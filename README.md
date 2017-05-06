@@ -72,11 +72,11 @@ BLOG | count 10
 ## Syntax
 
 ```
-{database name} [| count {default table row count}]
+{database name} [| {database property}, {database property}, ...]
 
-    {table name} [| count {table row count}]
+    {table name} [| {table property}, {table property}, ...]
     
-        {field name} [| {property} [, {property}] ...]
+        {field name} [| {field property}, {field property}, ...]
 ```
 
 ### Types
@@ -98,6 +98,18 @@ DATE
 DATETIME
 {TYPE} REF : reference.
 {TYPE} LIST : list.
+```
+
+### Database properties
+
+```
+count {row count}
+```
+
+### Table properties
+
+```
+count {row count}
 ```
 
 ### Field properties
