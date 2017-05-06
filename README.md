@@ -82,7 +82,6 @@ BLOG | count 10
 ### Types
 
 ```
-STRING
 BOOL
 INT8
 UINT8
@@ -94,6 +93,7 @@ INT64
 UINT64
 FLOAT32
 FLOAT64
+STRING
 DATE
 DATETIME
 {table} REF : table reference.
