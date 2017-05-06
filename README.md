@@ -4,7 +4,7 @@ Database builder.
 
 ## Features
 
-* Database schema design using a plain text database specification.
+* Database design with a concise textual specification.
 * Automatic generation of the :
   * Table data.
   * UML schema file.
