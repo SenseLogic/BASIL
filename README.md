@@ -6,7 +6,7 @@ Database builder.
 
 * Database design with a concise textual specification.
 * Automatic generation of the :
-  * Table data.
+  * Table data from the field names, types and properties.
   * UML schema file.
   * SQL schema and data files.
   * AQL data file.
