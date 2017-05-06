@@ -1,10 +1,10 @@
 # Basil
 
-Database builder.
+Textual database builder.
 
 ## Features
 
-* Database design with a concise textual specification.
+* Database design through a concise textual specification.
 * Automatic generation of the :
   * Table data from the field names, types and properties.
   * UML schema file.
