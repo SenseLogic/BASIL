@@ -119,7 +119,7 @@ count {row count}
 [!]key
 [!]required
 [!]incremented
-capacity {character count}
+capacity {maximum character count}
 aqlname {AQL field name}
 goname {Go field name}
 firstname
