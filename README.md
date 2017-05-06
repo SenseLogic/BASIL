@@ -96,8 +96,8 @@ FLOAT32
 FLOAT64
 DATE
 DATETIME
-{TYPE} REF : reference.
-{TYPE} LIST : list.
+{table} REF : table reference.
+{table} LIST : list of table references.
 ```
 
 ### Database properties
