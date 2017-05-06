@@ -144,10 +144,10 @@ basil [options] database.dbs
 ### Options
 
 ``` 
---uml : generate the UML schema file" );
---sql : generate the SQL schema and data files" );
---aql : generate the AQL data file" );
---go : generate the Go schema and data files" );
+--uml : generate the UML schema file
+--sql : generate the SQL schema and data files
+--aql : generate the AQL data file
+--go : generate the Go schema and data files
 ``` 
 
 ### Examples
