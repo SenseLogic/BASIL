@@ -1,0 +1,52 @@
+BLOG | count 10
+
+    SECTION
+
+        Id : UINT64 | key, incremented
+        Number : UINT64
+        Name : STRING | capacity 45
+        Text : STRING
+        Image : STRING | capacity 45
+        ArticleIdList : ARTICLE LIST | count 5 10
+        
+        ImageIndex : UINT64 | !stored
+
+    USER
+
+        Id : UINT64 | key, incremented
+        Email : STRING | capacity 45
+        Pseudonym : STRING | capacity 45
+        Password : STRING | capacity 45
+        ItIsAdministrator : BOOL | aqlname IsAdmin
+
+    ARTICLE
+
+        Id : UINT64 | key, incremented
+        SectionId : SECTION REF
+        UserId : USER REF
+        Title : STRING
+        Text : STRING
+        Image : STRING | capacity 45
+        Date : DATETIME
+        
+        Section : SECTION * | !stored
+        User : USER * | !stored
+        
+        ImageIndex : UINT64 | !stored
+
+    COMMENT
+
+        Id : UINT64 | key, incremented
+        ArticleId : ARTICLE REF
+        UserId : USER REF
+        Text : STRING
+        Date : DATE
+        
+        Article : ARTICLE * | !stored
+        User : USER * | !stored
+
+    SUBSCRIBER
+
+        Id : UINT64 | key, incremented
+        Name : STRING | capacity 45
+        Email : STRING | capacity 45
