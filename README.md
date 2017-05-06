@@ -107,7 +107,7 @@ DATETIME
 [!]key
 [!]required
 [!]incremented
-capacity {row count}
+capacity {character count}
 aqlname {AQL field name}
 goname {Go field name}
 firstname
