@@ -2500,14 +2500,17 @@ void main(
     }
     else
     {
-        PrintError( "Invalid arguments" );
-
         writeln( "Usage :" );
-        writeln( "    basil [options] schema.dbs" );
+        writeln( "    basil [options] file.dbs" );
         writeln( "Options :" );
-        writeln( "--uml : generate the UML schema file" );
-        writeln( "--sql : generate the SQL schema and data files" );
-        writeln( "--aql : generate the AQL data file" );
-        writeln( "--go : generate the GO schema and data files" );
+        writeln( "    --uml : generate the UML schema file" );
+        writeln( "    --sql : generate the SQL schema and data files" );
+        writeln( "    --aql : generate the AQL data file" );
+        writeln( "    --go : generate the GO schema and data files" );
+        writeln( "Examples :" );
+        writeln( "    basil --uml file.dbs" );
+        writeln( "    basil --sql --go file.dbs" );
+        
+        PrintError( "Invalid arguments" );
     }
 }
