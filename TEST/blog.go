@@ -12,9 +12,18 @@ type SECTION struct {
 
 type USER struct {
     Id uint64 `db:"Id"`;
+    FirstName string `db:"FirstName"`;
+    LastName string `db:"LastName"`;
     Email string `db:"Email"`;
     Pseudonym string `db:"Pseudonym"`;
     Password string `db:"Password"`;
+    Phone string `db:"Phone"`;
+    Street string `db:"Street"`;
+    City string `db:"City"`;
+    Code string `db:"Code"`;
+    Region string `db:"Region"`;
+    Country string `db:"Country"`;
+    Company string `db:"Company"`;
     ItIsAdministrator bool `db:"ItIsAdministrator"`;
 }
 

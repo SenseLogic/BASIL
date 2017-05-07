@@ -224,7 +224,10 @@ class RANDOM
 {
     string[]
         FirstNameArray,
-        LastNameArray;
+        LastNameArray,
+        CityNameArray,
+        RegionNameArray,
+        CountryNameArray;
     VERTEX[]
         VertexArray;
     int[ string ]
@@ -240,6 +243,9 @@ class RANDOM
     {
         MakeFirstNameArray();
         MakeLastNameArray();
+        MakeCityNameArray(),
+        MakeRegionNameArray(),
+        MakeCountryNameArray(),
         MakeVertexArray();
         MakeWordArray();
         MakeSyllableArray();
@@ -247,14 +253,54 @@ class RANDOM
 
     // ~~
 
-    void MakeFirstNameArray(
+    void MakeNameArray(
+        ref string[] name_array,
+        string file_path,
+        bool lines_are_split = false,
+        bool case_is_fixed = false
         )
     {
         string
             text;
 
-        text = GetExecutablePath( "first_name_table.txt" ).readText();
-        FirstNameArray = text.toLower().replace( "\r", "" ).replace( "\n", " " ).strip().split( ' ' );
+        text = GetExecutablePath( file_path ).readText().replace( "\r", "" );
+
+        while ( text.startsWith( "\n" ) )
+        {
+            text = text[ 1 .. $ ];
+        }
+
+        while ( text.endsWith( "\n" ) )
+        {
+            text = text[ 0 .. $ - 1 ];
+        }
+
+        text = text.replace( "\n\n", "\n" );
+
+        if ( lines_are_split )
+        {
+            name_array = text.replace( "\n", " " ).strip().split( ' ' );
+        }
+        else
+        {
+            name_array = text.split( '\n' );
+        }
+
+        if ( case_is_fixed )
+        {
+            foreach ( name; name_array )
+            {
+                name = name.toLower().GetCapitalizedText();
+            }
+        }
+    }
+
+    // ~~
+
+    void MakeFirstNameArray(
+        )
+    {
+        MakeNameArray( FirstNameArray, "first_name_table.txt", true, true );
     }
 
     // ~~
@@ -262,11 +308,31 @@ class RANDOM
     void MakeLastNameArray(
         )
     {
-        string
-            text;
+        MakeNameArray( LastNameArray, "last_name_table.txt", true, true );
+    }
 
-        text = GetExecutablePath( "last_name_table.txt" ).readText();
-        LastNameArray = text.toLower().replace( "\r", "" ).replace( "\n", " " ).strip().split( ' ' );
+    // ~~
+
+    void MakeCityNameArray(
+        )
+    {
+        MakeNameArray( CityNameArray, "city_name_table.txt" );
+    }
+
+    // ~~
+
+    void MakeRegionNameArray(
+        )
+    {
+        MakeNameArray( RegionNameArray, "region_name_table.txt" );
+    }
+
+    // ~~
+
+    void MakeCountryNameArray(
+        )
+    {
+        MakeNameArray( CountryNameArray, "country_name_table.txt" );
     }
 
     // ~~
@@ -638,6 +704,30 @@ class RANDOM
         )
     {
         return PickElement( LastNameArray );
+    }
+
+    // ~~
+
+    string MakeCityName(
+        )
+    {
+        return PickElement( CityNameArray );
+    }
+
+    // ~~
+
+    string MakeRegionName(
+        )
+    {
+        return PickElement( RegionNameArray );
+    }
+
+    // ~~
+
+    string MakeCountryName(
+        )
+    {
+        return PickElement( CountryNameArray );
     }
 
     // ~~
@@ -1280,18 +1370,18 @@ class COLUMN
         }
         else if ( ItIsRandomFirstName )
         {
-            value.Text = Random.MakeFirstName().GetCapitalizedText();
+            value.Text = Random.MakeFirstName();
         }
         else if ( ItIsRandomLastName )
         {
-            value.Text = Random.MakeLastName().GetCapitalizedText();
+            value.Text = Random.MakeLastName();
         }
         else if ( ItIsRandomFullName )
         {
             value.Text
-                = Random.MakeFirstName().GetCapitalizedText()
+                = Random.MakeFirstName()
                   ~ " "
-                  ~ Random.MakeLastName().GetCapitalizedText();
+                  ~ Random.MakeLastName();
         }
         else if ( ItIsRandomEnglish )
         {
@@ -1336,6 +1426,34 @@ class COLUMN
             {
                 value.Text = Random.MakeText( "english", 5, 10 );
             }
+            else if ( Name.endsWith( "FirstName" ) )
+            {
+                value.Text = Random.MakeFirstName();
+
+                table.PriorFirstName = value.Text;
+            }
+            else if ( Name.endsWith( "LastName" ) )
+            {
+                value.Text = Random.MakeLastName();
+
+                table.PriorLastName = value.Text;
+            }
+            else if ( Name.endsWith( "Name" ) )
+            {
+                value.Text = Random.MakeLastName();
+
+                table.PriorName = value.Text;
+            }
+            else if ( Name.endsWith( "Pseudonym" ) )
+            {
+                value.Text = Random.MakeName( 6, 8 );
+            }
+            else if ( Name.endsWith( "Password" ) )
+            {
+                value.Text
+                    = Random.MakeName( 8, 10 )
+                      ~ Random.MakeInteger( 1, 999 ).to!string();
+            }
             else if ( Name.endsWith( "Email" ) )
             {
                 value.Text
@@ -1365,9 +1483,44 @@ class COLUMN
                       ~ " "
                       ~ Random.MakeInteger( 100, 999 ).to!string();
             }
+            else if ( Name.endsWith( "Street" )
+                      || Name.endsWith( "Address" ) )
+            {
+                value.Text
+                    = Random.MakeInteger( 1, 100 ).to!string()
+                      ~ " "
+                      ~ Random.MakeLastName()
+                      ~ " "
+                      ~ [
+                          "Street",
+                          "Court",
+                          "Avenue",
+                          "Boulevard",
+                          "Lane",
+                          "Alley",
+                          "Drive",
+                          "Park"
+                        ][ Random.MakeIndex( 8 ) ];
+            }
             else if ( Name.endsWith( "Code" ) )
             {
                 value.Text = Random.MakeInteger( 1000, 9999 ).to!string();
+            }
+            else if ( Name.endsWith( "City" ) )
+            {
+                value.Text = Random.MakeCityName();
+            }
+            else if ( Name.endsWith( "Region" ) )
+            {
+                value.Text = Random.MakeRegionName();
+            }
+            else if ( Name.endsWith( "Country" ) )
+            {
+                value.Text = Random.MakeCountryName();
+            }
+            else if ( Name.endsWith( "Company" ) )
+            {
+                value.Text = Random.MakeLastName();
             }
             else if ( Name.endsWith( "Image" ) )
             {
@@ -1396,37 +1549,9 @@ class COLUMN
             else if ( Name.endsWith( "Author" ) )
             {
                 value.Text
-                    = Random.MakeFirstName().GetCapitalizedText()
+                    = Random.MakeFirstName()
                       ~ " "
-                      ~ Random.MakeLastName().GetCapitalizedText();
-            }
-            else if ( Name.endsWith( "FirstName" ) )
-            {
-                value.Text = Random.MakeFirstName().GetCapitalizedText();
-
-                table.PriorFirstName = value.Text;
-            }
-            else if ( Name.endsWith( "LastName" ) )
-            {
-                value.Text = Random.MakeLastName().GetCapitalizedText();
-
-                table.PriorLastName = value.Text;
-            }
-            else if ( Name.endsWith( "Name" ) )
-            {
-                value.Text = Random.MakeName( 6, 9 ).GetCapitalizedText();
-
-                table.PriorName = value.Text;
-            }
-            else if ( Name.endsWith( "Pseudonym" ) )
-            {
-                value.Text = Random.MakeName( 6, 8 );
-            }
-            else if ( Name.endsWith( "Password" ) )
-            {
-                value.Text
-                    = Random.MakeName( 8, 10 )
-                      ~ Random.MakeInteger( 1, 999 ).to!string();
+                      ~ Random.MakeLastName();
             }
             else if ( Name.endsWith( "Isbn" ) )
             {

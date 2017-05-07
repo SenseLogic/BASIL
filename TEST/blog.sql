@@ -24,9 +24,18 @@ drop table if exists `BLOG`.`USER`;
 
 create table if not exists `BLOG`.`USER`(
   `Id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `FirstName` VARCHAR( 45 ) NULL,
+  `LastName` VARCHAR( 45 ) NULL,
   `Email` VARCHAR( 45 ) NULL,
   `Pseudonym` VARCHAR( 45 ) NULL,
   `Password` VARCHAR( 45 ) NULL,
+  `Phone` VARCHAR( 45 ) NULL,
+  `Street` TEXT NULL,
+  `City` VARCHAR( 45 ) NULL,
+  `Code` VARCHAR( 45 ) NULL,
+  `Region` VARCHAR( 45 ) NULL,
+  `Country` VARCHAR( 45 ) NULL,
+  `Company` VARCHAR( 45 ) NULL,
   `ItIsAdministrator` TINYINT UNSIGNED NULL,
   primary key( `Id` ) )
 engine = InnoDB;

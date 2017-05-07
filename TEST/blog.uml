@@ -23,9 +23,18 @@ class SECTION {
 
 class USER {
     Id : UINT64
+    FirstName : STRING
+    LastName : STRING
     Email : STRING
     Pseudonym : STRING
     Password : STRING
+    Phone : STRING
+    Street : STRING
+    City : STRING
+    Code : STRING
+    Region : STRING
+    Country : STRING
+    Company : STRING
     ItIsAdministrator : BOOL
 }
 

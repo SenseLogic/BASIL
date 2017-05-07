@@ -14,9 +14,18 @@ BLOG | count 10
     USER
 
         Id : UINT64 | key, incremented
+        FirstName : STRING | capacity 45
+        LastName : STRING | capacity 45
         Email : STRING | capacity 45
         Pseudonym : STRING | capacity 45
         Password : STRING | capacity 45
+        Phone : STRING | capacity 45
+        Street : STRING
+        City : STRING | capacity 45
+        Code : STRING | capacity 45
+        Region : STRING | capacity 45
+        Country : STRING | capacity 45
+        Company : STRING | capacity 45
         ItIsAdministrator : BOOL | aqlname IsAdmin
 
     ARTICLE
