@@ -97,8 +97,8 @@ FLOAT64
 STRING
 DATE
 DATETIME
-{table} REF : table reference.
-{table} LIST : list of table references.
+{table} REF : table object reference.
+{table} LIST : list of table object references.
 ```
 
 ### Database properties
