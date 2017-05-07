@@ -4,7 +4,7 @@ Textual database builder.
 
 ## Features
 
-* Database design through a concise textual specification.
+* Database design using a simple textual specification.
 * Random data generation from the field names, types and properties.
 * English and Latin lorem ipsum text.
 * Several export formats :
