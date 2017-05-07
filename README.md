@@ -5,8 +5,8 @@ Textual database builder.
 ## Features
 
 * Database design using a simple textual specification.
-* Random data generation from the field names, types and properties.
-* English and Latin lorem ipsum text.
+* Random data generation from the field name, type, size and properties.
+* Lorem ipsum sentences in Latin or English.
 * Several export formats :
   * UML schema file.
   * SQL schema and data files.
@@ -77,28 +77,7 @@ BLOG | count 10
 
     {table name} [| {table property}, {table property}, ...]
     
-        {field name} [| {field property}, {field property}, ...]
-```
-
-### Types
-
-```
-BOOL
-INT8
-UINT8
-INT16
-UINT16
-INT32
-UINT32
-INT64
-UINT64
-FLOAT32
-FLOAT64
-STRING
-DATE
-DATETIME
-{table} REF : table object reference.
-{table} LIST : list of table object references.
+        {field name} : {field type} [| {field property}, {field property}, ...]
 ```
 
 ### Database properties
@@ -134,6 +113,54 @@ natural {minimum value} {maximum value} [{digit count}]
 name {minimum letter count} {maximum letter count}
 english {minimum sentence count} {maximum sentence count}
 latin  {minimum sentence count} {maximum sentence count}
+```
+
+### Field name endings
+
+```
+Id
+Year
+Title
+Slug
+Text
+Email
+Phone
+Code
+Image
+File
+Folder
+Author
+FirstName
+LastName
+Name
+Pseudonym
+Password
+Isbn
+Tags
+```
+
+An "Email" field is based on the "FirstName" and "LastName" fields if they are defined above.
+A "Slug" field is based on the "Title" or "Name" field if it's defined above.
+
+### Field types
+
+```
+BOOL
+INT8
+UINT8
+INT16
+UINT16
+INT32
+UINT32
+INT64
+UINT64
+FLOAT32
+FLOAT64
+STRING
+DATE
+DATETIME
+{table} REF : table object reference.
+{table} LIST : list of table object references.
 ```
 
 ## Installation
