@@ -5,8 +5,9 @@ Textual database builder.
 ## Features
 
 * Database design through a concise textual specification.
-* Automatic generation of the :
-  * Table data from the field names, types and properties.
+* Random data generation from the field names, types and properties.
+* English and Latin lorem ipsum text.
+* Several export formats :
   * UML schema file.
   * SQL schema and data files.
   * AQL data file.
