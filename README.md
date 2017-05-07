@@ -155,6 +155,7 @@ Tags
 ```
 
 An "Email" field is based on the "FirstName" and "LastName" fields if they are defined above.
+
 A "Slug" field is based on the "Title" or "Name" field if it's defined above.
 
 ### Field types
