@@ -171,7 +171,7 @@ basil --uml blog.dbs
 Generates "blog.uml" from "blog.dbs".
 
 ```bash
-basil --uml --sql --go blog.pepss 
+basil --uml --sql --go blog.dbs 
 ```
 
 Generates "blog.uml", "blog.sql", "blog_data.sql", "blog.go" and "blog_data.go" from "blog.dbs".
