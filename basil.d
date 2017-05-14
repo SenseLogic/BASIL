@@ -2594,6 +2594,8 @@ void main(
     {
         option = argument_array[ 0 ];
 
+        argument_array = argument_array[ 1 .. $ ];
+
         if ( option == "--uml" )
         {
             output_format_array ~= "uml";
@@ -2614,8 +2616,6 @@ void main(
         {
             Abort( "Invalid option : " ~ option );
         }
-
-        argument_array = argument_array[ 1 .. $ ];
     }
 
     if ( argument_array.length >= 1
