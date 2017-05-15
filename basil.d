@@ -2634,6 +2634,6 @@ void main(
         writeln( "    basil --uml file.dbs" );
         writeln( "    basil --sql --go file.dbs" );
         
-        PrintError( "Invalid arguments" );
+        Abort( "Invalid arguments : " ~ argument_array.to!string() );
     }
 }
