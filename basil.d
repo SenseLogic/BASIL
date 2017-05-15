@@ -41,8 +41,6 @@ void PrintError(
     )
 {
     writeln( "*** ERROR : ", message );
-    
-    exit( -1 );
 }
 
 // ~~
@@ -52,8 +50,8 @@ void Abort(
     )
 {
     PrintError( message );
-
-    throw new Exception( message );
+    
+    exit( -1 );
 }
 
 // ~~
