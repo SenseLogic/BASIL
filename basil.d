@@ -50,7 +50,7 @@ void Abort(
     )
 {
     PrintError( message );
-    
+
     exit( -1 );
 }
 
@@ -233,7 +233,7 @@ class RANDOM
     string[]
         WordArray,
         SyllableArray;
-        
+
     // ~~
 
     this(
@@ -347,7 +347,7 @@ class RANDOM
             key;
         VERTEX
             vertex;
-            
+
         key = "[" ~ word ~ "]";
 
         found_vertex_index = ( key in VertexIndexMap );
@@ -1416,9 +1416,9 @@ class COLUMN
 
                 value.Text
                     = value.Text.toLower()
-                      .replace( " ", "-" )
-                      .replace( "\"", "-" )
-                      .replace( ".", "" );
+                                .replace( " ", "-" )
+                                .replace( "\"", "-" )
+                                .replace( ".", "" );
             }
             else if ( Name.endsWith( "Text" ) )
             {
@@ -1464,7 +1464,7 @@ class COLUMN
                           "@outlook.com",
                           "@live.com",
                           "@hotmail.com"
-                        ][ Random.MakeIndex( 5 ) ];
+                          ][ Random.MakeIndex( 5 ) ];
 
                 table.PriorFirstName = "";
                 table.PriorLastName = "";
@@ -1498,7 +1498,7 @@ class COLUMN
                           "Alley",
                           "Drive",
                           "Park"
-                        ][ Random.MakeIndex( 8 ) ];
+                          ][ Random.MakeIndex( 8 ) ];
             }
             else if ( Name.endsWith( "Code" ) )
             {
@@ -1528,7 +1528,7 @@ class COLUMN
                           ".jpg",
                           ".png",
                           ".gif"
-                        ][ Random.MakeIndex( 3 ) ];
+                          ][ Random.MakeIndex( 3 ) ];
             }
             else if ( Name.endsWith( "File" ) )
             {
@@ -1538,7 +1538,7 @@ class COLUMN
                           ".pdf",
                           ".doc",
                           ".odt"
-                        ][ Random.MakeIndex( 3 ) ];
+                          ][ Random.MakeIndex( 3 ) ];
             }
             else if ( Name.endsWith( "Folder" ) )
             {
@@ -2047,7 +2047,7 @@ class SCHEMA
                         {
                             property_text_array = line_text_array[ 1 ].split( ',' );
 
-                            foreach ( ref property_text; property_text_array  )
+                            foreach ( ref property_text; property_text_array )
                             {
                                 column.SetPropertyValue( property_text.strip() );
                             }
@@ -2080,7 +2080,7 @@ class SCHEMA
                     {
                         property_text_array = line_text_array[ 1 ].split( ',' );
 
-                        foreach ( ref property_text; property_text_array  )
+                        foreach ( ref property_text; property_text_array )
                         {
                             table.SetPropertyValue( property_text.strip() );
                         }
@@ -2100,7 +2100,7 @@ class SCHEMA
                     {
                         property_text_array = line_text_array[ 1 ].split( ',' );
 
-                        foreach ( ref property_text; property_text_array  )
+                        foreach ( ref property_text; property_text_array )
                         {
                             SetPropertyValue( property_text.strip() );
                         }
@@ -2185,7 +2185,7 @@ class SCHEMA
 
         writeln( "Writing SQL schema file : " ~ sql_schema_file_path );
 
-        sql_schema_file_text 
+        sql_schema_file_text
             = "set @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;\n"
               ~ "set @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;\n"
               ~ "set @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='TRADITIONAL,ALLOW_INVALID_DATES';\n\n"
@@ -2213,7 +2213,7 @@ class SCHEMA
                            ~ ",\n";
                 }
             }
-            
+
             foreach ( ref column; table.ColumnArray )
             {
                 if ( column.ItIsStored
@@ -2233,7 +2233,7 @@ class SCHEMA
                 {
                     ++foreign_key_index;
 
-                    sql_schema_file_text 
+                    sql_schema_file_text
                         ~= "  index `fk_"
                            ~ table.Name.toLower()
                            ~ "_"
@@ -2247,7 +2247,7 @@ class SCHEMA
             }
 
             foreign_key_index = 0;
-            
+
             foreach ( ref column; table.ColumnArray )
             {
                 if ( column.ItIsStored
@@ -2256,7 +2256,7 @@ class SCHEMA
                 {
                     ++foreign_key_index;
 
-                    sql_schema_file_text 
+                    sql_schema_file_text
                         ~= "  constraint `fk_"
                            ~ table.Name.toLower()
                            ~ "_"
@@ -2278,8 +2278,8 @@ class SCHEMA
                            ~ "    on update no action,\n";
                 }
             }
-            
-            sql_schema_file_text 
+
+            sql_schema_file_text
                 = sql_schema_file_text[ 0 .. $ - 2 ]
                   ~ " )\n"
                   ~ "engine = InnoDB;\n\n";
@@ -2351,7 +2351,7 @@ class SCHEMA
 
         sql_data_file_path.write( sql_data_file_text );
     }
-    
+
     // ~~
 
     void WriteAqlDataFile(
@@ -2633,7 +2633,7 @@ void main(
         writeln( "Examples :" );
         writeln( "    basil --uml file.dbs" );
         writeln( "    basil --sql --go file.dbs" );
-        
+
         Abort( "Invalid arguments : " ~ argument_array.to!string() );
     }
 }
