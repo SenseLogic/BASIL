@@ -78,10 +78,9 @@ bool StartsByVowel(
     string text
     )
 {
-    return (
+    return
         text != ""
-        && IsVowelCharacter( text[ 0 ] )
-        );
+        && IsVowelCharacter( text[ 0 ] );
 }
 
 // ~~
@@ -90,10 +89,9 @@ bool StartsByConsonant(
     string text
     )
 {
-    return (
+    return
         text != ""
-        && IsConsonantCharacter( text[ 0 ] )
-        );
+        && IsConsonantCharacter( text[ 0 ] );
 }
 
 // ~~
@@ -102,10 +100,9 @@ bool EndsByVowel(
     string text
     )
 {
-    return (
+    return
         text != ""
-        && IsVowelCharacter( text[ $ - 1 ] )
-        );
+        && IsVowelCharacter( text[ $ - 1 ] );
 }
 
 // ~~
@@ -114,10 +111,9 @@ bool EndsByConsonant(
     string text
     )
 {
-    return (
+    return
         text != ""
-        && IsConsonantCharacter( text[ $ - 1 ] )
-        );
+        && IsConsonantCharacter( text[ $ - 1 ] );
 }
 
 // ~~
@@ -623,13 +619,12 @@ class RANDOM
     string MakeDate(
                    )
     {
-        return (
+        return
             MakeInteger( 2000, 2015 ).to!string()
             ~ "-"
             ~ MakeNatural( 1, 12, 2 ).to!string()
             ~ "-"
-            ~ MakeNatural( 1, 28, 2 ).to!string()
-            );
+            ~ MakeNatural( 1, 28, 2 ).to!string();
     }
 
     // ~~
@@ -637,13 +632,12 @@ class RANDOM
     string MakeTime(
                    )
     {
-        return (
+        return
             MakeNatural( 0, 23, 2 ).to!string()
             ~ ":"
             ~ MakeNatural( 0, 59, 2 ).to!string()
             ~ ":"
-            ~ MakeNatural( 0, 59, 2 ).to!string()
-            );
+            ~ MakeNatural( 0, 59, 2 ).to!string();
     }
 
     // ~~
@@ -1740,7 +1734,7 @@ class COLUMN
         }
         else if ( GoType == "bool" )
         {
-            return ( ValueArray[ row_index ].Text == "0" ? "false" : "true" );
+            return ValueArray[ row_index ].Text == "0" ? "false" : "true";
         }
         else
         {
