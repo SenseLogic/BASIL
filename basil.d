@@ -1441,7 +1441,8 @@ class COLUMN
 
                 table.PriorName = value.Text;
             }
-            else if ( Name.endsWith( "Pseudonym" ) )
+            else if ( Name.endsWith( "Login" )
+                      || Name.endsWith( "Pseudonym" ) )
             {
                 value.Text
                     = ( ( table.PriorFirstName != "" ) ? table.PriorFirstName : Random.MakeFirstName() ).toLower()
