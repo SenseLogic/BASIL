@@ -296,7 +296,7 @@ class RANDOM
     // ~~
 
     void MakeFirstNameArray(
-        )
+                           )
     {
         MakeNameArray( FirstNameArray, "first_name_table.txt", true, true );
     }
@@ -304,7 +304,7 @@ class RANDOM
     // ~~
 
     void MakeLastNameArray(
-        )
+                          )
     {
         MakeNameArray( LastNameArray, "last_name_table.txt", true, true );
     }
@@ -312,7 +312,7 @@ class RANDOM
     // ~~
 
     void MakeCityNameArray(
-        )
+                          )
     {
         MakeNameArray( CityNameArray, "city_name_table.txt" );
     }
@@ -320,7 +320,7 @@ class RANDOM
     // ~~
 
     void MakeRegionNameArray(
-        )
+                            )
     {
         MakeNameArray( RegionNameArray, "region_name_table.txt" );
     }
@@ -328,7 +328,7 @@ class RANDOM
     // ~~
 
     void MakeCountryNameArray(
-        )
+                             )
     {
         MakeNameArray( CountryNameArray, "country_name_table.txt" );
     }
@@ -395,7 +395,7 @@ class RANDOM
     // ~~
 
     void MakeVertexArray(
-        )
+                        )
     {
         bool
             it_is_final;
@@ -414,7 +414,7 @@ class RANDOM
         verse_array = text.strip().replace( "\r", "" ).split( '\n' );
 
         VertexArray = [];
-        //VertexIndexMap = [];
+        VertexIndexMap = null;
 
         foreach ( ref verse; verse_array )
         {
@@ -446,7 +446,7 @@ class RANDOM
     // ~~
 
     void MakeWordArray(
-        )
+                      )
     {
         string
             text;
@@ -460,7 +460,7 @@ class RANDOM
     // ~~
 
     void MakeSyllableArray(
-        )
+                          )
     {
         string
             old_text,
@@ -471,7 +471,7 @@ class RANDOM
 
         voyels_consonants_voyels_expression = regex( ` ([aeiou]+)([bcdfghjklmnpqrstvwx]+)([aeiou]+)([^ ])` );
         consonants_voyels_consonants_expression = regex( ` ([bcdfghjklmnpqrstvwx]+)([aeiou]+)([bcdfghjklmnpqrstvwx]+)([^ ])` );
-        text = FirstNameArray.join( ' ' ) ~ " " ~ LastNameArray.join( ' ' );
+        text = FirstNameArray.join( ' ' ) ~ " " ~ LastNameArray.join( ' ' ).toLower();
 
         do
         {
@@ -543,7 +543,7 @@ class RANDOM
     // ~~
 
     ulong MakeNatural64(
-        )
+                       )
     {
         return uniform!"[]"( 0, ulong( -1 ) );
     }
@@ -621,7 +621,7 @@ class RANDOM
     // ~~
 
     string MakeDate(
-        )
+                   )
     {
         return (
             MakeInteger( 2000, 2015 ).to!string()
@@ -635,7 +635,7 @@ class RANDOM
     // ~~
 
     string MakeTime(
-        )
+                   )
     {
         return (
             MakeNatural( 0, 23, 2 ).to!string()
@@ -691,7 +691,7 @@ class RANDOM
     // ~~
 
     string MakeFirstName(
-        )
+                        )
     {
         return PickElement( FirstNameArray );
     }
@@ -699,7 +699,7 @@ class RANDOM
     // ~~
 
     string MakeLastName(
-        )
+                       )
     {
         return PickElement( LastNameArray );
     }
@@ -707,7 +707,7 @@ class RANDOM
     // ~~
 
     string MakeCityName(
-        )
+                       )
     {
         return PickElement( CityNameArray );
     }
@@ -715,7 +715,7 @@ class RANDOM
     // ~~
 
     string MakeRegionName(
-        )
+                         )
     {
         return PickElement( RegionNameArray );
     }
@@ -723,7 +723,7 @@ class RANDOM
     // ~~
 
     string MakeCountryName(
-        )
+                          )
     {
         return PickElement( CountryNameArray );
     }
@@ -731,7 +731,7 @@ class RANDOM
     // ~~
 
     string MakeWord(
-        )
+                   )
     {
         return PickElement( WordArray );
     }
@@ -1193,7 +1193,7 @@ class COLUMN
     // ~~
 
     void MakeType(
-        )
+                 )
     {
         if ( SqlName == "" )
         {
@@ -1402,12 +1402,10 @@ class COLUMN
                 if ( table.PriorTitle != "" )
                 {
                     value.Text = table.PriorTitle;
-                    table.PriorTitle = "";
                 }
                 else if ( table.PriorName != "" )
                 {
                     value.Text = table.PriorName;
-                    table.PriorName = "";
                 }
                 else
                 {
@@ -1415,10 +1413,11 @@ class COLUMN
                 }
 
                 value.Text
-                    = value.Text.toLower()
-                                .replace( " ", "-" )
-                                .replace( "\"", "-" )
-                                .replace( ".", "" );
+                    = value.Text
+                           .toLower()
+                           .replace( " ", "-" )
+                           .replace( "\"", "-" )
+                           .replace( ".", "" );
             }
             else if ( Name.endsWith( "Text" ) )
             {
@@ -1444,13 +1443,16 @@ class COLUMN
             }
             else if ( Name.endsWith( "Pseudonym" ) )
             {
-                value.Text = Random.MakeName( 6, 8 );
+                value.Text
+                    = ( ( table.PriorFirstName != "" ) ? table.PriorFirstName : Random.MakeFirstName() ).toLower()
+                      ~ ( ( table.PriorLastName != "" ) ? table.PriorLastName : Random.MakeLastName() ).toLower()
+                      ~ Random.MakeInteger( 100, 999 ).to!string();
             }
             else if ( Name.endsWith( "Password" ) )
             {
                 value.Text
                     = Random.MakeName( 8, 10 )
-                      ~ Random.MakeInteger( 1, 999 ).to!string();
+                      ~ Random.MakeInteger( 1, 9 ).to!string();
             }
             else if ( Name.endsWith( "Email" ) )
             {
@@ -1463,11 +1465,9 @@ class COLUMN
                           "@yahoo.com",
                           "@outlook.com",
                           "@live.com",
-                          "@hotmail.com"
-                          ][ Random.MakeIndex( 5 ) ];
-
-                table.PriorFirstName = "";
-                table.PriorLastName = "";
+                          "@hotmail.com",
+                          "@mail.com"
+                        ][ Random.MakeIndex( 6 ) ];
             }
             else if ( Name.endsWith( "Phone" ) )
             {
@@ -1498,7 +1498,7 @@ class COLUMN
                           "Alley",
                           "Drive",
                           "Park"
-                          ][ Random.MakeIndex( 8 ) ];
+                        ][ Random.MakeIndex( 8 ) ];
             }
             else if ( Name.endsWith( "Code" ) )
             {
@@ -1518,7 +1518,30 @@ class COLUMN
             }
             else if ( Name.endsWith( "Company" ) )
             {
-                value.Text = Random.MakeLastName();
+                value.Text
+                    = Random.MakeLastName()
+                      ~ [
+                          " Company",
+                          " Limited",
+                          " Incorporated",
+                          " Corporation",
+                          " Union",
+                          " Trust",
+                          " Cooperative",
+                          " Institute",
+                          " Foundation",
+                          " Association",
+                          " Bank",
+                          " Fund",
+                          " Insurance",
+                          " Security",
+                          " Services",
+                          " Club",
+                          " Society",
+                          " College",
+                          " University",
+                          " Church"
+                        ][ Random.MakeIndex( 20 ) ];
             }
             else if ( Name.endsWith( "Image" ) )
             {
@@ -1528,7 +1551,7 @@ class COLUMN
                           ".jpg",
                           ".png",
                           ".gif"
-                          ][ Random.MakeIndex( 3 ) ];
+                        ][ Random.MakeIndex( 3 ) ];
             }
             else if ( Name.endsWith( "File" ) )
             {
@@ -1538,7 +1561,7 @@ class COLUMN
                           ".pdf",
                           ".doc",
                           ".odt"
-                          ][ Random.MakeIndex( 3 ) ];
+                        ][ Random.MakeIndex( 3 ) ];
             }
             else if ( Name.endsWith( "Folder" ) )
             {
@@ -1787,7 +1810,7 @@ class TABLE
     // ~~
 
     void MakeTypes(
-        )
+                  )
     {
         writeln( "Filling table : ", Name );
 
@@ -1800,7 +1823,7 @@ class TABLE
     // ~~
 
     void MakeValues(
-        )
+                   )
     {
         COLUMN
             last_stored_column;
@@ -1889,7 +1912,7 @@ class SCHEMA
     // ~~
 
     void MakeTypes(
-        )
+                  )
     {
         string
             foreign_table_name;
@@ -1938,7 +1961,7 @@ class SCHEMA
     // ~~
 
     void MakeValues(
-        )
+                   )
     {
         int
             foreign_value_count;
