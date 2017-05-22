@@ -186,7 +186,7 @@ Install the [DMD 2 compiler](https://dlang.org/download.html).
 Build the executable with the following command line :
 
 ```bash
-dmd basil.d
+dmd -m64 basil.d
 ```
 
 Install [PlantUML](http://plantuml.com/download) (or use [www.planttext.com](https://www.planttext.com/)) to view the UML diagram.
