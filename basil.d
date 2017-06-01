@@ -164,6 +164,32 @@ string GetExecutablePath(
     return dirName( thisExePath() ) ~ "/" ~ file_name;
 }
 
+// ~~
+
+string InsertCharacter(
+    string text,
+    char character
+    )
+{
+    int
+        character_index;
+
+    character_index = Random.MakeInteger( 0, text.length.to!int() );
+
+    if ( character_index == 0 )
+    {
+        return character ~ text;
+    }
+    else if ( character_index == text.length )
+    {
+        return text ~ character;
+    }
+    else
+    {
+        return text[ 0 .. character_index ] ~ character ~ text[ character_index .. $ ];
+    }
+}
+
 // -- TYPES
 
 class LINK
@@ -607,11 +633,48 @@ class RANDOM
 
     // ~~
 
+    int MakeIndex( ELEMENT )(
+        ELEMENT[] array
+        )
+    {
+        return MakeInteger( 0, array.length.to!int() - 1 );
+    }
+
+    // ~~
+
     ELEMENT PickElement( ELEMENT )(
         ELEMENT[] array
         )
     {
         return array[ MakeIndex( array.length.to!int() ) ];
+    }
+    
+    // ~~
+    
+    char MakeLowercaseLetter()
+    {
+        return "abcdefghijklmnopqrstuvwxyz"[ MakeIndex( 26 ) ];
+    }
+    
+    // ~~
+    
+    char MakeUppercaseLetter()
+    {
+        return "ABCDEFGHIJKLMNOPQRSTUVWXYZ"[ MakeIndex( 26 ) ];
+    }
+    
+    // ~~
+    
+    char MakeDigit()
+    {
+        return "0123456789"[ MakeIndex( 10 ) ];
+    }
+    
+    // ~~
+    
+    char MakeSeparator()
+    {
+        return ".,;:!?+-=*/%^&#@"[ MakeIndex( 16 ) ];
     }
 
     // ~~
@@ -1446,8 +1509,13 @@ class COLUMN
             else if ( Name.endsWith( "Password" ) )
             {
                 value.Text
-                    = Random.MakeName( 8, 10 )
-                      ~ Random.MakeInteger( 1, 9 ).to!string();
+                    = Random.MakeName( 8, 12 )
+                          .InsertCharacter( Random.MakeUppercaseLetter() )
+                          .InsertCharacter( Random.MakeUppercaseLetter() )
+                          .InsertCharacter( Random.MakeDigit() )
+                          .InsertCharacter( Random.MakeDigit() )
+                          .InsertCharacter( Random.MakeSeparator() )
+                          .InsertCharacter( Random.MakeSeparator() );
             }
             else if ( Name.endsWith( "Email" ) )
             {
@@ -1535,8 +1603,38 @@ class COLUMN
                           " Society",
                           " College",
                           " University",
-                          " Church"
-                        ][ Random.MakeIndex( 20 ) ];
+                          " Church",
+                          " Media",
+                          " News",
+                          " Magazine",
+                          " Network",
+                          " Channel",
+                          " Group",
+                          " Agency",
+                          " Consulting",
+                          " Team",
+                          " Center",
+                          " Design",
+                          " Studio",
+                          " Central",
+                          " Direct",
+                          " Tech",
+                          " Store",
+                          " Market",
+                          " Online",
+                          " Shop",
+                          " Express",
+                          " Point",
+                          " Labs",
+                          " Software",
+                          " Depot",
+                          " Logic",
+                          " Factory",
+                          " Fx",
+                          " Solutions",
+                          " Fashion",
+                          " Vision"
+                        ][ Random.MakeIndex( 50 ) ];
             }
             else if ( Name.endsWith( "Image" ) )
             {
