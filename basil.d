@@ -1509,12 +1509,9 @@ class COLUMN
             else if ( Name.endsWith( "Password" ) )
             {
                 value.Text
-                    = Random.MakeName( 8, 12 )
-                          .InsertCharacter( Random.MakeUppercaseLetter() )
+                    = Random.MakeName( 4, 8 )
                           .InsertCharacter( Random.MakeUppercaseLetter() )
                           .InsertCharacter( Random.MakeDigit() )
-                          .InsertCharacter( Random.MakeDigit() )
-                          .InsertCharacter( Random.MakeSeparator() )
                           .InsertCharacter( Random.MakeSeparator() );
             }
             else if ( Name.endsWith( "Email" ) )
