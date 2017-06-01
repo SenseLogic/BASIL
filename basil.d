@@ -1629,9 +1629,11 @@ class COLUMN
                           " Factory",
                           " Fx",
                           " Solutions",
+                          " Dynamics",
+                          " Associates",
                           " Fashion",
                           " Vision"
-                        ][ Random.MakeIndex( 50 ) ];
+                        ][ Random.MakeIndex( 52 ) ];
             }
             else if ( Name.endsWith( "Image" ) )
             {
