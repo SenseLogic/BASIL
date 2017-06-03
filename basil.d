@@ -131,7 +131,7 @@ string GetPascalCaseText(
     string text
     )
 {
-    int
+    long
         word_index;
     string[]
         word_array;
@@ -171,10 +171,10 @@ string InsertCharacter(
     char character
     )
 {
-    int
+    long
         character_index;
 
-    character_index = Random.MakeInteger( 0, text.length.to!int() );
+    character_index = Random.MakeInteger( 0, text.length );
 
     if ( character_index == 0 )
     {
@@ -196,7 +196,7 @@ class LINK
 {
     string
         Word;
-    int
+    long
         VertexIndex;
     bool
         ItIsFinal;
@@ -205,7 +205,7 @@ class LINK
 
     this(
         string word,
-        int vertex_index,
+        long vertex_index,
         bool it_is_final
         )
     {
@@ -250,7 +250,7 @@ class RANDOM
         CountryNameArray;
     VERTEX[]
         VertexArray;
-    int[ string ]
+    long[ string ]
         VertexIndexMap;
     string[]
         WordArray,
@@ -318,7 +318,7 @@ class RANDOM
     // ~~
 
     void MakeFirstNameArray(
-                           )
+        )
     {
         MakeNameArray( FirstNameArray, "first_name_table.txt", true, true );
     }
@@ -326,7 +326,7 @@ class RANDOM
     // ~~
 
     void MakeLastNameArray(
-                          )
+        )
     {
         MakeNameArray( LastNameArray, "last_name_table.txt", true, true );
     }
@@ -334,7 +334,7 @@ class RANDOM
     // ~~
 
     void MakeCityNameArray(
-                          )
+        )
     {
         MakeNameArray( CityNameArray, "city_name_table.txt" );
     }
@@ -342,7 +342,7 @@ class RANDOM
     // ~~
 
     void MakeRegionNameArray(
-                            )
+        )
     {
         MakeNameArray( RegionNameArray, "region_name_table.txt" );
     }
@@ -350,20 +350,20 @@ class RANDOM
     // ~~
 
     void MakeCountryNameArray(
-                             )
+        )
     {
         MakeNameArray( CountryNameArray, "country_name_table.txt" );
     }
 
     // ~~
 
-    int GetVertexIndex(
+    long GetVertexIndex(
         string word
         )
     {
-        int
+        long
             vertex_index;
-        int *
+        long *
             found_vertex_index;
         string
             key;
@@ -381,7 +381,7 @@ class RANDOM
         else
         {
             vertex = new VERTEX( word );
-            vertex_index = VertexArray.length.to!int();
+            vertex_index = VertexArray.length;
             VertexArray ~= vertex;
             VertexIndexMap[ key ] = vertex_index;
 
@@ -394,7 +394,7 @@ class RANDOM
     void AddLink(
         VERTEX vertex,
         string word,
-        int vertex_index,
+        long vertex_index,
         bool it_is_final
         )
     {
@@ -417,11 +417,11 @@ class RANDOM
     // ~~
 
     void MakeVertexArray(
-                        )
+        )
     {
         bool
             it_is_final;
-        int
+        long
             vertex_index;
         string
             text;
@@ -468,7 +468,7 @@ class RANDOM
     // ~~
 
     void MakeWordArray(
-                      )
+        )
     {
         string
             text;
@@ -482,7 +482,7 @@ class RANDOM
     // ~~
 
     void MakeSyllableArray(
-                          )
+        )
     {
         string
             old_text,
@@ -514,17 +514,7 @@ class RANDOM
 
     // ~~
 
-    float MakeReal(
-        float minimum_value,
-        float maximum_value
-        )
-    {
-        return uniform!"[]"( minimum_value, maximum_value );
-    }
-
-    // ~~
-
-    double MakeReal64(
+    double MakeReal(
         double minimum_value,
         double maximum_value
         )
@@ -534,17 +524,7 @@ class RANDOM
 
     // ~~
 
-    int MakeInteger(
-        int minimum_value,
-        int maximum_value
-        )
-    {
-        return uniform!"[]"( minimum_value, maximum_value );
-    }
-
-    // ~~
-
-    long MakeInteger64(
+    long MakeInteger(
         long minimum_value,
         long maximum_value
         )
@@ -554,25 +534,15 @@ class RANDOM
 
     // ~~
 
-    uint MakeNatural(
-        uint minimum_value,
-        uint maximum_value
+    ulong MakeNatural(
         )
-    {
-        return uniform!"[]"( minimum_value, maximum_value );
-    }
-
-    // ~~
-
-    ulong MakeNatural64(
-                       )
     {
         return uniform!"[]"( 0, ulong( -1 ) );
     }
 
     // ~~
 
-    ulong MakeNatural64(
+    ulong MakeNatural(
         ulong minimum_value,
         ulong maximum_value
         )
@@ -583,9 +553,9 @@ class RANDOM
     // ~~
 
     string MakeNatural(
-        uint minimum_value,
-        uint maximum_value,
-        int digit_count
+        ulong minimum_value,
+        ulong maximum_value,
+        long digit_count
         )
     {
         string
@@ -603,29 +573,8 @@ class RANDOM
 
     // ~~
 
-    string MakeNatural64(
-        ulong minimum_value,
-        ulong maximum_value,
-        int digit_count
-        )
-    {
-        string
-            text;
-
-        text = MakeNatural64( minimum_value, maximum_value ).to!string();
-
-        while ( text.length < digit_count )
-        {
-            text = "0" ~ text;
-        }
-
-        return text;
-    }
-
-    // ~~
-
-    int MakeIndex(
-        int count
+    long MakeIndex(
+        long count
         )
     {
         return MakeInteger( 0, count - 1 );
@@ -633,11 +582,11 @@ class RANDOM
 
     // ~~
 
-    int MakeIndex( ELEMENT )(
+    long MakeIndex( ELEMENT )(
         ELEMENT[] array
         )
     {
-        return MakeInteger( 0, array.length.to!int() - 1 );
+        return MakeInteger( 0, array.length - 1 );
     }
 
     // ~~
@@ -646,32 +595,32 @@ class RANDOM
         ELEMENT[] array
         )
     {
-        return array[ MakeIndex( array.length.to!int() ) ];
+        return array[ MakeIndex( array.length ) ];
     }
-    
+
     // ~~
-    
+
     char MakeLowercaseLetter()
     {
         return "abcdefghijklmnopqrstuvwxyz"[ MakeIndex( 26 ) ];
     }
-    
+
     // ~~
-    
+
     char MakeUppercaseLetter()
     {
         return "ABCDEFGHIJKLMNOPQRSTUVWXYZ"[ MakeIndex( 26 ) ];
     }
-    
+
     // ~~
-    
+
     char MakeDigit()
     {
         return "0123456789"[ MakeIndex( 10 ) ];
     }
-    
+
     // ~~
-    
+
     char MakeSeparator()
     {
         return ".,;:!?+-=*/%^&#@"[ MakeIndex( 16 ) ];
@@ -680,7 +629,7 @@ class RANDOM
     // ~~
 
     string MakeDate(
-                   )
+        )
     {
         return
             MakeInteger( 2000, 2015 ).to!string()
@@ -693,7 +642,7 @@ class RANDOM
     // ~~
 
     string MakeTime(
-                   )
+        )
     {
         return
             MakeNatural( 0, 23, 2 ).to!string()
@@ -706,11 +655,11 @@ class RANDOM
     // ~~
 
     string MakeName(
-        int minimum_letter_count,
-        int maximum_letter_count
+        long minimum_letter_count,
+        long maximum_letter_count
         )
     {
-        int
+        long
             letter_count;
         string
             name,
@@ -748,7 +697,7 @@ class RANDOM
     // ~~
 
     string MakeFirstName(
-                        )
+        )
     {
         return PickElement( FirstNameArray );
     }
@@ -756,7 +705,7 @@ class RANDOM
     // ~~
 
     string MakeLastName(
-                       )
+        )
     {
         return PickElement( LastNameArray );
     }
@@ -764,7 +713,7 @@ class RANDOM
     // ~~
 
     string MakeCityName(
-                       )
+        )
     {
         return PickElement( CityNameArray );
     }
@@ -772,7 +721,7 @@ class RANDOM
     // ~~
 
     string MakeRegionName(
-                         )
+        )
     {
         return PickElement( RegionNameArray );
     }
@@ -780,7 +729,7 @@ class RANDOM
     // ~~
 
     string MakeCountryName(
-                          )
+        )
     {
         return PickElement( CountryNameArray );
     }
@@ -788,7 +737,7 @@ class RANDOM
     // ~~
 
     string MakeWord(
-                   )
+        )
     {
         return PickElement( WordArray );
     }
@@ -796,13 +745,13 @@ class RANDOM
     // ~~
 
     string MakeEnglishSentence(
-        int minimum_word_count,
-        int maximum_word_count
+        long minimum_word_count,
+        long maximum_word_count
         )
     {
         bool
             vertex_is_final;
-        int
+        long
             word_count;
         string
             sentence;
@@ -864,11 +813,11 @@ class RANDOM
     // ~~
 
     string MakeLatinSentence(
-        int minimum_word_count,
-        int maximum_word_count
+        long minimum_word_count,
+        long maximum_word_count
         )
     {
-        int
+        long
             word_count;
         string
             sentence;
@@ -893,8 +842,8 @@ class RANDOM
 
     string MakeSentence(
         string language,
-        int minimum_word_count,
-        int maximum_word_count
+        long minimum_word_count,
+        long maximum_word_count
         )
     {
         if ( language == "english" )
@@ -911,15 +860,15 @@ class RANDOM
 
     string MakeText(
         string language,
-        int minimum_sentence_count,
-        int maximum_sentence_count
+        long minimum_sentence_count,
+        long maximum_sentence_count
         )
     {
         char
             punctuation_character;
         float
             punctuation_probability;
-        int
+        long
             sentence_count;
         string
             sentence,
@@ -1007,7 +956,7 @@ class COLUMN
         ItIsIncremented,
         ItIsForeign,
         ItIsList;
-    int
+    long
         Capacity;
     bool
         ItIsRandomReal;
@@ -1024,7 +973,7 @@ class COLUMN
     ulong
         MinimumRandomNatural,
         MaximumRandomNatural;
-    int
+    long
         MinimumRandomCount,
         MaximumRandomCount;
     bool
@@ -1142,7 +1091,7 @@ class COLUMN
                 }
                 else if ( property_name == "capacity" )
                 {
-                    Capacity = value_text_array[ 1 ].to!int();
+                    Capacity = value_text_array[ 1 ].to!long();
                 }
                 else if ( property_name == "aqlname" )
                 {
@@ -1205,25 +1154,25 @@ class COLUMN
                 else if ( property_name == "name" )
                 {
                     ItIsRandomName = true;
-                    MinimumRandomCount = value_text_array[ 1 ].to!int();
-                    MaximumRandomCount = value_text_array[ 2 ].to!int();
+                    MinimumRandomCount = value_text_array[ 1 ].to!long();
+                    MaximumRandomCount = value_text_array[ 2 ].to!long();
                 }
                 else if ( property_name == "english" )
                 {
                     ItIsRandomEnglish = true;
-                    MinimumRandomCount = value_text_array[ 1 ].to!int();
-                    MaximumRandomCount = value_text_array[ 2 ].to!int();
+                    MinimumRandomCount = value_text_array[ 1 ].to!long();
+                    MaximumRandomCount = value_text_array[ 2 ].to!long();
                 }
                 else if ( property_name == "latin" )
                 {
                     ItIsRandomLatin = true;
-                    MinimumRandomCount = value_text_array[ 1 ].to!int();
-                    MaximumRandomCount = value_text_array[ 2 ].to!int();
+                    MinimumRandomCount = value_text_array[ 1 ].to!long();
+                    MaximumRandomCount = value_text_array[ 2 ].to!long();
                 }
                 else if ( property_name == "count" )
                 {
-                    MinimumRandomCount = value_text_array[ 1 ].to!int();
-                    MaximumRandomCount = value_text_array[ 2 ].to!int();
+                    MinimumRandomCount = value_text_array[ 1 ].to!long();
+                    MaximumRandomCount = value_text_array[ 2 ].to!long();
                 }
                 else
                 {
@@ -1237,7 +1186,7 @@ class COLUMN
                     ItIsRandomNatural = true;
                     MinimumRandomNatural = value_text_array[ 1 ].to!ulong();
                     MaximumRandomNatural = value_text_array[ 2 ].to!ulong();
-                    MinimumRandomCount = value_text_array[ 3 ].to!int();
+                    MinimumRandomCount = value_text_array[ 3 ].to!long();
                 }
             }
             else
@@ -1250,7 +1199,7 @@ class COLUMN
     // ~~
 
     void MakeType(
-                 )
+        )
     {
         if ( SqlName == "" )
         {
@@ -1394,11 +1343,11 @@ class COLUMN
 
     VALUE MakeValue(
         TABLE table,
-        int row_index,
-        int row_count
+        long row_index,
+        long row_count
         )
     {
-        int
+        long
             prior_row_index;
         ulong
             random_natural;
@@ -1409,15 +1358,15 @@ class COLUMN
 
         if ( ItIsRandomReal )
         {
-            value.Text = Random.MakeReal64( MinimumRandomReal, MaximumRandomReal ).to!string();
+            value.Text = Random.MakeReal( MinimumRandomReal, MaximumRandomReal ).to!string();
         }
         if ( ItIsRandomInteger )
         {
-            value.Text = Random.MakeInteger64( MinimumRandomInteger, MaximumRandomInteger ).to!string();
+            value.Text = Random.MakeInteger( MinimumRandomInteger, MaximumRandomInteger ).to!string();
         }
         if ( ItIsRandomNatural )
         {
-            value.Text = Random.MakeNatural64( MinimumRandomNatural, MaximumRandomNatural, MinimumRandomCount ).to!string();
+            value.Text = Random.MakeNatural( MinimumRandomNatural, MaximumRandomNatural, MinimumRandomCount ).to!string();
         }
         else if ( ItIsRandomName )
         {
@@ -1510,9 +1459,9 @@ class COLUMN
             {
                 value.Text
                     = Random.MakeName( 4, 8 )
-                          .InsertCharacter( Random.MakeUppercaseLetter() )
-                          .InsertCharacter( Random.MakeDigit() )
-                          .InsertCharacter( Random.MakeSeparator() );
+                            .InsertCharacter( Random.MakeUppercaseLetter() )
+                            .InsertCharacter( Random.MakeDigit() )
+                            .InsertCharacter( Random.MakeSeparator() );
             }
             else if ( Name.endsWith( "Email" ) )
             {
@@ -1671,7 +1620,7 @@ class COLUMN
                 value.Text
                     = Random.MakeInteger( 100, 999 ).to!string()
                       ~ "-"
-                      ~ Random.MakeInteger64( 1000000000, 9999999999 ).to!string();
+                      ~ Random.MakeInteger( 1000000000, 9999999999 ).to!string();
             }
             else if ( Name.endsWith( "Tags" ) )
             {
@@ -1705,7 +1654,7 @@ class COLUMN
                 {
                     do
                     {
-                        random_natural = Random.MakeNatural64();
+                        random_natural = Random.MakeNatural();
 
                         if ( Type == "INT8" )
                         {
@@ -1797,7 +1746,7 @@ class COLUMN
     // ~~
 
     string GetAqlValueText(
-        int row_index
+        long row_index
         )
     {
         if ( AqlType == "string" )
@@ -1813,7 +1762,7 @@ class COLUMN
     // ~~
 
     string GetSqlValueText(
-        int row_index
+        long row_index
         )
     {
         return "\"" ~ ValueArray[ row_index ].Text ~ "\"";
@@ -1822,7 +1771,7 @@ class COLUMN
     // ~~
 
     string GetGoValueText(
-        int row_index
+        long row_index
         )
     {
         if ( GoType == "string" )
@@ -1852,7 +1801,7 @@ class TABLE
         KeyNameArray;
     COLUMN[]
         ColumnArray;
-    int
+    long
         RowCount;
     string
         PriorTitle,
@@ -1890,7 +1839,7 @@ class TABLE
         {
             if ( value_text_array[ 0 ] == "count" )
             {
-                RowCount = value_text_array[ 1 ].to!int();
+                RowCount = value_text_array[ 1 ].to!long();
             }
         }
         else
@@ -1902,7 +1851,7 @@ class TABLE
     // ~~
 
     void MakeTypes(
-                  )
+        )
     {
         writeln( "Filling table : ", Name );
 
@@ -1915,7 +1864,7 @@ class TABLE
     // ~~
 
     void MakeValues(
-                   )
+        )
     {
         COLUMN
             last_stored_column;
@@ -1966,7 +1915,7 @@ class SCHEMA
         Name;
     TABLE[]
         TableArray;
-    int
+    long
         RowCount;
 
     // ~~
@@ -1992,7 +1941,7 @@ class SCHEMA
         {
             if ( value_text_array[ 0 ] == "count" )
             {
-                RowCount = value_text_array[ 1 ].to!int();
+                RowCount = value_text_array[ 1 ].to!long();
             }
         }
         else
@@ -2004,7 +1953,7 @@ class SCHEMA
     // ~~
 
     void MakeTypes(
-                  )
+        )
     {
         string
             foreign_table_name;
@@ -2053,9 +2002,9 @@ class SCHEMA
     // ~~
 
     void MakeValues(
-                   )
+        )
     {
-        int
+        long
             foreign_value_count;
         VALUE
             foreign_value,
@@ -2295,7 +2244,7 @@ class SCHEMA
     {
         string
             sql_schema_file_text;
-        int
+        long
             foreign_key_index;
 
         writeln( "Writing SQL schema file : " ~ sql_schema_file_path );
@@ -2414,7 +2363,7 @@ class SCHEMA
         string sql_data_file_path
         )
     {
-        int
+        long
             column_count;
         string
             sql_data_file_text;
@@ -2423,7 +2372,7 @@ class SCHEMA
 
         foreach ( ref table; TableArray )
         {
-            column_count = table.ColumnArray.length.to!int();
+            column_count = table.ColumnArray.length;
 
             foreach ( row_index; 0 .. table.RowCount )
             {
@@ -2473,7 +2422,7 @@ class SCHEMA
         string aql_data_file_path
         )
     {
-        int
+        long
             column_count;
         string
             aql_data_file_text;
@@ -2484,7 +2433,7 @@ class SCHEMA
 
         foreach ( ref table; TableArray )
         {
-            column_count = table.ColumnArray.length.to!int();
+            column_count = table.ColumnArray.length;
 
             foreach ( row_index; 0 .. table.RowCount )
             {
@@ -2593,7 +2542,7 @@ class SCHEMA
         string go_data_file_path
         )
     {
-        int
+        long
             column_count;
         string
             go_data_file_text;
@@ -2611,7 +2560,7 @@ class SCHEMA
                 go_data_file_text
                     ~= "    Add" ~ GetPascalCaseText( table.Name ) ~ "(\n        " ~ table.TypeName ~ " {\n";
 
-                column_count = table.ColumnArray.length.to!int();
+                column_count = table.ColumnArray.length;
 
                 foreach ( ref column; table.ColumnArray )
                 {
