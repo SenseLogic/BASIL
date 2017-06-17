@@ -2602,7 +2602,7 @@ SCHEMA
 
 void ProcessFile(
     string dbs_schema_file_path,
-    string[] output_format_array
+    ref string[] output_format_array
     )
 {
     string
