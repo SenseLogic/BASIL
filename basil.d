@@ -28,9 +28,9 @@ import std.conv : to;
 import std.file : dirEntries, readText, thisExePath, write, SpanMode;
 import std.random : uniform;
 import std.path : dirName;
+import std.regex : regex, replaceAll, Regex;
 import std.stdio : writeln;
 import std.string : endsWith, format, indexOf, join, lineSplitter, replace, startsWith, split, strip, toLower, toUpper;
-import std.regex : regex, replaceAll, Regex;
 
 // == GLOBAL
 
