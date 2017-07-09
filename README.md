@@ -79,6 +79,8 @@ BLOG | count 10
         Email : STRING | capacity 45
 ```
 
+![](https://github.com/senselogic/BASIL/blob/master/TEST/blog.png)
+
 ## Syntax
 
 ```
