@@ -1341,6 +1341,19 @@ class COLUMN
 
     // ~~
 
+    void MakeForeignType(
+        )
+    {
+        if ( !ItIsList )
+        {
+            SqlType = ForeignColumn.SqlType;
+            AqlType = ForeignColumn.AqlType;
+            GoType = ForeignColumn.GoType;
+        }
+    }
+    
+    // ~~
+
     VALUE MakeValue(
         TABLE table,
         long row_index,
@@ -1990,6 +2003,7 @@ class SCHEMA
                         {
                             column.ForeignTable = foreign_table;
                             column.ForeignColumn = foreign_table.ColumnArray[ 0 ];
+                            column.MakeForeignType();
 
                             break;
                         }
