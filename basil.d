@@ -861,7 +861,9 @@ class RANDOM
     string MakeText(
         string language,
         long minimum_sentence_count,
-        long maximum_sentence_count
+        long maximum_sentence_count,
+        long minimum_word_count = 8,
+        long maximum_word_count = 16
         )
     {
         char
@@ -882,7 +884,7 @@ class RANDOM
 
         foreach ( sentence_index; 0 .. sentence_count )
         {
-            sentence = MakeSentence( language, 8, 16 );
+            sentence = MakeSentence( language, minimum_word_count, maximum_word_count );
 
             if ( punctuation_character == '.' )
             {
@@ -1157,18 +1159,6 @@ class COLUMN
                     MinimumRandomCount = value_text_array[ 1 ].to!long();
                     MaximumRandomCount = value_text_array[ 2 ].to!long();
                 }
-                else if ( property_name == "english" )
-                {
-                    ItIsRandomEnglish = true;
-                    MinimumRandomCount = value_text_array[ 1 ].to!long();
-                    MaximumRandomCount = value_text_array[ 2 ].to!long();
-                }
-                else if ( property_name == "latin" )
-                {
-                    ItIsRandomLatin = true;
-                    MinimumRandomCount = value_text_array[ 1 ].to!long();
-                    MaximumRandomCount = value_text_array[ 2 ].to!long();
-                }
                 else if ( property_name == "count" )
                 {
                     MinimumRandomCount = value_text_array[ 1 ].to!long();
@@ -1187,6 +1177,25 @@ class COLUMN
                     MinimumRandomNatural = value_text_array[ 1 ].to!ulong();
                     MaximumRandomNatural = value_text_array[ 2 ].to!ulong();
                     MinimumRandomCount = value_text_array[ 3 ].to!long();
+                }
+            }
+            else if ( value_text_array.length == 5 )
+            {
+                if ( property_name == "english" )
+                {
+                    ItIsRandomEnglish = true;
+                    MinimumRandomCount = value_text_array[ 1 ].to!long();
+                    MaximumRandomCount = value_text_array[ 2 ].to!long();
+                    MinimumRandomInteger = value_text_array[ 3 ].to!long();
+                    MaximumRandomInteger = value_text_array[ 4 ].to!long();
+                }
+                else if ( property_name == "latin" )
+                {
+                    ItIsRandomLatin = true;
+                    MinimumRandomCount = value_text_array[ 1 ].to!long();
+                    MaximumRandomCount = value_text_array[ 2 ].to!long();
+                    MinimumRandomInteger = value_text_array[ 3 ].to!long();
+                    MaximumRandomInteger = value_text_array[ 4 ].to!long();
                 }
             }
             else
@@ -1402,11 +1411,11 @@ class COLUMN
         }
         else if ( ItIsRandomEnglish )
         {
-            value.Text = Random.MakeSentence( "english", MinimumRandomCount, MaximumRandomCount ).GetCapitalizedText() ~ ".";
+            value.Text = Random.MakeText( "english", MinimumRandomCount, MaximumRandomCount, MinimumRandomInteger, MaximumRandomInteger );
         }
         else if ( ItIsRandomLatin )
         {
-            value.Text = Random.MakeSentence( "latin", MinimumRandomCount, MaximumRandomCount ).GetCapitalizedText() ~ ".";
+            value.Text = Random.MakeText( "latin", MinimumRandomCount, MaximumRandomCount, MinimumRandomInteger, MaximumRandomInteger );
         }
         else if ( Type == "STRING" )
         {
@@ -1465,8 +1474,7 @@ class COLUMN
             {
                 value.Text
                     = ( ( table.PriorFirstName != "" ) ? table.PriorFirstName : Random.MakeFirstName() ).toLower()
-                      ~ ( ( table.PriorLastName != "" ) ? table.PriorLastName : Random.MakeLastName() ).toLower()
-                      ~ Random.MakeInteger( 100, 999 ).to!string();
+                      ~ ( ( table.PriorLastName != "" ) ? table.PriorLastName : Random.MakeLastName() ).toLower();
             }
             else if ( Name.endsWith( "Password" ) )
             {
@@ -2622,7 +2630,7 @@ void ProcessFile(
     string
         base_file_path;
 
-    base_file_path = basil_schema_file_path[ 0 .. $ - 4 ];
+    base_file_path = basil_schema_file_path[ 0 .. $ - 6 ];
 
     Random = new RANDOM;
 

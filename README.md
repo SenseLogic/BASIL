@@ -122,8 +122,8 @@ real {minimum value} {maximum value}
 integer {minimum value} {maximum value}
 natural {minimum value} {maximum value} [{digit count}]
 name {minimum letter count} {maximum letter count}
-english {minimum sentence count} {maximum sentence count}
-latin  {minimum sentence count} {maximum sentence count}
+english {minimum sentence count} {maximum sentence count} {minimum word count} {maximum word count}
+latin  {minimum sentence count} {maximum sentence count} {minimum word count} {maximum word count}
 ```
 
 ### Field name endings
