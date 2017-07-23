@@ -2074,15 +2074,15 @@ class SCHEMA
 
     // ~~
 
-    void ReadDbsSchemaFile(
-        string dbs_schema_file_path
+    void ReadBasilSchemaFile(
+        string basil_schema_file_path
         )
     {
         string
             column_name,
             column_text,
             column_type,
-            dbs_schema_file_text,
+            basil_schema_file_text,
             stripped_line,
             table_name;
         string[]
@@ -2094,13 +2094,13 @@ class SCHEMA
         TABLE
             table;
 
-        writeln( "Reading schema file : " ~ dbs_schema_file_path );
+        writeln( "Reading schema file : " ~ basil_schema_file_path );
 
-        dbs_schema_file_text = dbs_schema_file_path.readText();
+        basil_schema_file_text = basil_schema_file_path.readText();
         TableArray = [];
         table = null;
 
-        foreach ( ref line; dbs_schema_file_text.lineSplitter() )
+        foreach ( ref line; basil_schema_file_text.lineSplitter() )
         {
             stripped_line = line.strip();
 
@@ -2615,19 +2615,19 @@ SCHEMA
 // .. FUNCTIONS
 
 void ProcessFile(
-    string dbs_schema_file_path,
+    string basil_schema_file_path,
     ref string[] output_format_array
     )
 {
     string
         base_file_path;
 
-    base_file_path = dbs_schema_file_path[ 0 .. $ - 4 ];
+    base_file_path = basil_schema_file_path[ 0 .. $ - 4 ];
 
     Random = new RANDOM;
 
     Schema = new SCHEMA;
-    Schema.ReadDbsSchemaFile( dbs_schema_file_path );
+    Schema.ReadBasilSchemaFile( basil_schema_file_path );
 
     foreach ( ref output_format; output_format_array )
     {
@@ -2695,22 +2695,22 @@ void main(
     }
 
     if ( argument_array.length >= 1
-         && argument_array[ 0 ].endsWith( ".dbs" ) )
+         && argument_array[ 0 ].endsWith( ".basil" ) )
     {
         ProcessFile( argument_array[ 0 ], output_format_array );
     }
     else
     {
         writeln( "Usage :" );
-        writeln( "    basil [options] file.dbs" );
+        writeln( "    basil [options] file.basil" );
         writeln( "Options :" );
         writeln( "    --uml : generate the UML schema file" );
         writeln( "    --sql : generate the SQL schema and data files" );
         writeln( "    --aql : generate the AQL data file" );
         writeln( "    --go : generate the GO schema and data files" );
         writeln( "Examples :" );
-        writeln( "    basil --uml file.dbs" );
-        writeln( "    basil --sql --go file.dbs" );
+        writeln( "    basil --uml file.basil" );
+        writeln( "    basil --sql --go file.basil" );
 
         Abort( "Invalid arguments : " ~ argument_array.to!string() );
     }

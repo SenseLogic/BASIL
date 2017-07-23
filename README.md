@@ -196,7 +196,7 @@ Install [PlantUML](http://plantuml.com/download) (or use [www.planttext.com](htt
 ## Command line
 
 ``` 
-basil [options] database.dbs
+basil [options] database.basil
 ``` 
 
 ### Options
@@ -211,16 +211,16 @@ basil [options] database.dbs
 ### Examples
 
 ```bash
-basil --uml blog.dbs
+basil --uml blog.basil
 ```
 
-Generates "blog.uml" from "blog.dbs".
+Generates "blog.uml" from "blog.basil".
 
 ```bash
-basil --uml --sql --go blog.dbs 
+basil --uml --sql --go blog.basil 
 ```
 
-Generates "blog.uml", "blog.sql", "blog_data.sql", "blog.go" and "blog_data.go" from "blog.dbs".
+Generates "blog.uml", "blog.sql", "blog_data.sql", "blog.go" and "blog_data.go" from "blog.basil".
 
 ## Version
 
