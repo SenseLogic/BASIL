@@ -1360,7 +1360,7 @@ class COLUMN
             GoType = ForeignColumn.GoType;
         }
     }
-    
+
     // ~~
 
     VALUE MakeValue(
@@ -1550,59 +1550,60 @@ class COLUMN
             {
                 value.Text
                     = Random.MakeLastName()
+                      ~ " "
                       ~ [
-                          " Company",
-                          " Limited",
-                          " Incorporated",
-                          " Corporation",
-                          " Union",
-                          " Trust",
-                          " Cooperative",
-                          " Institute",
-                          " Foundation",
-                          " Association",
-                          " Bank",
-                          " Fund",
-                          " Insurance",
-                          " Security",
-                          " Services",
-                          " Club",
-                          " Society",
-                          " College",
-                          " University",
-                          " Church",
-                          " Media",
-                          " News",
-                          " Magazine",
-                          " Network",
-                          " Channel",
-                          " Group",
-                          " Agency",
-                          " Consulting",
-                          " Team",
-                          " Center",
-                          " Design",
-                          " Studio",
-                          " Central",
-                          " Direct",
-                          " Tech",
-                          " Store",
-                          " Market",
-                          " Online",
-                          " Shop",
-                          " Express",
-                          " Point",
-                          " Labs",
-                          " Software",
-                          " Depot",
-                          " Logic",
-                          " Factory",
-                          " Fx",
-                          " Solutions",
-                          " Dynamics",
-                          " Associates",
-                          " Fashion",
-                          " Vision"
+                          "Company",
+                          "Limited",
+                          "Incorporated",
+                          "Corporation",
+                          "Union",
+                          "Trust",
+                          "Cooperative",
+                          "Institute",
+                          "Foundation",
+                          "Association",
+                          "Bank",
+                          "Fund",
+                          "Insurance",
+                          "Security",
+                          "Services",
+                          "Club",
+                          "Society",
+                          "College",
+                          "University",
+                          "Church",
+                          "Media",
+                          "News",
+                          "Magazine",
+                          "Network",
+                          "Channel",
+                          "Group",
+                          "Agency",
+                          "Consulting",
+                          "Team",
+                          "Center",
+                          "Design",
+                          "Studio",
+                          "Central",
+                          "Direct",
+                          "Tech",
+                          "Store",
+                          "Market",
+                          "Online",
+                          "Shop",
+                          "Express",
+                          "Point",
+                          "Labs",
+                          "Software",
+                          "Depot",
+                          "Logic",
+                          "Factory",
+                          "Fx",
+                          "Solutions",
+                          "Dynamics",
+                          "Associates",
+                          "Fashion",
+                          "Vision"
                         ][ Random.MakeIndex( 52 ) ];
             }
             else if ( Name.endsWith( "Image" ) )
@@ -2043,7 +2044,7 @@ class SCHEMA
             {
                 if ( column.ItIsForeign )
                 {
-                    foreach ( row_index; 0 .. RowCount )
+                    foreach ( row_index; 0 .. table.RowCount )
                     {
                         if ( column.ItIsList )
                         {
