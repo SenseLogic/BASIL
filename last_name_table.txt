@@ -401,7 +401,6 @@ Atkinson
 Atl
 Atlantic
 Atoui
-Atprs
 Attanasio
 Attarchi
 Attard
@@ -721,7 +720,6 @@ Bazerghi
 Bazerman
 Bazik
 Baziuk
-Bcs
 Beagley
 Beal
 Beall
@@ -1094,11 +1092,6 @@ Bly
 Blyskal
 Blyszczak
 Blythe
-Bmethods
-Bnrecad
-Bnrinfo
-Bnrlsi
-Bnrsport
 Boal
 Boarder
 Boase
@@ -1670,7 +1663,6 @@ Butts
 Butvich
 Buxton
 Buzzell
-Bvworks
 Bycenko
 Byczko
 Bydeley
@@ -2549,8 +2541,6 @@ Cruzado
 Csaszar
 Csenar
 Csop
-Csr
-Csreport
 Ctas
 Cuany
 Cucchiaro
@@ -2602,7 +2592,6 @@ Cusato
 Cushing
 Cusick
 Cusson
-Custsupport
 Cusumano
 Cuthbert
 Cuthill
@@ -2731,8 +2720,6 @@ Dasilva
 Dasrath
 Dassani
 Dassie
-DataSupport
-Datacenter
 Datema
 Datta
 Dattalo
@@ -2762,10 +2749,6 @@ Daya
 Dayal
 Dayberry
 Daymond
-Db
-Dba
-Dbase
-Dbs
 De
 DeAnda
 DeBaets
@@ -3110,7 +3093,6 @@ Ditko
 Dittburner
 Dix
 Dixon
-Dmsrtime
 Dmuchalsky
 Doak
 Doan
@@ -3238,8 +3220,6 @@ Dowser
 Doyle
 Doyon
 Dpierre
-Dpnq&a
-Dpu
 Drabek
 Dracula
 Draffin
@@ -5578,7 +5558,6 @@ Inamullah
 Ince
 Incze
 Indahl
-Infocenter
 Ing
 Inge
 Ingell
@@ -5761,7 +5740,6 @@ Jaworski
 Jaworsky
 Jayamanne
 Jazanoski
-Jcst
 JeanLouis
 Jeanes
 Jeavons
@@ -6714,7 +6692,6 @@ Lanoszka
 Lanoue
 Lanouette
 Lans
-Lansupport
 Lanteigne
 Lanthier
 Lantos
@@ -7224,7 +7201,6 @@ Loyst
 Loza
 Lozier
 Lozinski
-Lrcrtp
 Lu
 Luan
 Lucas
@@ -7375,7 +7351,6 @@ Macoosh
 Macpherson
 Macpost
 Macquistan
-Macsupport
 Madan
 Madani
 Maddix
@@ -8156,7 +8131,6 @@ Meyer
 Meyerink
 Mezzano
 Mezzoiuso
-Mgmt
 Mia
 Miao
 Miasek
@@ -8453,11 +8427,6 @@ Mozek
 Mozeleski
 Mraz
 Mrozinski
-Msg
-Mtcbase
-Mtl
-Mtlipadm
-Mtnview
 Mucci
 Muchow
 Mucklow
@@ -8689,16 +8658,11 @@ Nessman
 Nestor
 NetTeam
 Netas
-Netdbs
-Netdev
 Nethersole
 Netlink
 Neto
 Nettles
 Netto
-NetworkOps
-Networkroom
-Networks
 Netzke
 Neubauer
 Neufeld
@@ -9298,10 +9262,6 @@ Payne
 Paynter
 Payton
 Pazos
-Pbx
-PcSupport
-Pde
-Pdesupport
 Peacemaker
 Peacocke
 Peake
@@ -9546,7 +9506,6 @@ Piyasena
 Pizzanelli
 Pizzarello
 Pizzimenti
-Pkg
 Placido
 Plaisance
 Plaisant
@@ -9570,14 +9529,11 @@ Playatuna
 Plenderleith
 Plett
 Pleydon
-Plmcoop
 Ploeg
 Ploof
 Plotter
 Plouffe
 Plourde
-Plsntp
-Plssup
 Plucinska
 Plummer
 Plyler
@@ -9717,7 +9673,6 @@ Prikkel
 Primeau
 Pringle
 Prints
-Printsupport
 Pritchard
 Privett
 Privitera
@@ -9984,7 +9939,6 @@ Raymond
 Raynard
 Rayner
 Raynor
-Rch
 Rea
 Reade
 Readling
@@ -10077,10 +10031,6 @@ Reno
 Renton
 Renwick
 Repeta
-Reporting
-Reports
-Requests
-Research
 Resnick
 Ress
 Ressner
@@ -10108,8 +10058,6 @@ Rezansoff
 Reznechek
 Reznick
 Rezzik
-Rfa
-Rff
 Rhattigan
 Rheault
 Rheaume
@@ -10353,10 +10301,6 @@ Rozen
 Rozier
 Rozon
 Rozumna
-Rtp
-Rtpbuild
-Rtprel
-Rtprelb
 Ruane
 Ruaud
 Ruban
@@ -10796,15 +10740,12 @@ Scotti
 Scourneau
 Scovell
 Scovill
-Scp
 Scrantom
 Scrbacic
 Screener
 Scribner
 Scrivens
 Scroger
-Scss
-Scssdev
 Scully
 Scurlock
 Seabrook
@@ -11835,8 +11776,6 @@ Tarrant
 Tarsky
 Tarver
 Taschereau
-TaskForce
-Taspatch
 Tassi
 Tasso
 Tassy
@@ -12161,7 +12100,6 @@ Tremblay
 Tremewan
 Trent
 Trentadue
-TresSupport
 Trese
 Tresrch
 Trevethan
@@ -12230,7 +12168,6 @@ Tsui
 Tsuji
 Tsuk
 Tsunoda
-Ttisupport
 Tu
 Tuan
 Tubb
@@ -12273,7 +12210,6 @@ Twidale
 Twiss
 Twitty
 Twolan
-Twx
 Twyman
 Twynham
 Twyver
@@ -12320,14 +12256,10 @@ Umphres
 Underwood
 Unger
 Unitt
-Unix
-Unixsupport
 Unkefer
 Unkles
 Unsoy
-Unxlb
 Upchurch
-Updt
 Uppal
 Upshaw
 Upton
@@ -12339,8 +12271,6 @@ Urnes
 Urow
 Urquhart
 Urwin
-User
-Usrouter
 Usyk
 Utas
 Utsumi
@@ -12594,7 +12524,6 @@ Vivian
 Vivier
 Vlad
 Vlahos
-Vmsupport
 Vo
 Voadmin
 Vodicka
@@ -12631,7 +12560,6 @@ Vosup
 Vowels
 Vrabel
 Vradmin
-Vrbetic
 Vreugdenhil
 Vu
 Vucinich
@@ -13092,8 +13020,6 @@ Wrigglesworth
 Wrigley
 Wrobel
 Wroblewski
-Wsadmin
-Wsbackup
 Wu
 Wueppelmann
 Wun
@@ -13118,10 +13044,6 @@ Xavier
 Xayaraj
 Xenos
 Xie
-Xmssupport
-Xpm
-Xpmbld
-Xpmbuilder
 Xu
 Yabe
 Yach

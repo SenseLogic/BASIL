@@ -240,7 +240,6 @@ Allissa
 Allister
 Allix
 Allsun
-Allx
 Ally
 Allyce
 Allyn
@@ -628,8 +627,6 @@ Athar
 Athena
 Athene
 Atique
-Atl
-AtlSales
 Atlanta
 Atlante
 Atmane
@@ -771,8 +768,6 @@ Bassam
 Bathsheba
 Batsheva
 Bawn
-Bcs
-Bcspatch
 Bea
 Beana
 Beata
@@ -977,9 +972,6 @@ Blondelle
 Blondie
 Blondy
 Blythe
-Bnr
-Bnrecad
-Bnrtor
 Bo
 Bob
 Bobb
@@ -1007,7 +999,6 @@ Bonny
 Bora
 Boris
 Bosiljka
-Bqb
 Brad
 Bradley
 Brahmananda
@@ -1123,7 +1114,6 @@ Burton
 Business
 Buster
 Butch
-Bvworks
 Byron
 Cacilia
 Cacilie
@@ -2114,7 +2104,6 @@ Djenana
 Djordje
 Dnadoc
 Dniren
-Dnsproj
 Do
 Doc
 Dode
@@ -2218,9 +2207,6 @@ Douglas
 Douglass
 Dowell
 Doyle
-Dpn
-Dpnis
-Dpnlab
 Drago
 Dre
 Dreddy
@@ -2265,8 +2251,6 @@ Dusan
 Dusty
 Dutch
 Duy
-Dvm
-Dvs
 Dwain
 Dwaine
 Dwayne
@@ -2324,7 +2308,6 @@ Edlene
 Edmond
 Edmund
 Edmundo
-Edmx
 Edna
 Edouard
 Edric
@@ -2504,7 +2487,6 @@ Emmye
 Emogene
 Emory
 Emp
-Empdb
 Emr
 Emran
 Emyle
@@ -2822,7 +2804,6 @@ Flossi
 Flossie
 Flossy
 Floyd
-Flss
 Flying
 Foad
 Focus
@@ -2896,9 +2877,6 @@ Fulvia
 Fung
 Furrukh
 Fuzal
-Fwp
-Fwpas
-Fwpreg
 Gaal
 Gabbey
 Gabbi
@@ -3257,7 +3235,6 @@ Gwynith
 Gwynne
 Gypsy
 Gyula
-Gzl
 Ha
 Habeeb
 Habib
@@ -3513,15 +3490,9 @@ Howden
 Howie
 Hoy
 Hpone
-Hq
-Hqs
-Hr
-Hrdata
-Hrinfo
 Hsieh
 Hsinshi
 HsingJu
-Htd
 Huan
 Huanyu
 Hubert
@@ -5022,10 +4993,6 @@ Lovina
 Lowell
 Lowietje
 Lowry
-Lpo
-Lrc
-Lsi
-Lsiunix
 Lu
 Luan
 Luann
@@ -5798,7 +5765,6 @@ Mitzi
 Miwa
 Miwako
 Miyuki
-Mkt
 Mo
 Modesta
 Modestia
@@ -6393,9 +6359,6 @@ Pauly
 Pavia
 Pavla
 Pawel
-Payroll
-Pcta
-Pde
 Peach
 Pearl
 Pearla
@@ -6695,9 +6658,6 @@ Raynald
 Raynell
 Rayshell
 Raz
-Rch
-Rchisn
-Rchlab
 Rea
 Reagan
 Real
@@ -7658,10 +7618,8 @@ Suzie
 Suzy
 Svend
 SvennErik
-Svr
 Swact
 Swandi
-Swd
 SweeJoo
 Sybil
 Sybila
@@ -7775,14 +7733,7 @@ Tawauna
 Tawnya
 Tawsha
 Tayeb
-Tc
-Tchangid
-Tdr
 TeWei
-Team
-Tec
-Tech
-Technical
 Ted
 Tedda
 Teddi
@@ -8046,7 +7997,6 @@ Twana
 Twiggy
 Twila
 Twyla
-Txp
 Ty
 Tybi
 Tybie
@@ -8079,9 +8029,6 @@ Ursula
 Ursulina
 Ursuline
 Usa
-Usman
-Usrouter
-Uswrsd
 Uta
 Utah
 Utilla
@@ -8260,10 +8207,6 @@ Vivyanne
 Vlad
 Vladimir
 Vlado
-Vm
-Vmbackup
-Vmchange
-Vmcord
 Vo
 Vonni
 Vonnie

@@ -31,8 +31,8 @@ type USER struct {
 
 type ARTICLE struct {
     Id uint64 `db:"Id"`;
-    SectionId string `db:"SectionId"`;
-    UserId string `db:"UserId"`;
+    SectionId uint64 `db:"SectionId"`;
+    UserId uint64 `db:"UserId"`;
     Title string `db:"Title"`;
     Text string `db:"Text"`;
     Image string `db:"Image"`;
@@ -46,8 +46,8 @@ type ARTICLE struct {
 
 type COMMENT struct {
     Id uint64 `db:"Id"`;
-    ArticleId string `db:"ArticleId"`;
-    UserId string `db:"UserId"`;
+    ArticleId uint64 `db:"ArticleId"`;
+    UserId uint64 `db:"UserId"`;
     Text string `db:"Text"`;
     Date string `db:"Date"`;
     Article string;

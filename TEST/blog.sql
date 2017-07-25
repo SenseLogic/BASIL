@@ -44,12 +44,12 @@ drop table if exists `BLOG`.`ARTICLE`;
 
 create table if not exists `BLOG`.`ARTICLE`(
   `Id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
-  `SectionId` TEXT NULL,
-  `UserId` TEXT NULL,
+  `SectionId` BIGINT UNSIGNED NULL,
+  `UserId` BIGINT UNSIGNED NULL,
   `Title` TEXT NULL,
   `Text` TEXT NULL,
   `Image` VARCHAR( 45 ) NULL,
-  `Date` DATETIME NULL,
+  `Date` DATE NULL,
   primary key( `Id` ),
   index `fk_article_section_1_idx`( `SectionId` ASC ),
   index `fk_article_user_2_idx`( `UserId` ASC ),
@@ -69,10 +69,10 @@ drop table if exists `BLOG`.`COMMENT`;
 
 create table if not exists `BLOG`.`COMMENT`(
   `Id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
-  `ArticleId` TEXT NULL,
-  `UserId` TEXT NULL,
+  `ArticleId` BIGINT UNSIGNED NULL,
+  `UserId` BIGINT UNSIGNED NULL,
   `Text` TEXT NULL,
-  `Date` DATE NULL,
+  `Date` DATETIME NULL,
   primary key( `Id` ),
   index `fk_comment_article_1_idx`( `ArticleId` ASC ),
   index `fk_comment_user_2_idx`( `UserId` ASC ),
