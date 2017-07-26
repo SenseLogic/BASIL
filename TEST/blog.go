@@ -37,8 +37,8 @@ type ARTICLE struct {
     Text string `db:"Text"`;
     Image string `db:"Image"`;
     Date string `db:"Date"`;
-    Section string;
-    User string;
+    Section * SECTION;
+    User * USER;
     ImageIndex uint64;
 }
 
@@ -50,8 +50,8 @@ type COMMENT struct {
     UserId uint64 `db:"UserId"`;
     Text string `db:"Text"`;
     Date string `db:"Date"`;
-    Article string;
-    User string;
+    Article * ARTICLE;
+    User * USER;
 }
 
 // ~~
