@@ -1336,7 +1336,18 @@ class COLUMN
         {
             if ( !ItIsStored )
             {
-                GoType = Type;
+                if ( Type.endsWith( "*" ) )
+                {
+                    GoType = "* " ~ Type[ 0 .. $ - 1 ].strip();
+                }
+                else if ( Type.endsWith( "[]" ) )
+                {
+                    GoType = "[] " ~ Type[ 0 .. $ - 2 ].strip();
+                }
+                else
+                {
+                    GoType = Type;
+                }
             }
         }
 
