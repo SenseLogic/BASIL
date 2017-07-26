@@ -1332,6 +1332,13 @@ class COLUMN
             AqlType = "string";
             GoType = "string";
         }
+        else
+        {
+            if ( !ItIsStored )
+            {
+                GoType = Type;
+            }
+        }
 
         if ( ItIsKey || ItIsRequired )
         {
