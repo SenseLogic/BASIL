@@ -181,6 +181,12 @@ DATETIME
 {table} LIST : list of table object references.
 ```
 
+### Internal fields
+
+Fields with the "!stored" property are included in the generated Go types without being stored on the database. 
+
+Pointer fields should end with "*", and arrays with "[]".
+
 ## Installation
 
 Install the [DMD 2 compiler](https://dlang.org/download.html).
