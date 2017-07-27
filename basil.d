@@ -1207,6 +1207,78 @@ class COLUMN
 
     // ~~
 
+    string GetGoType(
+        string type
+        )
+    {
+        type = type.strip();
+
+        if ( type == "BOOL" )
+        {
+            return "bool";
+        }
+        else if ( type == "INT8" )
+        {
+            return "int8";
+        }
+        else if ( type == "UINT8" )
+        {
+            return "uint8";
+        }
+        else if ( type == "INT16" )
+        {
+            return "int16";
+        }
+        else if ( type == "UINT16" )
+        {
+            return "uint16";
+        }
+        else if ( type == "INT32" )
+        {
+            return "int32";
+        }
+        else if ( type == "UINT32" )
+        {
+            return "uint32";
+        }
+        else if ( type == "INT64" )
+        {
+            return "int64";
+        }
+        else if ( type == "UINT64" )
+        {
+            return "uint64";
+        }
+        else if ( type == "FLOAT32" )
+        {
+            return "float32";
+        }
+        else if ( type == "FLOAT64" )
+        {
+            return "float64";
+        }
+        else if ( type == "STRING"
+                  || type == "DATE"
+                  || type == "DATETIME" )
+        {
+            return "string";
+        }
+        else if ( type.endsWith( '*' ) )
+        {
+            return "* " ~ GetGoType( type[ 0 .. $ - 1 ] );
+        }
+        else if ( type.endsWith( "[]" ) )
+        {
+            return "[] " ~ GetGoType( type[ 0 .. $ - 2 ] );
+        }
+        else
+        {
+            return type;
+        }
+    }
+
+    // ~~
+
     void MakeType(
         )
     {
@@ -1336,18 +1408,7 @@ class COLUMN
         {
             if ( !ItIsStored )
             {
-                if ( Type.endsWith( "*" ) )
-                {
-                    GoType = "* " ~ Type[ 0 .. $ - 1 ].strip();
-                }
-                else if ( Type.endsWith( "[]" ) )
-                {
-                    GoType = "[] " ~ Type[ 0 .. $ - 2 ].strip();
-                }
-                else
-                {
-                    GoType = Type;
-                }
+                GoType = GetGoType( Type );
             }
         }
 
