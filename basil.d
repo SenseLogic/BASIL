@@ -199,7 +199,7 @@ class LINK
     long
         VertexIndex;
     bool
-        ItIsFinal;
+        IsFinal;
 
     // ~~
 
@@ -211,7 +211,7 @@ class LINK
     {
         Word = word;
         VertexIndex = vertex_index;
-        ItIsFinal = it_is_final;
+        IsFinal = it_is_final;
     }
 }
 
@@ -222,7 +222,7 @@ class VERTEX
     string
         Word;
     bool
-        ItIsInitial;
+        IsInitial;
     LINK[]
         LinkArray;
 
@@ -233,7 +233,7 @@ class VERTEX
         )
     {
         Word = word;
-        ItIsInitial = false;
+        IsInitial = false;
         LinkArray = [];
     }
 }
@@ -404,7 +404,7 @@ class RANDOM
             {
                 if ( it_is_final )
                 {
-                    link.ItIsFinal = true;
+                    link.IsFinal = true;
                 }
 
                 return;
@@ -450,7 +450,7 @@ class RANDOM
 
                 if ( word_index == 0 )
                 {
-                    vertex.ItIsInitial = true;
+                    vertex.IsInitial = true;
                 }
 
                 if ( prior_vertex !is null )
@@ -771,7 +771,7 @@ class RANDOM
             {
                 vertex = PickElement( VertexArray );
             }
-            while ( !vertex.ItIsInitial );
+            while ( !vertex.IsInitial );
 
             word_array = [];
             word_array ~= vertex.Word;
@@ -797,7 +797,7 @@ class RANDOM
                 prior_vertex = vertex;
 
                 word_array ~= vertex.Word;
-                vertex_is_final = link.ItIsFinal;
+                vertex_is_final = link.IsFinal;
             }
             while ( word_array.length < word_count
                     || !vertex_is_final );
@@ -951,27 +951,27 @@ class COLUMN
         Name,
         Type;
     bool
-        ItIsStored,
-        ItIsLastStored,
-        ItIsKey,
-        ItIsRequired,
-        ItIsIncremented,
-        ItIsForeign,
-        ItIsList;
+        IsStored,
+        IsLastStored,
+        IsKey,
+        IsRequired,
+        IsIncremented,
+        IsForeign,
+        IsList;
     long
         Capacity;
     bool
-        ItIsRandomReal;
+        IsRandomReal;
     double
         MinimumRandomReal,
         MaximumRandomReal;
     bool
-        ItIsRandomInteger;
+        IsRandomInteger;
     long
         MinimumRandomInteger,
         MaximumRandomInteger;
     bool
-        ItIsRandomNatural;
+        IsRandomNatural;
     ulong
         MinimumRandomNatural,
         MaximumRandomNatural;
@@ -979,15 +979,15 @@ class COLUMN
         MinimumRandomCount,
         MaximumRandomCount;
     bool
-        ItIsRandomName,
-        ItIsRandomFirstName,
-        ItIsRandomLastName,
-        ItIsRandomFullName,
-        ItIsRandomEnglish,
-        ItIsRandomLatin;
+        IsRandomName,
+        IsRandomFirstName,
+        IsRandomLastName,
+        IsRandomFullName,
+        IsRandomEnglish,
+        IsRandomLatin;
     bool
-        ItIsLowercase,
-        ItIsUppercase;
+        IsLowercase,
+        IsUppercase;
     VALUE[]
         ValueArray;
     TABLE
@@ -1014,33 +1014,33 @@ class COLUMN
     {
         Name = name;
         Type = type;
-        ItIsStored = true;
-        ItIsLastStored = false;
-        ItIsKey = false;
-        ItIsRequired = false;
-        ItIsIncremented = false;
-        ItIsForeign = false;
-        ItIsList = false;
+        IsStored = true;
+        IsLastStored = false;
+        IsKey = false;
+        IsRequired = false;
+        IsIncremented = false;
+        IsForeign = false;
+        IsList = false;
         Capacity = 0;
-        ItIsRandomReal = false;
+        IsRandomReal = false;
         MinimumRandomReal = 0.0;
         MaximumRandomReal = 0.0;
-        ItIsRandomInteger = false;
+        IsRandomInteger = false;
         MinimumRandomInteger = 0;
         MaximumRandomInteger = 0;
-        ItIsRandomNatural = false;
+        IsRandomNatural = false;
         MinimumRandomNatural = 0;
         MaximumRandomNatural = 0;
         MinimumRandomCount = 5;
         MaximumRandomCount = 10;
-        ItIsRandomName = false;
-        ItIsRandomFirstName = false;
-        ItIsRandomLastName = false;
-        ItIsRandomFullName = false;
-        ItIsRandomEnglish = false;
-        ItIsRandomLatin = false;
-        ItIsLowercase = false;
-        ItIsUppercase = false;
+        IsRandomName = false;
+        IsRandomFirstName = false;
+        IsRandomLastName = false;
+        IsRandomFullName = false;
+        IsRandomEnglish = false;
+        IsRandomLatin = false;
+        IsLowercase = false;
+        IsUppercase = false;
     }
 
     // ~~
@@ -1077,19 +1077,19 @@ class COLUMN
             {
                 if ( property_name == "stored" )
                 {
-                    ItIsStored = ( value_text_array[ 1 ] != "0" );
+                    IsStored = ( value_text_array[ 1 ] != "0" );
                 }
                 else if ( property_name == "key" )
                 {
-                    ItIsKey = ( value_text_array[ 1 ] != "0" );
+                    IsKey = ( value_text_array[ 1 ] != "0" );
                 }
                 else if ( property_name == "required" )
                 {
-                    ItIsRequired = ( value_text_array[ 1 ] != "0" );
+                    IsRequired = ( value_text_array[ 1 ] != "0" );
                 }
                 else if ( property_name == "incremented" )
                 {
-                    ItIsIncremented = ( value_text_array[ 1 ] != "0" );
+                    IsIncremented = ( value_text_array[ 1 ] != "0" );
                 }
                 else if ( property_name == "capacity" )
                 {
@@ -1109,23 +1109,23 @@ class COLUMN
                 }
                 else if ( property_name == "firstname" )
                 {
-                    ItIsRandomFirstName = ( value_text_array[ 1 ] != "0" );
+                    IsRandomFirstName = ( value_text_array[ 1 ] != "0" );
                 }
                 else if ( property_name == "lastname" )
                 {
-                    ItIsRandomLastName = ( value_text_array[ 1 ] != "0" );
+                    IsRandomLastName = ( value_text_array[ 1 ] != "0" );
                 }
                 else if ( property_name == "fullname" )
                 {
-                    ItIsRandomFullName = ( value_text_array[ 1 ] != "0" );
+                    IsRandomFullName = ( value_text_array[ 1 ] != "0" );
                 }
                 else if ( property_name == "lowercase" )
                 {
-                    ItIsLowercase = ( value_text_array[ 1 ] != "0" );
+                    IsLowercase = ( value_text_array[ 1 ] != "0" );
                 }
                 else if ( property_name == "uppercase" )
                 {
-                    ItIsUppercase = ( value_text_array[ 1 ] != "0" );
+                    IsUppercase = ( value_text_array[ 1 ] != "0" );
                 }
                 else
                 {
@@ -1136,26 +1136,26 @@ class COLUMN
             {
                 if ( property_name == "real" )
                 {
-                    ItIsRandomReal = true;
+                    IsRandomReal = true;
                     MinimumRandomReal = value_text_array[ 1 ].to!double();
                     MaximumRandomReal = value_text_array[ 2 ].to!double();
                 }
                 else if ( property_name == "integer" )
                 {
-                    ItIsRandomInteger = true;
+                    IsRandomInteger = true;
                     MinimumRandomInteger = value_text_array[ 1 ].to!long();
                     MaximumRandomInteger = value_text_array[ 2 ].to!long();
                 }
                 else if ( property_name == "natural" )
                 {
-                    ItIsRandomNatural = true;
+                    IsRandomNatural = true;
                     MinimumRandomNatural = value_text_array[ 1 ].to!ulong();
                     MaximumRandomNatural = value_text_array[ 2 ].to!ulong();
                     MinimumRandomCount = 0;
                 }
                 else if ( property_name == "name" )
                 {
-                    ItIsRandomName = true;
+                    IsRandomName = true;
                     MinimumRandomCount = value_text_array[ 1 ].to!long();
                     MaximumRandomCount = value_text_array[ 2 ].to!long();
                 }
@@ -1173,7 +1173,7 @@ class COLUMN
             {
                 if ( property_name == "natural" )
                 {
-                    ItIsRandomNatural = true;
+                    IsRandomNatural = true;
                     MinimumRandomNatural = value_text_array[ 1 ].to!ulong();
                     MaximumRandomNatural = value_text_array[ 2 ].to!ulong();
                     MinimumRandomCount = value_text_array[ 3 ].to!long();
@@ -1183,7 +1183,7 @@ class COLUMN
             {
                 if ( property_name == "english" )
                 {
-                    ItIsRandomEnglish = true;
+                    IsRandomEnglish = true;
                     MinimumRandomCount = value_text_array[ 1 ].to!long();
                     MaximumRandomCount = value_text_array[ 2 ].to!long();
                     MinimumRandomInteger = value_text_array[ 3 ].to!long();
@@ -1191,7 +1191,7 @@ class COLUMN
                 }
                 else if ( property_name == "latin" )
                 {
-                    ItIsRandomLatin = true;
+                    IsRandomLatin = true;
                     MinimumRandomCount = value_text_array[ 1 ].to!long();
                     MaximumRandomCount = value_text_array[ 2 ].to!long();
                     MinimumRandomInteger = value_text_array[ 3 ].to!long();
@@ -1406,13 +1406,13 @@ class COLUMN
         }
         else
         {
-            if ( !ItIsStored )
+            if ( !IsStored )
             {
                 GoType = GetGoType( Type );
             }
         }
 
-        if ( ItIsKey || ItIsRequired )
+        if ( IsKey || IsRequired )
         {
             SqlPropertyArray ~= "NOT NULL";
         }
@@ -1421,7 +1421,7 @@ class COLUMN
             SqlPropertyArray ~= "NULL";
         }
 
-        if ( ItIsIncremented )
+        if ( IsIncremented )
         {
             SqlPropertyArray ~= "AUTO_INCREMENT";
         }
@@ -1432,7 +1432,7 @@ class COLUMN
     void MakeForeignType(
         )
     {
-        if ( !ItIsList )
+        if ( !IsList )
         {
             SqlType = ForeignColumn.SqlType;
             AqlType = ForeignColumn.AqlType;
@@ -1457,42 +1457,42 @@ class COLUMN
 
         value = new VALUE;
 
-        if ( ItIsRandomReal )
+        if ( IsRandomReal )
         {
             value.Text = Random.MakeReal( MinimumRandomReal, MaximumRandomReal ).to!string();
         }
-        if ( ItIsRandomInteger )
+        if ( IsRandomInteger )
         {
             value.Text = Random.MakeInteger( MinimumRandomInteger, MaximumRandomInteger ).to!string();
         }
-        if ( ItIsRandomNatural )
+        if ( IsRandomNatural )
         {
             value.Text = Random.MakeNatural( MinimumRandomNatural, MaximumRandomNatural, MinimumRandomCount ).to!string();
         }
-        else if ( ItIsRandomName )
+        else if ( IsRandomName )
         {
             value.Text = Random.MakeName( MinimumRandomCount, MaximumRandomCount );
         }
-        else if ( ItIsRandomFirstName )
+        else if ( IsRandomFirstName )
         {
             value.Text = Random.MakeFirstName();
         }
-        else if ( ItIsRandomLastName )
+        else if ( IsRandomLastName )
         {
             value.Text = Random.MakeLastName();
         }
-        else if ( ItIsRandomFullName )
+        else if ( IsRandomFullName )
         {
             value.Text
                 = Random.MakeFirstName()
                   ~ " "
                   ~ Random.MakeLastName();
         }
-        else if ( ItIsRandomEnglish )
+        else if ( IsRandomEnglish )
         {
             value.Text = Random.MakeText( "english", MinimumRandomCount, MaximumRandomCount, MinimumRandomInteger, MaximumRandomInteger );
         }
-        else if ( ItIsRandomLatin )
+        else if ( IsRandomLatin )
         {
             value.Text = Random.MakeText( "latin", MinimumRandomCount, MaximumRandomCount, MinimumRandomInteger, MaximumRandomInteger );
         }
@@ -1747,7 +1747,7 @@ class COLUMN
         {
             if ( Name == "Id" )
             {
-                if ( ItIsIncremented )
+                if ( IsIncremented )
                 {
                     value.Text = ( row_index + 1 ).to!string();
                 }
@@ -1831,12 +1831,12 @@ class COLUMN
             value.Text = Random.MakeDate() ~ " " ~ Random.MakeTime();
         }
 
-        if ( ItIsLowercase )
+        if ( IsLowercase )
         {
             value.Text = value.Text.toLower();
         }
 
-        if ( ItIsUppercase )
+        if ( IsUppercase )
         {
             value.Text = value.Text.toUpper();
         }
@@ -1976,7 +1976,7 @@ class TABLE
 
         foreach ( ref column; ColumnArray )
         {
-            if ( column.ItIsStored )
+            if ( column.IsStored )
             {
                 column.ValueArray = new VALUE[ RowCount ];
 
@@ -1986,7 +1986,7 @@ class TABLE
 
         if ( last_stored_column !is null )
         {
-            last_stored_column.ItIsLastStored = true;
+            last_stored_column.IsLastStored = true;
         }
 
         foreach ( row_index; 0 .. RowCount )
@@ -1998,8 +1998,8 @@ class TABLE
 
             foreach ( ref column; ColumnArray )
             {
-                if ( column.ItIsStored
-                     && !column.ItIsForeign )
+                if ( column.IsStored
+                     && !column.IsForeign )
                 {
                     column.ValueArray[ row_index ] = column.MakeValue( this, row_index, RowCount );
                 }
@@ -2070,20 +2070,20 @@ class SCHEMA
             {
                 if ( column.Type.endsWith( " REF" ) )
                 {
-                    column.ItIsForeign = true;
+                    column.IsForeign = true;
 
                     foreign_table_name = column.Type[ 0 .. $ - 4 ];
                 }
 
                 if ( column.Type.endsWith( " LIST" ) )
                 {
-                    column.ItIsForeign = true;
-                    column.ItIsList = true;
+                    column.IsForeign = true;
+                    column.IsList = true;
 
                     foreign_table_name = column.Type[ 0 .. $ - 5 ];
                 }
 
-                if ( column.ItIsForeign )
+                if ( column.IsForeign )
                 {
                     foreach ( ref foreign_table; TableArray )
                     {
@@ -2121,11 +2121,11 @@ class SCHEMA
         {
             foreach ( ref column; table.ColumnArray )
             {
-                if ( column.ItIsForeign )
+                if ( column.IsForeign )
                 {
                     foreach ( row_index; 0 .. table.RowCount )
                     {
-                        if ( column.ItIsList )
+                        if ( column.IsList )
                         {
                             foreign_value_count = Random.MakeInteger( column.MinimumRandomCount, column.MaximumRandomCount );
 
@@ -2218,7 +2218,7 @@ class SCHEMA
                                 column.SetPropertyValue( property_text.strip() );
                             }
 
-                            if ( column.ItIsKey )
+                            if ( column.IsKey )
                             {
                                 table.KeyNameArray ~= column.Name;
                             }
@@ -2325,7 +2325,7 @@ class SCHEMA
         {
             foreach ( ref column; table.ColumnArray )
             {
-                if ( column.ItIsForeign )
+                if ( column.IsForeign )
                 {
                     uml_schema_file_text
                         ~= "\n" ~ column.ForeignTable.Name ~ " <-- " ~ table.Name ~ "\n";
@@ -2367,7 +2367,7 @@ class SCHEMA
 
             foreach ( ref column; table.ColumnArray )
             {
-                if ( column.ItIsStored )
+                if ( column.IsStored )
                 {
                     sql_schema_file_text
                         ~= "  `"
@@ -2382,8 +2382,8 @@ class SCHEMA
 
             foreach ( ref column; table.ColumnArray )
             {
-                if ( column.ItIsStored
-                     && column.ItIsKey )
+                if ( column.IsStored
+                     && column.IsKey )
                 {
                     sql_schema_file_text ~= "  primary key( `" ~ column.SqlName ~ "` ),\n";
                 }
@@ -2393,9 +2393,9 @@ class SCHEMA
 
             foreach ( ref column; table.ColumnArray )
             {
-                if ( column.ItIsStored
-                     && column.ItIsForeign
-                     && !column.ItIsList )
+                if ( column.IsStored
+                     && column.IsForeign
+                     && !column.IsList )
                 {
                     ++foreign_key_index;
 
@@ -2416,9 +2416,9 @@ class SCHEMA
 
             foreach ( ref column; table.ColumnArray )
             {
-                if ( column.ItIsStored
-                     && column.ItIsForeign
-                     && !column.ItIsList )
+                if ( column.IsStored
+                     && column.IsForeign
+                     && !column.IsList )
                 {
                     ++foreign_key_index;
 
@@ -2483,11 +2483,11 @@ class SCHEMA
 
                 foreach ( ref column; table.ColumnArray )
                 {
-                    if ( column.ItIsStored )
+                    if ( column.IsStored )
                     {
                         sql_data_file_text ~= "`" ~ column.SqlName ~ "`";
 
-                        if ( !column.ItIsLastStored )
+                        if ( !column.IsLastStored )
                         {
                             sql_data_file_text ~= ", ";
                         }
@@ -2498,11 +2498,11 @@ class SCHEMA
 
                 foreach ( ref column; table.ColumnArray )
                 {
-                    if ( column.ItIsStored )
+                    if ( column.IsStored )
                     {
                         sql_data_file_text ~= "        " ~ column.GetSqlValueText( row_index );
 
-                        if ( !column.ItIsLastStored )
+                        if ( !column.IsLastStored )
                         {
                             sql_data_file_text ~= ",";
                         }
@@ -2548,11 +2548,11 @@ class SCHEMA
 
                 foreach ( ref column; table.ColumnArray )
                 {
-                    if ( column.ItIsStored )
+                    if ( column.IsStored )
                     {
                         aql_data_file_text ~= column.AqlName;
 
-                        if ( !column.ItIsLastStored )
+                        if ( !column.IsLastStored )
                         {
                             aql_data_file_text ~= ", ";
                         }
@@ -2566,21 +2566,21 @@ class SCHEMA
 
                 foreach ( column_index, ref column; table.ColumnArray )
                 {
-                    if ( column.ItIsStored )
+                    if ( column.IsStored )
                     {
-                        if ( column.ItIsList )
+                        if ( column.IsList )
                         {
                             aql_data_file_text ~= "'JSON[ ";
                         }
 
                         aql_data_file_text ~= column.GetAqlValueText( row_index );
 
-                        if ( column.ItIsList )
+                        if ( column.IsList )
                         {
                             aql_data_file_text ~= " ]'";
                         }
 
-                        if ( !column.ItIsLastStored )
+                        if ( !column.IsLastStored )
                         {
                             aql_data_file_text ~= ", ";
                         }
@@ -2621,7 +2621,7 @@ class SCHEMA
                        ~ " "
                        ~ column.GoType;
 
-                if ( column.ItIsStored )
+                if ( column.IsStored )
                 {
                     go_schema_file_text
                         ~= " `db:\""
@@ -2666,7 +2666,7 @@ class SCHEMA
 
                 foreach ( ref column; table.ColumnArray )
                 {
-                    if ( column.ItIsStored )
+                    if ( column.IsStored )
                     {
                         go_data_file_text
                             ~= "            "
@@ -2674,7 +2674,7 @@ class SCHEMA
                                ~ " : "
                                ~ column.GetGoValueText( row_index );
 
-                        if ( !column.ItIsLastStored )
+                        if ( !column.IsLastStored )
                         {
                             go_data_file_text ~= ",";
                         }
