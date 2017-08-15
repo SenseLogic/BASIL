@@ -2782,23 +2782,22 @@ void main(
         }
     }
 
-    if ( argument_array.length >= 1
-         && argument_array[ 0 ].endsWith( ".basil" ) )
+    if ( argument_array.length >= 1 )
     {
         ProcessFile( argument_array[ 0 ], output_format_array );
     }
     else
     {
         writeln( "Usage :" );
-        writeln( "    basil [options] file.basil" );
+        writeln( "    basil [options] script.basil" );
         writeln( "Options :" );
         writeln( "    --uml : generate the UML schema file" );
         writeln( "    --sql : generate the SQL schema and data files" );
         writeln( "    --aql : generate the AQL data file" );
         writeln( "    --go : generate the GO schema and data files" );
         writeln( "Examples :" );
-        writeln( "    basil --uml file.basil" );
-        writeln( "    basil --sql --go file.basil" );
+        writeln( "    basil --uml script.basil" );
+        writeln( "    basil --uml --sql --go script.basil" );
 
         Abort( "Invalid arguments : " ~ argument_array.to!string() );
     }
