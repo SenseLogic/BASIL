@@ -2789,15 +2789,15 @@ void main(
     else
     {
         writeln( "Usage :" );
-        writeln( "    basil [options] script.basil" );
+        writeln( "    basil [options] script_file.basil" );
         writeln( "Options :" );
         writeln( "    --uml : generate the UML schema file" );
         writeln( "    --sql : generate the SQL schema and data files" );
         writeln( "    --aql : generate the AQL data file" );
         writeln( "    --go : generate the GO schema and data files" );
         writeln( "Examples :" );
-        writeln( "    basil --uml script.basil" );
-        writeln( "    basil --uml --sql --go script.basil" );
+        writeln( "    basil --uml script_file.basil" );
+        writeln( "    basil --uml --sql --go script_file.basil" );
 
         Abort( "Invalid arguments : " ~ argument_array.to!string() );
     }

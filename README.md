@@ -202,7 +202,7 @@ Install [PlantUML](http://plantuml.com/download) (or use [www.planttext.com](htt
 ## Command line
 
 ``` 
-basil [options] script.basil
+basil [options] script_file.basil
 ``` 
 
 ### Options
