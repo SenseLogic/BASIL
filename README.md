@@ -1,3 +1,5 @@
+![](https://github.com/senselogic/BASIL/blob/master/LOGO/basil.png)
+
 # Basil
 
 Textual database builder.
