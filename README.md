@@ -18,7 +18,7 @@ Textual database builder.
 ## Sample
 
 ```cpp
-BLOG | count 10
+BLOG | count 5
 
     SECTION
 
@@ -48,7 +48,7 @@ BLOG | count 10
         Company : STRING | capacity 45
         ItIsAdministrator : BOOL | aqlname IsAdmin
 
-    ARTICLE
+    ARTICLE | count 15
 
         Id : UINT64 | key, incremented
         SectionId : SECTION REF
@@ -56,20 +56,20 @@ BLOG | count 10
         Title : STRING
         Text : STRING
         Image : STRING | capacity 45
-        Date : DATETIME
+        Date : DATE
         
         Section : SECTION * | !stored
         User : USER * | !stored
         
         ImageIndex : UINT64 | !stored
 
-    COMMENT
+    COMMENT | count 30
 
         Id : UINT64 | key, incremented
         ArticleId : ARTICLE REF
         UserId : USER REF
-        Text : STRING
-        Date : DATE
+        Text : STRING | english 2 4 5 7
+        Date : DATETIME
         
         Article : ARTICLE * | !stored
         User : USER * | !stored
