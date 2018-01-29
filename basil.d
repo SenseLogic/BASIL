@@ -455,7 +455,7 @@ class RANDOM
 
                 if ( prior_vertex !is null )
                 {
-                    it_is_final = ( word_index == word_array.length - 1 );
+                    it_is_final = ( word_index == word_array.length.to!long() - 1 );
 
                     AddLink( prior_vertex, word, vertex_index, it_is_final );
                 }
@@ -586,7 +586,7 @@ class RANDOM
         ELEMENT[] array
         )
     {
-        return MakeInteger( 0, array.length - 1 );
+        return MakeInteger( 0, array.length.to!long() - 1 );
     }
 
     // ~~
