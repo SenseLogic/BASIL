@@ -2182,7 +2182,7 @@ class SCHEMA
         TABLE
             table;
 
-        writeln( "Reading schema file : " ~ basil_schema_file_path );
+        writeln( "Reading schema file : ", basil_schema_file_path );
 
         basil_schema_file_text = basil_schema_file_path.readText();
         TableArray = [];
@@ -2293,7 +2293,7 @@ class SCHEMA
         string
             uml_schema_file_text;
 
-        writeln( "Writing UML schema file : " ~ uml_schema_file_path );
+        writeln( "Writing UML schema file : ", uml_schema_file_path );
 
         uml_schema_file_text
             = "@startuml\n"
@@ -2349,7 +2349,7 @@ class SCHEMA
         long
             foreign_key_index;
 
-        writeln( "Writing SQL schema file : " ~ sql_schema_file_path );
+        writeln( "Writing SQL schema file : ", sql_schema_file_path );
 
         sql_schema_file_text
             = "set @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;\n"
@@ -2470,7 +2470,7 @@ class SCHEMA
         string
             sql_data_file_text;
 
-        writeln( "Writing SQL data file : " ~ sql_data_file_path );
+        writeln( "Writing SQL data file : ", sql_data_file_path );
 
         foreach ( ref table; TableArray )
         {
@@ -2529,7 +2529,7 @@ class SCHEMA
         string
             aql_data_file_text;
 
-        writeln( "Writing AQL data file : " ~ aql_data_file_path );
+        writeln( "Writing AQL data file : ", aql_data_file_path );
 
         aql_data_file_text = "";
 
@@ -2603,7 +2603,7 @@ class SCHEMA
         string
             go_schema_file_text;
 
-        writeln( "Writing Go schema file : " ~ go_schema_file_path );
+        writeln( "Writing Go schema file : ", go_schema_file_path );
 
         go_schema_file_text = "";
 
@@ -2651,7 +2651,7 @@ class SCHEMA
         VALUE
             column_value;
 
-        writeln( "Writing Go data file : " ~ go_data_file_path );
+        writeln( "Writing Go data file : ", go_data_file_path );
 
         go_data_file_text = "func FillDatabase() {\n";
 
