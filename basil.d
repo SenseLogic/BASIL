@@ -1455,7 +1455,7 @@ class COLUMN
         VALUE
             value;
 
-        value = new VALUE;
+        value = new VALUE();
 
         if ( IsRandomReal )
         {
@@ -2129,7 +2129,7 @@ class SCHEMA
                         {
                             foreign_value_count = Random.MakeInteger( column.MinimumRandomCount, column.MaximumRandomCount );
 
-                            value = new VALUE;
+                            value = new VALUE();
 
                             foreach ( foreign_value_index; 0 .. foreign_value_count )
                             {
@@ -2712,9 +2712,9 @@ void ProcessFile(
 
     base_file_path = basil_schema_file_path[ 0 .. $ - 6 ];
 
-    Random = new RANDOM;
+    Random = new RANDOM();
 
-    Schema = new SCHEMA;
+    Schema = new SCHEMA();
     Schema.ReadBasilSchemaFile( basil_schema_file_path );
 
     foreach ( ref output_format; output_format_array )
