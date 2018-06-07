@@ -8,7 +8,7 @@ BLOG | count 5
         Text : STRING
         Image : STRING | capacity 45
         ArticleIdList : ARTICLE LIST | count 5 10
-        
+
         ImageIndex : UINT64 | !stored
 
     USER
@@ -37,10 +37,10 @@ BLOG | count 5
         Text : STRING
         Image : STRING | capacity 45
         Date : DATE
-        
+
         Section : SECTION * | !stored
         User : USER * | !stored
-        
+
         ImageIndex : UINT64 | !stored
 
     COMMENT | count 30
@@ -49,8 +49,8 @@ BLOG | count 5
         ArticleId : ARTICLE REF
         UserId : USER REF
         Text : STRING | english 2 4 5 7
-        Date : DATETIME
-        
+        DateTime : DATETIME
+
         Article : ARTICLE * | !stored
         User : USER * | !stored
 

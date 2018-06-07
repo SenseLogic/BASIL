@@ -12,6 +12,7 @@ Textual database builder.
 * Several export formats :
   * UML schema file.
   * SQL schema and data files.
+  * CQL schema and data files.
   * AQL data file.
   * Go schema and data files.
 
@@ -28,7 +29,7 @@ BLOG | count 5
         Text : STRING
         Image : STRING | capacity 45
         ArticleIdList : ARTICLE LIST | count 5 10
-        
+
         ImageIndex : UINT64 | !stored
 
     USER
@@ -57,10 +58,10 @@ BLOG | count 5
         Text : STRING
         Image : STRING | capacity 45
         Date : DATE
-        
+
         Section : SECTION * | !stored
         User : USER * | !stored
-        
+
         ImageIndex : UINT64 | !stored
 
     COMMENT | count 30
@@ -70,7 +71,7 @@ BLOG | count 5
         UserId : USER REF
         Text : STRING | english 2 4 5 7
         Date : DATETIME
-        
+
         Article : ARTICLE * | !stored
         User : USER * | !stored
 
@@ -89,7 +90,7 @@ BLOG | count 5
 {database name} [| {database property}, {database property}, ...]
 
     {table name} [| {table property}, {table property}, ...]
-    
+
         {field name} : {field type} [| {field property}, {field property}, ...]
 ```
 
@@ -110,9 +111,13 @@ count {row count}
 ```
 [!]stored
 [!]key
+[!]clustered
+[!]indexed
+[!]static
 [!]required
 [!]incremented
 capacity {maximum character count}
+cqlname {CQL field name}
 aqlname {AQL field name}
 goname {Go field name}
 firstname
@@ -179,13 +184,18 @@ FLOAT64
 STRING
 DATE
 DATETIME
+UUID
+BLOB
+LIST[...]
+SET[...]
+MAP[...,...]
 {table} REF : table object reference.
 {table} LIST : list of table object references.
 ```
 
 ### Internal fields
 
-Fields with the "!stored" property are included in the generated Go types without being stored on the database. 
+Fields with the "!stored" property are included in the generated Go types without being stored on the database.
 
 Pointer fields should end with "*", and arrays with "[]".
 
@@ -203,18 +213,19 @@ Install [PlantUML](http://plantuml.com/download) (or use [www.planttext.com](htt
 
 ## Command line
 
-``` 
+```
 basil [options] script_file.basil
-``` 
+```
 
 ### Options
 
-``` 
+```
 --uml : generate the UML schema file
 --sql : generate the SQL schema and data files
+--cql : generate the CQL schema and data files
 --aql : generate the AQL data file
 --go : generate the Go schema and data files
-``` 
+```
 
 ### Examples
 
@@ -225,7 +236,7 @@ basil --uml blog.basil
 Generates "blog.uml" from "blog.basil".
 
 ```bash
-basil --uml --sql --go blog.basil 
+basil --uml --sql --go blog.basil
 ```
 
 Generates "blog.uml", "blog.sql", "blog_data.sql", "blog.go" and "blog_data.go" from "blog.basil".

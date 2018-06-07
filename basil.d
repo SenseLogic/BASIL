@@ -654,6 +654,46 @@ class RANDOM
 
     // ~~
 
+    string MakeUuid(
+        )
+    {
+        string
+            uuid;
+
+        while ( uuid.length < 128 )
+        {
+            uuid ~= ( Random.MakeNatural() & 63 ).to!string();
+        }
+
+        uuid.length = 32;
+
+        return uuid;
+    }
+
+    // ~~
+
+    string MakeBlob(
+        )
+    {
+        long
+            blob_length;
+        string
+            blob;
+
+        blob_length = MakeInteger( 32, 128 );
+
+        while ( blob.length < blob_length )
+        {
+            blob ~= ( Random.MakeNatural() & 63 ).to!string();
+        }
+
+        blob.length = blob_length;
+
+        return blob;
+    }
+
+    // ~~
+
     string MakeName(
         long minimum_letter_count,
         long maximum_letter_count
@@ -952,12 +992,17 @@ class COLUMN
         Type;
     bool
         IsStored,
-        IsLastStored,
         IsKey,
+        IsLastStored,
+        IsIndexed,
+        IsClustered,
+        IsStatic,
         IsRequired,
         IsIncremented,
         IsForeign,
-        IsList;
+        IsList,
+        IsMap,
+        IsSet;
     long
         Capacity;
     bool
@@ -1000,6 +1045,8 @@ class COLUMN
     string[]
         SqlPropertyArray;
     string
+        CqlName,
+        CqlType,
         AqlName,
         AqlType,
         GoName,
@@ -1017,10 +1064,15 @@ class COLUMN
         IsStored = true;
         IsLastStored = false;
         IsKey = false;
+        IsIndexed = false;
+        IsClustered = false;
+        IsStatic = false;
         IsRequired = false;
         IsIncremented = false;
         IsForeign = false;
         IsList = false;
+        IsMap = false;
+        IsSet = false;
         Capacity = 0;
         IsRandomReal = false;
         MinimumRandomReal = 0.0;
@@ -1082,6 +1134,18 @@ class COLUMN
                 else if ( property_name == "key" )
                 {
                     IsKey = ( value_text_array[ 1 ] != "0" );
+                }
+                else if ( property_name == "indexed" )
+                {
+                    IsIndexed = ( value_text_array[ 1 ] != "0" );
+                }
+                else if ( property_name == "clustered" )
+                {
+                    IsClustered = ( value_text_array[ 1 ] != "0" );
+                }
+                else if ( property_name == "static" )
+                {
+                    IsStatic = ( value_text_array[ 1 ] != "0" );
                 }
                 else if ( property_name == "required" )
                 {
@@ -1287,6 +1351,11 @@ class COLUMN
             SqlName = Name;
         }
 
+        if ( CqlName == "" )
+        {
+            CqlName = Name;
+        }
+
         if ( AqlName == "" )
         {
             AqlName = Name;
@@ -1300,6 +1369,11 @@ class COLUMN
         if ( SqlType == "" )
         {
             SqlType = "TEXT";
+        }
+
+        if ( CqlType == "" )
+        {
+            CqlType = "text";
         }
 
         if ( AqlType == "" )
@@ -1317,10 +1391,12 @@ class COLUMN
             if ( Capacity != 0 )
             {
                 SqlType = "VARCHAR( " ~ Capacity.to!string() ~ " )";
+                CqlType = "text";
             }
             else
             {
                 SqlType = "TEXT";
+                CqlType = "text";
             }
 
             AqlType = "string";
@@ -1329,80 +1405,107 @@ class COLUMN
         else if ( Type == "BOOL" )
         {
             SqlType = "TINYINT UNSIGNED";
+            CqlType = "boolean";
             AqlType = "int64";
             GoType = "bool";
         }
         else if ( Type == "INT8" )
         {
             SqlType = "TINYINT";
+            CqlType = "tinyint";
             AqlType = "int64";
             GoType = "int8";
         }
         else if ( Type == "UINT8" )
         {
             SqlType = "TINYINT UNSIGNED";
+            CqlType = "tinyint";
             AqlType = "int64";
             GoType = "uint8";
         }
         else if ( Type == "INT16" )
         {
             SqlType = "SMALLINT";
+            CqlType = "smallint";
             AqlType = "int64";
             GoType = "int16";
         }
         else if ( Type == "UINT16" )
         {
             SqlType = "SMALLINT UNSIGNED";
+            CqlType = "smallint";
             AqlType = "int64";
             GoType = "uint16";
         }
         else if ( Type == "INT32" )
         {
             SqlType = "INT";
+            CqlType = "int";
             AqlType = "int64";
             GoType = "int32";
         }
         else if ( Type == "UINT32" )
         {
             SqlType = "INT UNSIGNED";
+            CqlType = "int";
             AqlType = "int64";
             GoType = "uint32";
         }
         else if ( Type == "INT64" )
         {
             SqlType = "BIGINT";
+            CqlType = "bigint";
             AqlType = "int64";
             GoType = "int64";
         }
         else if ( Type == "UINT64" )
         {
             SqlType = "BIGINT UNSIGNED";
+            CqlType = "bigint";
             AqlType = "int64";
             GoType = "uint64";
         }
         else if ( Type == "FLOAT32" )
         {
             SqlType = "FLOAT";
+            CqlType = "float";
             AqlType = "float64";
             GoType = "float32";
         }
         else if ( Type == "FLOAT64" )
         {
             SqlType = "DOUBLE";
+            CqlType = "double";
             AqlType = "float64";
             GoType = "float64";
         }
         else if ( Type == "DATE" )
         {
             SqlType = "DATE";
+            CqlType = "timestamp";
             AqlType = "string";
             GoType = "string";
         }
         else if ( Type == "DATETIME" )
         {
             SqlType = "DATETIME";
+            CqlType = "timestamp";
             AqlType = "string";
             GoType = "string";
+        }
+        else if ( Type == "UUID" )
+        {
+            SqlType = "BINARY(16)";
+            CqlType = "uuid";
+            AqlType = "string";
+            GoType = "string";
+        }
+        else if ( Type == "BLOB" )
+        {
+            SqlType = "BLOB";
+            CqlType = "blob";
+            AqlType = "blob";
+            GoType = "[]byte";
         }
         else
         {
@@ -1435,6 +1538,7 @@ class COLUMN
         if ( !IsList )
         {
             SqlType = ForeignColumn.SqlType;
+            CqlType = ForeignColumn.CqlType;
             AqlType = ForeignColumn.AqlType;
             GoType = ForeignColumn.GoType;
         }
@@ -1830,6 +1934,14 @@ class COLUMN
         {
             value.Text = Random.MakeDate() ~ " " ~ Random.MakeTime();
         }
+        else if ( Type == "UUID" )
+        {
+            value.Text = Random.MakeUuid();
+        }
+        else if ( Type == "BLOB" )
+        {
+            value.Text = Random.MakeBlob();
+        }
 
         if ( IsLowercase )
         {
@@ -1867,6 +1979,38 @@ class COLUMN
         )
     {
         return "\"" ~ ValueArray[ row_index ].Text ~ "\"";
+    }
+
+    // ~~
+
+    string GetCqlValueText(
+        long row_index
+        )
+    {
+        if ( CqlType == "boolean" )
+        {
+            if ( ValueArray[ row_index ].Text == "1" )
+            {
+                return "true";
+            }
+            else
+            {
+                return "false";
+            }
+        }
+        else if ( CqlType == "tinyint"
+             || CqlType == "smallint"
+             || CqlType == "int"
+             || CqlType == "bigint"
+             || CqlType == "float"
+             || CqlType == "double" )
+        {
+            return ValueArray[ row_index ].Text;
+        }
+        else
+        {
+            return "'" ~ ValueArray[ row_index ].Text.replace( "'", "''" ) ~ "'";
+        }
     }
 
     // ~~
@@ -2370,7 +2514,7 @@ class SCHEMA
                 if ( column.IsStored )
                 {
                     sql_schema_file_text
-                        ~= "  `"
+                        ~= "    `"
                            ~ column.SqlName
                            ~ "` "
                            ~ column.SqlType
@@ -2385,7 +2529,7 @@ class SCHEMA
                 if ( column.IsStored
                      && column.IsKey )
                 {
-                    sql_schema_file_text ~= "  primary key( `" ~ column.SqlName ~ "` ),\n";
+                    sql_schema_file_text ~= "    primary key( `" ~ column.SqlName ~ "` ),\n";
                 }
             }
 
@@ -2400,7 +2544,7 @@ class SCHEMA
                     ++foreign_key_index;
 
                     sql_schema_file_text
-                        ~= "  index `fk_"
+                        ~= "    index `fk_"
                            ~ table.Name.toLower()
                            ~ "_"
                            ~ column.ForeignTable.Name.toLower()
@@ -2423,7 +2567,7 @@ class SCHEMA
                     ++foreign_key_index;
 
                     sql_schema_file_text
-                        ~= "  constraint `fk_"
+                        ~= "    constraint `fk_"
                            ~ table.Name.toLower()
                            ~ "_"
                            ~ column.ForeignTable.Name.toLower()
@@ -2440,15 +2584,14 @@ class SCHEMA
                            ~ "`( `"
                            ~ column.ForeignColumn.SqlName
                            ~ "` )\n"
-                           ~ "    on delete set null\n"
-                           ~ "    on update no action,\n";
+                           ~ "        on delete set null\n"
+                           ~ "        on update no action,\n";
                 }
             }
 
             sql_schema_file_text
                 = sql_schema_file_text[ 0 .. $ - 2 ]
-                  ~ " )\n"
-                  ~ "engine = InnoDB;\n\n";
+                  ~ "\n    ) engine = InnoDB;\n\n";
         }
 
         sql_schema_file_text
@@ -2516,6 +2659,166 @@ class SCHEMA
         }
 
         sql_data_file_path.write( sql_data_file_text );
+    }
+
+    // ~~
+
+    void WriteCqlSchemaFile(
+        string cql_schema_file_path
+        )
+    {
+        string
+            cql_schema_file_text,
+            cluster_key,
+            partition_key;
+
+        writeln( "Writing CQL schema file : ", cql_schema_file_path );
+
+        cql_schema_file_text
+            = "drop keyspace if exists " ~ Name ~ ";\n"
+              ~ "create keyspace if not exists " ~ Name ~ " with replication = { 'class' : 'SimpleStrategy', 'replication_factor' : 1 };\n";
+
+        foreach ( ref table; TableArray )
+        {
+            cql_schema_file_text
+                ~= "drop table if exists " ~ Name ~ "." ~ table.Name ~ ";\n"
+                   ~ "create table if not exists " ~ Name ~ "." ~ table.Name ~ "(";
+
+            foreach ( ref column; table.ColumnArray )
+            {
+                if ( column.IsStored )
+                {
+                    cql_schema_file_text ~= " " ~ column.CqlName ~ " " ~ column.CqlType;
+
+                    if ( column.IsStatic )
+                    {
+                        cql_schema_file_text ~= " static";
+                    }
+
+                    cql_schema_file_text ~= ",";
+                }
+            }
+
+            partition_key = "";
+            cluster_key = "";
+
+            foreach ( ref column; table.ColumnArray )
+            {
+                if ( column.IsStored
+                     && column.IsKey
+                     && !column.IsIndexed )
+                {
+                    if ( column.IsClustered )
+                    {
+                        if ( cluster_key == "" )
+                        {
+                            cluster_key = column.CqlName;
+                        }
+                        else
+                        {
+                            cluster_key ~= ", " ~ column.CqlName;
+                        }
+                    }
+                    else
+                    {
+                        if ( partition_key == "" )
+                        {
+                            partition_key = column.CqlName;
+                        }
+                        else
+                        {
+                            partition_key ~= ", " ~ column.CqlName;
+                        }
+                    }
+                }
+            }
+
+            if ( partition_key.indexOf( ',' ) >= 0 )
+            {
+                partition_key = "( " ~ partition_key ~ " )";
+            }
+
+            if ( cluster_key == "" )
+            {
+                cql_schema_file_text ~= " primary key( " ~ partition_key ~ " )";
+            }
+            else
+            {
+                cql_schema_file_text ~= " primary key( " ~ partition_key ~ ", " ~ cluster_key ~ " )";
+            }
+
+            cql_schema_file_text ~= " );\n";
+
+            foreach ( ref column; table.ColumnArray )
+            {
+                if ( column.IsStored
+                     && column.IsKey
+                     && column.IsIndexed )
+                {
+                    cql_schema_file_text
+                        ~= "create index on " ~ Name ~ "." ~ table.Name ~ " ( " ~ column.Name ~ " );\n";
+                }
+            }
+        }
+
+        cql_schema_file_path.write( cql_schema_file_text );
+    }
+
+    // ~~
+
+    void WriteCqlDataFile(
+        string cql_data_file_path
+        )
+    {
+        long
+            column_count;
+        string
+            cql_data_file_text;
+
+        writeln( "Writing CQL data file : ", cql_data_file_path );
+
+        foreach ( ref table; TableArray )
+        {
+            column_count = table.ColumnArray.length;
+
+            foreach ( row_index; 0 .. table.RowCount )
+            {
+                cql_data_file_text
+                    ~= "insert into " ~ table.SchemaName ~ "." ~ table.Name ~ " ( " ;
+
+                foreach ( ref column; table.ColumnArray )
+                {
+                    if ( column.IsStored )
+                    {
+                        cql_data_file_text ~= "" ~ column.CqlName ~ "";
+
+                        if ( !column.IsLastStored )
+                        {
+                            cql_data_file_text ~= ", ";
+                        }
+                    }
+                }
+
+                cql_data_file_text ~= " ) values (";
+
+                foreach ( ref column; table.ColumnArray )
+                {
+                    if ( column.IsStored )
+                    {
+                        cql_data_file_text ~= " " ~ column.GetCqlValueText( row_index );
+
+                        if ( !column.IsLastStored )
+                        {
+                            cql_data_file_text ~= ",";
+                        }
+                    }
+                }
+
+                cql_data_file_text ~= " );\n";
+            }
+        }
+
+        cql_data_file_path.write( cql_data_file_text );
     }
 
     // ~~
@@ -2728,6 +3031,11 @@ void ProcessFile(
             Schema.WriteSqlSchemaFile( base_file_path ~ ".sql" );
             Schema.WriteSqlDataFile( base_file_path ~ "_data.sql" );
         }
+        else if ( output_format == "cql" )
+        {
+            Schema.WriteCqlSchemaFile( base_file_path ~ ".cql" );
+            Schema.WriteCqlDataFile( base_file_path ~ "_data.cql" );
+        }
         else if ( output_format == "aql" )
         {
             Schema.WriteAqlDataFile( base_file_path ~ "_data.aql" );
@@ -2768,6 +3076,10 @@ void main(
         {
             output_format_array ~= "sql";
         }
+        else if ( option == "--cql" )
+        {
+            output_format_array ~= "cql";
+        }
         else if ( option == "--aql" )
         {
             output_format_array ~= "aql";
@@ -2793,6 +3105,7 @@ void main(
         writeln( "Options :" );
         writeln( "    --uml : generate the UML schema file" );
         writeln( "    --sql : generate the SQL schema and data files" );
+        writeln( "    --cql : generate the CQL schema and data files" );
         writeln( "    --aql : generate the AQL data file" );
         writeln( "    --go : generate the GO schema and data files" );
         writeln( "Examples :" );
