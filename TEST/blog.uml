@@ -56,7 +56,7 @@ class COMMENT {
     ArticleId : ARTICLE REF
     UserId : USER REF
     Text : STRING
-    DateTime : DATETIME
+    Date : DATETIME
     Article : ARTICLE *
     User : USER *
 }

@@ -7,6 +7,6 @@ create table if not exists BLOG.USER( Id bigint, FirstName text, LastName text, 
 drop table if exists BLOG.ARTICLE;
 create table if not exists BLOG.ARTICLE( Id bigint, SectionId bigint, UserId bigint, Title text, Text text, Image text, Date timestamp, primary key( Id ) );
 drop table if exists BLOG.COMMENT;
-create table if not exists BLOG.COMMENT( Id bigint, ArticleId bigint, UserId bigint, Text text, DateTime timestamp, primary key( Id ) );
+create table if not exists BLOG.COMMENT( Id bigint, ArticleId bigint, UserId bigint, Text text, Date timestamp, primary key( Id ) );
 drop table if exists BLOG.SUBSCRIBER;
 create table if not exists BLOG.SUBSCRIBER( Id bigint, Name text, Email text, primary key( Id ) );

@@ -72,7 +72,7 @@ create table if not exists `BLOG`.`COMMENT`(
     `ArticleId` BIGINT UNSIGNED NULL,
     `UserId` BIGINT UNSIGNED NULL,
     `Text` TEXT NULL,
-    `DateTime` DATETIME NULL,
+    `Date` DATETIME NULL,
     primary key( `Id` ),
     index `fk_comment_article_1_idx`( `ArticleId` ASC ),
     index `fk_comment_user_2_idx`( `UserId` ASC ),
