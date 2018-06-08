@@ -999,7 +999,7 @@ class COLUMN
         IsStatic,
         IsRequired,
         IsIncremented,
-        IsForeign,
+        IsRef,
         IsList,
         IsMap,
         IsSet;
@@ -1069,7 +1069,7 @@ class COLUMN
         IsStatic = false;
         IsRequired = false;
         IsIncremented = false;
-        IsForeign = false;
+        IsRef = false;
         IsList = false;
         IsMap = false;
         IsSet = false;
@@ -1271,6 +1271,291 @@ class COLUMN
 
     // ~~
 
+    string GetSqlType(
+        string type
+        )
+    {
+        type = type.strip();
+
+        if ( type == "BOOL" )
+        {
+            return "TINYINT UNSIGNED";
+        }
+        else if ( type == "INT8" )
+        {
+            return "TINYINT";
+        }
+        else if ( type == "UINT8" )
+        {
+            return "TINYINT UNSIGNED";
+        }
+        else if ( type == "INT16" )
+        {
+            return "SMALLINT";
+        }
+        else if ( type == "UINT16" )
+        {
+            return "SMALLINT UNSIGNED";
+        }
+        else if ( type == "INT32" )
+        {
+            return "INT";
+        }
+        else if ( type == "UINT32" )
+        {
+            return "INT UNSIGNED";
+        }
+        else if ( type == "INT64" )
+        {
+            return "BIGINT";
+        }
+        else if ( type == "UINT64" )
+        {
+            return "BIGINT UNSIGNED";
+        }
+        else if ( type == "FLOAT32" )
+        {
+            return "FLOAT";
+        }
+        else if ( type == "FLOAT64" )
+        {
+            return "DOUBLE";
+        }
+        else if ( type == "STRING" )
+        {
+            if ( Capacity != 0 )
+            {
+                return "VARCHAR( " ~ Capacity.to!string() ~ " )";
+            }
+            else
+            {
+                return "TEXT";
+            }
+        }
+
+        else if ( type == "DATE" )
+        {
+            return "DATE";
+        }
+        else if ( type == "DATETIME" )
+        {
+            return "DATETIME";
+        }
+        else if ( type == "UUID" )
+        {
+            return "BINARY(16)";
+        }
+        else if ( type == "BLOB" )
+        {
+            return "BLOB";
+        }
+
+        return "TEXT";
+    }
+
+    // ~~
+
+    string GetCqlType(
+        string type,
+        string default_type = "text"
+        )
+    {
+        string[]
+            sub_type_array;
+
+        type = type.strip();
+
+        if ( type == "BOOL" )
+        {
+            return "boolean";
+        }
+        else if ( type == "INT8" )
+        {
+            return "tinyint";
+        }
+        else if ( type == "UINT8" )
+        {
+            return "tinyint";
+        }
+        else if ( type == "INT16" )
+        {
+            return "smallint";
+        }
+        else if ( type == "UINT16" )
+        {
+            return "smallint";
+        }
+        else if ( type == "INT32" )
+        {
+            return "int";
+        }
+        else if ( type == "UINT32" )
+        {
+            return "int";
+        }
+        else if ( type == "INT64" )
+        {
+            return "bigint";
+        }
+        else if ( type == "UINT64" )
+        {
+            return "bigint";
+        }
+        else if ( type == "FLOAT32" )
+        {
+            return "float";
+        }
+        else if ( type == "FLOAT64" )
+        {
+            return "double";
+        }
+        else if ( type == "STRING" )
+        {
+            return "text";
+        }
+        else if ( type == "DATE" )
+        {
+            return "timestamp";
+        }
+        else if ( type == "DATETIME" )
+        {
+            return "timestamp";
+        }
+        else if ( type == "UUID" )
+        {
+            return "uuid";
+        }
+        else if ( type == "BLOB" )
+        {
+            return "blob";
+        }
+        else if ( type == "TUPLE" )
+        {
+            return "tuple";
+        }
+        else if ( type == "MAP" )
+        {
+            return "map";
+        }
+        else if ( type == "SET" )
+        {
+            return "set";
+        }
+        else if ( type == "LIST" )
+        {
+            return "list";
+        }
+        else if ( type.indexOf( ' ' ) >= 0 )
+        {
+            type = type.replace( "/", "  " );
+            sub_type_array = type.split( ' ' );
+
+            foreach ( ref sub_type; sub_type_array )
+            {
+                sub_type = GetCqlType( sub_type, sub_type );
+            }
+
+            type = sub_type_array.join( ' ' ).replace( "  ", "," );
+
+            sub_type_array = type.split( ' ' );
+
+            foreach ( sub_type_index, sub_type; sub_type_array )
+            {
+                if ( sub_type_index == 0 )
+                {
+                    type = sub_type;
+                }
+                else
+                {
+                    type = sub_type ~ "<" ~ type ~ ">";
+                }
+            }
+
+            return type;
+
+        }
+
+        return default_type;
+    }
+
+    // ~~
+
+    string GetAqlType(
+        string type
+        )
+    {
+        type = type.strip();
+
+        if ( type == "BOOL" )
+        {
+            return "int64";
+        }
+        else if ( type == "INT8" )
+        {
+            return "int64";
+        }
+        else if ( type == "UINT8" )
+        {
+            return "int64";
+        }
+        else if ( type == "INT16" )
+        {
+            return "int64";
+        }
+        else if ( type == "UINT16" )
+        {
+            return "int64";
+        }
+        else if ( type == "INT32" )
+        {
+            return "int64";
+        }
+        else if ( type == "UINT32" )
+        {
+            return "int64";
+        }
+        else if ( type == "INT64" )
+        {
+            return "int64";
+        }
+        else if ( type == "UINT64" )
+        {
+            return "int64";
+        }
+        else if ( type == "FLOAT32" )
+        {
+            return "float64";
+        }
+        else if ( type == "FLOAT64" )
+        {
+            return "float64";
+        }
+        else if ( type == "STRING" )
+        {
+            return "string";
+        }
+        else if ( type == "DATE" )
+        {
+            return "string";
+        }
+        else if ( type == "DATETIME" )
+        {
+            return "string";
+        }
+        else if ( type == "UUID" )
+        {
+            return "string";
+        }
+        else if ( type == "BLOB" )
+        {
+            return "blob";
+        }
+
+        return "string";
+    }
+
+    // ~~
+
     string GetGoType(
         string type
         )
@@ -1321,11 +1606,25 @@ class COLUMN
         {
             return "float64";
         }
-        else if ( type == "STRING"
-                  || type == "DATE"
-                  || type == "DATETIME" )
+        else if ( type == "STRING" )
         {
             return "string";
+        }
+        else if ( type == "DATE" )
+        {
+            return "string";
+        }
+        else if ( type == "DATETIME" )
+        {
+            return "string";
+        }
+        else if ( type == "UUID" )
+        {
+            return "string";
+        }
+        else if ( type == "BLOB" )
+        {
+            return "[]byte";
         }
         else if ( type.endsWith( '*' ) )
         {
@@ -1366,154 +1665,10 @@ class COLUMN
             GoName = Name;
         }
 
-        if ( SqlType == "" )
-        {
-            SqlType = "TEXT";
-        }
-
-        if ( CqlType == "" )
-        {
-            CqlType = "text";
-        }
-
-        if ( AqlType == "" )
-        {
-            AqlType = "string";
-        }
-
-        if ( GoType == "" )
-        {
-            GoType = "string";
-        }
-
-        if ( Type == "STRING" )
-        {
-            if ( Capacity != 0 )
-            {
-                SqlType = "VARCHAR( " ~ Capacity.to!string() ~ " )";
-                CqlType = "text";
-            }
-            else
-            {
-                SqlType = "TEXT";
-                CqlType = "text";
-            }
-
-            AqlType = "string";
-            GoType = "string";
-        }
-        else if ( Type == "BOOL" )
-        {
-            SqlType = "TINYINT UNSIGNED";
-            CqlType = "boolean";
-            AqlType = "int64";
-            GoType = "bool";
-        }
-        else if ( Type == "INT8" )
-        {
-            SqlType = "TINYINT";
-            CqlType = "tinyint";
-            AqlType = "int64";
-            GoType = "int8";
-        }
-        else if ( Type == "UINT8" )
-        {
-            SqlType = "TINYINT UNSIGNED";
-            CqlType = "tinyint";
-            AqlType = "int64";
-            GoType = "uint8";
-        }
-        else if ( Type == "INT16" )
-        {
-            SqlType = "SMALLINT";
-            CqlType = "smallint";
-            AqlType = "int64";
-            GoType = "int16";
-        }
-        else if ( Type == "UINT16" )
-        {
-            SqlType = "SMALLINT UNSIGNED";
-            CqlType = "smallint";
-            AqlType = "int64";
-            GoType = "uint16";
-        }
-        else if ( Type == "INT32" )
-        {
-            SqlType = "INT";
-            CqlType = "int";
-            AqlType = "int64";
-            GoType = "int32";
-        }
-        else if ( Type == "UINT32" )
-        {
-            SqlType = "INT UNSIGNED";
-            CqlType = "int";
-            AqlType = "int64";
-            GoType = "uint32";
-        }
-        else if ( Type == "INT64" )
-        {
-            SqlType = "BIGINT";
-            CqlType = "bigint";
-            AqlType = "int64";
-            GoType = "int64";
-        }
-        else if ( Type == "UINT64" )
-        {
-            SqlType = "BIGINT UNSIGNED";
-            CqlType = "bigint";
-            AqlType = "int64";
-            GoType = "uint64";
-        }
-        else if ( Type == "FLOAT32" )
-        {
-            SqlType = "FLOAT";
-            CqlType = "float";
-            AqlType = "float64";
-            GoType = "float32";
-        }
-        else if ( Type == "FLOAT64" )
-        {
-            SqlType = "DOUBLE";
-            CqlType = "double";
-            AqlType = "float64";
-            GoType = "float64";
-        }
-        else if ( Type == "DATE" )
-        {
-            SqlType = "DATE";
-            CqlType = "timestamp";
-            AqlType = "string";
-            GoType = "string";
-        }
-        else if ( Type == "DATETIME" )
-        {
-            SqlType = "DATETIME";
-            CqlType = "timestamp";
-            AqlType = "string";
-            GoType = "string";
-        }
-        else if ( Type == "UUID" )
-        {
-            SqlType = "BINARY(16)";
-            CqlType = "uuid";
-            AqlType = "string";
-            GoType = "string";
-        }
-        else if ( Type == "BLOB" )
-        {
-            SqlType = "BLOB";
-            CqlType = "blob";
-            AqlType = "blob";
-            GoType = "[]byte";
-        }
-        else
-        {
-            if ( !IsStored )
-            {
-                GoType = GetGoType( Type );
-            }
-        }
+        SqlType = GetSqlType( Type );
+        CqlType = GetCqlType( Type );
+        AqlType = GetAqlType( Type );
+        GoType = GetGoType( Type );
 
         if ( IsKey || IsRequired )
         {
@@ -1532,7 +1687,7 @@ class COLUMN
 
     // ~~
 
-    void MakeForeignType(
+    void UseForeignType(
         )
     {
         if ( !IsList )
@@ -1999,13 +2154,21 @@ class COLUMN
             }
         }
         else if ( CqlType == "tinyint"
-             || CqlType == "smallint"
-             || CqlType == "int"
-             || CqlType == "bigint"
-             || CqlType == "float"
-             || CqlType == "double" )
+                  || CqlType == "smallint"
+                  || CqlType == "int"
+                  || CqlType == "bigint"
+                  || CqlType == "float"
+                  || CqlType == "double" )
         {
             return ValueArray[ row_index ].Text;
+        }
+        else if ( IsList )
+        {
+            return "[ " ~ ValueArray[ row_index ].Text ~ " ]";
+        }
+        else if ( IsSet || IsMap )
+        {
+            return "{ " ~ ValueArray[ row_index ].Text ~ " }";
         }
         else
         {
@@ -2143,7 +2306,7 @@ class TABLE
             foreach ( ref column; ColumnArray )
             {
                 if ( column.IsStored
-                     && !column.IsForeign )
+                     && !column.IsRef )
                 {
                     column.ValueArray[ row_index ] = column.MakeValue( this, row_index, RowCount );
                 }
@@ -2202,6 +2365,8 @@ class SCHEMA
     {
         string
             foreign_table_name;
+        string[]
+            type_name_array;
 
         foreach ( ref table; TableArray )
         {
@@ -2212,30 +2377,42 @@ class SCHEMA
         {
             foreach ( ref column; table.ColumnArray )
             {
-                if ( column.Type.endsWith( " REF" ) )
-                {
-                    column.IsForeign = true;
+                type_name_array = column.Type.split( ' ' );
 
-                    foreign_table_name = column.Type[ 0 .. $ - 4 ];
+                foreign_table_name = "";
+
+                if ( type_name_array[ $ - 1 ] == "REF" )
+                {
+                    foreign_table_name = type_name_array[ 0 ];
                 }
 
-                if ( column.Type.endsWith( " LIST" ) )
+                if ( type_name_array[ $ - 1 ] == "LIST" )
                 {
-                    column.IsForeign = true;
                     column.IsList = true;
 
-                    foreign_table_name = column.Type[ 0 .. $ - 5 ];
+                    foreign_table_name = type_name_array[ 0 ];
                 }
 
-                if ( column.IsForeign )
+                if ( type_name_array[ $ - 1 ] == "SET" )
+                {
+                    column.IsSet = true;
+                }
+
+                if ( type_name_array[ $ - 1 ] == "MAP" )
+                {
+                    column.IsMap = true;
+                }
+
+                if ( foreign_table_name != "" )
                 {
                     foreach ( ref foreign_table; TableArray )
                     {
                         if ( foreign_table.Name == foreign_table_name )
                         {
+                            column.IsRef = true;
                             column.ForeignTable = foreign_table;
                             column.ForeignColumn = foreign_table.ColumnArray[ 0 ];
-                            column.MakeForeignType();
+                            column.UseForeignType();
 
                             break;
                         }
@@ -2265,13 +2442,18 @@ class SCHEMA
         {
             foreach ( ref column; table.ColumnArray )
             {
-                if ( column.IsForeign )
+                if ( column.IsRef )
                 {
                     foreach ( row_index; 0 .. table.RowCount )
                     {
                         if ( column.IsList )
                         {
                             foreign_value_count = Random.MakeInteger( column.MinimumRandomCount, column.MaximumRandomCount );
+
+                            if ( foreign_value_count > column.ForeignColumn.ValueArray.length )
+                            {
+                                foreign_value_count = column.ForeignColumn.ValueArray.length;
+                            }
 
                             value = new VALUE();
 
@@ -2336,7 +2518,8 @@ class SCHEMA
         {
             stripped_line = line.strip();
 
-            if ( stripped_line.length > 0 )
+            if ( stripped_line.length > 0
+                 && stripped_line[ 0 ] != '#' )
             {
                 writeln( line );
 
@@ -2469,7 +2652,7 @@ class SCHEMA
         {
             foreach ( ref column; table.ColumnArray )
             {
-                if ( column.IsForeign )
+                if ( column.IsRef )
                 {
                     uml_schema_file_text
                         ~= "\n" ~ column.ForeignTable.Name ~ " <-- " ~ table.Name ~ "\n";
@@ -2538,7 +2721,7 @@ class SCHEMA
             foreach ( ref column; table.ColumnArray )
             {
                 if ( column.IsStored
-                     && column.IsForeign
+                     && column.IsRef
                      && !column.IsList )
                 {
                     ++foreign_key_index;
@@ -2561,7 +2744,7 @@ class SCHEMA
             foreach ( ref column; table.ColumnArray )
             {
                 if ( column.IsStored
-                     && column.IsForeign
+                     && column.IsRef
                      && !column.IsList )
                 {
                     ++foreign_key_index;
@@ -2890,7 +3073,7 @@ class SCHEMA
                     }
                 }
 
-                aql_data_file_text ~= " );\n\n";
+                aql_data_file_text ~= " );\n";
             }
         }
 

@@ -87,6 +87,8 @@ BLOG | count 5
 ## Syntax
 
 ```
+# comment
+
 {database name} [| {database property}, {database property}, ...]
 
     {table name} [| {table property}, {table property}, ...]
@@ -186,11 +188,11 @@ DATE
 DATETIME
 UUID
 BLOB
-LIST[...]
-SET[...]
-MAP[...,...]
-{table} REF : table object reference.
-{table} LIST : list of table object references.
+.../... TUPLE
+.../... MAP
+... SET
+... LIST
+... REF
 ```
 
 ### Internal fields
@@ -209,7 +211,7 @@ Build the executable with the following command line :
 dmd -m64 basil.d
 ```
 
-Install [PlantUML](http://plantuml.com/download) (or use [www.planttext.com](https://www.planttext.com/)) to view the UML diagram.
+The UML diagrams can be drawn using [www.planttext.com](https://www.planttext.com/).
 
 ## Command line
 

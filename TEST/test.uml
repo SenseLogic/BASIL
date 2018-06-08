@@ -1,0 +1,47 @@
+@startuml
+skinparam shadowing false
+skinparam classAttributeIconSize 0
+skinparam classAttributeFontColor tomato
+skinparam classFontStyle bold
+skinparam classFontColor blue
+skinparam classBackgroundColor lightyellow
+skinparam classBorderColor cornflowerblue
+skinparam arrowColor cornflowerblue
+hide circle
+hide methods
+left to right direction
+
+class ITEM {
+    Uuid : UUID
+    Bool : BOOL
+    Int8 : INT8
+    Uint8 : UINT8
+    Int16 : INT16
+    Uint16 : UINT16
+    Int32 : INT32
+    Uint32 : UINT32
+    Int64 : INT64
+    Uint64 : UINT64
+    Float32 : FLOAT32
+    Float64 : FLOAT64
+    String : STRING
+    Date : DATE
+    DateTime : DATETIME
+    Blob : BLOB
+}
+
+class COLLECTION {
+    Id : INT32
+    Tuple : INT32/STRING TUPLE
+    Map : INT32/STRING MAP
+    Set : INT32 SET
+    List : INT32 SET
+    ItemRef : ITEM REF
+    ItemList : ITEM LIST
+}
+
+ITEM <-- COLLECTION
+
+ITEM <-- COLLECTION
+
+@enduml

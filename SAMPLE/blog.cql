@@ -1,7 +1,7 @@
 drop keyspace if exists BLOG;
 create keyspace if not exists BLOG with replication = { 'class' : 'SimpleStrategy', 'replication_factor' : 1 };
 drop table if exists BLOG.SECTION;
-create table if not exists BLOG.SECTION( Id bigint, Number bigint, Name text, Text text, Image text, ArticleIdList text, primary key( Id ) );
+create table if not exists BLOG.SECTION( Id bigint, Number bigint, Name text, Text text, Image text, ArticleIdList list<ARTICLE>, primary key( Id ) );
 drop table if exists BLOG.USER;
 create table if not exists BLOG.USER( Id bigint, FirstName text, LastName text, Email text, Pseudonym text, Password text, Phone text, Street text, City text, Code text, Region text, Country text, Company text, ItIsAdministrator boolean, primary key( Id ) );
 drop table if exists BLOG.ARTICLE;
