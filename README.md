@@ -247,7 +247,7 @@ Generates "blog.uml", "blog.sql", "blog_data.sql", "blog.go" and "blog_data.go" 
 
 ## Version
 
-1.0
+2.0
 
 ## Author
 
