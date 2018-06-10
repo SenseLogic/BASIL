@@ -40,8 +40,8 @@ class USER {
 
 class ARTICLE {
     Id : UINT64
-    SectionId : SECTION REF
-    UserId : USER REF
+    SectionId : SECTION
+    UserId : USER
     Title : STRING
     Text : STRING
     Image : STRING
@@ -53,10 +53,10 @@ class ARTICLE {
 
 class COMMENT {
     Id : UINT64
-    ArticleId : ARTICLE REF
-    UserId : USER REF
+    ArticleId : ARTICLE
+    UserId : USER
     Text : STRING
-    Date : DATETIME
+    DateTime : DATETIME
     Article : ARTICLE *
     User : USER *
 }

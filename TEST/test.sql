@@ -38,12 +38,12 @@ create table if not exists `TEST`.`COLLECTION`(
     `Map` TEXT NULL,
     `Set` TEXT NULL,
     `List` TEXT NULL,
-    `ItemRef` BINARY(16) NULL,
+    `ItemUuid` BINARY(16) NULL,
     `ItemList` TEXT NULL,
     primary key( `Id` ),
-    index `fk_collection_item_1_idx`( `ItemRef` ASC ),
+    index `fk_collection_item_1_idx`( `ItemUuid` ASC ),
     constraint `fk_collection_item_1`
-    foreign key( `ItemRef` )
+    foreign key( `ItemUuid` )
     references `TEST`.`ITEM`( `Uuid` )
         on delete set null
         on update no action

@@ -31,8 +31,8 @@ BLOG | count 5
     ARTICLE | count 15
 
         Id : UINT64 | key, incremented
-        SectionId : SECTION REF
-        UserId : USER REF
+        SectionId : SECTION | partitioned
+        UserId : USER | clustered
         Title : STRING
         Text : STRING
         Image : STRING | capacity 45
@@ -46,10 +46,10 @@ BLOG | count 5
     COMMENT | count 30
 
         Id : UINT64 | key, incremented
-        ArticleId : ARTICLE REF
-        UserId : USER REF
+        ArticleId : ARTICLE | indexed
+        UserId : USER | indexed
         Text : STRING | english 2 4 5 7
-        Date : DATETIME
+        DateTime : DATETIME
 
         Article : ARTICLE * | !stored
         User : USER * | !stored

@@ -49,7 +49,7 @@ type COMMENT struct {
     ArticleId uint64 `db:"ArticleId"`;
     UserId uint64 `db:"UserId"`;
     Text string `db:"Text"`;
-    Date string `db:"Date"`;
+    DateTime string `db:"DateTime"`;
     Article * ARTICLE;
     User * USER;
 }

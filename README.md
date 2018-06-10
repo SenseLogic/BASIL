@@ -113,6 +113,7 @@ count {row count}
 ```
 [!]stored
 [!]key
+[!]partitioned
 [!]clustered
 [!]indexed
 [!]static
@@ -135,7 +136,7 @@ english {minimum sentence count} {maximum sentence count} {minimum word count} {
 latin  {minimum sentence count} {maximum sentence count} {minimum word count} {maximum word count}
 ```
 
-### Field name endings
+### Field name suffixes
 
 ```
 Id
@@ -192,14 +193,15 @@ BLOB
 .../... MAP
 ... SET
 ... LIST
-... REF
 ```
+
+Foreign keys can be specified by using a foreign table name as field type.
 
 ### Internal fields
 
-Fields with the "!stored" property are included in the generated Go types without being stored on the database.
+Fields with the "!stored" property will be included in the generated Go types, but not stored on the database.
 
-Pointer fields should end with "*", and arrays with "[]".
+Pointer fields should end with "*", and array fields should end with "[]".
 
 ## Installation
 
@@ -211,7 +213,7 @@ Build the executable with the following command line :
 dmd -m64 basil.d
 ```
 
-The UML diagrams can be drawn using [www.planttext.com](https://www.planttext.com/).
+The UML diagrams can be drawn using [PlantText](https://www.planttext.com/) or [PlantUML](http://plantuml.com/).
 
 ## Command line
 

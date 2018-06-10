@@ -24,8 +24,8 @@ type COLLECTION struct {
     Tuple INT32/STRING TUPLE `db:"Tuple"`;
     Map INT32/STRING MAP `db:"Map"`;
     Set INT32 SET `db:"Set"`;
-    List INT32 SET `db:"List"`;
-    ItemRef string `db:"ItemRef"`;
+    List INT32 LIST `db:"List"`;
+    ItemUuid string `db:"ItemUuid"`;
     ItemList ITEM LIST `db:"ItemList"`;
 }
 

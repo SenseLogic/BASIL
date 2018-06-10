@@ -35,8 +35,8 @@ class COLLECTION {
     Tuple : INT32/STRING TUPLE
     Map : INT32/STRING MAP
     Set : INT32 SET
-    List : INT32 SET
-    ItemRef : ITEM REF
+    List : INT32 LIST
+    ItemUuid : ITEM
     ItemList : ITEM LIST
 }
 

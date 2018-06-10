@@ -2,9 +2,9 @@ TEST | count 3
 
     ITEM
         Uuid : UUID | key
-        Bool : BOOL
-        Int8 : INT8
-        Uint8 : UINT8
+        Bool : BOOL | partitioned
+        Int8 : INT8 | clustered
+        Uint8 : UINT8 | indexed
         Int16 : INT16
         Uint16 : UINT16
         Int32 : INT32
@@ -24,6 +24,6 @@ TEST | count 3
         Tuple : INT32/STRING TUPLE
         Map : INT32/STRING MAP
         Set : INT32 SET
-        List : INT32 SET
-        ItemRef : ITEM REF
+        List : INT32 LIST
+        ItemUuid : ITEM
         ItemList : ITEM LIST

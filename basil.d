@@ -994,15 +994,17 @@ class COLUMN
         IsStored,
         IsKey,
         IsLastStored,
-        IsIndexed,
+        IsPartitioned,
         IsClustered,
+        IsIndexed,
         IsStatic,
         IsRequired,
         IsIncremented,
-        IsRef,
+        IsForeign,
         IsList,
+        IsSet,
         IsMap,
-        IsSet;
+        IsMultiple;
     long
         Capacity;
     bool
@@ -1064,15 +1066,17 @@ class COLUMN
         IsStored = true;
         IsLastStored = false;
         IsKey = false;
-        IsIndexed = false;
+        IsPartitioned = false;
         IsClustered = false;
+        IsIndexed = false;
         IsStatic = false;
         IsRequired = false;
         IsIncremented = false;
-        IsRef = false;
+        IsForeign = false;
         IsList = false;
-        IsMap = false;
         IsSet = false;
+        IsMap = false;
+        IsMultiple = false;
         Capacity = 0;
         IsRandomReal = false;
         MinimumRandomReal = 0.0;
@@ -1135,13 +1139,17 @@ class COLUMN
                 {
                     IsKey = ( value_text_array[ 1 ] != "0" );
                 }
-                else if ( property_name == "indexed" )
+                else if ( property_name == "partitioned" )
                 {
-                    IsIndexed = ( value_text_array[ 1 ] != "0" );
+                    IsPartitioned = ( value_text_array[ 1 ] != "0" );
                 }
                 else if ( property_name == "clustered" )
                 {
                     IsClustered = ( value_text_array[ 1 ] != "0" );
+                }
+                else if ( property_name == "indexed" )
+                {
+                    IsIndexed = ( value_text_array[ 1 ] != "0" );
                 }
                 else if ( property_name == "static" )
                 {
@@ -1690,7 +1698,7 @@ class COLUMN
     void UseForeignType(
         )
     {
-        if ( !IsList )
+        if ( !IsMultiple )
         {
             SqlType = ForeignColumn.SqlType;
             CqlType = ForeignColumn.CqlType;
@@ -2142,7 +2150,15 @@ class COLUMN
         long row_index
         )
     {
-        if ( CqlType == "boolean" )
+        if ( IsList )
+        {
+            return "[ " ~ ValueArray[ row_index ].Text ~ " ]";
+        }
+        else if ( IsSet || IsMap )
+        {
+            return "{ " ~ ValueArray[ row_index ].Text ~ " }";
+        }
+        else if ( CqlType == "boolean" )
         {
             if ( ValueArray[ row_index ].Text == "1" )
             {
@@ -2161,14 +2177,6 @@ class COLUMN
                   || CqlType == "double" )
         {
             return ValueArray[ row_index ].Text;
-        }
-        else if ( IsList )
-        {
-            return "[ " ~ ValueArray[ row_index ].Text ~ " ]";
-        }
-        else if ( IsSet || IsMap )
-        {
-            return "{ " ~ ValueArray[ row_index ].Text ~ " }";
         }
         else
         {
@@ -2306,7 +2314,7 @@ class TABLE
             foreach ( ref column; ColumnArray )
             {
                 if ( column.IsStored
-                     && !column.IsRef )
+                     && !column.IsForeign )
                 {
                     column.ValueArray[ row_index ] = column.MakeValue( this, row_index, RowCount );
                 }
@@ -2364,7 +2372,7 @@ class SCHEMA
         )
     {
         string
-            foreign_table_name;
+            base_type_name;
         string[]
             type_name_array;
 
@@ -2378,38 +2386,33 @@ class SCHEMA
             foreach ( ref column; table.ColumnArray )
             {
                 type_name_array = column.Type.split( ' ' );
-
-                foreign_table_name = "";
-
-                if ( type_name_array[ $ - 1 ] == "REF" )
-                {
-                    foreign_table_name = type_name_array[ 0 ];
-                }
+                base_type_name = type_name_array[ 0 ];
 
                 if ( type_name_array[ $ - 1 ] == "LIST" )
                 {
                     column.IsList = true;
-
-                    foreign_table_name = type_name_array[ 0 ];
+                    column.IsMultiple = true;
                 }
 
                 if ( type_name_array[ $ - 1 ] == "SET" )
                 {
                     column.IsSet = true;
+                    column.IsMultiple = true;
                 }
 
                 if ( type_name_array[ $ - 1 ] == "MAP" )
                 {
                     column.IsMap = true;
+                    column.IsMultiple = true;
                 }
 
-                if ( foreign_table_name != "" )
+                if ( column.IsStored )
                 {
                     foreach ( ref foreign_table; TableArray )
                     {
-                        if ( foreign_table.Name == foreign_table_name )
+                        if ( foreign_table.Name == base_type_name )
                         {
-                            column.IsRef = true;
+                            column.IsForeign = true;
                             column.ForeignTable = foreign_table;
                             column.ForeignColumn = foreign_table.ColumnArray[ 0 ];
                             column.UseForeignType();
@@ -2442,11 +2445,11 @@ class SCHEMA
         {
             foreach ( ref column; table.ColumnArray )
             {
-                if ( column.IsRef )
+                if ( column.IsForeign )
                 {
                     foreach ( row_index; 0 .. table.RowCount )
                     {
-                        if ( column.IsList )
+                        if ( column.IsMultiple )
                         {
                             foreign_value_count = Random.MakeInteger( column.MinimumRandomCount, column.MaximumRandomCount );
 
@@ -2652,7 +2655,7 @@ class SCHEMA
         {
             foreach ( ref column; table.ColumnArray )
             {
-                if ( column.IsRef )
+                if ( column.IsForeign )
                 {
                     uml_schema_file_text
                         ~= "\n" ~ column.ForeignTable.Name ~ " <-- " ~ table.Name ~ "\n";
@@ -2721,8 +2724,8 @@ class SCHEMA
             foreach ( ref column; table.ColumnArray )
             {
                 if ( column.IsStored
-                     && column.IsRef
-                     && !column.IsList )
+                     && column.IsForeign
+                     && !column.IsMultiple )
                 {
                     ++foreign_key_index;
 
@@ -2744,8 +2747,8 @@ class SCHEMA
             foreach ( ref column; table.ColumnArray )
             {
                 if ( column.IsStored
-                     && column.IsRef
-                     && !column.IsList )
+                     && column.IsForeign
+                     && !column.IsMultiple )
                 {
                     ++foreign_key_index;
 
@@ -2887,22 +2890,10 @@ class SCHEMA
 
             foreach ( ref column; table.ColumnArray )
             {
-                if ( column.IsStored
-                     && column.IsKey
-                     && !column.IsIndexed )
+                if ( column.IsStored )
                 {
-                    if ( column.IsClustered )
-                    {
-                        if ( cluster_key == "" )
-                        {
-                            cluster_key = column.CqlName;
-                        }
-                        else
-                        {
-                            cluster_key ~= ", " ~ column.CqlName;
-                        }
-                    }
-                    else
+                    if ( column.IsKey
+                         || column.IsPartitioned )
                     {
                         if ( partition_key == "" )
                         {
@@ -2911,6 +2902,17 @@ class SCHEMA
                         else
                         {
                             partition_key ~= ", " ~ column.CqlName;
+                        }
+                    }
+                    else if ( column.IsClustered )
+                    {
+                        if ( cluster_key == "" )
+                        {
+                            cluster_key = column.CqlName;
+                        }
+                        else
+                        {
+                            cluster_key ~= ", " ~ column.CqlName;
                         }
                     }
                 }
@@ -2935,7 +2937,6 @@ class SCHEMA
             foreach ( ref column; table.ColumnArray )
             {
                 if ( column.IsStored
-                     && column.IsKey
                      && column.IsIndexed )
                 {
                     cql_schema_file_text
@@ -3054,14 +3055,14 @@ class SCHEMA
                 {
                     if ( column.IsStored )
                     {
-                        if ( column.IsList )
+                        if ( column.IsMultiple )
                         {
                             aql_data_file_text ~= "'JSON[ ";
                         }
 
                         aql_data_file_text ~= column.GetAqlValueText( row_index );
 
-                        if ( column.IsList )
+                        if ( column.IsMultiple )
                         {
                             aql_data_file_text ~= " ]'";
                         }
