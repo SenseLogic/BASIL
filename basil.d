@@ -18,12 +18,11 @@
     along with Basil.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-// == LOCAL
-
 // -- IMPORTS
 
 import core.stdc.stdlib : exit;
 import std.algorithm : countUntil;
+import std.ascii : isDigit, isLower, isUpper;
 import std.conv : to;
 import std.file : dirEntries, readText, thisExePath, write, SpanMode;
 import std.random : uniform;
@@ -32,168 +31,12 @@ import std.regex : regex, replaceAll, Regex;
 import std.stdio : writeln;
 import std.string : endsWith, format, indexOf, join, lineSplitter, replace, startsWith, split, strip, toLower, toUpper;
 
-// == GLOBAL
-
-// -- FUNCTIONS
-
-void PrintError(
-    string message
-    )
-{
-    writeln( "*** ERROR : ", message );
-}
-
-// ~~
-
-void Abort(
-    string message
-    )
-{
-    PrintError( message );
-
-    exit( -1 );
-}
-
-// ~~
-
-bool IsVowelCharacter(
-    char character
-    )
-{
-    return "aeiouy".indexOf( character ) >= 0;
-}
-
-// ~~
-
-bool IsConsonantCharacter(
-    char character
-    )
-{
-    return "bcdfghjklmnpqrstvwx".indexOf( character ) >= 0;
-}
-
-// ~~
-
-bool StartsByVowel(
-    string text
-    )
-{
-    return
-        text != ""
-        && IsVowelCharacter( text[ 0 ] );
-}
-
-// ~~
-
-bool StartsByConsonant(
-    string text
-    )
-{
-    return
-        text != ""
-        && IsConsonantCharacter( text[ 0 ] );
-}
-
-// ~~
-
-bool EndsByVowel(
-    string text
-    )
-{
-    return
-        text != ""
-        && IsVowelCharacter( text[ $ - 1 ] );
-}
-
-// ~~
-
-bool EndsByConsonant(
-    string text
-    )
-{
-    return
-        text != ""
-        && IsConsonantCharacter( text[ $ - 1 ] );
-}
-
-// ~~
-
-string GetCapitalizedText(
-    string text
-    )
-{
-    return text[ 0 .. 1 ].toUpper() ~ text[ 1 .. $ ].toLower();
-}
-
-// ~~
-
-string GetPascalCaseText(
-    string text
-    )
-{
-    long
-        word_index;
-    string[]
-        word_array;
-
-    word_array = text.split( '_' );
-
-    foreach ( ref word; word_array )
-    {
-        word = word.GetCapitalizedText();
-    }
-
-    return word_array.join( "" );
-}
-
-// ~~
-
-string GetSnakeCaseText(
-    string text
-    )
-{
-    return text.replaceAll( regex( `([a-z0-9])([A-Z])` ), "$1_$2" );
-}
-
-// ~~
-
-string GetExecutablePath(
-    string file_name
-    )
-{
-    return dirName( thisExePath() ) ~ "/" ~ file_name;
-}
-
-// ~~
-
-string InsertCharacter(
-    string text,
-    char character
-    )
-{
-    long
-        character_index;
-
-    character_index = Random.MakeInteger( 0, text.length );
-
-    if ( character_index == 0 )
-    {
-        return character ~ text;
-    }
-    else if ( character_index == text.length )
-    {
-        return text ~ character;
-    }
-    else
-    {
-        return text[ 0 .. character_index ] ~ character ~ text[ character_index .. $ ];
-    }
-}
-
 // -- TYPES
 
 class LINK
 {
+    // -- ATTRIBUTES
+
     string
         Word;
     long
@@ -201,7 +44,7 @@ class LINK
     bool
         IsFinal;
 
-    // ~~
+    // -- CONSTRUCTORS
 
     this(
         string word,
@@ -219,6 +62,8 @@ class LINK
 
 class VERTEX
 {
+    // -- ATTRIBUTES
+
     string
         Word;
     bool
@@ -226,7 +71,7 @@ class VERTEX
     LINK[]
         LinkArray;
 
-    // ~~
+    // -- CONSTRUCTORS
 
     this(
         string word
@@ -242,6 +87,8 @@ class VERTEX
 
 class RANDOM
 {
+    // -- ATTRIBUTES
+
     string[]
         FirstNameArray,
         LastNameArray,
@@ -256,7 +103,7 @@ class RANDOM
         WordArray,
         SyllableArray;
 
-    // ~~
+    // -- CONSTRUCTORS
 
     this(
         )
@@ -271,7 +118,7 @@ class RANDOM
         MakeSyllableArray();
     }
 
-    // ~~
+    // -- OPERATIONS
 
     void MakeNameArray(
         ref string[] name_array,
@@ -961,12 +808,14 @@ class RANDOM
 
 class VALUE
 {
+    // -- ATTRIBUTES
+
     string
         Text;
     VALUE[]
         ValueArray;
 
-    // ~~
+    // -- CONSTRUCTORS
 
     this(
         )
@@ -987,6 +836,8 @@ class VALUE
 
 class COLUMN
 {
+    // -- ATTRIBUTES
+
     string
         Name,
         Type;
@@ -1052,9 +903,11 @@ class COLUMN
         AqlName,
         AqlType,
         GoName,
-        GoType;
+        GoType,
+        CrystalName,
+        CrystalType;
 
-    // ~~
+    // -- CONSTRUCTORS
 
     this(
         string name,
@@ -1099,7 +952,7 @@ class COLUMN
         IsUppercase = false;
     }
 
-    // ~~
+    // -- OPERATIONS
 
     void SetPropertyValue(
         string property_text
@@ -1178,6 +1031,10 @@ class COLUMN
                 else if ( property_name == "goname" )
                 {
                     GoName = value_text_array[ 1 ];
+                }
+                else if ( property_name == "crystalname" )
+                {
+                    CrystalName = value_text_array[ 1 ];
                 }
                 else if ( property_name == "firstname" )
                 {
@@ -1650,6 +1507,177 @@ class COLUMN
 
     // ~~
 
+    string GetCrystalType(
+        string type,
+        string default_type = "string"
+        )
+    {
+        string[]
+            sub_type_array;
+
+        type = type.strip();
+
+        if ( type == "BOOL" )
+        {
+            return "bool";
+        }
+        else if ( type == "INT8" )
+        {
+            return "Int8";
+        }
+        else if ( type == "UINT8" )
+        {
+            return "Uint8";
+        }
+        else if ( type == "INT16" )
+        {
+            return "Int16";
+        }
+        else if ( type == "UINT16" )
+        {
+            return "Uint16";
+        }
+        else if ( type == "INT32" )
+        {
+            return "Int32";
+        }
+        else if ( type == "UINT32" )
+        {
+            return "Uint32";
+        }
+        else if ( type == "INT64" )
+        {
+            return "Int64";
+        }
+        else if ( type == "UINT64" )
+        {
+            return "Uint64";
+        }
+        else if ( type == "FLOAT32" )
+        {
+            return "Float32";
+        }
+        else if ( type == "FLOAT64" )
+        {
+            return "Float64";
+        }
+        else if ( type == "STRING" )
+        {
+            return "String";
+        }
+        else if ( type == "DATE" )
+        {
+            return "String";
+        }
+        else if ( type == "DATETIME" )
+        {
+            return "String";
+        }
+        else if ( type == "UUID" )
+        {
+            return "String";
+        }
+        else if ( type == "BLOB" )
+        {
+            return "String";
+        }
+        else if ( type == "TUPLE" )
+        {
+            return "Tuple";
+        }
+        else if ( type == "MAP" )
+        {
+            return "Map";
+        }
+        else if ( type == "SET" )
+        {
+            return "Set";
+        }
+        else if ( type == "LIST" )
+        {
+            return "List";
+        }
+        else if ( type.indexOf( ' ' ) >= 0 )
+        {
+            type = type.replace( "/", "  " );
+            sub_type_array = type.split( ' ' );
+
+            foreach ( ref sub_type; sub_type_array )
+            {
+                sub_type = GetCrystalType( sub_type, sub_type );
+            }
+
+            type = sub_type_array.join( ' ' ).replace( "  ", "," );
+
+            sub_type_array = type.split( ' ' );
+
+            foreach ( sub_type_index, sub_type; sub_type_array )
+            {
+                if ( sub_type_index == 0 )
+                {
+                    type = sub_type;
+                }
+                else
+                {
+                    type = sub_type ~ "(" ~ type ~ ")";
+                }
+            }
+
+            return type;
+
+        }
+
+        return default_type;
+    }
+
+    // ~~
+
+    void FixType(
+        )
+    {
+        bool
+            sub_type_has_changed;
+        string
+            type;
+        string[]
+            sub_type_array;
+        TABLE
+            table;
+
+        table = Schema.FindTable( Type );
+
+        if ( table !is null )
+        {
+            IsForeign = true;
+            ForeignTable = table;
+            ForeignColumn = table.ColumnArray[ 0 ];
+        }
+
+        do
+        {
+            type = Type.replace( "/", "  " );
+
+            sub_type_array = type.split( ' ' );
+            sub_type_has_changed = false;
+
+            foreach ( ref sub_type; sub_type_array )
+            {
+                table = Schema.FindTable( sub_type );
+
+                if ( table !is null )
+                {
+                    sub_type = table.ColumnArray[ 0 ].Type;
+                    sub_type_has_changed = true;
+                }
+            }
+
+            Type = sub_type_array.join( ' ' ).replace( "  ", "," );
+        }
+        while ( sub_type_has_changed );
+    }
+
+    // ~~
+
     void MakeType(
         )
     {
@@ -1673,10 +1701,21 @@ class COLUMN
             GoName = Name;
         }
 
+        if ( CrystalName == "" )
+        {
+            CrystalName = GetSnakeCaseText( Name );
+        }
+
+        if ( IsStored )
+        {
+            FixType();
+        }
+
         SqlType = GetSqlType( Type );
         CqlType = GetCqlType( Type );
         AqlType = GetAqlType( Type );
         GoType = GetGoType( Type );
+        CrystalType = GetCrystalType( Type );
 
         if ( IsKey || IsRequired )
         {
@@ -1690,20 +1729,6 @@ class COLUMN
         if ( IsIncremented )
         {
             SqlPropertyArray ~= "AUTO_INCREMENT";
-        }
-    }
-
-    // ~~
-
-    void UseForeignType(
-        )
-    {
-        if ( !IsMultiple )
-        {
-            SqlType = ForeignColumn.SqlType;
-            CqlType = ForeignColumn.CqlType;
-            AqlType = ForeignColumn.AqlType;
-            GoType = ForeignColumn.GoType;
         }
     }
 
@@ -2203,12 +2228,34 @@ class COLUMN
             return ValueArray[ row_index ].Text;
         }
     }
+
+    // ~~
+
+    string GetCrystalValueText(
+        long row_index
+        )
+    {
+        if ( CrystalType == "String" )
+        {
+            return "\"" ~ ValueArray[ row_index ].Text ~ "\"";
+        }
+        else if ( CrystalType == "Bool" )
+        {
+            return ValueArray[ row_index ].Text == "0" ? "false" : "true";
+        }
+        else
+        {
+            return ValueArray[ row_index ].Text;
+        }
+    }
 }
 
 // ~~
 
 class TABLE
 {
+    // -- ATTRIBUTES
+
     string
         SchemaName,
         Name,
@@ -2225,7 +2272,7 @@ class TABLE
         PriorLastName,
         PriorName;
 
-    // ~~
+    // -- CONSTRUCTORS
 
     this(
         SCHEMA schema,
@@ -2240,7 +2287,7 @@ class TABLE
         RowCount = schema.RowCount;
     }
 
-    // ~~
+    // -- OPERATIONS
 
     void SetPropertyValue(
         string property_text
@@ -2327,6 +2374,8 @@ class TABLE
 
 class SCHEMA
 {
+    // -- ATTRIBUTES
+
     string
         Name;
     TABLE[]
@@ -2334,7 +2383,7 @@ class SCHEMA
     long
         RowCount;
 
-    // ~~
+    // -- CONSTRUCTORS
 
     this(
         )
@@ -2342,7 +2391,24 @@ class SCHEMA
         RowCount = 10;
     }
 
-    // -- FUNCTIONS
+    // -- INQUIRIES
+
+    TABLE FindTable(
+        string table_name
+        )
+    {
+        foreach ( ref table; TableArray )
+        {
+            if ( table.Name == table_name )
+            {
+                return table;
+            }
+        }
+
+        return null;
+    }
+
+    // -- OPERATIONS
 
     void SetPropertyValue(
         string property_text
@@ -2372,7 +2438,7 @@ class SCHEMA
         )
     {
         string
-            base_type_name;
+            last_type_name;
         string[]
             type_name_array;
 
@@ -2386,40 +2452,24 @@ class SCHEMA
             foreach ( ref column; table.ColumnArray )
             {
                 type_name_array = column.Type.split( ' ' );
-                base_type_name = type_name_array[ 0 ];
+                last_type_name = type_name_array[ $ - 1 ];
 
-                if ( type_name_array[ $ - 1 ] == "LIST" )
+                if ( last_type_name == "LIST" )
                 {
                     column.IsList = true;
                     column.IsMultiple = true;
                 }
 
-                if ( type_name_array[ $ - 1 ] == "SET" )
+                if ( last_type_name == "SET" )
                 {
                     column.IsSet = true;
                     column.IsMultiple = true;
                 }
 
-                if ( type_name_array[ $ - 1 ] == "MAP" )
+                if ( last_type_name == "MAP" )
                 {
                     column.IsMap = true;
                     column.IsMultiple = true;
-                }
-
-                if ( column.IsStored )
-                {
-                    foreach ( ref foreign_table; TableArray )
-                    {
-                        if ( foreign_table.Name == base_type_name )
-                        {
-                            column.IsForeign = true;
-                            column.ForeignTable = foreign_table;
-                            column.ForeignColumn = foreign_table.ColumnArray[ 0 ];
-                            column.UseForeignType();
-
-                            break;
-                        }
-                    }
                 }
             }
         }
@@ -3178,6 +3228,41 @@ class SCHEMA
 
         go_data_file_path.write( go_data_file_text );
     }
+
+    // ~~
+
+    void WriteCrystalSchemaFile(
+        string crystal_schema_file_path
+        )
+    {
+        string
+            crystal_schema_file_text;
+
+        writeln( "Writing Crystal schema file : ", crystal_schema_file_path );
+
+        crystal_schema_file_text = "";
+
+        foreach ( ref table; TableArray )
+        {
+            table.TypeName = table.Name;
+
+            crystal_schema_file_text ~= "class " ~ table.TypeName ~ "\n";
+
+            foreach ( ref column; table.ColumnArray )
+            {
+                crystal_schema_file_text
+                    ~= "    @"
+                       ~ column.CrystalName
+                       ~ " : "
+                       ~ column.CrystalType
+                       ~ "\n";
+            }
+
+            crystal_schema_file_text ~= "end\n\n";
+        }
+
+        crystal_schema_file_path.write( crystal_schema_file_text );
+    }
 }
 
 // -- VARIABLES
@@ -3187,7 +3272,184 @@ RANDOM
 SCHEMA
     Schema;
 
-// .. FUNCTIONS
+// -- FUNCTIONS
+
+void PrintError(
+    string message
+    )
+{
+    writeln( "*** ERROR : ", message );
+}
+
+// ~~
+
+void Abort(
+    string message
+    )
+{
+    PrintError( message );
+
+    exit( -1 );
+}
+
+// ~~
+
+bool IsVowelCharacter(
+    char character
+    )
+{
+    return "aeiouy".indexOf( character ) >= 0;
+}
+
+// ~~
+
+bool IsConsonantCharacter(
+    char character
+    )
+{
+    return "bcdfghjklmnpqrstvwx".indexOf( character ) >= 0;
+}
+
+// ~~
+
+bool StartsByVowel(
+    string text
+    )
+{
+    return
+        text != ""
+        && IsVowelCharacter( text[ 0 ] );
+}
+
+// ~~
+
+bool StartsByConsonant(
+    string text
+    )
+{
+    return
+        text != ""
+        && IsConsonantCharacter( text[ 0 ] );
+}
+
+// ~~
+
+bool EndsByVowel(
+    string text
+    )
+{
+    return
+        text != ""
+        && IsVowelCharacter( text[ $ - 1 ] );
+}
+
+// ~~
+
+bool EndsByConsonant(
+    string text
+    )
+{
+    return
+        text != ""
+        && IsConsonantCharacter( text[ $ - 1 ] );
+}
+
+// ~~
+
+string GetCapitalizedText(
+    string text
+    )
+{
+    return text[ 0 .. 1 ].toUpper() ~ text[ 1 .. $ ].toLower();
+}
+
+// ~~
+
+string GetPascalCaseText(
+    string text
+    )
+{
+    long
+        word_index;
+    string[]
+        word_array;
+
+    word_array = text.split( '_' );
+
+    foreach ( ref word; word_array )
+    {
+        word = word.GetCapitalizedText();
+    }
+
+    return word_array.join( "" );
+}
+
+// ~~
+
+string GetSnakeCaseText(
+    string text
+    )
+{
+    char
+        prior_character;
+    string
+        snake_case_text;
+
+    snake_case_text = "";
+    prior_character = 0;
+
+    foreach ( char character; text )
+    {
+        if ( ( prior_character.isLower()
+               || prior_character.isDigit() )
+             && character.isUpper() )
+        {
+            snake_case_text ~= '_';
+        }
+
+        snake_case_text ~= character;
+        prior_character = character;
+    }
+
+    return snake_case_text.toLower();
+}
+
+// ~~
+
+string GetExecutablePath(
+    string file_name
+    )
+{
+    return dirName( thisExePath() ) ~ "/" ~ file_name;
+}
+
+// ~~
+
+string InsertCharacter(
+    string text,
+    char character
+    )
+{
+    long
+        character_index;
+
+    character_index = Random.MakeInteger( 0, text.length );
+
+    if ( character_index == 0 )
+    {
+        return character ~ text;
+    }
+    else if ( character_index == text.length )
+    {
+        return text ~ character;
+    }
+    else
+    {
+        return text[ 0 .. character_index ] ~ character ~ text[ character_index .. $ ];
+    }
+}
+
+// ~~
 
 void ProcessFile(
     string basil_schema_file_path,
@@ -3228,6 +3490,10 @@ void ProcessFile(
         {
             Schema.WriteGoSchemaFile( base_file_path ~ ".go" );
             Schema.WriteGoDataFile( base_file_path ~ "_data.go" );
+        }
+        else if ( output_format == "crystal" )
+        {
+            Schema.WriteCrystalSchemaFile( base_file_path ~ ".cr" );
         }
     }
 }
@@ -3272,6 +3538,10 @@ void main(
         {
             output_format_array ~= "go";
         }
+        else if ( option == "--crystal" )
+        {
+            output_format_array ~= "crystal";
+        }
         else
         {
             Abort( "Invalid option : " ~ option );
@@ -3291,7 +3561,8 @@ void main(
         writeln( "    --sql : generate the SQL schema and data files" );
         writeln( "    --cql : generate the CQL schema and data files" );
         writeln( "    --aql : generate the AQL data file" );
-        writeln( "    --go : generate the GO schema and data files" );
+        writeln( "    --go : generate the Go schema and data files" );
+        writeln( "    --crystal : generate the Crystal schema file" );
         writeln( "Examples :" );
         writeln( "    basil --uml script_file.basil" );
         writeln( "    basil --uml --sql --go script_file.basil" );

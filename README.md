@@ -6,15 +6,16 @@ Textual database builder.
 
 ## Features
 
-* Database design using a simple textual specification.
-* Random data generation from the field name, type, size and properties.
-* Lorem ipsum sentences in Latin or English.
-* Several export formats :
-  * UML schema file.
-  * SQL schema and data files.
-  * CQL schema and data files.
-  * AQL data file.
-  * Go schema and data files.
+*   Database design using a simple textual specification.
+*   Random data generation from the field name, type, size and properties.
+*   Lorem ipsum sentences in Latin or English.
+*   Several export formats :
+    *   UML schema file.
+    *   SQL schema and data files.
+    *   CQL schema and data files.
+    *   AQL data file.
+    *   Go schema and data files.
+    *   Crystal schema file.
 
 ## Sample
 
@@ -197,6 +198,8 @@ BLOB
 
 Foreign keys can be specified by using a foreign table name as field type.
 
+The foreign table name will be replaced by the type of the first column of the foreign table.
+
 ### Internal fields
 
 Fields with the "!stored" property will be included in the generated Go types, but not stored on the database.
@@ -229,6 +232,7 @@ basil [options] script_file.basil
 --cql : generate the CQL schema and data files
 --aql : generate the AQL data file
 --go : generate the Go schema and data files
+--crystal : generate the Crystal schema file
 ```
 
 ### Examples

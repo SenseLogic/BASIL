@@ -21,12 +21,12 @@ type ITEM struct {
 
 type COLLECTION struct {
     Id int32 `db:"Id"`;
-    Tuple INT32/STRING TUPLE `db:"Tuple"`;
-    Map INT32/STRING MAP `db:"Map"`;
+    Tuple INT32,STRING TUPLE `db:"Tuple"`;
+    Map INT32,STRING MAP `db:"Map"`;
     Set INT32 SET `db:"Set"`;
     List INT32 LIST `db:"List"`;
     ItemUuid string `db:"ItemUuid"`;
-    ItemList ITEM LIST `db:"ItemList"`;
+    ItemList UUID LIST `db:"ItemList"`;
 }
 
 // ~~
