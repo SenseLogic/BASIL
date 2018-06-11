@@ -14,7 +14,8 @@ Textual database builder.
     *   SQL schema and data files.
     *   CQL schema and data files.
     *   AQL data file.
-    *   Go schema and data files.
+    *   Go SQL schema and data files.
+    *   Go CQL schema file.
     *   Crystal schema file.
 
 ## Sample
@@ -231,7 +232,8 @@ basil [options] script_file.basil
 --sql : generate the SQL schema and data files
 --cql : generate the CQL schema and data files
 --aql : generate the AQL data file
---go : generate the Go schema and data files
+--gosql : generate the Go SQL schema and data files
+--gocql : generate the Go CQL schema file
 --crystal : generate the Crystal schema file
 ```
 
@@ -244,10 +246,10 @@ basil --uml blog.basil
 Generates "blog.uml" from "blog.basil".
 
 ```bash
-basil --uml --sql --go blog.basil
+basil --uml --sql --gosql blog.basil
 ```
 
-Generates "blog.uml", "blog.sql", "blog_data.sql", "blog.go" and "blog_data.go" from "blog.basil".
+Generates "blog.uml", "blog.sql", "blog_data.sql", "blog_sql.go" and "blog_sql_data.go" from "blog.basil".
 
 ## Version
 

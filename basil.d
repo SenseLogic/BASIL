@@ -3133,26 +3133,26 @@ class SCHEMA
 
     // ~~
 
-    void WriteGoSchemaFile(
-        string go_schema_file_path
+    void WriteGoSqlSchemaFile(
+        string go_sql_schema_file_path
         )
     {
         string
-            go_schema_file_text;
+            go_sql_schema_file_text;
 
-        writeln( "Writing Go schema file : ", go_schema_file_path );
+        writeln( "Writing Go SQL schema file : ", go_sql_schema_file_path );
 
-        go_schema_file_text = "";
+        go_sql_schema_file_text = "";
 
         foreach ( ref table; TableArray )
         {
             table.TypeName = table.Name.toUpper();
 
-            go_schema_file_text ~= "type " ~ table.TypeName ~ " struct {\n";
+            go_sql_schema_file_text ~= "type " ~ table.TypeName ~ " struct {\n";
 
             foreach ( ref column; table.ColumnArray )
             {
-                go_schema_file_text
+                go_sql_schema_file_text
                     ~= "    "
                        ~ column.GoName
                        ~ " "
@@ -3160,43 +3160,43 @@ class SCHEMA
 
                 if ( column.IsStored )
                 {
-                    go_schema_file_text
+                    go_sql_schema_file_text
                         ~= " `db:\""
                            ~ column.SqlName
                            ~ "\"`";
                 }
 
-                go_schema_file_text ~= ";\n";
+                go_sql_schema_file_text ~= ";\n";
             }
 
-            go_schema_file_text ~= "}\n\n// ~~\n\n";
+            go_sql_schema_file_text ~= "}\n\n// ~~\n\n";
         }
 
-        go_schema_file_path.write( go_schema_file_text );
+        go_sql_schema_file_path.write( go_sql_schema_file_text );
     }
 
     // ~~
 
-    void WriteGoDataFile(
-        string go_data_file_path
+    void WriteGoSqlDataFile(
+        string go_sql_data_file_path
         )
     {
         long
             column_count;
         string
-            go_data_file_text;
+            go_sql_data_file_text;
         VALUE
             column_value;
 
-        writeln( "Writing Go data file : ", go_data_file_path );
+        writeln( "Writing Go SQL data file : ", go_sql_data_file_path );
 
-        go_data_file_text = "func FillDatabase() {\n";
+        go_sql_data_file_text = "func FillDatabase() {\n";
 
         foreach ( ref table; TableArray )
         {
             foreach ( row_index; 0 .. table.RowCount )
             {
-                go_data_file_text
+                go_sql_data_file_text
                     ~= "    Add" ~ GetPascalCaseText( table.Name ) ~ "(\n        " ~ table.TypeName ~ " {\n";
 
                 column_count = table.ColumnArray.length;
@@ -3205,7 +3205,7 @@ class SCHEMA
                 {
                     if ( column.IsStored )
                     {
-                        go_data_file_text
+                        go_sql_data_file_text
                             ~= "            "
                                ~ column.GoName
                                ~ " : "
@@ -3213,20 +3213,62 @@ class SCHEMA
 
                         if ( !column.IsLastStored )
                         {
-                            go_data_file_text ~= ",";
+                            go_sql_data_file_text ~= ",";
                         }
 
-                        go_data_file_text ~= "\n";
+                        go_sql_data_file_text ~= "\n";
                     }
                 }
 
-                go_data_file_text ~= "        }\n        );\n\n";
+                go_sql_data_file_text ~= "        }\n        );\n\n";
             }
         }
 
-        go_data_file_text ~= "}\n";
+        go_sql_data_file_text ~= "}\n";
 
-        go_data_file_path.write( go_data_file_text );
+        go_sql_data_file_path.write( go_sql_data_file_text );
+    }
+
+    // ~~
+
+    void WriteGoCqlSchemaFile(
+        string go_cql_schema_file_path
+        )
+    {
+        string
+            go_cql_schema_file_text;
+
+        writeln( "Writing Go CQL schema file : ", go_cql_schema_file_path );
+
+        go_cql_schema_file_text = "";
+
+        foreach ( ref table; TableArray )
+        {
+            table.TypeName = table.Name.toUpper();
+
+            go_cql_schema_file_text ~= "type " ~ table.TypeName ~ " struct {\n";
+
+            foreach ( ref column; table.ColumnArray )
+            {
+                go_cql_schema_file_text
+                    ~= "    "
+                       ~ column.GoName
+                       ~ " "
+                       ~ column.GoType;
+
+                if ( !column.IsStored )
+                {
+                    go_cql_schema_file_text
+                        ~= " `db:\"-\"`";
+                }
+
+                go_cql_schema_file_text ~= ";\n";
+            }
+
+            go_cql_schema_file_text ~= "}\n\n// ~~\n\n";
+        }
+
+        go_cql_schema_file_path.write( go_cql_schema_file_text );
     }
 
     // ~~
@@ -3486,10 +3528,14 @@ void ProcessFile(
         {
             Schema.WriteAqlDataFile( base_file_path ~ "_data.aql" );
         }
-        else if ( output_format == "go" )
+        else if ( output_format == "gosql" )
         {
-            Schema.WriteGoSchemaFile( base_file_path ~ ".go" );
-            Schema.WriteGoDataFile( base_file_path ~ "_data.go" );
+            Schema.WriteGoSqlSchemaFile( base_file_path ~ "_sql.go" );
+            Schema.WriteGoSqlDataFile( base_file_path ~ "_sql_data.go" );
+        }
+        else if ( output_format == "gocql" )
+        {
+            Schema.WriteGoCqlSchemaFile( base_file_path ~ "_cql.go" );
         }
         else if ( output_format == "crystal" )
         {
@@ -3534,9 +3580,13 @@ void main(
         {
             output_format_array ~= "aql";
         }
-        else if ( option == "--go" )
+        else if ( option == "--gosql" )
         {
-            output_format_array ~= "go";
+            output_format_array ~= "gosql";
+        }
+        else if ( option == "--gocql" )
+        {
+            output_format_array ~= "gocql";
         }
         else if ( option == "--crystal" )
         {
@@ -3561,7 +3611,8 @@ void main(
         writeln( "    --sql : generate the SQL schema and data files" );
         writeln( "    --cql : generate the CQL schema and data files" );
         writeln( "    --aql : generate the AQL data file" );
-        writeln( "    --go : generate the Go schema and data files" );
+        writeln( "    --gosql : generate the Go SQL schema and data files" );
+        writeln( "    --gocql : generate the Go CQL schema" );
         writeln( "    --crystal : generate the Crystal schema file" );
         writeln( "Examples :" );
         writeln( "    basil --uml script_file.basil" );

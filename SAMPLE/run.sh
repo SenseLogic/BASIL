@@ -1,3 +1,3 @@
 #!/bin/sh
 set -x
-../basil --uml --sql --cql --aql --go --crystal blog.basil
+../basil --uml --sql --cql --aql --gosql --gocql --crystal blog.basil
