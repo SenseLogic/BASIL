@@ -1,7 +1,8 @@
-TEST | count 3
+TEST | count 10
 
-    ITEM
-        Uuid : UUID | key
+    SIMPLE
+
+        Uuid : UUID | key, unique
         Bool : BOOL | partitioned
         Int8 : INT8 | clustered
         Uint8 : UINT8 | indexed
@@ -14,16 +15,22 @@ TEST | count 3
         Float32 : FLOAT32
         Float64 : FLOAT64
         String : STRING
-        Date : DATE
+        Date : DATE | unique
         DateTime : DATETIME
         Blob : BLOB
 
-    COLLECTION
+    COMPOUND
 
-        Id : INT32 | key, incremented
-        Tuple : INT32/STRING TUPLE
-        Map : INT32/STRING MAP
-        Set : INT32 SET
-        List : INT32 LIST
-        ItemUuid : ITEM
-        ItemList : ITEM LIST
+        Id : INT32 | key, unique, incremented
+        Location : Country : STRING | uppercase
+        Name : TUPLE[ FirstName : STRING, LastName : STRING ] | unique
+        NameSet : SET[ TUPLE[ FirstName : STRING, LastName : STRING ] ] | count 2
+        Company Map : MAP[ Phone : STRING, STRING ] | count 2
+        Email Set : SET[ STRING ] | count 2
+        Phone List : LIST[ STRING ] | count 2
+        SimpleDate : SIMPLE.Date
+        SimpleDateMap : MAP[ COMPOUND.Name, SIMPLE.Date ] | count 2
+        SimpleDateSet : SET[ SIMPLE.Date ] | count 2
+        SimpleDateList : LIST[ SIMPLE.Date ] | count 1 3
+        NameSetMap : MAP[ SIMPLE.Date, COMPOUND.NameSet ] | count 2
+        SimplePointerArray : ARRAY[ POINTER[ SIMPLE ] ] | !stored

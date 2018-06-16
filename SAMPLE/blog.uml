@@ -17,7 +17,6 @@ class SECTION {
     Name : STRING
     Text : STRING
     Image : STRING
-    ArticleIdList : UINT64 LIST
     ImageIndex : UINT64
 }
 
@@ -40,25 +39,25 @@ class USER {
 
 class ARTICLE {
     Id : UINT64
-    SectionId : UINT64
-    UserId : UINT64
+    SectionId : SECTION.Id
+    UserId : USER.Id
     Title : STRING
     Text : STRING
     Image : STRING
     Date : DATE
-    Section : SECTION *
-    User : USER *
+    Section : POINTER[ SECTION ]
+    User : POINTER[ USER ]
     ImageIndex : UINT64
 }
 
 class COMMENT {
     Id : UINT64
-    ArticleId : UINT64
-    UserId : UINT64
+    ArticleId : ARTICLE.Id
+    UserId : USER.Id
     Text : STRING
     DateTime : DATETIME
-    Article : ARTICLE *
-    User : USER *
+    Article : POINTER[ ARTICLE ]
+    User : POINTER[ USER ]
 }
 
 class SUBSCRIBER {
@@ -66,13 +65,5 @@ class SUBSCRIBER {
     Name : STRING
     Email : STRING
 }
-
-SECTION <-- ARTICLE
-
-USER <-- ARTICLE
-
-ARTICLE <-- COMMENT
-
-USER <-- COMMENT
 
 @enduml

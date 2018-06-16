@@ -1,4 +1,4 @@
-class ITEM
+class SIMPLE
     @uuid : String
     @bool : bool
     @int8 : Int8
@@ -17,13 +17,19 @@ class ITEM
     @blob : String
 end
 
-class COLLECTION
+class COMPOUND
     @id : Int32
-    @tuple : Tuple(INT32,STRING)
-    @map : Map(INT32,STRING)
-    @set : Set(Int32)
-    @list : List(Int32)
-    @item_uuid : String
-    @item_list : List(String)
+    @location : String
+    @name : Tuple(String,String)
+    @name_set : Set(Tuple(String,String))
+    @company_map : Map(String,String)
+    @email_set : Set(String)
+    @phone_list : List(String)
+    @simple_date : String
+    @simple_date_map : Map(Tuple(),String)
+    @simple_date_set : Set(String)
+    @simple_date_list : List(String)
+    @name_set_map : Map(String,Set())
+    @simple_pointer_array : ARRAY[ POINTER[ SIMPLE ] ]
 end
 

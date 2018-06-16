@@ -155,7 +155,7 @@ class RANDOM
 
         if ( case_is_fixed )
         {
-            foreach ( name; name_array )
+            foreach ( ref name; name_array )
             {
                 name = name.toLower().GetCapitalizedText();
             }
@@ -806,14 +806,23 @@ class RANDOM
 
 // ~~
 
-class VALUE
+class TYPE
 {
     // -- ATTRIBUTES
 
+    TABLE
+        Table;
+    COLUMN
+        Column,
+        ForeignColumn;
     string
-        Text;
-    VALUE[]
-        ValueArray;
+        ColumnName,
+        BaseColumnName,
+        Name,
+        BaseName,
+        ActualBaseName;
+    TYPE[]
+        SubTypeArray;
 
     // -- CONSTRUCTORS
 
@@ -825,10 +834,1679 @@ class VALUE
     // ~~
 
     this(
-        string text
+        TABLE table,
+        COLUMN column,
+        string name
         )
     {
-        Text = text;
+        char
+            character;
+        long
+            bracket_level,
+            character_index;
+        string
+            sub_type;
+
+        Table = table;
+        Column = column;
+        ColumnName = column.Name;
+        BaseColumnName = column.BaseName;
+        Name = name.strip();
+        BaseName = Name;
+
+        bracket_level = 0;
+
+        for ( character_index = 0;
+              character_index < Name.length;
+              ++character_index )
+        {
+            character = Name[ character_index ];
+
+            if ( character == ':' )
+            {
+                if ( bracket_level == 0 )
+                {
+                    ColumnName = Name[ 0 .. character_index ].replace( " ", "" );
+                    BaseColumnName = Name[ 0 .. character_index ].split( ' ' )[ 0 ];
+                    Name = Name[ character_index + 1 .. $ ].strip();
+                    BaseName = Name;
+                    sub_type = "";
+                    character_index = -1;
+                }
+                else
+                {
+                    sub_type ~= character;
+                }
+            }
+            else if ( character == '[' )
+            {
+                ++bracket_level;
+
+                if ( bracket_level == 1 )
+                {
+                    BaseName = Name[ 0 .. character_index ].strip();
+                    sub_type = "";
+                }
+                else
+                {
+                    sub_type ~= character;
+                }
+            }
+            else if ( character == ','
+                      || character == ']' )
+            {
+                if ( bracket_level == 1 )
+                {
+                    SubTypeArray ~= new TYPE( table, column, sub_type );
+                    sub_type = "";
+                }
+                else
+                {
+                    sub_type ~= character;
+                }
+
+                if ( character == ']' )
+                {
+                    --bracket_level;
+                }
+            }
+            else
+            {
+                sub_type ~= character;
+            }
+        }
+    }
+
+    // -- INQUIRIES
+
+    string GetActualBaseName(
+        )
+    {
+        COLUMN
+            foreign_column;
+
+        if ( BaseName.indexOf( '.' ) >= 0 )
+        {
+            foreign_column = Schema.FindForeignColumn( BaseName );
+
+            return foreign_column.Type.GetActualBaseName();
+        }
+        else
+        {
+            return BaseName;
+        }
+    }
+
+    // ~~
+
+    string GetSqlText(
+        )
+    {
+        if ( ActualBaseName == "BOOL" )
+        {
+            return "TINYINT UNSIGNED";
+        }
+        else if ( ActualBaseName == "INT8" )
+        {
+            return "TINYINT";
+        }
+        else if ( ActualBaseName == "UINT8" )
+        {
+            return "TINYINT UNSIGNED";
+        }
+        else if ( ActualBaseName == "INT16" )
+        {
+            return "SMALLINT";
+        }
+        else if ( ActualBaseName == "UINT16" )
+        {
+            return "SMALLINT UNSIGNED";
+        }
+        else if ( ActualBaseName == "INT32" )
+        {
+            return "INT";
+        }
+        else if ( ActualBaseName == "UINT32" )
+        {
+            return "INT UNSIGNED";
+        }
+        else if ( ActualBaseName == "INT64" )
+        {
+            return "BIGINT";
+        }
+        else if ( ActualBaseName == "UINT64" )
+        {
+            return "BIGINT UNSIGNED";
+        }
+        else if ( ActualBaseName == "FLOAT32" )
+        {
+            return "FLOAT";
+        }
+        else if ( ActualBaseName == "FLOAT64" )
+        {
+            return "DOUBLE";
+        }
+        else if ( ActualBaseName == "STRING" )
+        {
+            if ( Column.Capacity != 0 )
+            {
+                return "VARCHAR( " ~ Column.Capacity.to!string() ~ " )";
+            }
+            else
+            {
+                return "TEXT";
+            }
+        }
+        else if ( ActualBaseName == "DATE" )
+        {
+            return "DATE";
+        }
+        else if ( ActualBaseName == "DATETIME" )
+        {
+            return "DATETIME";
+        }
+        else if ( ActualBaseName == "UUID" )
+        {
+            return "BINARY(16)";
+        }
+        else if ( ActualBaseName == "BLOB" )
+        {
+            return "BLOB";
+        }
+        else
+        {
+            return "TEXT";
+        }
+    }
+
+    // ~~
+
+    string GetSubTextSqlText(
+        )
+    {
+        string
+            sub_type_cql_text;
+
+        foreach ( ref sub_type; SubTypeArray )
+        {
+            if ( sub_type_cql_text != "" )
+            {
+                sub_type_cql_text ~= ",";
+            }
+
+            sub_type_cql_text ~= sub_type.GetCqlText();
+        }
+
+        return sub_type_cql_text;
+    }
+
+    // ~~
+
+    string GetCqlText(
+        )
+    {
+        if ( ActualBaseName == "BOOL" )
+        {
+            return "boolean";
+        }
+        else if ( ActualBaseName == "INT8" )
+        {
+            return "tinyint";
+        }
+        else if ( ActualBaseName == "UINT8" )
+        {
+            return "tinyint";
+        }
+        else if ( ActualBaseName == "INT16" )
+        {
+            return "smallint";
+        }
+        else if ( ActualBaseName == "UINT16" )
+        {
+            return "smallint";
+        }
+        else if ( ActualBaseName == "INT32" )
+        {
+            return "int";
+        }
+        else if ( ActualBaseName == "UINT32" )
+        {
+            return "int";
+        }
+        else if ( ActualBaseName == "INT64" )
+        {
+            return "bigint";
+        }
+        else if ( ActualBaseName == "UINT64" )
+        {
+            return "bigint";
+        }
+        else if ( ActualBaseName == "FLOAT32" )
+        {
+            return "float";
+        }
+        else if ( ActualBaseName == "FLOAT64" )
+        {
+            return "double";
+        }
+        else if ( ActualBaseName == "STRING" )
+        {
+            return "text";
+        }
+        else if ( ActualBaseName == "DATE" )
+        {
+            return "timestamp";
+        }
+        else if ( ActualBaseName == "DATETIME" )
+        {
+            return "timestamp";
+        }
+        else if ( ActualBaseName == "UUID" )
+        {
+            return "uuid";
+        }
+        else if ( ActualBaseName == "BLOB" )
+        {
+            return "blob";
+        }
+        else if ( ActualBaseName == "TUPLE" )
+        {
+            return "tuple<" ~ GetSubTextSqlText() ~ ">";
+        }
+        else if ( ActualBaseName == "MAP" )
+        {
+            return "map<" ~ GetSubTextSqlText() ~ ">";
+        }
+        else if ( ActualBaseName == "SET" )
+        {
+            return "set<" ~ GetSubTextSqlText() ~ ">";
+        }
+        else if ( ActualBaseName == "LIST" )
+        {
+            return "list<" ~ GetSubTextSqlText() ~ ">";
+        }
+        else
+        {
+            return "text";
+        }
+    }
+
+    // ~~
+
+    string GetAqlText(
+        )
+    {
+        if ( ActualBaseName == "BOOL" )
+        {
+            return "int64";
+        }
+        else if ( ActualBaseName == "INT8" )
+        {
+            return "int64";
+        }
+        else if ( ActualBaseName == "UINT8" )
+        {
+            return "int64";
+        }
+        else if ( ActualBaseName == "INT16" )
+        {
+            return "int64";
+        }
+        else if ( ActualBaseName == "UINT16" )
+        {
+            return "int64";
+        }
+        else if ( ActualBaseName == "INT32" )
+        {
+            return "int64";
+        }
+        else if ( ActualBaseName == "UINT32" )
+        {
+            return "int64";
+        }
+        else if ( ActualBaseName == "INT64" )
+        {
+            return "int64";
+        }
+        else if ( ActualBaseName == "UINT64" )
+        {
+            return "int64";
+        }
+        else if ( ActualBaseName == "FLOAT32" )
+        {
+            return "float64";
+        }
+        else if ( ActualBaseName == "FLOAT64" )
+        {
+            return "float64";
+        }
+        else if ( ActualBaseName == "STRING" )
+        {
+            return "string";
+        }
+        else if ( ActualBaseName == "DATE" )
+        {
+            return "string";
+        }
+        else if ( ActualBaseName == "DATETIME" )
+        {
+            return "string";
+        }
+        else if ( ActualBaseName == "UUID" )
+        {
+            return "string";
+        }
+        else if ( ActualBaseName == "BLOB" )
+        {
+            return "blob";
+        }
+        else
+        {
+            return "string";
+        }
+    }
+
+    // ~~
+
+    string GetGoText(
+        )
+    {
+        if ( ActualBaseName == "BOOL" )
+        {
+            return "bool";
+        }
+        else if ( ActualBaseName == "INT8" )
+        {
+            return "int8";
+        }
+        else if ( ActualBaseName == "UINT8" )
+        {
+            return "uint8";
+        }
+        else if ( ActualBaseName == "INT16" )
+        {
+            return "int16";
+        }
+        else if ( ActualBaseName == "UINT16" )
+        {
+            return "uint16";
+        }
+        else if ( ActualBaseName == "INT32" )
+        {
+            return "int32";
+        }
+        else if ( ActualBaseName == "UINT32" )
+        {
+            return "uint32";
+        }
+        else if ( ActualBaseName == "INT64" )
+        {
+            return "int64";
+        }
+        else if ( ActualBaseName == "UINT64" )
+        {
+            return "uint64";
+        }
+        else if ( ActualBaseName == "FLOAT32" )
+        {
+            return "float32";
+        }
+        else if ( ActualBaseName == "FLOAT64" )
+        {
+            return "float64";
+        }
+        else if ( ActualBaseName == "STRING" )
+        {
+            return "string";
+        }
+        else if ( ActualBaseName == "DATE" )
+        {
+            return "string";
+        }
+        else if ( ActualBaseName == "DATETIME" )
+        {
+            return "string";
+        }
+        else if ( ActualBaseName == "UUID" )
+        {
+            return "string";
+        }
+        else if ( ActualBaseName == "BLOB" )
+        {
+            return "[]byte";
+        }
+        else if ( ActualBaseName == "POINTER" )
+        {
+            return "* " ~ SubTypeArray[ 0 ].GetGoText();
+        }
+        else if ( ActualBaseName == "ARRAY" )
+        {
+            return "[] " ~ SubTypeArray[ 0 ].GetGoText();
+        }
+        else
+        {
+            return Name;
+        }
+    }
+
+    // ~~
+
+    string GetSubTypeCrystalText(
+        )
+    {
+        string
+            sub_type_crystal_text;
+
+        foreach ( ref sub_type; SubTypeArray )
+        {
+            if ( sub_type_crystal_text != "" )
+            {
+                sub_type_crystal_text ~= ",";
+            }
+
+            sub_type_crystal_text ~= sub_type.GetCrystalText();
+        }
+
+        return sub_type_crystal_text;
+    }
+
+    // ~~
+
+    string GetCrystalText(
+        )
+    {
+        if ( ActualBaseName == "BOOL" )
+        {
+            return "bool";
+        }
+        else if ( ActualBaseName == "INT8" )
+        {
+            return "Int8";
+        }
+        else if ( ActualBaseName == "UINT8" )
+        {
+            return "Uint8";
+        }
+        else if ( ActualBaseName == "INT16" )
+        {
+            return "Int16";
+        }
+        else if ( ActualBaseName == "UINT16" )
+        {
+            return "Uint16";
+        }
+        else if ( ActualBaseName == "INT32" )
+        {
+            return "Int32";
+        }
+        else if ( ActualBaseName == "UINT32" )
+        {
+            return "Uint32";
+        }
+        else if ( ActualBaseName == "INT64" )
+        {
+            return "Int64";
+        }
+        else if ( ActualBaseName == "UINT64" )
+        {
+            return "Uint64";
+        }
+        else if ( ActualBaseName == "FLOAT32" )
+        {
+            return "Float32";
+        }
+        else if ( ActualBaseName == "FLOAT64" )
+        {
+            return "Float64";
+        }
+        else if ( ActualBaseName == "STRING" )
+        {
+            return "String";
+        }
+        else if ( ActualBaseName == "DATE" )
+        {
+            return "String";
+        }
+        else if ( ActualBaseName == "DATETIME" )
+        {
+            return "String";
+        }
+        else if ( ActualBaseName == "UUID" )
+        {
+            return "String";
+        }
+        else if ( ActualBaseName == "BLOB" )
+        {
+            return "String";
+        }
+        else if ( ActualBaseName == "TUPLE" )
+        {
+            return "Tuple(" ~ GetSubTypeCrystalText() ~ ")";
+        }
+        else if ( ActualBaseName == "MAP" )
+        {
+            return "Map(" ~ GetSubTypeCrystalText() ~ ")";
+        }
+        else if ( ActualBaseName == "SET" )
+        {
+            return "Set(" ~ GetSubTypeCrystalText() ~ ")";
+        }
+        else if ( ActualBaseName == "LIST" )
+        {
+            return "List(" ~ GetSubTypeCrystalText() ~ ")";
+        }
+        else
+        {
+            return Name;
+        }
+    }
+
+    // -- OPERATIONS
+
+    COLUMN GetForeignColumn(
+        )
+    {
+        if ( ForeignColumn is null )
+        {
+            ForeignColumn = Schema.FindForeignColumn( BaseName );
+        }
+
+        return ForeignColumn;
+    }
+
+    // ~~
+
+    void SetActualBaseName(
+        )
+    {
+        ActualBaseName = GetActualBaseName();
+
+        foreach ( sub_type; SubTypeArray )
+        {
+            sub_type.SetActualBaseName();
+        }
+    }
+}
+
+// ~~
+
+class VALUE
+{
+    // -- ATTRIBUTES
+
+    TYPE
+        Type;
+    string
+        Text;
+    VALUE[]
+        SubValueArray,
+        KeyValueArray,
+        ElementValueArray;
+
+    // -- CONSTRUCTORS
+
+    this(
+        )
+    {
+    }
+
+    // ~~
+
+    this(
+        TYPE type
+        )
+    {
+        Type = type;
+
+        foreach ( ref sub_type; type.SubTypeArray )
+        {
+            SubValueArray ~= new VALUE( sub_type );
+        }
+    }
+
+    // -- INQUIRIES
+
+    bool IsEqual(
+        VALUE value
+        )
+    {
+        if ( Text != value.Text )
+        {
+            return false;
+        }
+
+        if ( SubValueArray.length != value.SubValueArray.length )
+        {
+            return false;
+        }
+
+        foreach ( sub_value_index; 0 .. SubValueArray.length )
+        {
+            if ( !SubValueArray[ sub_value_index ].IsEqual( value.SubValueArray[ sub_value_index ] ) )
+            {
+                return false;
+            }
+        }
+
+        if ( KeyValueArray.length != value.KeyValueArray.length )
+        {
+            return false;
+        }
+
+        foreach ( key_value_index; 0 .. KeyValueArray.length )
+        {
+            if ( !KeyValueArray[ key_value_index ].IsEqual( value.KeyValueArray[ key_value_index ] ) )
+            {
+                return false;
+            }
+        }
+
+        if ( ElementValueArray.length != value.ElementValueArray.length )
+        {
+            return false;
+        }
+
+        foreach ( element_value_index; 0 .. ElementValueArray.length )
+        {
+            if ( !ElementValueArray[ element_value_index ].IsEqual( value.ElementValueArray[ element_value_index ] ) )
+            {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    // ~~
+
+    bool IsPriorValue(
+        VALUE[] value_array,
+        long value_index
+        )
+    {
+        long
+            prior_value_index;
+
+        for ( prior_value_index = 0;
+              prior_value_index < value_index;
+              ++prior_value_index )
+        {
+            if ( value_array[ prior_value_index ].IsEqual( value_array[ value_index ] ) )
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    // -- OPERATIONS
+
+    void Set(
+        VALUE value
+        )
+    {
+        Text = value.Text;
+        SubValueArray = value.SubValueArray;
+        KeyValueArray = value.KeyValueArray;
+        ElementValueArray = value.ElementValueArray;
+    }
+
+    // ~~
+
+    void Make(
+        long row_index,
+        long row_count,
+        bool it_is_sub_value = false
+        )
+    {
+        long
+            element_value_count,
+            element_value_index,
+            prior_row_index;
+        string
+            prior_first_name,
+            prior_last_name,
+            prior_name,
+            prior_title;
+        ulong
+            random_natural;
+
+        foreach ( ref sub_value; SubValueArray )
+        {
+            sub_value.Make( row_index, row_count, true );
+        }
+
+        do
+        {
+            if ( Type.BaseName.indexOf( '.' ) >= 0 )
+            {
+                Type.GetForeignColumn().MakeValues();
+
+                Set( Random.PickElement( Type.ForeignColumn.ValueArray ) );
+            }
+            else if ( Type.Column.IsRandomReal )
+            {
+                Text = Random.MakeReal( Type.Column.MinimumRandomReal, Type.Column.MaximumRandomReal ).to!string();
+            }
+            if ( Type.Column.IsRandomInteger )
+            {
+                Text = Random.MakeInteger( Type.Column.MinimumRandomInteger, Type.Column.MaximumRandomInteger ).to!string();
+            }
+            if ( Type.Column.IsRandomNatural )
+            {
+                Text = Random.MakeNatural( Type.Column.MinimumRandomNatural, Type.Column.MaximumRandomNatural, Type.Column.MinimumRandomCount ).to!string();
+            }
+            else if ( Type.Column.IsRandomName )
+            {
+                Text = Random.MakeName( Type.Column.MinimumRandomCount, Type.Column.MaximumRandomCount );
+            }
+            else if ( Type.Column.IsRandomFirstName )
+            {
+                Text = Random.MakeFirstName();
+            }
+            else if ( Type.Column.IsRandomLastName )
+            {
+                Text = Random.MakeLastName();
+            }
+            else if ( Type.Column.IsRandomFullName )
+            {
+                Text
+                    = Random.MakeFirstName()
+                      ~ " "
+                      ~ Random.MakeLastName();
+            }
+            else if ( Type.Column.IsRandomEnglish )
+            {
+                Text = Random.MakeText( "english", Type.Column.MinimumRandomCount, Type.Column.MaximumRandomCount, Type.Column.MinimumRandomInteger, Type.Column.MaximumRandomInteger );
+            }
+            else if ( Type.Column.IsRandomLatin )
+            {
+                Text = Random.MakeText( "latin", Type.Column.MinimumRandomCount, Type.Column.MaximumRandomCount, Type.Column.MinimumRandomInteger, Type.Column.MaximumRandomInteger );
+            }
+            else if ( Type.BaseName == "STRING" )
+            {
+                if ( Type.ColumnName.endsWith( "Title" ) )
+                {
+                    Text = Random.MakeSentence( "english", 4, 8 ).GetCapitalizedText() ~ ".";
+                }
+                else if ( Type.ColumnName.endsWith( "Slug" ) )
+                {
+                    prior_title = Type.Column.FindPriorColumnValue( "Title", row_index );
+                    prior_name = Type.Column.FindPriorColumnValue( "Name", row_index );
+
+                    if ( prior_title != "" )
+                    {
+                        Text = prior_title;
+                    }
+                    else if ( prior_name != "" )
+                    {
+                        Text = prior_name;
+                    }
+                    else
+                    {
+                        Text = Random.MakeName( 6, 12 );
+                    }
+
+                    Text
+                        = Text
+                               .toLower()
+                               .replace( " ", "-" )
+                               .replace( "\"", "-" )
+                               .replace( ".", "" );
+                }
+                else if ( Type.ColumnName.endsWith( "Text" ) )
+                {
+                    Text = Random.MakeText( "english", 5, 10 );
+                }
+                else if ( Type.ColumnName.endsWith( "FirstName" ) )
+                {
+                    Text = Random.MakeFirstName();
+                }
+                else if ( Type.ColumnName.endsWith( "LastName" ) )
+                {
+                    Text = Random.MakeLastName();
+                }
+                else if ( Type.ColumnName.endsWith( "Name" ) )
+                {
+                    Text = Random.MakeLastName();
+                }
+                else if ( Type.ColumnName.endsWith( "Login" )
+                          || Type.ColumnName.endsWith( "Pseudonym" ) )
+                {
+                    prior_first_name = Type.Column.FindPriorColumnValue( "FirstName", row_index );
+                    prior_last_name = Type.Column.FindPriorColumnValue( "LastName", row_index );
+
+                    Text
+                        = ( ( prior_first_name != "" ) ? prior_first_name : Random.MakeFirstName() ).toLower()
+                          ~ ( ( prior_last_name != "" ) ? prior_last_name : Random.MakeLastName() ).toLower();
+                }
+                else if ( Type.ColumnName.endsWith( "Password" ) )
+                {
+                    Text
+                        = Random.MakeName( 4, 8 )
+                                .InsertCharacter( Random.MakeUppercaseLetter() )
+                                .InsertCharacter( Random.MakeDigit() )
+                                .InsertCharacter( Random.MakeSeparator() );
+                }
+                else if ( Type.ColumnName.endsWith( "Email" ) )
+                {
+                    prior_first_name = Type.Column.FindPriorColumnValue( "FirstName", row_index );
+                    prior_last_name = Type.Column.FindPriorColumnValue( "LastName", row_index );
+
+                    Text
+                        = ( ( prior_first_name != "" ) ? prior_first_name : Random.MakeFirstName() ).toLower()
+                          ~ "."
+                          ~ ( ( prior_last_name != "" ) ? prior_last_name : Random.MakeLastName() ).toLower()
+                          ~ [
+                              "@gmail.com",
+                              "@yahoo.com",
+                              "@outlook.com",
+                              "@live.com",
+                              "@hotmail.com",
+                              "@mail.com"
+                            ][ Random.MakeIndex( 6 ) ];
+                }
+                else if ( Type.ColumnName.endsWith( "Phone" ) )
+                {
+                    Text
+                        = "+"
+                          ~ Random.MakeInteger( 10, 99 ).to!string()
+                          ~ " "
+                          ~ Random.MakeInteger( 100, 999 ).to!string()
+                          ~ " "
+                          ~ Random.MakeInteger( 100, 999 ).to!string()
+                          ~ " "
+                          ~ Random.MakeInteger( 100, 999 ).to!string();
+                }
+                else if ( Type.ColumnName.endsWith( "Street" )
+                          || Type.ColumnName.endsWith( "Address" ) )
+                {
+                    Text
+                        = Random.MakeInteger( 1, 100 ).to!string()
+                          ~ " "
+                          ~ Random.MakeLastName()
+                          ~ " "
+                          ~ [
+                              "Street",
+                              "Court",
+                              "Avenue",
+                              "Boulevard",
+                              "Lane",
+                              "Alley",
+                              "Drive",
+                              "Park"
+                            ][ Random.MakeIndex( 8 ) ];
+                }
+                else if ( Type.ColumnName.endsWith( "Code" ) )
+                {
+                    Text = Random.MakeInteger( 1000, 9999 ).to!string();
+                }
+                else if ( Type.ColumnName.endsWith( "City" ) )
+                {
+                    Text = Random.MakeCityName();
+                }
+                else if ( Type.ColumnName.endsWith( "Region" ) )
+                {
+                    Text = Random.MakeRegionName();
+                }
+                else if ( Type.ColumnName.endsWith( "Country" ) )
+                {
+                    Text = Random.MakeCountryName();
+                }
+                else if ( Type.ColumnName.endsWith( "Company" ) )
+                {
+                    Text
+                        = Random.MakeLastName()
+                          ~ " "
+                          ~ [
+                              "Company",
+                              "Limited",
+                              "Incorporated",
+                              "Corporation",
+                              "Union",
+                              "Trust",
+                              "Cooperative",
+                              "Institute",
+                              "Foundation",
+                              "Association",
+                              "Bank",
+                              "Fund",
+                              "Insurance",
+                              "Security",
+                              "Services",
+                              "Club",
+                              "Society",
+                              "College",
+                              "University",
+                              "Church",
+                              "Media",
+                              "News",
+                              "Magazine",
+                              "Network",
+                              "Channel",
+                              "Group",
+                              "Agency",
+                              "Consulting",
+                              "Team",
+                              "Center",
+                              "Design",
+                              "Studio",
+                              "Central",
+                              "Direct",
+                              "Tech",
+                              "Store",
+                              "Market",
+                              "Online",
+                              "Shop",
+                              "Express",
+                              "Point",
+                              "Labs",
+                              "Software",
+                              "Depot",
+                              "Logic",
+                              "Factory",
+                              "Fx",
+                              "Solutions",
+                              "Dynamics",
+                              "Associates",
+                              "Fashion",
+                              "Vision"
+                            ][ Random.MakeIndex( 52 ) ];
+                }
+                else if ( Type.ColumnName.endsWith( "Image" ) )
+                {
+                    Text
+                        = Random.MakeName( 8, 8 )
+                          ~ [
+                              ".jpg",
+                              ".png",
+                              ".gif"
+                            ][ Random.MakeIndex( 3 ) ];
+                }
+                else if ( Type.ColumnName.endsWith( "File" ) )
+                {
+                    Text
+                        = Random.MakeName( 8, 8 )
+                          ~ [
+                              ".pdf",
+                              ".doc",
+                              ".odt"
+                            ][ Random.MakeIndex( 3 ) ];
+                }
+                else if ( Type.ColumnName.endsWith( "Folder" ) )
+                {
+                    Text = Random.MakeName( 8, 8 ) ~ "/";
+                }
+                else if ( Type.ColumnName.endsWith( "Author" ) )
+                {
+                    Text
+                        = Random.MakeFirstName()
+                          ~ " "
+                          ~ Random.MakeLastName();
+                }
+                else if ( Type.ColumnName.endsWith( "Isbn" ) )
+                {
+                    Text
+                        = Random.MakeInteger( 100, 999 ).to!string()
+                          ~ "-"
+                          ~ Random.MakeInteger( 1000000000, 9999999999 ).to!string();
+                }
+                else if ( Type.ColumnName.endsWith( "Tags" ) )
+                {
+                    Text = Random.MakeEnglishSentence( 5, 10 ).replace( " ", ", " );
+                }
+                else
+                {
+                    Text = GetCapitalizedText( Random.MakeName( 6, 12 ) );
+                }
+            }
+            else if ( Type.BaseName == "BOOL" )
+            {
+                Text = Random.MakeInteger( 0, 1 ).to!string();
+            }
+            else if ( Type.BaseName == "INT8"
+                      || Type.BaseName == "UINT8"
+                      || Type.BaseName == "INT16"
+                      || Type.BaseName == "UINT16"
+                      || Type.BaseName == "INT32"
+                      || Type.BaseName == "UINT32"
+                      || Type.BaseName == "INT64"
+                      || Type.BaseName == "UINT64" )
+            {
+                if ( Type.ColumnName == "Id" )
+                {
+                    if ( Type.Column.IsIncremented )
+                    {
+                        Text = ( row_index + 1 ).to!string();
+                    }
+                    else
+                    {
+                        random_natural = Random.MakeNatural();
+
+                        if ( Type.BaseName == "INT8" )
+                        {
+                            random_natural = random_natural & 7;
+                        }
+                        else if ( Type.BaseName == "UINT8" )
+                        {
+                            random_natural = random_natural & 8;
+                        }
+                        else if ( Type.BaseName == "INT16" )
+                        {
+                            random_natural = random_natural & 15;
+                        }
+                        else if ( Type.BaseName == "UINT16" )
+                        {
+                            random_natural = random_natural & 16;
+                        }
+                        else if ( Type.BaseName == "INT32" )
+                        {
+                            random_natural = random_natural & 31;
+                        }
+                        else if ( Type.BaseName == "UINT32" )
+                        {
+                            random_natural = random_natural & 32;
+                        }
+                        else if ( Type.BaseName == "INT64" )
+                        {
+                            random_natural = random_natural & 63;
+                        }
+
+                        Text = random_natural.to!string();
+                    }
+                }
+                else if ( Type.ColumnName.endsWith( "Year" ) )
+                {
+                    Text = Random.MakeInteger( 2000, 2015 ).to!string();
+                }
+                else
+                {
+                    if ( Type.BaseName == "INT8"
+                         || Type.BaseName == "UINT8" )
+                    {
+                        Text = Random.MakeInteger( 1, 100 ).to!string();
+                    }
+                    else
+                    {
+                        Text = Random.MakeInteger( 1, 1000 ).to!string();
+                    }
+                }
+            }
+            else if ( Type.BaseName == "FLOAT32"
+                      || Type.BaseName == "FLOAT64" )
+            {
+                Text = ( Random.MakeInteger( 1000, 9999 ) / 100.0 ).to!string();
+            }
+            else if ( Type.BaseName == "DATE" )
+            {
+                Text = Random.MakeDate();
+            }
+            else if ( Type.BaseName == "DATETIME" )
+            {
+                Text = Random.MakeDate() ~ " " ~ Random.MakeTime();
+            }
+            else if ( Type.BaseName == "UUID" )
+            {
+                Text = Random.MakeUuid();
+            }
+            else if ( Type.BaseName == "BLOB" )
+            {
+                Text = Random.MakeBlob();
+            }
+            else if ( Type.BaseName == "MAP" )
+            {
+                element_value_count = Random.MakeInteger( Type.Column.MinimumRandomCount, Type.Column.MaximumRandomCount );
+
+                KeyValueArray = new VALUE[ element_value_count ];
+                ElementValueArray = new VALUE[ element_value_count ];
+
+                for ( element_value_index = 0;
+                      element_value_index < element_value_count;
+                      ++element_value_index )
+                {
+                    KeyValueArray[ element_value_index ] = new VALUE( Type.SubTypeArray[ 0 ] );
+                    KeyValueArray[ element_value_index ].Make( row_index, row_count, true );
+
+                    ElementValueArray[ element_value_index ] = new VALUE( Type.SubTypeArray[ 1 ] );
+                    ElementValueArray[ element_value_index ].Make( row_index, row_count, true );
+
+                    if ( IsPriorValue( KeyValueArray, element_value_index ) )
+                    {
+                        --element_value_index;
+                    }
+                }
+            }
+            else if ( Type.BaseName == "SET" )
+            {
+                element_value_count = Random.MakeInteger( Type.Column.MinimumRandomCount, Type.Column.MaximumRandomCount );
+
+                ElementValueArray = new VALUE[ element_value_count ];
+
+                for ( element_value_index = 0;
+                      element_value_index < element_value_count;
+                      ++element_value_index )
+                {
+                    ElementValueArray[ element_value_index ] = new VALUE( Type.SubTypeArray[ 0 ] );
+                    ElementValueArray[ element_value_index ].Make( row_index, row_count, true );
+
+                    if ( IsPriorValue( ElementValueArray, element_value_index ) )
+                    {
+                        --element_value_index;
+                    }
+                }
+            }
+            else if ( Type.BaseName == "LIST" )
+            {
+                element_value_count = Random.MakeInteger( Type.Column.MinimumRandomCount, Type.Column.MaximumRandomCount );
+
+                ElementValueArray = new VALUE[ element_value_count ];
+
+                for ( element_value_index = 0;
+                      element_value_index < element_value_count;
+                      ++element_value_index )
+                {
+                    ElementValueArray[ element_value_index ] = new VALUE( Type.SubTypeArray[ 0 ] );
+                    ElementValueArray[ element_value_index ].Make( row_index, row_count, true );
+                }
+            }
+
+            if ( Type.Column.IsLowercase )
+            {
+                Text = Text.toLower();
+            }
+
+            if ( Type.Column.IsUppercase )
+            {
+                Text = Text.toUpper();
+            }
+        }
+        while ( !it_is_sub_value
+                && Type.Column.IsUnique
+                && Type.Column.HasPriorValue( this, row_index ) );
+    }
+
+    // ~~
+
+    string GetSqlText(
+        )
+    {
+        string
+            sql_text;
+
+        if ( Type.ActualBaseName == "TUPLE" )
+        {
+            foreach ( sub_value_index, ref sub_value; SubValueArray )
+            {
+                if ( sub_value_index > 0 )
+                {
+                    sql_text ~= ", ";
+                }
+
+                sql_text ~= sub_value.GetSqlText();
+            }
+
+            sql_text = "{ " ~ sql_text ~ " }";
+        }
+        else if ( Type.ActualBaseName == "MAP" )
+        {
+            foreach ( element_value_index, ref element_value; ElementValueArray )
+            {
+                if ( element_value_index > 0 )
+                {
+                    sql_text ~= ", ";
+                }
+
+                sql_text ~= KeyValueArray[ element_value_index ].GetSqlText() ~ " : " ~ element_value.GetSqlText();
+            }
+
+            sql_text = "{ " ~ sql_text ~ " }";
+        }
+        else if ( Type.ActualBaseName == "SET" )
+        {
+            foreach ( element_value_index, ref element_value; ElementValueArray )
+            {
+                if ( element_value_index > 0 )
+                {
+                    sql_text ~= ", ";
+                }
+
+                sql_text ~= element_value.GetSqlText();
+            }
+
+            sql_text = "{ " ~ sql_text ~ " }";
+        }
+        else if ( Type.ActualBaseName == "LIST" )
+        {
+            foreach ( element_value_index, ref element_value; ElementValueArray )
+            {
+                if ( element_value_index > 0 )
+                {
+                    sql_text ~= ", ";
+                }
+
+                sql_text ~= element_value.GetSqlText();
+            }
+
+            sql_text = "[ " ~ sql_text ~ " ]";
+        }
+        else
+        {
+            sql_text = Text;
+        }
+
+        return "\"" ~ sql_text.replace( "\"", "\\\"" ) ~ "\"";
+    }
+
+    // ~~
+
+    string GetCqlText(
+        )
+    {
+        string
+            cql_text;
+
+        if ( Type.ActualBaseName == "BOOL" )
+        {
+            if ( Text == "1" )
+            {
+                cql_text = "true";
+            }
+            else
+            {
+                cql_text = "false";
+            }
+        }
+        else if ( Type.ActualBaseName == "INT8"
+                  || Type.ActualBaseName == "UINT8"
+                  || Type.ActualBaseName == "INT16"
+                  || Type.ActualBaseName == "UINT16"
+                  || Type.ActualBaseName == "INT32"
+                  || Type.ActualBaseName == "UINT32"
+                  || Type.ActualBaseName == "INT64"
+                  || Type.ActualBaseName == "UINT64"
+                  || Type.ActualBaseName == "FLOAT32"
+                  || Type.ActualBaseName == "FLOAT64" )
+        {
+            cql_text = Text;
+        }
+        else if ( Type.ActualBaseName == "DATE"
+                  || Type.ActualBaseName == "DATETIME" )
+        {
+            cql_text = "'" ~ Text ~ "'";
+        }
+        else if ( Type.ActualBaseName == "UUID" )
+        {
+            cql_text = "'" ~ Text ~ "'";
+        }
+        else if ( Type.ActualBaseName == "BLOB" )
+        {
+            cql_text = "'" ~ Text ~ "'";
+        }
+        else if ( Type.ActualBaseName == "TUPLE" )
+        {
+            foreach ( sub_value_index, ref sub_value; SubValueArray )
+            {
+                if ( sub_value_index > 0 )
+                {
+                    cql_text ~= ", ";
+                }
+
+                cql_text ~= sub_value.GetCqlText();
+            }
+
+            cql_text = "{ " ~ cql_text ~ " }";
+        }
+        else if ( Type.ActualBaseName == "MAP" )
+        {
+            foreach ( element_value_index, ref element_value; ElementValueArray )
+            {
+                if ( element_value_index > 0 )
+                {
+                    cql_text ~= ", ";
+                }
+
+                cql_text ~= KeyValueArray[ element_value_index ].GetCqlText() ~ " : " ~ element_value.GetCqlText();
+            }
+
+            cql_text = "{ " ~ cql_text ~ " }";
+        }
+        else if ( Type.ActualBaseName == "SET" )
+        {
+            foreach ( element_value_index, ref element_value; ElementValueArray )
+            {
+                if ( element_value_index > 0 )
+                {
+                    cql_text ~= ", ";
+                }
+
+                cql_text ~= element_value.GetCqlText();
+            }
+
+            cql_text = "{ " ~ cql_text ~ " }";
+        }
+        else if ( Type.ActualBaseName == "LIST" )
+        {
+            foreach ( element_value_index, ref element_value; ElementValueArray )
+            {
+                if ( element_value_index > 0 )
+                {
+                    cql_text ~= ", ";
+                }
+
+                cql_text ~= element_value.GetCqlText();
+            }
+
+            cql_text = "[ " ~ cql_text ~ " ]";
+        }
+        else
+        {
+            cql_text = "'" ~ Text.replace( "'", "''" ) ~ "'";
+        }
+
+        return cql_text;
+    }
+
+    // ~~
+
+    string GetAqlText(
+        )
+    {
+        string
+            aql_text;
+
+        if ( Type.ActualBaseName == "BOOL" )
+        {
+            if ( Text == "1" )
+            {
+                aql_text = "true";
+            }
+            else
+            {
+                aql_text = "false";
+            }
+        }
+        else if ( Type.ActualBaseName == "INT8"
+                  || Type.ActualBaseName == "UINT8"
+                  || Type.ActualBaseName == "INT16"
+                  || Type.ActualBaseName == "UINT16"
+                  || Type.ActualBaseName == "INT32"
+                  || Type.ActualBaseName == "UINT32"
+                  || Type.ActualBaseName == "INT64"
+                  || Type.ActualBaseName == "UINT64"
+                  || Type.ActualBaseName == "FLOAT32"
+                  || Type.ActualBaseName == "FLOAT64" )
+        {
+            aql_text = Text;
+        }
+        else if ( Type.ActualBaseName == "DATE"
+                  || Type.ActualBaseName == "DATETIME" )
+        {
+            aql_text = "'" ~ Text ~ "'";
+        }
+        else if ( Type.ActualBaseName == "UUID" )
+        {
+            aql_text = "'" ~ Text ~ "'";
+        }
+        else if ( Type.ActualBaseName == "BLOB" )
+        {
+            aql_text = "'" ~ Text ~ "'";
+        }
+
+        else if ( Type.ActualBaseName == "TUPLE" )
+        {
+            foreach ( sub_value_index, ref sub_value; SubValueArray )
+            {
+                if ( sub_value_index > 0 )
+                {
+                    aql_text ~= ", ";
+                }
+
+                aql_text ~= sub_value.GetAqlText();
+            }
+
+            aql_text = "{ " ~ aql_text ~ " }";
+        }
+        else if ( Type.ActualBaseName == "MAP" )
+        {
+            foreach ( element_value_index, ref element_value; ElementValueArray )
+            {
+                if ( element_value_index > 0 )
+                {
+                    aql_text ~= ", ";
+                }
+
+                aql_text ~= KeyValueArray[ element_value_index ].GetAqlText() ~ " : " ~ element_value.GetAqlText();
+            }
+
+            aql_text = "{ " ~ aql_text ~ " }";
+        }
+        else if ( Type.ActualBaseName == "SET" )
+        {
+            foreach ( element_value_index, ref element_value; ElementValueArray )
+            {
+                if ( element_value_index > 0 )
+                {
+                    aql_text ~= ", ";
+                }
+
+                aql_text ~= element_value.GetAqlText();
+            }
+
+            aql_text = "{ " ~ aql_text ~ " }";
+        }
+        else if ( Type.ActualBaseName == "LIST" )
+        {
+            foreach ( element_value_index, ref element_value; ElementValueArray )
+            {
+                if ( element_value_index > 0 )
+                {
+                    aql_text ~= ", ";
+                }
+
+                aql_text ~= element_value.GetAqlText();
+            }
+
+            aql_text = "[ " ~ aql_text ~ " ]";
+        }
+        else
+        {
+            aql_text = "'" ~ Text.replace( "'", "''" ) ~ "'";
+        }
+
+        return aql_text;
+    }
+
+    // ~~
+
+    string GetGoText(
+        )
+    {
+        string
+            go_text;
+
+        if ( Type.ActualBaseName == "BOOL" )
+        {
+            if ( Text == "1" )
+            {
+                go_text = "true";
+            }
+            else
+            {
+                go_text = "false";
+            }
+        }
+        else if ( Type.ActualBaseName == "INT8"
+                  || Type.ActualBaseName == "UINT8"
+                  || Type.ActualBaseName == "INT16"
+                  || Type.ActualBaseName == "UINT16"
+                  || Type.ActualBaseName == "INT32"
+                  || Type.ActualBaseName == "UINT32"
+                  || Type.ActualBaseName == "INT64"
+                  || Type.ActualBaseName == "UINT64"
+                  || Type.ActualBaseName == "FLOAT32"
+                  || Type.ActualBaseName == "FLOAT64" )
+        {
+            go_text = Text;
+        }
+        else if ( Type.ActualBaseName == "TUPLE" )
+        {
+            foreach ( sub_value_index, ref sub_value; SubValueArray )
+            {
+                if ( sub_value_index > 0 )
+                {
+                    go_text ~= ", ";
+                }
+
+                go_text ~= sub_value.GetGoText();
+            }
+
+            go_text = "{ " ~ go_text ~ " }";
+        }
+        else if ( Type.ActualBaseName == "MAP" )
+        {
+            foreach ( element_value_index, ref element_value; ElementValueArray )
+            {
+                if ( element_value_index > 0 )
+                {
+                    go_text ~= ", ";
+                }
+
+                go_text ~= KeyValueArray[ element_value_index ].GetGoText() ~ " : " ~ element_value.GetGoText();
+            }
+
+            go_text = "{ " ~ go_text ~ " }";
+        }
+        else if ( Type.ActualBaseName == "SET" )
+        {
+            foreach ( element_value_index, ref element_value; ElementValueArray )
+            {
+                if ( element_value_index > 0 )
+                {
+                    go_text ~= ", ";
+                }
+
+                go_text ~= element_value.GetGoText();
+            }
+
+            go_text = "{ " ~ go_text ~ " }";
+        }
+        else if ( Type.ActualBaseName == "LIST" )
+        {
+            foreach ( element_value_index, ref element_value; ElementValueArray )
+            {
+                if ( element_value_index > 0 )
+                {
+                    go_text ~= ", ";
+                }
+
+                go_text ~= element_value.GetGoText();
+            }
+
+            go_text = "[ " ~ go_text ~ " ]";
+        }
+        else
+        {
+            go_text = "\"" ~ Text ~ "\"";
+        }
+
+        return go_text;
+    }
+
+    // ~~
+
+    string GetCrystalText(
+        )
+    {
+        string
+            crystal_text;
+
+        if ( Type.ActualBaseName == "BOOL" )
+        {
+            if ( Text == "1" )
+            {
+                crystal_text = "true";
+            }
+            else
+            {
+                crystal_text = "false";
+            }
+        }
+        else if ( Type.ActualBaseName == "INT8"
+                  || Type.ActualBaseName == "UINT8"
+                  || Type.ActualBaseName == "INT16"
+                  || Type.ActualBaseName == "UINT16"
+                  || Type.ActualBaseName == "INT32"
+                  || Type.ActualBaseName == "UINT32"
+                  || Type.ActualBaseName == "INT64"
+                  || Type.ActualBaseName == "UINT64"
+                  || Type.ActualBaseName == "FLOAT32"
+                  || Type.ActualBaseName == "FLOAT64" )
+        {
+            crystal_text = Text;
+        }
+        else if ( Type.ActualBaseName == "TUPLE" )
+        {
+            foreach ( sub_value_index, ref sub_value; SubValueArray )
+            {
+                if ( sub_value_index > 0 )
+                {
+                    crystal_text ~= ", ";
+                }
+
+                crystal_text ~= sub_value.GetCrystalText();
+            }
+
+            crystal_text = "{ " ~ crystal_text ~ " }";
+        }
+        else if ( Type.ActualBaseName == "MAP" )
+        {
+            foreach ( element_value_index, ref element_value; ElementValueArray )
+            {
+                if ( element_value_index > 0 )
+                {
+                    crystal_text ~= ", ";
+                }
+
+                crystal_text ~= KeyValueArray[ element_value_index ].GetCrystalText() ~ " : " ~ element_value.GetCrystalText();
+            }
+
+            crystal_text = "{ " ~ crystal_text ~ " }";
+        }
+        else if ( Type.ActualBaseName == "SET" )
+        {
+            foreach ( element_value_index, ref element_value; ElementValueArray )
+            {
+                if ( element_value_index > 0 )
+                {
+                    crystal_text ~= ", ";
+                }
+
+                crystal_text ~= element_value.GetCrystalText();
+            }
+
+            crystal_text = "{ " ~ crystal_text ~ " }";
+        }
+        else if ( Type.ActualBaseName == "LIST" )
+        {
+            foreach ( element_value_index, ref element_value; ElementValueArray )
+            {
+                if ( element_value_index > 0 )
+                {
+                    crystal_text ~= ", ";
+                }
+
+                crystal_text ~= element_value.GetCrystalText();
+            }
+
+            crystal_text = "[ " ~ crystal_text ~ " ]";
+        }
+        else
+        {
+            crystal_text = "\"" ~ Text ~ "\"";
+        }
+
+        return crystal_text;
     }
 }
 
@@ -838,13 +2516,21 @@ class COLUMN
 {
     // -- ATTRIBUTES
 
+    TABLE
+        Table;
     string
-        Name,
+        Name;
+    string[]
+        NamePartArray;
+    string
+        BaseName;
+    TYPE
         Type;
     bool
         IsStored,
-        IsKey,
         IsLastStored,
+        IsUnique,
+        IsKey,
         IsPartitioned,
         IsClustered,
         IsIndexed,
@@ -852,6 +2538,8 @@ class COLUMN
         IsRequired,
         IsIncremented,
         IsForeign,
+        IsProcessed,
+        IsFilled,
         IsList,
         IsSet,
         IsMap,
@@ -910,46 +2598,63 @@ class COLUMN
     // -- CONSTRUCTORS
 
     this(
+        TABLE table,
         string name,
         string type
         )
     {
-        Name = name;
-        Type = type;
+        Table = table;
+        NamePartArray = name.strip().split( ' ' );
+        BaseName = NamePartArray[ 0 ];
+        Name = NamePartArray.join( "" );
+        Type = new TYPE( table, this, type );
         IsStored = true;
-        IsLastStored = false;
-        IsKey = false;
-        IsPartitioned = false;
-        IsClustered = false;
-        IsIndexed = false;
-        IsStatic = false;
-        IsRequired = false;
-        IsIncremented = false;
-        IsForeign = false;
-        IsList = false;
-        IsSet = false;
-        IsMap = false;
-        IsMultiple = false;
-        Capacity = 0;
-        IsRandomReal = false;
-        MinimumRandomReal = 0.0;
-        MaximumRandomReal = 0.0;
-        IsRandomInteger = false;
-        MinimumRandomInteger = 0;
-        MaximumRandomInteger = 0;
-        IsRandomNatural = false;
-        MinimumRandomNatural = 0;
-        MaximumRandomNatural = 0;
+        IsForeign = name.indexOf( '.' ) >= 0;
         MinimumRandomCount = 5;
         MaximumRandomCount = 10;
-        IsRandomName = false;
-        IsRandomFirstName = false;
-        IsRandomLastName = false;
-        IsRandomFullName = false;
-        IsRandomEnglish = false;
-        IsRandomLatin = false;
-        IsLowercase = false;
-        IsUppercase = false;
+    }
+
+    // -- INQUIRIES
+
+    bool HasPriorValue(
+        VALUE value,
+        long row_index
+        )
+    {
+        foreach ( prior_row_index; 0 .. row_index )
+        {
+            if ( ValueArray[ prior_row_index ].IsEqual( value ) )
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    // ~~
+
+    string FindPriorColumnValue(
+        string prior_column_name_suffix,
+        long row_index
+        )
+    {
+        foreach ( prior_column; Table.ColumnArray )
+        {
+            if ( prior_column == this )
+            {
+                return "";
+            }
+            else if ( prior_column.IsStored
+                      && prior_column.Name.endsWith( prior_column_name_suffix ) )
+            {
+                prior_column.MakeValues();
+
+                return prior_column.ValueArray[ row_index ].Text;
+            }
+        }
+
+        return "";
     }
 
     // -- OPERATIONS
@@ -987,6 +2692,10 @@ class COLUMN
                 if ( property_name == "stored" )
                 {
                     IsStored = ( value_text_array[ 1 ] != "0" );
+                }
+                else if ( property_name == "unique" )
+                {
+                    IsUnique = ( value_text_array[ 1 ] != "0" );
                 }
                 else if ( property_name == "key" )
                 {
@@ -1055,6 +2764,11 @@ class COLUMN
                 else if ( property_name == "uppercase" )
                 {
                     IsUppercase = ( value_text_array[ 1 ] != "0" );
+                }
+                else if ( property_name == "count" )
+                {
+                    MinimumRandomCount = value_text_array[ 1 ].to!long();
+                    MaximumRandomCount = MinimumRandomCount;
                 }
                 else
                 {
@@ -1136,551 +2850,11 @@ class COLUMN
 
     // ~~
 
-    string GetSqlType(
-        string type
-        )
-    {
-        type = type.strip();
-
-        if ( type == "BOOL" )
-        {
-            return "TINYINT UNSIGNED";
-        }
-        else if ( type == "INT8" )
-        {
-            return "TINYINT";
-        }
-        else if ( type == "UINT8" )
-        {
-            return "TINYINT UNSIGNED";
-        }
-        else if ( type == "INT16" )
-        {
-            return "SMALLINT";
-        }
-        else if ( type == "UINT16" )
-        {
-            return "SMALLINT UNSIGNED";
-        }
-        else if ( type == "INT32" )
-        {
-            return "INT";
-        }
-        else if ( type == "UINT32" )
-        {
-            return "INT UNSIGNED";
-        }
-        else if ( type == "INT64" )
-        {
-            return "BIGINT";
-        }
-        else if ( type == "UINT64" )
-        {
-            return "BIGINT UNSIGNED";
-        }
-        else if ( type == "FLOAT32" )
-        {
-            return "FLOAT";
-        }
-        else if ( type == "FLOAT64" )
-        {
-            return "DOUBLE";
-        }
-        else if ( type == "STRING" )
-        {
-            if ( Capacity != 0 )
-            {
-                return "VARCHAR( " ~ Capacity.to!string() ~ " )";
-            }
-            else
-            {
-                return "TEXT";
-            }
-        }
-
-        else if ( type == "DATE" )
-        {
-            return "DATE";
-        }
-        else if ( type == "DATETIME" )
-        {
-            return "DATETIME";
-        }
-        else if ( type == "UUID" )
-        {
-            return "BINARY(16)";
-        }
-        else if ( type == "BLOB" )
-        {
-            return "BLOB";
-        }
-
-        return "TEXT";
-    }
-
-    // ~~
-
-    string GetCqlType(
-        string type,
-        string default_type = "text"
-        )
-    {
-        string[]
-            sub_type_array;
-
-        type = type.strip();
-
-        if ( type == "BOOL" )
-        {
-            return "boolean";
-        }
-        else if ( type == "INT8" )
-        {
-            return "tinyint";
-        }
-        else if ( type == "UINT8" )
-        {
-            return "tinyint";
-        }
-        else if ( type == "INT16" )
-        {
-            return "smallint";
-        }
-        else if ( type == "UINT16" )
-        {
-            return "smallint";
-        }
-        else if ( type == "INT32" )
-        {
-            return "int";
-        }
-        else if ( type == "UINT32" )
-        {
-            return "int";
-        }
-        else if ( type == "INT64" )
-        {
-            return "bigint";
-        }
-        else if ( type == "UINT64" )
-        {
-            return "bigint";
-        }
-        else if ( type == "FLOAT32" )
-        {
-            return "float";
-        }
-        else if ( type == "FLOAT64" )
-        {
-            return "double";
-        }
-        else if ( type == "STRING" )
-        {
-            return "text";
-        }
-        else if ( type == "DATE" )
-        {
-            return "timestamp";
-        }
-        else if ( type == "DATETIME" )
-        {
-            return "timestamp";
-        }
-        else if ( type == "UUID" )
-        {
-            return "uuid";
-        }
-        else if ( type == "BLOB" )
-        {
-            return "blob";
-        }
-        else if ( type == "TUPLE" )
-        {
-            return "tuple";
-        }
-        else if ( type == "MAP" )
-        {
-            return "map";
-        }
-        else if ( type == "SET" )
-        {
-            return "set";
-        }
-        else if ( type == "LIST" )
-        {
-            return "list";
-        }
-        else if ( type.indexOf( ' ' ) >= 0 )
-        {
-            type = type.replace( "/", "  " );
-            sub_type_array = type.split( ' ' );
-
-            foreach ( ref sub_type; sub_type_array )
-            {
-                sub_type = GetCqlType( sub_type, sub_type );
-            }
-
-            type = sub_type_array.join( ' ' ).replace( "  ", "," );
-
-            sub_type_array = type.split( ' ' );
-
-            foreach ( sub_type_index, sub_type; sub_type_array )
-            {
-                if ( sub_type_index == 0 )
-                {
-                    type = sub_type;
-                }
-                else
-                {
-                    type = sub_type ~ "<" ~ type ~ ">";
-                }
-            }
-
-            return type;
-
-        }
-
-        return default_type;
-    }
-
-    // ~~
-
-    string GetAqlType(
-        string type
-        )
-    {
-        type = type.strip();
-
-        if ( type == "BOOL" )
-        {
-            return "int64";
-        }
-        else if ( type == "INT8" )
-        {
-            return "int64";
-        }
-        else if ( type == "UINT8" )
-        {
-            return "int64";
-        }
-        else if ( type == "INT16" )
-        {
-            return "int64";
-        }
-        else if ( type == "UINT16" )
-        {
-            return "int64";
-        }
-        else if ( type == "INT32" )
-        {
-            return "int64";
-        }
-        else if ( type == "UINT32" )
-        {
-            return "int64";
-        }
-        else if ( type == "INT64" )
-        {
-            return "int64";
-        }
-        else if ( type == "UINT64" )
-        {
-            return "int64";
-        }
-        else if ( type == "FLOAT32" )
-        {
-            return "float64";
-        }
-        else if ( type == "FLOAT64" )
-        {
-            return "float64";
-        }
-        else if ( type == "STRING" )
-        {
-            return "string";
-        }
-        else if ( type == "DATE" )
-        {
-            return "string";
-        }
-        else if ( type == "DATETIME" )
-        {
-            return "string";
-        }
-        else if ( type == "UUID" )
-        {
-            return "string";
-        }
-        else if ( type == "BLOB" )
-        {
-            return "blob";
-        }
-
-        return "string";
-    }
-
-    // ~~
-
-    string GetGoType(
-        string type
-        )
-    {
-        type = type.strip();
-
-        if ( type == "BOOL" )
-        {
-            return "bool";
-        }
-        else if ( type == "INT8" )
-        {
-            return "int8";
-        }
-        else if ( type == "UINT8" )
-        {
-            return "uint8";
-        }
-        else if ( type == "INT16" )
-        {
-            return "int16";
-        }
-        else if ( type == "UINT16" )
-        {
-            return "uint16";
-        }
-        else if ( type == "INT32" )
-        {
-            return "int32";
-        }
-        else if ( type == "UINT32" )
-        {
-            return "uint32";
-        }
-        else if ( type == "INT64" )
-        {
-            return "int64";
-        }
-        else if ( type == "UINT64" )
-        {
-            return "uint64";
-        }
-        else if ( type == "FLOAT32" )
-        {
-            return "float32";
-        }
-        else if ( type == "FLOAT64" )
-        {
-            return "float64";
-        }
-        else if ( type == "STRING" )
-        {
-            return "string";
-        }
-        else if ( type == "DATE" )
-        {
-            return "string";
-        }
-        else if ( type == "DATETIME" )
-        {
-            return "string";
-        }
-        else if ( type == "UUID" )
-        {
-            return "string";
-        }
-        else if ( type == "BLOB" )
-        {
-            return "[]byte";
-        }
-        else if ( type.endsWith( '*' ) )
-        {
-            return "* " ~ GetGoType( type[ 0 .. $ - 1 ] );
-        }
-        else if ( type.endsWith( "[]" ) )
-        {
-            return "[] " ~ GetGoType( type[ 0 .. $ - 2 ] );
-        }
-        else
-        {
-            return type;
-        }
-    }
-
-    // ~~
-
-    string GetCrystalType(
-        string type,
-        string default_type = "string"
-        )
-    {
-        string[]
-            sub_type_array;
-
-        type = type.strip();
-
-        if ( type == "BOOL" )
-        {
-            return "bool";
-        }
-        else if ( type == "INT8" )
-        {
-            return "Int8";
-        }
-        else if ( type == "UINT8" )
-        {
-            return "Uint8";
-        }
-        else if ( type == "INT16" )
-        {
-            return "Int16";
-        }
-        else if ( type == "UINT16" )
-        {
-            return "Uint16";
-        }
-        else if ( type == "INT32" )
-        {
-            return "Int32";
-        }
-        else if ( type == "UINT32" )
-        {
-            return "Uint32";
-        }
-        else if ( type == "INT64" )
-        {
-            return "Int64";
-        }
-        else if ( type == "UINT64" )
-        {
-            return "Uint64";
-        }
-        else if ( type == "FLOAT32" )
-        {
-            return "Float32";
-        }
-        else if ( type == "FLOAT64" )
-        {
-            return "Float64";
-        }
-        else if ( type == "STRING" )
-        {
-            return "String";
-        }
-        else if ( type == "DATE" )
-        {
-            return "String";
-        }
-        else if ( type == "DATETIME" )
-        {
-            return "String";
-        }
-        else if ( type == "UUID" )
-        {
-            return "String";
-        }
-        else if ( type == "BLOB" )
-        {
-            return "String";
-        }
-        else if ( type == "TUPLE" )
-        {
-            return "Tuple";
-        }
-        else if ( type == "MAP" )
-        {
-            return "Map";
-        }
-        else if ( type == "SET" )
-        {
-            return "Set";
-        }
-        else if ( type == "LIST" )
-        {
-            return "List";
-        }
-        else if ( type.indexOf( ' ' ) >= 0 )
-        {
-            type = type.replace( "/", "  " );
-            sub_type_array = type.split( ' ' );
-
-            foreach ( ref sub_type; sub_type_array )
-            {
-                sub_type = GetCrystalType( sub_type, sub_type );
-            }
-
-            type = sub_type_array.join( ' ' ).replace( "  ", "," );
-
-            sub_type_array = type.split( ' ' );
-
-            foreach ( sub_type_index, sub_type; sub_type_array )
-            {
-                if ( sub_type_index == 0 )
-                {
-                    type = sub_type;
-                }
-                else
-                {
-                    type = sub_type ~ "(" ~ type ~ ")";
-                }
-            }
-
-            return type;
-
-        }
-
-        return default_type;
-    }
-
-    // ~~
-
-    void FixType(
-        )
-    {
-        bool
-            sub_type_has_changed;
-        string
-            type;
-        string[]
-            sub_type_array;
-        TABLE
-            table;
-
-        table = Schema.FindTable( Type );
-
-        if ( table !is null )
-        {
-            IsForeign = true;
-            ForeignTable = table;
-            ForeignColumn = table.ColumnArray[ 0 ];
-        }
-
-        do
-        {
-            type = Type.replace( "/", "  " );
-
-            sub_type_array = type.split( ' ' );
-            sub_type_has_changed = false;
-
-            foreach ( ref sub_type; sub_type_array )
-            {
-                table = Schema.FindTable( sub_type );
-
-                if ( table !is null )
-                {
-                    sub_type = table.ColumnArray[ 0 ].Type;
-                    sub_type_has_changed = true;
-                }
-            }
-
-            Type = sub_type_array.join( ' ' ).replace( "  ", "," );
-        }
-        while ( sub_type_has_changed );
-    }
-
-    // ~~
-
     void MakeType(
         )
     {
+        Type.SetActualBaseName();
+
         if ( SqlName == "" )
         {
             SqlName = Name;
@@ -1706,16 +2880,11 @@ class COLUMN
             CrystalName = GetSnakeCaseText( Name );
         }
 
-        if ( IsStored )
-        {
-            FixType();
-        }
-
-        SqlType = GetSqlType( Type );
-        CqlType = GetCqlType( Type );
-        AqlType = GetAqlType( Type );
-        GoType = GetGoType( Type );
-        CrystalType = GetCrystalType( Type );
+        SqlType = Type.GetSqlText();
+        CqlType = Type.GetCqlText();
+        AqlType = Type.GetAqlText();
+        GoType = Type.GetGoText();
+        CrystalType = Type.GetCrystalText();
 
         if ( IsKey || IsRequired )
         {
@@ -1734,518 +2903,38 @@ class COLUMN
 
     // ~~
 
-    VALUE MakeValue(
-        TABLE table,
-        long row_index,
-        long row_count
+    void MakeValues(
         )
     {
-        long
-            prior_row_index;
-        ulong
-            random_natural;
-        VALUE
-            value;
+        if ( IsProcessed )
+        {
+            Abort( "Mutual column dependency : " ~ Table.Name ~ "." ~ Name );
+        }
 
-        value = new VALUE();
+        if ( !IsStored )
+        {
+            Abort( "Unstored column dependency : " ~ Table.Name ~ "." ~ Name );
+        }
 
-        if ( IsRandomReal )
+        if ( !IsFilled )
         {
-            value.Text = Random.MakeReal( MinimumRandomReal, MaximumRandomReal ).to!string();
-        }
-        if ( IsRandomInteger )
-        {
-            value.Text = Random.MakeInteger( MinimumRandomInteger, MaximumRandomInteger ).to!string();
-        }
-        if ( IsRandomNatural )
-        {
-            value.Text = Random.MakeNatural( MinimumRandomNatural, MaximumRandomNatural, MinimumRandomCount ).to!string();
-        }
-        else if ( IsRandomName )
-        {
-            value.Text = Random.MakeName( MinimumRandomCount, MaximumRandomCount );
-        }
-        else if ( IsRandomFirstName )
-        {
-            value.Text = Random.MakeFirstName();
-        }
-        else if ( IsRandomLastName )
-        {
-            value.Text = Random.MakeLastName();
-        }
-        else if ( IsRandomFullName )
-        {
-            value.Text
-                = Random.MakeFirstName()
-                  ~ " "
-                  ~ Random.MakeLastName();
-        }
-        else if ( IsRandomEnglish )
-        {
-            value.Text = Random.MakeText( "english", MinimumRandomCount, MaximumRandomCount, MinimumRandomInteger, MaximumRandomInteger );
-        }
-        else if ( IsRandomLatin )
-        {
-            value.Text = Random.MakeText( "latin", MinimumRandomCount, MaximumRandomCount, MinimumRandomInteger, MaximumRandomInteger );
-        }
-        else if ( Type == "STRING" )
-        {
-            if ( Name.endsWith( "Title" ) )
+            writeln( "Filling column : " ~ Table.Name ~ "." ~ Name );
+
+            IsProcessed = true;
+            ValueArray = new VALUE[ Table.RowCount ];
+
+            foreach ( row_index; 0 .. Table.RowCount )
             {
-                value.Text = Random.MakeSentence( "english", 4, 8 ).GetCapitalizedText() ~ ".";
-
-                table.PriorTitle = value.Text;
-            }
-            else if ( Name.endsWith( "Slug" ) )
-            {
-                if ( table.PriorTitle != "" )
+                if ( IsStored
+                     && !IsForeign )
                 {
-                    value.Text = table.PriorTitle;
-                }
-                else if ( table.PriorName != "" )
-                {
-                    value.Text = table.PriorName;
-                }
-                else
-                {
-                    value.Text = Random.MakeName( 6, 12 );
-                }
-
-                value.Text
-                    = value.Text
-                           .toLower()
-                           .replace( " ", "-" )
-                           .replace( "\"", "-" )
-                           .replace( ".", "" );
-            }
-            else if ( Name.endsWith( "Text" ) )
-            {
-                value.Text = Random.MakeText( "english", 5, 10 );
-            }
-            else if ( Name.endsWith( "FirstName" ) )
-            {
-                value.Text = Random.MakeFirstName();
-
-                table.PriorFirstName = value.Text;
-            }
-            else if ( Name.endsWith( "LastName" ) )
-            {
-                value.Text = Random.MakeLastName();
-
-                table.PriorLastName = value.Text;
-            }
-            else if ( Name.endsWith( "Name" ) )
-            {
-                value.Text = Random.MakeLastName();
-
-                table.PriorName = value.Text;
-            }
-            else if ( Name.endsWith( "Login" )
-                      || Name.endsWith( "Pseudonym" ) )
-            {
-                value.Text
-                    = ( ( table.PriorFirstName != "" ) ? table.PriorFirstName : Random.MakeFirstName() ).toLower()
-                      ~ ( ( table.PriorLastName != "" ) ? table.PriorLastName : Random.MakeLastName() ).toLower();
-            }
-            else if ( Name.endsWith( "Password" ) )
-            {
-                value.Text
-                    = Random.MakeName( 4, 8 )
-                            .InsertCharacter( Random.MakeUppercaseLetter() )
-                            .InsertCharacter( Random.MakeDigit() )
-                            .InsertCharacter( Random.MakeSeparator() );
-            }
-            else if ( Name.endsWith( "Email" ) )
-            {
-                value.Text
-                    = ( ( table.PriorFirstName != "" ) ? table.PriorFirstName : Random.MakeFirstName() ).toLower()
-                      ~ "."
-                      ~ ( ( table.PriorLastName != "" ) ? table.PriorLastName : Random.MakeLastName() ).toLower()
-                      ~ [
-                          "@gmail.com",
-                          "@yahoo.com",
-                          "@outlook.com",
-                          "@live.com",
-                          "@hotmail.com",
-                          "@mail.com"
-                        ][ Random.MakeIndex( 6 ) ];
-            }
-            else if ( Name.endsWith( "Phone" ) )
-            {
-                value.Text
-                    = "+"
-                      ~ Random.MakeInteger( 10, 99 ).to!string()
-                      ~ " "
-                      ~ Random.MakeInteger( 100, 999 ).to!string()
-                      ~ " "
-                      ~ Random.MakeInteger( 100, 999 ).to!string()
-                      ~ " "
-                      ~ Random.MakeInteger( 100, 999 ).to!string();
-            }
-            else if ( Name.endsWith( "Street" )
-                      || Name.endsWith( "Address" ) )
-            {
-                value.Text
-                    = Random.MakeInteger( 1, 100 ).to!string()
-                      ~ " "
-                      ~ Random.MakeLastName()
-                      ~ " "
-                      ~ [
-                          "Street",
-                          "Court",
-                          "Avenue",
-                          "Boulevard",
-                          "Lane",
-                          "Alley",
-                          "Drive",
-                          "Park"
-                        ][ Random.MakeIndex( 8 ) ];
-            }
-            else if ( Name.endsWith( "Code" ) )
-            {
-                value.Text = Random.MakeInteger( 1000, 9999 ).to!string();
-            }
-            else if ( Name.endsWith( "City" ) )
-            {
-                value.Text = Random.MakeCityName();
-            }
-            else if ( Name.endsWith( "Region" ) )
-            {
-                value.Text = Random.MakeRegionName();
-            }
-            else if ( Name.endsWith( "Country" ) )
-            {
-                value.Text = Random.MakeCountryName();
-            }
-            else if ( Name.endsWith( "Company" ) )
-            {
-                value.Text
-                    = Random.MakeLastName()
-                      ~ " "
-                      ~ [
-                          "Company",
-                          "Limited",
-                          "Incorporated",
-                          "Corporation",
-                          "Union",
-                          "Trust",
-                          "Cooperative",
-                          "Institute",
-                          "Foundation",
-                          "Association",
-                          "Bank",
-                          "Fund",
-                          "Insurance",
-                          "Security",
-                          "Services",
-                          "Club",
-                          "Society",
-                          "College",
-                          "University",
-                          "Church",
-                          "Media",
-                          "News",
-                          "Magazine",
-                          "Network",
-                          "Channel",
-                          "Group",
-                          "Agency",
-                          "Consulting",
-                          "Team",
-                          "Center",
-                          "Design",
-                          "Studio",
-                          "Central",
-                          "Direct",
-                          "Tech",
-                          "Store",
-                          "Market",
-                          "Online",
-                          "Shop",
-                          "Express",
-                          "Point",
-                          "Labs",
-                          "Software",
-                          "Depot",
-                          "Logic",
-                          "Factory",
-                          "Fx",
-                          "Solutions",
-                          "Dynamics",
-                          "Associates",
-                          "Fashion",
-                          "Vision"
-                        ][ Random.MakeIndex( 52 ) ];
-            }
-            else if ( Name.endsWith( "Image" ) )
-            {
-                value.Text
-                    = Random.MakeName( 8, 8 )
-                      ~ [
-                          ".jpg",
-                          ".png",
-                          ".gif"
-                        ][ Random.MakeIndex( 3 ) ];
-            }
-            else if ( Name.endsWith( "File" ) )
-            {
-                value.Text
-                    = Random.MakeName( 8, 8 )
-                      ~ [
-                          ".pdf",
-                          ".doc",
-                          ".odt"
-                        ][ Random.MakeIndex( 3 ) ];
-            }
-            else if ( Name.endsWith( "Folder" ) )
-            {
-                value.Text = Random.MakeName( 8, 8 ) ~ "/";
-            }
-            else if ( Name.endsWith( "Author" ) )
-            {
-                value.Text
-                    = Random.MakeFirstName()
-                      ~ " "
-                      ~ Random.MakeLastName();
-            }
-            else if ( Name.endsWith( "Isbn" ) )
-            {
-                value.Text
-                    = Random.MakeInteger( 100, 999 ).to!string()
-                      ~ "-"
-                      ~ Random.MakeInteger( 1000000000, 9999999999 ).to!string();
-            }
-            else if ( Name.endsWith( "Tags" ) )
-            {
-                value.Text = Random.MakeEnglishSentence( 5, 10 ).replace( " ", ", " );
-            }
-            else
-            {
-                value.Text = GetCapitalizedText( Random.MakeName( 6, 12 ) );
-            }
-        }
-        else if ( Type == "BOOL" )
-        {
-            value.Text = Random.MakeInteger( 0, 1 ).to!string();
-        }
-        else if ( Type == "INT8"
-                  || Type == "UINT8"
-                  || Type == "INT16"
-                  || Type == "UINT16"
-                  || Type == "INT32"
-                  || Type == "UINT32"
-                  || Type == "INT64"
-                  || Type == "UINT64" )
-        {
-            if ( Name == "Id" )
-            {
-                if ( IsIncremented )
-                {
-                    value.Text = ( row_index + 1 ).to!string();
-                }
-                else
-                {
-                    do
-                    {
-                        random_natural = Random.MakeNatural();
-
-                        if ( Type == "INT8" )
-                        {
-                            random_natural = random_natural & 7;
-                        }
-                        else if ( Type == "UINT8" )
-                        {
-                            random_natural = random_natural & 8;
-                        }
-                        else if ( Type == "INT16" )
-                        {
-                            random_natural = random_natural & 15;
-                        }
-                        else if ( Type == "UINT16" )
-                        {
-                            random_natural = random_natural & 16;
-                        }
-                        else if ( Type == "INT32" )
-                        {
-                            random_natural = random_natural & 31;
-                        }
-                        else if ( Type == "UINT32" )
-                        {
-                            random_natural = random_natural & 32;
-                        }
-                        else if ( Type == "INT64" )
-                        {
-                            random_natural = random_natural & 63;
-                        }
-
-                        value.Text = random_natural.to!string();
-
-                        for ( prior_row_index = 0;
-                              prior_row_index < row_index;
-                              ++prior_row_index )
-                        {
-                            if ( ValueArray[ prior_row_index ].Text == value.Text )
-                            {
-                                break;
-                            }
-                        }
-                    } while ( prior_row_index < row_index );
+                    ValueArray[ row_index ] = new VALUE( Type );
+                    ValueArray[ row_index ].Make( row_index, Table.RowCount );
                 }
             }
-            else if ( Name.endsWith( "Year" ) )
-            {
-                value.Text = Random.MakeInteger( 2000, 2015 ).to!string();
-            }
-            else
-            {
-                if ( Type == "INT8"
-                     || Type == "UINT8" )
-                {
-                    value.Text = Random.MakeInteger( 1, 100 ).to!string();
-                }
-                else
-                {
-                    value.Text = Random.MakeInteger( 1, 1000 ).to!string();
-                }
-            }
-        }
-        else if ( Type == "FLOAT32"
-                  || Type == "FLOAT64" )
-        {
-            value.Text = ( Random.MakeInteger( 1000, 9999 ) / 100.0 ).to!string();
-        }
-        else if ( Type == "DATE" )
-        {
-            value.Text = Random.MakeDate();
-        }
-        else if ( Type == "DATETIME" )
-        {
-            value.Text = Random.MakeDate() ~ " " ~ Random.MakeTime();
-        }
-        else if ( Type == "UUID" )
-        {
-            value.Text = Random.MakeUuid();
-        }
-        else if ( Type == "BLOB" )
-        {
-            value.Text = Random.MakeBlob();
-        }
 
-        if ( IsLowercase )
-        {
-            value.Text = value.Text.toLower();
-        }
-
-        if ( IsUppercase )
-        {
-            value.Text = value.Text.toUpper();
-        }
-
-        return value;
-    }
-
-    // ~~
-
-    string GetAqlValueText(
-        long row_index
-        )
-    {
-        if ( AqlType == "string" )
-        {
-            return "\"" ~ ValueArray[ row_index ].Text ~ "\"";
-        }
-        else
-        {
-            return ValueArray[ row_index ].Text;
-        }
-    }
-
-    // ~~
-
-    string GetSqlValueText(
-        long row_index
-        )
-    {
-        return "\"" ~ ValueArray[ row_index ].Text ~ "\"";
-    }
-
-    // ~~
-
-    string GetCqlValueText(
-        long row_index
-        )
-    {
-        if ( IsList )
-        {
-            return "[ " ~ ValueArray[ row_index ].Text ~ " ]";
-        }
-        else if ( IsSet || IsMap )
-        {
-            return "{ " ~ ValueArray[ row_index ].Text ~ " }";
-        }
-        else if ( CqlType == "boolean" )
-        {
-            if ( ValueArray[ row_index ].Text == "1" )
-            {
-                return "true";
-            }
-            else
-            {
-                return "false";
-            }
-        }
-        else if ( CqlType == "tinyint"
-                  || CqlType == "smallint"
-                  || CqlType == "int"
-                  || CqlType == "bigint"
-                  || CqlType == "float"
-                  || CqlType == "double" )
-        {
-            return ValueArray[ row_index ].Text;
-        }
-        else
-        {
-            return "'" ~ ValueArray[ row_index ].Text.replace( "'", "''" ) ~ "'";
-        }
-    }
-
-    // ~~
-
-    string GetGoValueText(
-        long row_index
-        )
-    {
-        if ( GoType == "string" )
-        {
-            return "\"" ~ ValueArray[ row_index ].Text ~ "\"";
-        }
-        else if ( GoType == "bool" )
-        {
-            return ValueArray[ row_index ].Text == "0" ? "false" : "true";
-        }
-        else
-        {
-            return ValueArray[ row_index ].Text;
-        }
-    }
-
-    // ~~
-
-    string GetCrystalValueText(
-        long row_index
-        )
-    {
-        if ( CrystalType == "String" )
-        {
-            return "\"" ~ ValueArray[ row_index ].Text ~ "\"";
-        }
-        else if ( CrystalType == "Bool" )
-        {
-            return ValueArray[ row_index ].Text == "0" ? "false" : "true";
-        }
-        else
-        {
-            return ValueArray[ row_index ].Text;
+            IsFilled = true;
+            IsProcessed = false;
         }
     }
 }
@@ -2259,18 +2948,13 @@ class TABLE
     string
         SchemaName,
         Name,
-        TypeName;
+        Type;
     string[]
         KeyNameArray;
     COLUMN[]
         ColumnArray;
     long
         RowCount;
-    string
-        PriorTitle,
-        PriorFirstName,
-        PriorLastName,
-        PriorName;
 
     // -- CONSTRUCTORS
 
@@ -2281,10 +2965,27 @@ class TABLE
     {
         SchemaName = schema.Name;
         Name = name;
-        TypeName = "";
+        Type = "";
         KeyNameArray = [];
         ColumnArray = [];
         RowCount = schema.RowCount;
+    }
+
+    // -- INQUIRIES
+
+    COLUMN FindColumn(
+        string column_name
+        )
+    {
+        foreach ( ref column; ColumnArray )
+        {
+            if ( column.Name == column_name )
+            {
+                return column;
+            }
+        }
+
+        return null;
     }
 
     // -- OPERATIONS
@@ -2316,23 +3017,15 @@ class TABLE
     void MakeTypes(
         )
     {
-        writeln( "Filling table : ", Name );
+        COLUMN
+            last_stored_column;
+
+        writeln( "Processing table : ", Name );
 
         foreach ( ref column; ColumnArray )
         {
             column.MakeType();
         }
-    }
-
-    // ~~
-
-    void MakeValues(
-        )
-    {
-        COLUMN
-            last_stored_column;
-
-        writeln( "Filling table : ", Name );
 
         last_stored_column = null;
 
@@ -2340,8 +3033,6 @@ class TABLE
         {
             if ( column.IsStored )
             {
-                column.ValueArray = new VALUE[ RowCount ];
-
                 last_stored_column = column;
             }
         }
@@ -2350,21 +3041,20 @@ class TABLE
         {
             last_stored_column.IsLastStored = true;
         }
+    }
 
-        foreach ( row_index; 0 .. RowCount )
+    // ~~
+
+    void MakeValues(
+        )
+    {
+        writeln( "Filling table : ", Name );
+
+        foreach ( ref column; ColumnArray )
         {
-            PriorTitle = "";
-            PriorFirstName = "";
-            PriorLastName = "";
-            PriorName = "";
-
-            foreach ( ref column; ColumnArray )
+            if ( column.IsStored )
             {
-                if ( column.IsStored
-                     && !column.IsForeign )
-                {
-                    column.ValueArray[ row_index ] = column.MakeValue( this, row_index, RowCount );
-                }
+                column.MakeValues();
             }
         }
     }
@@ -2408,6 +3098,34 @@ class SCHEMA
         return null;
     }
 
+    // ~~
+
+    COLUMN FindForeignColumn(
+        string foreign_column_name
+        )
+    {
+        string[]
+            foreign_column_name_part_array;
+        TABLE
+            foreign_table;
+
+        foreign_column_name_part_array = foreign_column_name.split( '.' );
+
+        if ( foreign_column_name_part_array.length == 2 )
+        {
+            foreign_table = FindTable( foreign_column_name_part_array[ 0 ] );
+
+            if ( foreign_table !is null )
+            {
+                return foreign_table.FindColumn( foreign_column_name_part_array[ 1 ] );
+            }
+        }
+
+        Abort( "Invalid foreign column name : " ~ foreign_column_name );
+
+        return null;
+    }
+
     // -- OPERATIONS
 
     void SetPropertyValue(
@@ -2437,11 +3155,6 @@ class SCHEMA
     void MakeTypes(
         )
     {
-        string
-            last_type_name;
-        string[]
-            type_name_array;
-
         foreach ( ref table; TableArray )
         {
             table.MakeTypes();
@@ -2451,22 +3164,19 @@ class SCHEMA
         {
             foreach ( ref column; table.ColumnArray )
             {
-                type_name_array = column.Type.split( ' ' );
-                last_type_name = type_name_array[ $ - 1 ];
-
-                if ( last_type_name == "LIST" )
+                if ( column.Type.BaseName == "LIST" )
                 {
                     column.IsList = true;
                     column.IsMultiple = true;
                 }
 
-                if ( last_type_name == "SET" )
+                if ( column.Type.BaseName == "SET" )
                 {
                     column.IsSet = true;
                     column.IsMultiple = true;
                 }
 
-                if ( last_type_name == "MAP" )
+                if ( column.Type.BaseName == "MAP" )
                 {
                     column.IsMap = true;
                     column.IsMultiple = true;
@@ -2480,60 +3190,13 @@ class SCHEMA
     void MakeValues(
         )
     {
-        long
-            foreign_value_count;
-        VALUE
-            foreign_value,
-            value;
-
-        foreach ( ref table; TableArray )
-        {
-            table.MakeValues();
-        }
-
         foreach ( ref table; TableArray )
         {
             foreach ( ref column; table.ColumnArray )
             {
-                if ( column.IsForeign )
+                if ( column.IsStored )
                 {
-                    foreach ( row_index; 0 .. table.RowCount )
-                    {
-                        if ( column.IsMultiple )
-                        {
-                            foreign_value_count = Random.MakeInteger( column.MinimumRandomCount, column.MaximumRandomCount );
-
-                            if ( foreign_value_count > column.ForeignColumn.ValueArray.length )
-                            {
-                                foreign_value_count = column.ForeignColumn.ValueArray.length;
-                            }
-
-                            value = new VALUE();
-
-                            foreach ( foreign_value_index; 0 .. foreign_value_count )
-                            {
-                                do
-                                {
-                                    foreign_value = Random.PickElement( column.ForeignColumn.ValueArray );
-                                }
-                                while ( value.ValueArray.countUntil( foreign_value ) >= 0 );
-
-                                value.Text ~= foreign_value.Text;
-                                value.ValueArray ~= foreign_value;
-
-                                if ( foreign_value_index < foreign_value_count - 1 )
-                                {
-                                    value.Text ~= ", ";
-                                }
-                            }
-
-                            column.ValueArray[ row_index ] = value;
-                        }
-                        else
-                        {
-                            column.ValueArray[ row_index ] = Random.PickElement( column.ForeignColumn.ValueArray );
-                        }
-                    }
+                    column.MakeValues();
                 }
             }
         }
@@ -2581,12 +3244,12 @@ class SCHEMA
                     line_text_array = stripped_line.split( '|' );
                     column_text_array = line_text_array[ 0 ].split( ':' );
 
-                    if ( column_text_array.length == 2 )
+                    if ( column_text_array.length >= 2 )
                     {
                         column_name = column_text_array[ 0 ].strip();
-                        column_type = column_text_array[ 1 ].strip();
+                        column_type = column_text_array[ 1 .. $ ].join( ':' ).strip();
 
-                        column = new COLUMN( column_name, column_type );
+                        column = new COLUMN( table, column_name, column_type );
                         table.ColumnArray ~= column;
 
                         if ( line_text_array.length == 2 )
@@ -2695,7 +3358,7 @@ class SCHEMA
 
             foreach ( ref column; table.ColumnArray )
             {
-                uml_schema_file_text ~= "    " ~ column.Name ~ " : " ~ column.Type ~ "\n";
+                uml_schema_file_text ~= "    " ~ column.Name ~ " : " ~ column.Type.Name ~ "\n";
             }
 
             uml_schema_file_text ~= "}\n";
@@ -2879,7 +3542,7 @@ class SCHEMA
                 {
                     if ( column.IsStored )
                     {
-                        sql_data_file_text ~= "        " ~ column.GetSqlValueText( row_index );
+                        sql_data_file_text ~= "        " ~ column.ValueArray[ row_index ].GetSqlText();
 
                         if ( !column.IsLastStored )
                         {
@@ -3039,7 +3702,7 @@ class SCHEMA
                 {
                     if ( column.IsStored )
                     {
-                        cql_data_file_text ~= " " ~ column.GetCqlValueText( row_index );
+                        cql_data_file_text ~= " " ~ column.ValueArray[ row_index ].GetCqlText();
 
                         if ( !column.IsLastStored )
                         {
@@ -3098,7 +3761,7 @@ class SCHEMA
 
                 aql_data_file_text
                     ~= " ) values ( "
-                       ~ table.ColumnArray[ 0 ].GetAqlValueText( row_index )
+                       ~ table.ColumnArray[ 0 ].ValueArray[ row_index ].GetAqlText()
                        ~ ", ";
 
                 foreach ( column_index, ref column; table.ColumnArray )
@@ -3110,7 +3773,7 @@ class SCHEMA
                             aql_data_file_text ~= "'JSON[ ";
                         }
 
-                        aql_data_file_text ~= column.GetAqlValueText( row_index );
+                        aql_data_file_text ~= column.ValueArray[ row_index ].GetAqlText();
 
                         if ( column.IsMultiple )
                         {
@@ -3146,9 +3809,9 @@ class SCHEMA
 
         foreach ( ref table; TableArray )
         {
-            table.TypeName = table.Name.toUpper();
+            table.Type = table.Name.toUpper();
 
-            go_sql_schema_file_text ~= "type " ~ table.TypeName ~ " struct {\n";
+            go_sql_schema_file_text ~= "type " ~ table.Type ~ " struct {\n";
 
             foreach ( ref column; table.ColumnArray )
             {
@@ -3177,60 +3840,6 @@ class SCHEMA
 
     // ~~
 
-    void WriteGoSqlDataFile(
-        string go_sql_data_file_path
-        )
-    {
-        long
-            column_count;
-        string
-            go_sql_data_file_text;
-        VALUE
-            column_value;
-
-        writeln( "Writing Go SQL data file : ", go_sql_data_file_path );
-
-        go_sql_data_file_text = "func FillDatabase() {\n";
-
-        foreach ( ref table; TableArray )
-        {
-            foreach ( row_index; 0 .. table.RowCount )
-            {
-                go_sql_data_file_text
-                    ~= "    Add" ~ GetPascalCaseText( table.Name ) ~ "(\n        " ~ table.TypeName ~ " {\n";
-
-                column_count = table.ColumnArray.length;
-
-                foreach ( ref column; table.ColumnArray )
-                {
-                    if ( column.IsStored )
-                    {
-                        go_sql_data_file_text
-                            ~= "            "
-                               ~ column.GoName
-                               ~ " : "
-                               ~ column.GetGoValueText( row_index );
-
-                        if ( !column.IsLastStored )
-                        {
-                            go_sql_data_file_text ~= ",";
-                        }
-
-                        go_sql_data_file_text ~= "\n";
-                    }
-                }
-
-                go_sql_data_file_text ~= "        }\n        );\n\n";
-            }
-        }
-
-        go_sql_data_file_text ~= "}\n";
-
-        go_sql_data_file_path.write( go_sql_data_file_text );
-    }
-
-    // ~~
-
     void WriteGoCqlSchemaFile(
         string go_cql_schema_file_path
         )
@@ -3244,9 +3853,9 @@ class SCHEMA
 
         foreach ( ref table; TableArray )
         {
-            table.TypeName = table.Name.toUpper();
+            table.Type = table.Name.toUpper();
 
-            go_cql_schema_file_text ~= "type " ~ table.TypeName ~ " struct {\n";
+            go_cql_schema_file_text ~= "type " ~ table.Type ~ " struct {\n";
 
             foreach ( ref column; table.ColumnArray )
             {
@@ -3286,9 +3895,9 @@ class SCHEMA
 
         foreach ( ref table; TableArray )
         {
-            table.TypeName = table.Name;
+            table.Type = table.Name;
 
-            crystal_schema_file_text ~= "class " ~ table.TypeName ~ "\n";
+            crystal_schema_file_text ~= "class " ~ table.Type ~ "\n";
 
             foreach ( ref column; table.ColumnArray )
             {
@@ -3508,7 +4117,7 @@ void ProcessFile(
     Schema = new SCHEMA();
     Schema.ReadBasilSchemaFile( basil_schema_file_path );
 
-    foreach ( ref output_format; output_format_array )
+    foreach ( output_format; output_format_array )
     {
         if ( output_format == "uml" )
         {
@@ -3531,7 +4140,6 @@ void ProcessFile(
         else if ( output_format == "gosql" )
         {
             Schema.WriteGoSqlSchemaFile( base_file_path ~ "_sql.go" );
-            Schema.WriteGoSqlDataFile( base_file_path ~ "_sql_data.go" );
         }
         else if ( output_format == "gocql" )
         {
@@ -3611,8 +4219,8 @@ void main(
         writeln( "    --sql : generate the SQL schema and data files" );
         writeln( "    --cql : generate the CQL schema and data files" );
         writeln( "    --aql : generate the AQL data file" );
-        writeln( "    --gosql : generate the Go SQL schema and data files" );
-        writeln( "    --gocql : generate the Go CQL schema" );
+        writeln( "    --gosql : generate the Go SQL schema file" );
+        writeln( "    --gocql : generate the Go CQL schema file" );
         writeln( "    --crystal : generate the Crystal schema file" );
         writeln( "Examples :" );
         writeln( "    basil --uml script_file.basil" );

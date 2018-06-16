@@ -4,7 +4,6 @@ type SECTION struct {
     Name string `db:"Name"`;
     Text string `db:"Text"`;
     Image string `db:"Image"`;
-    ArticleIdList UINT64 LIST `db:"ArticleIdList"`;
     ImageIndex uint64;
 }
 

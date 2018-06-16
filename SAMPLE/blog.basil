@@ -2,18 +2,17 @@ BLOG | count 5
 
     SECTION
 
-        Id : UINT64 | key, incremented
+        Id : UINT64 | key, unique, incremented
         Number : UINT64
         Name : STRING | capacity 45
         Text : STRING
         Image : STRING | capacity 45
-        ArticleIdList : ARTICLE LIST | count 5 10
 
         ImageIndex : UINT64 | !stored
 
     USER
 
-        Id : UINT64 | key, incremented
+        Id : UINT64 | key, unique, incremented
         FirstName : STRING | capacity 45
         LastName : STRING | capacity 45
         Email : STRING | capacity 45
@@ -30,32 +29,31 @@ BLOG | count 5
 
     ARTICLE | count 15
 
-        Id : UINT64 | key, incremented
-        SectionId : SECTION | partitioned
-        UserId : USER | clustered
+        Id : UINT64 | key, unique, incremented
+        SectionId : SECTION.Id | partitioned
+        UserId : USER.Id | clustered
         Title : STRING
         Text : STRING
         Image : STRING | capacity 45
         Date : DATE
 
-        Section : SECTION * | !stored
-        User : USER * | !stored
-
+        Section : POINTER[ SECTION ] | !stored
+        User : POINTER[ USER ] | !stored
         ImageIndex : UINT64 | !stored
 
     COMMENT | count 30
 
-        Id : UINT64 | key, incremented
-        ArticleId : ARTICLE | indexed
-        UserId : USER | indexed
+        Id : UINT64 | key, unique, incremented
+        ArticleId : ARTICLE.Id | indexed
+        UserId : USER.Id | indexed
         Text : STRING | english 2 4 5 7
         DateTime : DATETIME
 
-        Article : ARTICLE * | !stored
-        User : USER * | !stored
+        Article : POINTER[ ARTICLE ] | !stored
+        User : POINTER[ USER ] | !stored
 
     SUBSCRIBER
 
-        Id : UINT64 | key, incremented
+        Id : UINT64 | key, unique, incremented
         Name : STRING | capacity 45
         Email : STRING | capacity 45

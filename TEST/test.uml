@@ -11,7 +11,7 @@ hide circle
 hide methods
 left to right direction
 
-class ITEM {
+class SIMPLE {
     Uuid : UUID
     Bool : BOOL
     Int8 : INT8
@@ -30,16 +30,20 @@ class ITEM {
     Blob : BLOB
 }
 
-class COLLECTION {
+class COMPOUND {
     Id : INT32
-    Tuple : INT32,STRING TUPLE
-    Map : INT32,STRING MAP
-    Set : INT32 SET
-    List : INT32 LIST
-    ItemUuid : UUID
-    ItemList : UUID LIST
+    Location : STRING
+    Name : TUPLE[ FirstName : STRING, LastName : STRING ]
+    NameSet : SET[ TUPLE[ FirstName : STRING, LastName : STRING ] ]
+    CompanyMap : MAP[ Phone : STRING, STRING ]
+    EmailSet : SET[ STRING ]
+    PhoneList : LIST[ STRING ]
+    SimpleDate : SIMPLE.Date
+    SimpleDateMap : MAP[ COMPOUND.Name, SIMPLE.Date ]
+    SimpleDateSet : SET[ SIMPLE.Date ]
+    SimpleDateList : LIST[ SIMPLE.Date ]
+    NameSetMap : MAP[ SIMPLE.Date, COMPOUND.NameSet ]
+    SimplePointerArray : ARRAY[ POINTER[ SIMPLE ] ]
 }
-
-ITEM <-- COLLECTION
 
 @enduml

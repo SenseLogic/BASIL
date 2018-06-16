@@ -7,14 +7,14 @@ Textual database builder.
 ## Features
 
 *   Database design using a simple textual specification.
-*   Random data generation from the field name, type, size and properties.
+*   Random data generation from the column name, type, size and properties.
 *   Lorem ipsum sentences in Latin or English.
 *   Several export formats :
     *   UML schema file.
     *   SQL schema and data files.
     *   CQL schema and data files.
     *   AQL data file.
-    *   Go SQL schema and data files.
+    *   Go SQL schema file.
     *   Go CQL schema file.
     *   Crystal schema file.
 
@@ -25,18 +25,17 @@ BLOG | count 5
 
     SECTION
 
-        Id : UINT64 | key, incremented
+        Id : UINT64 | key, unique, incremented
         Number : UINT64
         Name : STRING | capacity 45
         Text : STRING
         Image : STRING | capacity 45
-        ArticleIdList : ARTICLE LIST | count 5 10
 
         ImageIndex : UINT64 | !stored
 
     USER
 
-        Id : UINT64 | key, incremented
+        Id : UINT64 | key, unique, incremented
         FirstName : STRING | capacity 45
         LastName : STRING | capacity 45
         Email : STRING | capacity 45
@@ -53,35 +52,73 @@ BLOG | count 5
 
     ARTICLE | count 15
 
-        Id : UINT64 | key, incremented
-        SectionId : SECTION REF
-        UserId : USER REF
+        Id : UINT64 | key, unique, incremented
+        SectionId : SECTION.Id | partitioned
+        UserId : USER.Id | clustered
         Title : STRING
         Text : STRING
         Image : STRING | capacity 45
         Date : DATE
 
-        Section : SECTION * | !stored
-        User : USER * | !stored
-
+        Section : POINTER[ SECTION ] | !stored
+        User : POINTER[ USER ] | !stored
         ImageIndex : UINT64 | !stored
 
     COMMENT | count 30
 
-        Id : UINT64 | key, incremented
-        ArticleId : ARTICLE REF
-        UserId : USER REF
+        Id : UINT64 | key, unique, incremented
+        ArticleId : ARTICLE.Id | indexed
+        UserId : USER.Id | indexed
         Text : STRING | english 2 4 5 7
-        Date : DATETIME
+        DateTime : DATETIME
 
-        Article : ARTICLE * | !stored
-        User : USER * | !stored
+        Article : POINTER[ ARTICLE ] | !stored
+        User : POINTER[ USER ] | !stored
 
     SUBSCRIBER
 
-        Id : UINT64 | key, incremented
+        Id : UINT64 | key, unique, incremented
         Name : STRING | capacity 45
         Email : STRING | capacity 45
+```
+
+```
+TEST | count 10
+
+    SIMPLE
+
+        Uuid : UUID | key, unique
+        Bool : BOOL | partitioned
+        Int8 : INT8 | clustered
+        Uint8 : UINT8 | indexed
+        Int16 : INT16
+        Uint16 : UINT16
+        Int32 : INT32
+        Uint32 : UINT32
+        Int64 : INT64
+        Uint64 : UINT64
+        Float32 : FLOAT32
+        Float64 : FLOAT64
+        String : STRING
+        Date : DATE | unique
+        DateTime : DATETIME
+        Blob : BLOB
+
+    COMPOUND
+
+        Id : INT32 | key, unique, incremented
+        Location : Country : STRING | uppercase
+        Name : TUPLE[ FirstName : STRING, LastName : STRING ] | unique
+        NameSet : SET[ TUPLE[ FirstName : STRING, LastName : STRING ] ] | count 2
+        Company Map : MAP[ Phone : STRING, STRING ] | count 2
+        Email Set : SET[ STRING ] | count 2
+        Phone List : LIST[ STRING ] | count 2
+        SimpleDate : SIMPLE.Date
+        SimpleDateMap : MAP[ COMPOUND.Name, SIMPLE.Date ] | count 2
+        SimpleDateSet : SET[ SIMPLE.Date ] | count 2
+        SimpleDateList : LIST[ SIMPLE.Date ] | count 1 3
+        NameSetMap : MAP[ SIMPLE.Date, COMPOUND.NameSet ] | count 2
+        SimplePointerArray : ARRAY[ POINTER[ SIMPLE ] ] | !stored
 ```
 
 ![](https://github.com/senselogic/BASIL/blob/master/TEST/blog.png)
@@ -95,7 +132,7 @@ BLOG | count 5
 
     {table name} [| {table property}, {table property}, ...]
 
-        {field name} : {field type} [| {field property}, {field property}, ...]
+        {column name} : {column type} [| {column property}, {column property}, ...]
 ```
 
 ### Database properties
@@ -110,7 +147,7 @@ count {row count}
 count {row count}
 ```
 
-### Field properties
+### Column properties
 
 ```
 [!]stored
@@ -122,9 +159,9 @@ count {row count}
 [!]required
 [!]incremented
 capacity {maximum character count}
-cqlname {CQL field name}
-aqlname {AQL field name}
-goname {Go field name}
+cqlname {CQL column name}
+aqlname {AQL column name}
+goname {Go column name}
 firstname
 lastname
 fullname
@@ -136,9 +173,11 @@ natural {minimum value} {maximum value} [{digit count}]
 name {minimum letter count} {maximum letter count}
 english {minimum sentence count} {maximum sentence count} {minimum word count} {maximum word count}
 latin  {minimum sentence count} {maximum sentence count} {minimum word count} {maximum word count}
+count {minimum element count} {maximum element count}
+count {element count}
 ```
 
-### Field name suffixes
+### Column name suffixes
 
 ```
 Id
@@ -168,11 +207,15 @@ Isbn
 Tags
 ```
 
-An "Email" field is based on the "FirstName" and "LastName" fields if they are defined above.
+An "Email" column is based on the "FirstName" and "LastName" columns if they are defined above.
 
-A "Slug" field is based on the "Title" or "Name" field if it's defined above.
+A "Slug" column is based on the "Title" or "Name" column if it's defined above.
 
-### Field types
+If a column name is made of several words separated by spaces, it's the suffix of the first word which will be used.
+
+If a sub type is prefixed by a column name separated by a colon, it's the suffix of this column name which will be used.
+
+### Column types
 
 ```
 BOOL
@@ -191,21 +234,14 @@ DATE
 DATETIME
 UUID
 BLOB
-.../... TUPLE
-.../... MAP
-... SET
-... LIST
+TUPLE[ SUB_TYPE, SUB_TYPE, ... ]
+MAP[ KEY_TYPE, ELEMENT_TYPE ]
+SET[ ELEMENT_TYPE ]
+LIST[ ELEMENT_TYPE ]
+ARRAY[ ELEMENT_TYPE ] | !stored
+POINTER[ ELEMENT_TYPE ] | !stored
+TABLE_NAME.ColumnName
 ```
-
-Foreign keys can be specified by using a foreign table name as field type.
-
-The foreign table name will be replaced by the type of the first column of the foreign table.
-
-### Internal fields
-
-Fields with the "!stored" property will be included in the generated Go types, but not stored on the database.
-
-Pointer fields should end with "*", and array fields should end with "[]".
 
 ## Installation
 
@@ -232,7 +268,7 @@ basil [options] script_file.basil
 --sql : generate the SQL schema and data files
 --cql : generate the CQL schema and data files
 --aql : generate the AQL data file
---gosql : generate the Go SQL schema and data files
+--gosql : generate the Go SQL schema file
 --gocql : generate the Go CQL schema file
 --crystal : generate the Crystal schema file
 ```
@@ -249,7 +285,7 @@ Generates "blog.uml" from "blog.basil".
 basil --uml --sql --gosql blog.basil
 ```
 
-Generates "blog.uml", "blog.sql", "blog_data.sql", "blog_sql.go" and "blog_sql_data.go" from "blog.basil".
+Generates "blog.uml", "blog.sql", "blog_data.sql" and "blog_sql.go" from "blog.basil".
 
 ## Version
 

@@ -8,9 +8,9 @@ create schema if not exists `TEST` default character set utf8 collate utf8_gener
 
 use `TEST`;
 
-drop table if exists `TEST`.`ITEM`;
+drop table if exists `TEST`.`SIMPLE`;
 
-create table if not exists `TEST`.`ITEM`(
+create table if not exists `TEST`.`SIMPLE`(
     `Uuid` BINARY(16) NOT NULL,
     `Bool` TINYINT UNSIGNED NULL,
     `Int8` TINYINT NULL,
@@ -30,23 +30,22 @@ create table if not exists `TEST`.`ITEM`(
     primary key( `Uuid` )
     ) engine = InnoDB;
 
-drop table if exists `TEST`.`COLLECTION`;
+drop table if exists `TEST`.`COMPOUND`;
 
-create table if not exists `TEST`.`COLLECTION`(
+create table if not exists `TEST`.`COMPOUND`(
     `Id` INT NOT NULL AUTO_INCREMENT,
-    `Tuple` TEXT NULL,
-    `Map` TEXT NULL,
-    `Set` TEXT NULL,
-    `List` TEXT NULL,
-    `ItemUuid` BINARY(16) NULL,
-    `ItemList` TEXT NULL,
-    primary key( `Id` ),
-    index `fk_collection_item_1_idx`( `ItemUuid` ASC ),
-    constraint `fk_collection_item_1`
-    foreign key( `ItemUuid` )
-    references `TEST`.`ITEM`( `Uuid` )
-        on delete set null
-        on update no action
+    `Location` TEXT NULL,
+    `Name` TEXT NULL,
+    `NameSet` TEXT NULL,
+    `CompanyMap` TEXT NULL,
+    `EmailSet` TEXT NULL,
+    `PhoneList` TEXT NULL,
+    `SimpleDate` DATE NULL,
+    `SimpleDateMap` TEXT NULL,
+    `SimpleDateSet` TEXT NULL,
+    `SimpleDateList` TEXT NULL,
+    `NameSetMap` TEXT NULL,
+    primary key( `Id` )
     ) engine = InnoDB;
 
 set SQL_MODE=@OLD_SQL_MODE;

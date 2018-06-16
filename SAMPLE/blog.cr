@@ -4,7 +4,6 @@ class SECTION
     @name : String
     @text : String
     @image : String
-    @article_id_list : List(Uint64)
     @image_index : Uint64
 end
 
@@ -33,8 +32,8 @@ class ARTICLE
     @text : String
     @image : String
     @date : String
-    @section : *(SECTION)
-    @user : *(USER)
+    @section : POINTER[ SECTION ]
+    @user : POINTER[ USER ]
     @image_index : Uint64
 end
 
@@ -44,8 +43,8 @@ class COMMENT
     @user_id : Uint64
     @text : String
     @date_time : String
-    @article : *(ARTICLE)
-    @user : *(USER)
+    @article : POINTER[ ARTICLE ]
+    @user : POINTER[ USER ]
 end
 
 class SUBSCRIBER

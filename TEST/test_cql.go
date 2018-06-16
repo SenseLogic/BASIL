@@ -1,4 +1,4 @@
-type ITEM struct {
+type SIMPLE struct {
     Uuid string;
     Bool bool;
     Int8 int8;
@@ -19,14 +19,20 @@ type ITEM struct {
 
 // ~~
 
-type COLLECTION struct {
+type COMPOUND struct {
     Id int32;
-    Tuple INT32,STRING TUPLE;
-    Map INT32,STRING MAP;
-    Set INT32 SET;
-    List INT32 LIST;
-    ItemUuid string;
-    ItemList UUID LIST;
+    Location string;
+    Name TUPLE[ FirstName : STRING, LastName : STRING ];
+    NameSet SET[ TUPLE[ FirstName : STRING, LastName : STRING ] ];
+    CompanyMap MAP[ Phone : STRING, STRING ];
+    EmailSet SET[ STRING ];
+    PhoneList LIST[ STRING ];
+    SimpleDate string;
+    SimpleDateMap MAP[ COMPOUND.Name, SIMPLE.Date ];
+    SimpleDateSet SET[ SIMPLE.Date ];
+    SimpleDateList LIST[ SIMPLE.Date ];
+    NameSetMap MAP[ SIMPLE.Date, COMPOUND.NameSet ];
+    SimplePointerArray [] * SIMPLE `db:"-"`;
 }
 
 // ~~
