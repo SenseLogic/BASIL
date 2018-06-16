@@ -13,7 +13,6 @@ Textual database builder.
     *   UML schema file.
     *   SQL schema and data files.
     *   CQL schema and data files.
-    *   AQL data file.
     *   Go SQL schema file.
     *   Go CQL schema file.
     *   Crystal schema file.
@@ -48,7 +47,7 @@ BLOG | count 5
         Region : STRING | capacity 45
         Country : STRING | capacity 45
         Company : STRING | capacity 45
-        ItIsAdministrator : BOOL | aqlname IsAdmin
+        ItIsAdministrator : BOOL
 
     ARTICLE | count 15
 
@@ -159,9 +158,10 @@ count {row count}
 [!]required
 [!]incremented
 capacity {maximum character count}
+sqlname {SQL column name}
 cqlname {CQL column name}
-aqlname {AQL column name}
-goname {Go column name}
+goname {Go field name}
+crystalname {Crystal field name}
 firstname
 lastname
 fullname
@@ -267,7 +267,6 @@ basil [options] script_file.basil
 --uml : generate the UML schema file
 --sql : generate the SQL schema and data files
 --cql : generate the CQL schema and data files
---aql : generate the AQL data file
 --gosql : generate the Go SQL schema file
 --gocql : generate the Go CQL schema file
 --crystal : generate the Crystal schema file

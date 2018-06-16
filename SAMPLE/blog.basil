@@ -25,7 +25,7 @@ BLOG | count 5
         Region : STRING | capacity 45
         Country : STRING | capacity 45
         Company : STRING | capacity 45
-        ItIsAdministrator : BOOL | aqlname IsAdmin
+        ItIsAdministrator : BOOL
 
     ARTICLE | count 15
 

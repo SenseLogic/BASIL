@@ -1133,81 +1133,6 @@ class TYPE
 
     // ~~
 
-    string GetAqlText(
-        )
-    {
-        if ( ActualBaseName == "BOOL" )
-        {
-            return "int64";
-        }
-        else if ( ActualBaseName == "INT8" )
-        {
-            return "int64";
-        }
-        else if ( ActualBaseName == "UINT8" )
-        {
-            return "int64";
-        }
-        else if ( ActualBaseName == "INT16" )
-        {
-            return "int64";
-        }
-        else if ( ActualBaseName == "UINT16" )
-        {
-            return "int64";
-        }
-        else if ( ActualBaseName == "INT32" )
-        {
-            return "int64";
-        }
-        else if ( ActualBaseName == "UINT32" )
-        {
-            return "int64";
-        }
-        else if ( ActualBaseName == "INT64" )
-        {
-            return "int64";
-        }
-        else if ( ActualBaseName == "UINT64" )
-        {
-            return "int64";
-        }
-        else if ( ActualBaseName == "FLOAT32" )
-        {
-            return "float64";
-        }
-        else if ( ActualBaseName == "FLOAT64" )
-        {
-            return "float64";
-        }
-        else if ( ActualBaseName == "STRING" )
-        {
-            return "string";
-        }
-        else if ( ActualBaseName == "DATE" )
-        {
-            return "string";
-        }
-        else if ( ActualBaseName == "DATETIME" )
-        {
-            return "string";
-        }
-        else if ( ActualBaseName == "UUID" )
-        {
-            return "string";
-        }
-        else if ( ActualBaseName == "BLOB" )
-        {
-            return "blob";
-        }
-        else
-        {
-            return "string";
-        }
-    }
-
-    // ~~
-
     string GetGoText(
         )
     {
@@ -2209,116 +2134,6 @@ class VALUE
 
     // ~~
 
-    string GetAqlText(
-        )
-    {
-        string
-            aql_text;
-
-        if ( Type.ActualBaseName == "BOOL" )
-        {
-            if ( Text == "1" )
-            {
-                aql_text = "true";
-            }
-            else
-            {
-                aql_text = "false";
-            }
-        }
-        else if ( Type.ActualBaseName == "INT8"
-                  || Type.ActualBaseName == "UINT8"
-                  || Type.ActualBaseName == "INT16"
-                  || Type.ActualBaseName == "UINT16"
-                  || Type.ActualBaseName == "INT32"
-                  || Type.ActualBaseName == "UINT32"
-                  || Type.ActualBaseName == "INT64"
-                  || Type.ActualBaseName == "UINT64"
-                  || Type.ActualBaseName == "FLOAT32"
-                  || Type.ActualBaseName == "FLOAT64" )
-        {
-            aql_text = Text;
-        }
-        else if ( Type.ActualBaseName == "DATE"
-                  || Type.ActualBaseName == "DATETIME" )
-        {
-            aql_text = "'" ~ Text ~ "'";
-        }
-        else if ( Type.ActualBaseName == "UUID" )
-        {
-            aql_text = "'" ~ Text ~ "'";
-        }
-        else if ( Type.ActualBaseName == "BLOB" )
-        {
-            aql_text = "'" ~ Text ~ "'";
-        }
-
-        else if ( Type.ActualBaseName == "TUPLE" )
-        {
-            foreach ( sub_value_index, ref sub_value; SubValueArray )
-            {
-                if ( sub_value_index > 0 )
-                {
-                    aql_text ~= ", ";
-                }
-
-                aql_text ~= sub_value.GetAqlText();
-            }
-
-            aql_text = "{ " ~ aql_text ~ " }";
-        }
-        else if ( Type.ActualBaseName == "MAP" )
-        {
-            foreach ( element_value_index, ref element_value; ElementValueArray )
-            {
-                if ( element_value_index > 0 )
-                {
-                    aql_text ~= ", ";
-                }
-
-                aql_text ~= KeyValueArray[ element_value_index ].GetAqlText() ~ " : " ~ element_value.GetAqlText();
-            }
-
-            aql_text = "{ " ~ aql_text ~ " }";
-        }
-        else if ( Type.ActualBaseName == "SET" )
-        {
-            foreach ( element_value_index, ref element_value; ElementValueArray )
-            {
-                if ( element_value_index > 0 )
-                {
-                    aql_text ~= ", ";
-                }
-
-                aql_text ~= element_value.GetAqlText();
-            }
-
-            aql_text = "{ " ~ aql_text ~ " }";
-        }
-        else if ( Type.ActualBaseName == "LIST" )
-        {
-            foreach ( element_value_index, ref element_value; ElementValueArray )
-            {
-                if ( element_value_index > 0 )
-                {
-                    aql_text ~= ", ";
-                }
-
-                aql_text ~= element_value.GetAqlText();
-            }
-
-            aql_text = "[ " ~ aql_text ~ " ]";
-        }
-        else
-        {
-            aql_text = "'" ~ Text.replace( "'", "''" ) ~ "'";
-        }
-
-        return aql_text;
-    }
-
-    // ~~
-
     string GetGoText(
         )
     {
@@ -2588,8 +2403,6 @@ class COLUMN
     string
         CqlName,
         CqlType,
-        AqlName,
-        AqlType,
         GoName,
         GoType,
         CrystalName,
@@ -2729,13 +2542,13 @@ class COLUMN
                 {
                     Capacity = value_text_array[ 1 ].to!long();
                 }
-                else if ( property_name == "aqlname" )
-                {
-                    AqlName = value_text_array[ 1 ];
-                }
                 else if ( property_name == "sqlname" )
                 {
                     SqlName = value_text_array[ 1 ];
+                }
+                else if ( property_name == "cqlname" )
+                {
+                    CqlName = value_text_array[ 1 ];
                 }
                 else if ( property_name == "goname" )
                 {
@@ -2865,11 +2678,6 @@ class COLUMN
             CqlName = Name;
         }
 
-        if ( AqlName == "" )
-        {
-            AqlName = Name;
-        }
-
         if ( GoName == "" )
         {
             GoName = Name;
@@ -2882,7 +2690,6 @@ class COLUMN
 
         SqlType = Type.GetSqlText();
         CqlType = Type.GetCqlText();
-        AqlType = Type.GetAqlText();
         GoType = Type.GetGoText();
         CrystalType = Type.GetCrystalText();
 
@@ -3720,82 +3527,6 @@ class SCHEMA
 
     // ~~
 
-    void WriteAqlDataFile(
-        string aql_data_file_path
-        )
-    {
-        long
-            column_count;
-        string
-            aql_data_file_text;
-
-        writeln( "Writing AQL data file : ", aql_data_file_path );
-
-        aql_data_file_text = "";
-
-        foreach ( ref table; TableArray )
-        {
-            column_count = table.ColumnArray.length;
-
-            foreach ( row_index; 0 .. table.RowCount )
-            {
-                aql_data_file_text
-                    ~= "insert into "
-                       ~ table.SchemaName
-                       ~ "."
-                       ~ table.Name
-                       ~ " ( PK, " ;
-
-                foreach ( ref column; table.ColumnArray )
-                {
-                    if ( column.IsStored )
-                    {
-                        aql_data_file_text ~= column.AqlName;
-
-                        if ( !column.IsLastStored )
-                        {
-                            aql_data_file_text ~= ", ";
-                        }
-                    }
-                }
-
-                aql_data_file_text
-                    ~= " ) values ( "
-                       ~ table.ColumnArray[ 0 ].ValueArray[ row_index ].GetAqlText()
-                       ~ ", ";
-
-                foreach ( column_index, ref column; table.ColumnArray )
-                {
-                    if ( column.IsStored )
-                    {
-                        if ( column.IsMultiple )
-                        {
-                            aql_data_file_text ~= "'JSON[ ";
-                        }
-
-                        aql_data_file_text ~= column.ValueArray[ row_index ].GetAqlText();
-
-                        if ( column.IsMultiple )
-                        {
-                            aql_data_file_text ~= " ]'";
-                        }
-
-                        if ( !column.IsLastStored )
-                        {
-                            aql_data_file_text ~= ", ";
-                        }
-                    }
-                }
-
-                aql_data_file_text ~= " );\n";
-            }
-        }
-
-        aql_data_file_path.write( aql_data_file_text );
-    }
-
-    // ~~
-
     void WriteGoSqlSchemaFile(
         string go_sql_schema_file_path
         )
@@ -4133,10 +3864,6 @@ void ProcessFile(
             Schema.WriteCqlSchemaFile( base_file_path ~ ".cql" );
             Schema.WriteCqlDataFile( base_file_path ~ "_data.cql" );
         }
-        else if ( output_format == "aql" )
-        {
-            Schema.WriteAqlDataFile( base_file_path ~ "_data.aql" );
-        }
         else if ( output_format == "gosql" )
         {
             Schema.WriteGoSqlSchemaFile( base_file_path ~ "_sql.go" );
@@ -4184,10 +3911,6 @@ void main(
         {
             output_format_array ~= "cql";
         }
-        else if ( option == "--aql" )
-        {
-            output_format_array ~= "aql";
-        }
         else if ( option == "--gosql" )
         {
             output_format_array ~= "gosql";
@@ -4218,7 +3941,6 @@ void main(
         writeln( "    --uml : generate the UML schema file" );
         writeln( "    --sql : generate the SQL schema and data files" );
         writeln( "    --cql : generate the CQL schema and data files" );
-        writeln( "    --aql : generate the AQL data file" );
         writeln( "    --gosql : generate the Go SQL schema file" );
         writeln( "    --gocql : generate the Go CQL schema file" );
         writeln( "    --crystal : generate the Crystal schema file" );
