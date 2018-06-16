@@ -26,10 +26,10 @@ class COMPOUND
     @email_set : Set(String)
     @phone_list : List(String)
     @simple_date : String
-    @simple_date_map : Map(Tuple(),String)
+    @simple_date_map : Map(Tuple(String,String),String)
     @simple_date_set : Set(String)
     @simple_date_list : List(String)
-    @name_set_map : Map(String,Set())
+    @name_set_map : Map(String,Set(Tuple(String,String)))
     @simple_pointer_array : ARRAY[POINTER[SIMPLE]]
 end
 

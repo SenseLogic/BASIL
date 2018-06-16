@@ -818,8 +818,9 @@ class TYPE
     string
         ColumnName,
         Name,
-        BaseName,
-        ActualBaseName;
+        BaseName;
+    TYPE
+        ActualType;
     TYPE[]
         SubTypeArray;
 
@@ -917,7 +918,7 @@ class TYPE
 
     // -- INQUIRIES
 
-    string GetActualBaseName(
+    TYPE GetActualType(
         )
     {
         COLUMN
@@ -927,11 +928,11 @@ class TYPE
         {
             foreign_column = Schema.FindForeignColumn( BaseName );
 
-            return foreign_column.Type.GetActualBaseName();
+            return foreign_column.Type.GetActualType();
         }
         else
         {
-            return BaseName;
+            return this;
         }
     }
 
@@ -940,51 +941,56 @@ class TYPE
     string GetSqlText(
         )
     {
-        if ( ActualBaseName == "BOOL" )
+        string
+            type_name;
+
+        type_name = ActualType.BaseName;
+
+        if ( type_name == "BOOL" )
         {
             return "TINYINT UNSIGNED";
         }
-        else if ( ActualBaseName == "INT8" )
+        else if ( type_name == "INT8" )
         {
             return "TINYINT";
         }
-        else if ( ActualBaseName == "UINT8" )
+        else if ( type_name == "UINT8" )
         {
             return "TINYINT UNSIGNED";
         }
-        else if ( ActualBaseName == "INT16" )
+        else if ( type_name == "INT16" )
         {
             return "SMALLINT";
         }
-        else if ( ActualBaseName == "UINT16" )
+        else if ( type_name == "UINT16" )
         {
             return "SMALLINT UNSIGNED";
         }
-        else if ( ActualBaseName == "INT32" )
+        else if ( type_name == "INT32" )
         {
             return "INT";
         }
-        else if ( ActualBaseName == "UINT32" )
+        else if ( type_name == "UINT32" )
         {
             return "INT UNSIGNED";
         }
-        else if ( ActualBaseName == "INT64" )
+        else if ( type_name == "INT64" )
         {
             return "BIGINT";
         }
-        else if ( ActualBaseName == "UINT64" )
+        else if ( type_name == "UINT64" )
         {
             return "BIGINT UNSIGNED";
         }
-        else if ( ActualBaseName == "FLOAT32" )
+        else if ( type_name == "FLOAT32" )
         {
             return "FLOAT";
         }
-        else if ( ActualBaseName == "FLOAT64" )
+        else if ( type_name == "FLOAT64" )
         {
             return "DOUBLE";
         }
-        else if ( ActualBaseName == "STRING" )
+        else if ( type_name == "STRING" )
         {
             if ( Column.Capacity != 0 )
             {
@@ -995,19 +1001,19 @@ class TYPE
                 return "TEXT";
             }
         }
-        else if ( ActualBaseName == "DATE" )
+        else if ( type_name == "DATE" )
         {
             return "DATE";
         }
-        else if ( ActualBaseName == "DATETIME" )
+        else if ( type_name == "DATETIME" )
         {
             return "DATETIME";
         }
-        else if ( ActualBaseName == "UUID" )
+        else if ( type_name == "UUID" )
         {
             return "BINARY(16)";
         }
-        else if ( ActualBaseName == "BLOB" )
+        else if ( type_name == "BLOB" )
         {
             return "BLOB";
         }
@@ -1025,7 +1031,7 @@ class TYPE
         string
             sub_type_cql_text;
 
-        foreach ( ref sub_type; SubTypeArray )
+        foreach ( ref sub_type; ActualType.SubTypeArray )
         {
             if ( sub_type_cql_text != "" )
             {
@@ -1043,83 +1049,88 @@ class TYPE
     string GetCqlText(
         )
     {
-        if ( ActualBaseName == "BOOL" )
+        string
+            type_name;
+
+        type_name = ActualType.BaseName;
+
+        if ( type_name == "BOOL" )
         {
             return "boolean";
         }
-        else if ( ActualBaseName == "INT8" )
+        else if ( type_name == "INT8" )
         {
             return "tinyint";
         }
-        else if ( ActualBaseName == "UINT8" )
+        else if ( type_name == "UINT8" )
         {
             return "tinyint";
         }
-        else if ( ActualBaseName == "INT16" )
+        else if ( type_name == "INT16" )
         {
             return "smallint";
         }
-        else if ( ActualBaseName == "UINT16" )
+        else if ( type_name == "UINT16" )
         {
             return "smallint";
         }
-        else if ( ActualBaseName == "INT32" )
+        else if ( type_name == "INT32" )
         {
             return "int";
         }
-        else if ( ActualBaseName == "UINT32" )
+        else if ( type_name == "UINT32" )
         {
             return "int";
         }
-        else if ( ActualBaseName == "INT64" )
+        else if ( type_name == "INT64" )
         {
             return "bigint";
         }
-        else if ( ActualBaseName == "UINT64" )
+        else if ( type_name == "UINT64" )
         {
             return "bigint";
         }
-        else if ( ActualBaseName == "FLOAT32" )
+        else if ( type_name == "FLOAT32" )
         {
             return "float";
         }
-        else if ( ActualBaseName == "FLOAT64" )
+        else if ( type_name == "FLOAT64" )
         {
             return "double";
         }
-        else if ( ActualBaseName == "STRING" )
+        else if ( type_name == "STRING" )
         {
             return "text";
         }
-        else if ( ActualBaseName == "DATE" )
+        else if ( type_name == "DATE" )
         {
             return "timestamp";
         }
-        else if ( ActualBaseName == "DATETIME" )
+        else if ( type_name == "DATETIME" )
         {
             return "timestamp";
         }
-        else if ( ActualBaseName == "UUID" )
+        else if ( type_name == "UUID" )
         {
             return "uuid";
         }
-        else if ( ActualBaseName == "BLOB" )
+        else if ( type_name == "BLOB" )
         {
             return "blob";
         }
-        else if ( ActualBaseName == "TUPLE" )
+        else if ( type_name == "TUPLE" )
         {
             return "tuple<" ~ GetSubTextSqlText() ~ ">";
         }
-        else if ( ActualBaseName == "MAP" )
+        else if ( type_name == "MAP" )
         {
             return "map<" ~ GetSubTextSqlText() ~ ">";
         }
-        else if ( ActualBaseName == "SET" )
+        else if ( type_name == "SET" )
         {
             return "set<" ~ GetSubTextSqlText() ~ ">";
         }
-        else if ( ActualBaseName == "LIST" )
+        else if ( type_name == "LIST" )
         {
             return "list<" ~ GetSubTextSqlText() ~ ">";
         }
@@ -1134,75 +1145,80 @@ class TYPE
     string GetGoText(
         )
     {
-        if ( ActualBaseName == "BOOL" )
+        string
+            type_name;
+
+        type_name = ActualType.BaseName;
+
+        if ( type_name == "BOOL" )
         {
             return "bool";
         }
-        else if ( ActualBaseName == "INT8" )
+        else if ( type_name == "INT8" )
         {
             return "int8";
         }
-        else if ( ActualBaseName == "UINT8" )
+        else if ( type_name == "UINT8" )
         {
             return "uint8";
         }
-        else if ( ActualBaseName == "INT16" )
+        else if ( type_name == "INT16" )
         {
             return "int16";
         }
-        else if ( ActualBaseName == "UINT16" )
+        else if ( type_name == "UINT16" )
         {
             return "uint16";
         }
-        else if ( ActualBaseName == "INT32" )
+        else if ( type_name == "INT32" )
         {
             return "int32";
         }
-        else if ( ActualBaseName == "UINT32" )
+        else if ( type_name == "UINT32" )
         {
             return "uint32";
         }
-        else if ( ActualBaseName == "INT64" )
+        else if ( type_name == "INT64" )
         {
             return "int64";
         }
-        else if ( ActualBaseName == "UINT64" )
+        else if ( type_name == "UINT64" )
         {
             return "uint64";
         }
-        else if ( ActualBaseName == "FLOAT32" )
+        else if ( type_name == "FLOAT32" )
         {
             return "float32";
         }
-        else if ( ActualBaseName == "FLOAT64" )
+        else if ( type_name == "FLOAT64" )
         {
             return "float64";
         }
-        else if ( ActualBaseName == "STRING" )
+        else if ( type_name == "STRING" )
         {
             return "string";
         }
-        else if ( ActualBaseName == "DATE" )
+        else if ( type_name == "DATE" )
         {
             return "string";
         }
-        else if ( ActualBaseName == "DATETIME" )
+        else if ( type_name == "DATETIME" )
         {
             return "string";
         }
-        else if ( ActualBaseName == "UUID" )
+        else if ( type_name == "UUID" )
         {
             return "string";
         }
-        else if ( ActualBaseName == "BLOB" )
+        else if ( type_name == "BLOB" )
         {
             return "[]byte";
         }
-        else if ( ActualBaseName == "POINTER" )
+        else if ( type_name == "POINTER" )
         {
             return "* " ~ SubTypeArray[ 0 ].GetGoText();
         }
-        else if ( ActualBaseName == "ARRAY" )
+        else if ( type_name == "ARRAY" )
         {
             return "[] " ~ SubTypeArray[ 0 ].GetGoText();
         }
@@ -1220,7 +1236,7 @@ class TYPE
         string
             sub_type_crystal_text;
 
-        foreach ( ref sub_type; SubTypeArray )
+        foreach ( ref sub_type; ActualType.SubTypeArray )
         {
             if ( sub_type_crystal_text != "" )
             {
@@ -1238,83 +1254,88 @@ class TYPE
     string GetCrystalText(
         )
     {
-        if ( ActualBaseName == "BOOL" )
+        string
+            type_name;
+
+        type_name = ActualType.BaseName;
+
+        if ( type_name == "BOOL" )
         {
             return "bool";
         }
-        else if ( ActualBaseName == "INT8" )
+        else if ( type_name == "INT8" )
         {
             return "Int8";
         }
-        else if ( ActualBaseName == "UINT8" )
+        else if ( type_name == "UINT8" )
         {
             return "Uint8";
         }
-        else if ( ActualBaseName == "INT16" )
+        else if ( type_name == "INT16" )
         {
             return "Int16";
         }
-        else if ( ActualBaseName == "UINT16" )
+        else if ( type_name == "UINT16" )
         {
             return "Uint16";
         }
-        else if ( ActualBaseName == "INT32" )
+        else if ( type_name == "INT32" )
         {
             return "Int32";
         }
-        else if ( ActualBaseName == "UINT32" )
+        else if ( type_name == "UINT32" )
         {
             return "Uint32";
         }
-        else if ( ActualBaseName == "INT64" )
+        else if ( type_name == "INT64" )
         {
             return "Int64";
         }
-        else if ( ActualBaseName == "UINT64" )
+        else if ( type_name == "UINT64" )
         {
             return "Uint64";
         }
-        else if ( ActualBaseName == "FLOAT32" )
+        else if ( type_name == "FLOAT32" )
         {
             return "Float32";
         }
-        else if ( ActualBaseName == "FLOAT64" )
+        else if ( type_name == "FLOAT64" )
         {
             return "Float64";
         }
-        else if ( ActualBaseName == "STRING" )
+        else if ( type_name == "STRING" )
         {
             return "String";
         }
-        else if ( ActualBaseName == "DATE" )
+        else if ( type_name == "DATE" )
         {
             return "String";
         }
-        else if ( ActualBaseName == "DATETIME" )
+        else if ( type_name == "DATETIME" )
         {
             return "String";
         }
-        else if ( ActualBaseName == "UUID" )
+        else if ( type_name == "UUID" )
         {
             return "String";
         }
-        else if ( ActualBaseName == "BLOB" )
+        else if ( type_name == "BLOB" )
         {
             return "String";
         }
-        else if ( ActualBaseName == "TUPLE" )
+        else if ( type_name == "TUPLE" )
         {
             return "Tuple(" ~ GetSubTypeCrystalText() ~ ")";
         }
-        else if ( ActualBaseName == "MAP" )
+        else if ( type_name == "MAP" )
         {
             return "Map(" ~ GetSubTypeCrystalText() ~ ")";
         }
-        else if ( ActualBaseName == "SET" )
+        else if ( type_name == "SET" )
         {
             return "Set(" ~ GetSubTypeCrystalText() ~ ")";
         }
-        else if ( ActualBaseName == "LIST" )
+        else if ( type_name == "LIST" )
         {
             return "List(" ~ GetSubTypeCrystalText() ~ ")";
         }
@@ -1339,14 +1360,14 @@ class TYPE
 
     // ~~
 
-    void SetActualBaseName(
+    void SetActualType(
         )
     {
-        ActualBaseName = GetActualBaseName();
+        ActualType = GetActualType();
 
         foreach ( sub_type; SubTypeArray )
         {
-            sub_type.SetActualBaseName();
+            sub_type.SetActualType();
         }
     }
 }
@@ -1955,9 +1976,12 @@ class VALUE
         )
     {
         string
-            sql_text;
+            sql_text,
+            type_name;
 
-        if ( Type.ActualBaseName == "TUPLE" )
+        type_name = Type.ActualType.BaseName;
+
+        if ( type_name == "TUPLE" )
         {
             foreach ( sub_value_index, ref sub_value; SubValueArray )
             {
@@ -1971,7 +1995,7 @@ class VALUE
 
             sql_text = "{ " ~ sql_text ~ " }";
         }
-        else if ( Type.ActualBaseName == "MAP" )
+        else if ( type_name == "MAP" )
         {
             foreach ( element_value_index, ref element_value; ElementValueArray )
             {
@@ -1985,7 +2009,7 @@ class VALUE
 
             sql_text = "{ " ~ sql_text ~ " }";
         }
-        else if ( Type.ActualBaseName == "SET" )
+        else if ( type_name == "SET" )
         {
             foreach ( element_value_index, ref element_value; ElementValueArray )
             {
@@ -1999,7 +2023,7 @@ class VALUE
 
             sql_text = "{ " ~ sql_text ~ " }";
         }
-        else if ( Type.ActualBaseName == "LIST" )
+        else if ( type_name == "LIST" )
         {
             foreach ( element_value_index, ref element_value; ElementValueArray )
             {
@@ -2027,9 +2051,12 @@ class VALUE
         )
     {
         string
-            cql_text;
+            cql_text,
+            type_name;
 
-        if ( Type.ActualBaseName == "BOOL" )
+        type_name = Type.ActualType.BaseName;
+
+        if ( type_name == "BOOL" )
         {
             if ( Text == "1" )
             {
@@ -2040,33 +2067,33 @@ class VALUE
                 cql_text = "false";
             }
         }
-        else if ( Type.ActualBaseName == "INT8"
-                  || Type.ActualBaseName == "UINT8"
-                  || Type.ActualBaseName == "INT16"
-                  || Type.ActualBaseName == "UINT16"
-                  || Type.ActualBaseName == "INT32"
-                  || Type.ActualBaseName == "UINT32"
-                  || Type.ActualBaseName == "INT64"
-                  || Type.ActualBaseName == "UINT64"
-                  || Type.ActualBaseName == "FLOAT32"
-                  || Type.ActualBaseName == "FLOAT64" )
+        else if ( type_name == "INT8"
+                  || type_name == "UINT8"
+                  || type_name == "INT16"
+                  || type_name == "UINT16"
+                  || type_name == "INT32"
+                  || type_name == "UINT32"
+                  || type_name == "INT64"
+                  || type_name == "UINT64"
+                  || type_name == "FLOAT32"
+                  || type_name == "FLOAT64" )
         {
             cql_text = Text;
         }
-        else if ( Type.ActualBaseName == "DATE"
-                  || Type.ActualBaseName == "DATETIME" )
+        else if ( type_name == "DATE"
+                  || type_name == "DATETIME" )
         {
             cql_text = "'" ~ Text ~ "'";
         }
-        else if ( Type.ActualBaseName == "UUID" )
+        else if ( type_name == "UUID" )
         {
             cql_text = "'" ~ Text ~ "'";
         }
-        else if ( Type.ActualBaseName == "BLOB" )
+        else if ( type_name == "BLOB" )
         {
             cql_text = "'" ~ Text ~ "'";
         }
-        else if ( Type.ActualBaseName == "TUPLE" )
+        else if ( type_name == "TUPLE" )
         {
             foreach ( sub_value_index, ref sub_value; SubValueArray )
             {
@@ -2080,7 +2107,7 @@ class VALUE
 
             cql_text = "{ " ~ cql_text ~ " }";
         }
-        else if ( Type.ActualBaseName == "MAP" )
+        else if ( type_name == "MAP" )
         {
             foreach ( element_value_index, ref element_value; ElementValueArray )
             {
@@ -2094,7 +2121,7 @@ class VALUE
 
             cql_text = "{ " ~ cql_text ~ " }";
         }
-        else if ( Type.ActualBaseName == "SET" )
+        else if ( type_name == "SET" )
         {
             foreach ( element_value_index, ref element_value; ElementValueArray )
             {
@@ -2108,7 +2135,7 @@ class VALUE
 
             cql_text = "{ " ~ cql_text ~ " }";
         }
-        else if ( Type.ActualBaseName == "LIST" )
+        else if ( type_name == "LIST" )
         {
             foreach ( element_value_index, ref element_value; ElementValueArray )
             {
@@ -2136,9 +2163,12 @@ class VALUE
         )
     {
         string
-            go_text;
+            go_text,
+            type_name;
 
-        if ( Type.ActualBaseName == "BOOL" )
+        type_name = Type.ActualType.BaseName;
+
+        if ( type_name == "BOOL" )
         {
             if ( Text == "1" )
             {
@@ -2149,20 +2179,20 @@ class VALUE
                 go_text = "false";
             }
         }
-        else if ( Type.ActualBaseName == "INT8"
-                  || Type.ActualBaseName == "UINT8"
-                  || Type.ActualBaseName == "INT16"
-                  || Type.ActualBaseName == "UINT16"
-                  || Type.ActualBaseName == "INT32"
-                  || Type.ActualBaseName == "UINT32"
-                  || Type.ActualBaseName == "INT64"
-                  || Type.ActualBaseName == "UINT64"
-                  || Type.ActualBaseName == "FLOAT32"
-                  || Type.ActualBaseName == "FLOAT64" )
+        else if ( type_name == "INT8"
+                  || type_name == "UINT8"
+                  || type_name == "INT16"
+                  || type_name == "UINT16"
+                  || type_name == "INT32"
+                  || type_name == "UINT32"
+                  || type_name == "INT64"
+                  || type_name == "UINT64"
+                  || type_name == "FLOAT32"
+                  || type_name == "FLOAT64" )
         {
             go_text = Text;
         }
-        else if ( Type.ActualBaseName == "TUPLE" )
+        else if ( type_name == "TUPLE" )
         {
             foreach ( sub_value_index, ref sub_value; SubValueArray )
             {
@@ -2176,7 +2206,7 @@ class VALUE
 
             go_text = "{ " ~ go_text ~ " }";
         }
-        else if ( Type.ActualBaseName == "MAP" )
+        else if ( type_name == "MAP" )
         {
             foreach ( element_value_index, ref element_value; ElementValueArray )
             {
@@ -2190,7 +2220,7 @@ class VALUE
 
             go_text = "{ " ~ go_text ~ " }";
         }
-        else if ( Type.ActualBaseName == "SET" )
+        else if ( type_name == "SET" )
         {
             foreach ( element_value_index, ref element_value; ElementValueArray )
             {
@@ -2204,7 +2234,7 @@ class VALUE
 
             go_text = "{ " ~ go_text ~ " }";
         }
-        else if ( Type.ActualBaseName == "LIST" )
+        else if ( type_name == "LIST" )
         {
             foreach ( element_value_index, ref element_value; ElementValueArray )
             {
@@ -2232,9 +2262,12 @@ class VALUE
         )
     {
         string
-            crystal_text;
+            crystal_text,
+            type_name;
 
-        if ( Type.ActualBaseName == "BOOL" )
+        type_name = Type.ActualType.BaseName;
+
+        if ( type_name == "BOOL" )
         {
             if ( Text == "1" )
             {
@@ -2245,20 +2278,20 @@ class VALUE
                 crystal_text = "false";
             }
         }
-        else if ( Type.ActualBaseName == "INT8"
-                  || Type.ActualBaseName == "UINT8"
-                  || Type.ActualBaseName == "INT16"
-                  || Type.ActualBaseName == "UINT16"
-                  || Type.ActualBaseName == "INT32"
-                  || Type.ActualBaseName == "UINT32"
-                  || Type.ActualBaseName == "INT64"
-                  || Type.ActualBaseName == "UINT64"
-                  || Type.ActualBaseName == "FLOAT32"
-                  || Type.ActualBaseName == "FLOAT64" )
+        else if ( type_name == "INT8"
+                  || type_name == "UINT8"
+                  || type_name == "INT16"
+                  || type_name == "UINT16"
+                  || type_name == "INT32"
+                  || type_name == "UINT32"
+                  || type_name == "INT64"
+                  || type_name == "UINT64"
+                  || type_name == "FLOAT32"
+                  || type_name == "FLOAT64" )
         {
             crystal_text = Text;
         }
-        else if ( Type.ActualBaseName == "TUPLE" )
+        else if ( type_name == "TUPLE" )
         {
             foreach ( sub_value_index, ref sub_value; SubValueArray )
             {
@@ -2272,7 +2305,7 @@ class VALUE
 
             crystal_text = "{ " ~ crystal_text ~ " }";
         }
-        else if ( Type.ActualBaseName == "MAP" )
+        else if ( type_name == "MAP" )
         {
             foreach ( element_value_index, ref element_value; ElementValueArray )
             {
@@ -2286,7 +2319,7 @@ class VALUE
 
             crystal_text = "{ " ~ crystal_text ~ " }";
         }
-        else if ( Type.ActualBaseName == "SET" )
+        else if ( type_name == "SET" )
         {
             foreach ( element_value_index, ref element_value; ElementValueArray )
             {
@@ -2300,7 +2333,7 @@ class VALUE
 
             crystal_text = "{ " ~ crystal_text ~ " }";
         }
-        else if ( Type.ActualBaseName == "LIST" )
+        else if ( type_name == "LIST" )
         {
             foreach ( element_value_index, ref element_value; ElementValueArray )
             {
@@ -2658,7 +2691,7 @@ class COLUMN
     void MakeType(
         )
     {
-        Type.SetActualBaseName();
+        Type.SetActualType();
 
         if ( SqlName == "" )
         {
