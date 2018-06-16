@@ -2,14 +2,14 @@
 
 # Basil
 
-Textual database builder.
+Textual database designer.
 
 ## Features
 
-*   Database design using a simple textual specification.
+*   Database design using a concise textual specification.
 *   Random data generation from the column name, type, size and properties.
 *   Lorem ipsum sentences in Latin or English.
-*   Several export formats :
+*   Multiple export formats :
     *   UML schema file.
     *   SQL schema and data files.
     *   CQL schema and data files.
@@ -81,6 +81,8 @@ BLOG | count 5
         Email : STRING | capacity 45
 ```
 
+![](https://github.com/senselogic/BASIL/blob/master/SAMPLE/blog.png)
+
 ```
 TEST | count 10
 
@@ -120,7 +122,7 @@ TEST | count 10
         SimplePointerArray : ARRAY[ POINTER[ SIMPLE ] ] | !stored
 ```
 
-![](https://github.com/senselogic/BASIL/blob/master/TEST/blog.png)
+![](https://github.com/senselogic/BASIL/blob/master/TEST/test.png)
 
 ## Syntax
 
@@ -288,7 +290,7 @@ Generates "blog.uml", "blog.sql", "blog_data.sql" and "blog_sql.go" from "blog.b
 
 ## Version
 
-2.0
+2.1
 
 ## Author
 

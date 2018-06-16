@@ -918,26 +918,6 @@ class TYPE
 
     // -- INQUIRIES
 
-    TYPE GetActualType(
-        )
-    {
-        COLUMN
-            foreign_column;
-
-        if ( BaseName.indexOf( '.' ) >= 0 )
-        {
-            foreign_column = Schema.FindForeignColumn( BaseName );
-
-            return foreign_column.Type.GetActualType();
-        }
-        else
-        {
-            return this;
-        }
-    }
-
-    // ~~
-
     string GetSqlText(
         )
     {
@@ -1356,6 +1336,24 @@ class TYPE
         }
 
         return ForeignColumn;
+    }
+
+    // ~~
+
+    TYPE GetActualType(
+        )
+    {
+        COLUMN
+            foreign_column;
+
+        if ( BaseName.indexOf( '.' ) >= 0 )
+        {
+            return GetForeignColumn().Type.GetActualType();
+        }
+        else
+        {
+            return this;
+        }
     }
 
     // ~~
@@ -2381,11 +2379,7 @@ class COLUMN
         IsIncremented,
         IsForeign,
         IsProcessed,
-        IsFilled,
-        IsList,
-        IsSet,
-        IsMap,
-        IsMultiple;
+        IsFilled;
     long
         Capacity;
     bool
@@ -2418,8 +2412,6 @@ class COLUMN
         IsUppercase;
     VALUE[]
         ValueArray;
-    TABLE
-        ForeignTable;
     COLUMN
         ForeignColumn;
     string
@@ -2447,7 +2439,6 @@ class COLUMN
         Name = name.replace( " ", "" );
         Type = new TYPE( table, this, Name, type );
         IsStored = true;
-        IsForeign = name.indexOf( '.' ) >= 0;
         MinimumRandomCount = 5;
         MaximumRandomCount = 10;
     }
@@ -2688,10 +2679,20 @@ class COLUMN
 
     // ~~
 
-    void MakeType(
+    void SetForeignColumn(
         )
     {
         Type.SetActualType();
+        ForeignColumn = Type.ForeignColumn;
+        IsForeign = ForeignColumn !is null;
+    }
+
+    // ~~
+
+    void MakeType(
+        )
+    {
+        SetForeignColumn();
 
         if ( SqlName == "" )
         {
@@ -2757,8 +2758,7 @@ class COLUMN
 
             foreach ( row_index; 0 .. Table.RowCount )
             {
-                if ( IsStored
-                     && !IsForeign )
+                if ( IsStored )
                 {
                     ValueArray[ row_index ] = new VALUE( Type );
                     ValueArray[ row_index ].Make( row_index, Table.RowCount );
@@ -2991,30 +2991,6 @@ class SCHEMA
         {
             table.MakeTypes();
         }
-
-        foreach ( ref table; TableArray )
-        {
-            foreach ( ref column; table.ColumnArray )
-            {
-                if ( column.Type.BaseName == "LIST" )
-                {
-                    column.IsList = true;
-                    column.IsMultiple = true;
-                }
-
-                if ( column.Type.BaseName == "SET" )
-                {
-                    column.IsSet = true;
-                    column.IsMultiple = true;
-                }
-
-                if ( column.Type.BaseName == "MAP" )
-                {
-                    column.IsMap = true;
-                    column.IsMultiple = true;
-                }
-            }
-        }
     }
 
     // ~~
@@ -3203,7 +3179,7 @@ class SCHEMA
                 if ( column.IsForeign )
                 {
                     uml_schema_file_text
-                        ~= "\n" ~ column.ForeignTable.Name ~ " <-- " ~ table.Name ~ "\n";
+                        ~= "\n" ~ column.ForeignColumn.Table.Name ~ " <-- " ~ table.Name ~ "\n";
                 }
             }
         }
@@ -3269,8 +3245,7 @@ class SCHEMA
             foreach ( ref column; table.ColumnArray )
             {
                 if ( column.IsStored
-                     && column.IsForeign
-                     && !column.IsMultiple )
+                     && column.IsForeign )
                 {
                     ++foreign_key_index;
 
@@ -3278,7 +3253,7 @@ class SCHEMA
                         ~= "    index `fk_"
                            ~ table.Name.toLower()
                            ~ "_"
-                           ~ column.ForeignTable.Name.toLower()
+                           ~ column.ForeignColumn.Table.Name.toLower()
                            ~ "_"
                            ~ foreign_key_index.to!string()
                            ~ "_idx`( `"
@@ -3292,8 +3267,7 @@ class SCHEMA
             foreach ( ref column; table.ColumnArray )
             {
                 if ( column.IsStored
-                     && column.IsForeign
-                     && !column.IsMultiple )
+                     && column.IsForeign )
                 {
                     ++foreign_key_index;
 
@@ -3301,7 +3275,7 @@ class SCHEMA
                         ~= "    constraint `fk_"
                            ~ table.Name.toLower()
                            ~ "_"
-                           ~ column.ForeignTable.Name.toLower()
+                           ~ column.ForeignColumn.Table.Name.toLower()
                            ~ "_"
                            ~ foreign_key_index.to!string()
                            ~ "`\n"
@@ -3311,7 +3285,7 @@ class SCHEMA
                            ~ "    references `"
                            ~ Name
                            ~ "`.`"
-                           ~ column.ForeignTable.Name
+                           ~ column.ForeignColumn.Table.Name
                            ~ "`( `"
                            ~ column.ForeignColumn.SqlName
                            ~ "` )\n"

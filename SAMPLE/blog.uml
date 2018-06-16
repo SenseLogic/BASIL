@@ -66,4 +66,12 @@ class SUBSCRIBER {
     Email : STRING
 }
 
+SECTION <-- ARTICLE
+
+USER <-- ARTICLE
+
+ARTICLE <-- COMMENT
+
+USER <-- COMMENT
+
 @enduml

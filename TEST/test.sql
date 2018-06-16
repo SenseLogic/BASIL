@@ -45,7 +45,13 @@ create table if not exists `TEST`.`COMPOUND`(
     `SimpleDateSet` TEXT NULL,
     `SimpleDateList` TEXT NULL,
     `NameSetMap` TEXT NULL,
-    primary key( `Id` )
+    primary key( `Id` ),
+    index `fk_compound_simple_1_idx`( `SimpleDate` ASC ),
+    constraint `fk_compound_simple_1`
+    foreign key( `SimpleDate` )
+    references `TEST`.`SIMPLE`( `Date` )
+        on delete set null
+        on update no action
     ) engine = InnoDB;
 
 set SQL_MODE=@OLD_SQL_MODE;

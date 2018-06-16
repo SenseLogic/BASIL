@@ -46,4 +46,6 @@ class COMPOUND {
     SimplePointerArray : ARRAY[POINTER[SIMPLE]]
 }
 
+SIMPLE <-- COMPOUND
+
 @enduml
