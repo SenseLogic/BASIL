@@ -817,7 +817,6 @@ class TYPE
         ForeignColumn;
     string
         ColumnName,
-        BaseColumnName,
         Name,
         BaseName,
         ActualBaseName;
@@ -836,7 +835,8 @@ class TYPE
     this(
         TABLE table,
         COLUMN column,
-        string name
+        string column_name,
+        string type_name
         )
     {
         char
@@ -850,8 +850,7 @@ class TYPE
         Table = table;
         Column = column;
         ColumnName = column.Name;
-        BaseColumnName = column.BaseName;
-        Name = name.strip();
+        Name = type_name.replace( " ", "" );
         BaseName = Name;
 
         bracket_level = 0;
@@ -866,9 +865,8 @@ class TYPE
             {
                 if ( bracket_level == 0 )
                 {
-                    ColumnName = Name[ 0 .. character_index ].replace( " ", "" );
-                    BaseColumnName = Name[ 0 .. character_index ].split( ' ' )[ 0 ];
-                    Name = Name[ character_index + 1 .. $ ].strip();
+                    ColumnName = Name[ 0 .. character_index ];
+                    Name = Name[ character_index + 1 .. $ ];
                     BaseName = Name;
                     sub_type = "";
                     character_index = -1;
@@ -884,7 +882,7 @@ class TYPE
 
                 if ( bracket_level == 1 )
                 {
-                    BaseName = Name[ 0 .. character_index ].strip();
+                    BaseName = Name[ 0 .. character_index ];
                     sub_type = "";
                 }
                 else
@@ -897,7 +895,7 @@ class TYPE
             {
                 if ( bracket_level == 1 )
                 {
-                    SubTypeArray ~= new TYPE( table, column, sub_type );
+                    SubTypeArray ~= new TYPE( table, column, "", sub_type );
                     sub_type = "";
                 }
                 else
@@ -2335,10 +2333,6 @@ class COLUMN
         Table;
     string
         Name;
-    string[]
-        NamePartArray;
-    string
-        BaseName;
     TYPE
         Type;
     bool
@@ -2417,10 +2411,8 @@ class COLUMN
         )
     {
         Table = table;
-        NamePartArray = name.strip().split( ' ' );
-        BaseName = NamePartArray[ 0 ];
-        Name = NamePartArray.join( "" );
-        Type = new TYPE( table, this, type );
+        Name = name.replace( " ", "" );
+        Type = new TYPE( table, this, Name, type );
         IsStored = true;
         IsForeign = name.indexOf( '.' ) >= 0;
         MinimumRandomCount = 5;

@@ -45,8 +45,8 @@ class ARTICLE {
     Text : STRING
     Image : STRING
     Date : DATE
-    Section : POINTER[ SECTION ]
-    User : POINTER[ USER ]
+    Section : POINTER[SECTION]
+    User : POINTER[USER]
     ImageIndex : UINT64
 }
 
@@ -56,8 +56,8 @@ class COMMENT {
     UserId : USER.Id
     Text : STRING
     DateTime : DATETIME
-    Article : POINTER[ ARTICLE ]
-    User : POINTER[ USER ]
+    Article : POINTER[ARTICLE]
+    User : POINTER[USER]
 }
 
 class SUBSCRIBER {

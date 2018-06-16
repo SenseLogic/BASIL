@@ -30,6 +30,6 @@ class COMPOUND
     @simple_date_set : Set(String)
     @simple_date_list : List(String)
     @name_set_map : Map(String,Set())
-    @simple_pointer_array : ARRAY[ POINTER[ SIMPLE ] ]
+    @simple_pointer_array : ARRAY[POINTER[SIMPLE]]
 end
 

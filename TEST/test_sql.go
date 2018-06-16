@@ -22,16 +22,16 @@ type SIMPLE struct {
 type COMPOUND struct {
     Id int32 `db:"Id"`;
     Location string `db:"Location"`;
-    Name TUPLE[ FirstName : STRING, LastName : STRING ] `db:"Name"`;
-    NameSet SET[ TUPLE[ FirstName : STRING, LastName : STRING ] ] `db:"NameSet"`;
-    CompanyMap MAP[ Phone : STRING, STRING ] `db:"CompanyMap"`;
-    EmailSet SET[ STRING ] `db:"EmailSet"`;
-    PhoneList LIST[ STRING ] `db:"PhoneList"`;
+    Name TUPLE[FirstName:STRING,LastName:STRING] `db:"Name"`;
+    NameSet SET[TUPLE[FirstName:STRING,LastName:STRING]] `db:"NameSet"`;
+    CompanyMap MAP[Phone:STRING,Company:STRING] `db:"CompanyMap"`;
+    EmailSet SET[Email:STRING] `db:"EmailSet"`;
+    PhoneList LIST[Phone:STRING] `db:"PhoneList"`;
     SimpleDate string `db:"SimpleDate"`;
-    SimpleDateMap MAP[ COMPOUND.Name, SIMPLE.Date ] `db:"SimpleDateMap"`;
-    SimpleDateSet SET[ SIMPLE.Date ] `db:"SimpleDateSet"`;
-    SimpleDateList LIST[ SIMPLE.Date ] `db:"SimpleDateList"`;
-    NameSetMap MAP[ SIMPLE.Date, COMPOUND.NameSet ] `db:"NameSetMap"`;
+    SimpleDateMap MAP[COMPOUND.Name,SIMPLE.Date] `db:"SimpleDateMap"`;
+    SimpleDateSet SET[SIMPLE.Date] `db:"SimpleDateSet"`;
+    SimpleDateList LIST[SIMPLE.Date] `db:"SimpleDateList"`;
+    NameSetMap MAP[SIMPLE.Date,COMPOUND.NameSet] `db:"NameSetMap"`;
     SimplePointerArray [] * SIMPLE;
 }
 

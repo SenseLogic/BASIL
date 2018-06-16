@@ -109,9 +109,9 @@ TEST | count 10
         Location : Country : STRING | uppercase
         Name : TUPLE[ FirstName : STRING, LastName : STRING ] | unique
         NameSet : SET[ TUPLE[ FirstName : STRING, LastName : STRING ] ] | count 2
-        Company Map : MAP[ Phone : STRING, STRING ] | count 2
-        Email Set : SET[ STRING ] | count 2
-        Phone List : LIST[ STRING ] | count 2
+        CompanyMap : MAP[ Phone : STRING, Company : STRING ] | count 2
+        EmailSet : SET[ Email : STRING ] | count 2
+        PhoneList : LIST[ Phone : STRING ] | count 2
         SimpleDate : SIMPLE.Date
         SimpleDateMap : MAP[ COMPOUND.Name, SIMPLE.Date ] | count 2
         SimpleDateSet : SET[ SIMPLE.Date ] | count 2
@@ -177,7 +177,7 @@ count {minimum element count} {maximum element count}
 count {element count}
 ```
 
-### Column name suffixes
+### Field name suffixes
 
 ```
 Id
@@ -211,10 +211,6 @@ An "Email" column is based on the "FirstName" and "LastName" columns if they are
 
 A "Slug" column is based on the "Title" or "Name" column if it's defined above.
 
-If a column name is made of several words separated by spaces, it's the suffix of the first word which will be used.
-
-If a sub type is prefixed by a column name separated by a colon, it's the suffix of this column name which will be used.
-
 ### Column types
 
 ```
@@ -234,10 +230,14 @@ DATE
 DATETIME
 UUID
 BLOB
-TUPLE[ SUB_TYPE, SUB_TYPE, ... ]
+TUPLE[ FIELD_TYPE, FIELD_TYPE, ... ]
+TUPLE[ FieldName : FIELD_TYPE, FieldName : FIELD_TYPE, ... ]
 MAP[ KEY_TYPE, ELEMENT_TYPE ]
+MAP[ KeyName : KEY_TYPE, ElementName : ELEMENT_TYPE ]
 SET[ ELEMENT_TYPE ]
+SET[ ElementName : ELEMENT_TYPE ]
 LIST[ ELEMENT_TYPE ]
+LIST[ ElementName : ELEMENT_TYPE ]
 ARRAY[ ELEMENT_TYPE ] | !stored
 POINTER[ ELEMENT_TYPE ] | !stored
 TABLE_NAME.ColumnName
