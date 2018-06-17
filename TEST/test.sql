@@ -11,7 +11,7 @@ use `TEST`;
 drop table if exists `TEST`.`SIMPLE`;
 
 create table if not exists `TEST`.`SIMPLE`(
-    `Uuid` BINARY(16) NOT NULL,
+    `Uuid` VARCHAR(36) NOT NULL,
     `Bool` TINYINT UNSIGNED NULL,
     `Int8` TINYINT NULL,
     `Uint8` TINYINT UNSIGNED NULL,
@@ -37,21 +37,15 @@ create table if not exists `TEST`.`COMPOUND`(
     `Location` TEXT NULL,
     `Name` TEXT NULL,
     `NameSet` TEXT NULL,
-    `CompanyMap` TEXT NULL,
-    `EmailSet` TEXT NULL,
     `PhoneList` TEXT NULL,
+    `EmailSet` TEXT NULL,
+    `CompanyMap` TEXT NULL,
     `SimpleDate` DATE NULL,
     `SimpleDateMap` TEXT NULL,
     `SimpleDateSet` TEXT NULL,
     `SimpleDateList` TEXT NULL,
     `NameSetMap` TEXT NULL,
-    primary key( `Id` ),
-    index `fk_compound_simple_1_idx`( `SimpleDate` ASC ),
-    constraint `fk_compound_simple_1`
-    foreign key( `SimpleDate` )
-    references `TEST`.`SIMPLE`( `Date` )
-        on delete set null
-        on update no action
+    primary key( `Id` )
     ) engine = InnoDB;
 
 set SQL_MODE=@OLD_SQL_MODE;

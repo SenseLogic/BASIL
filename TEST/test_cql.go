@@ -24,9 +24,9 @@ type COMPOUND struct {
     Location string;
     Name TUPLE[FirstName:STRING,LastName:STRING];
     NameSet SET[TUPLE[FirstName:STRING,LastName:STRING]];
-    CompanyMap MAP[Phone:STRING,Company:STRING];
-    EmailSet SET[Email:STRING];
     PhoneList LIST[Phone:STRING];
+    EmailSet SET[Email:STRING];
+    CompanyMap MAP[Phone:STRING,Company:STRING];
     SimpleDate string;
     SimpleDateMap MAP[COMPOUND.Name,SIMPLE.Date];
     SimpleDateSet SET[SIMPLE.Date];

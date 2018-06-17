@@ -25,9 +25,9 @@ TEST | count 10
         Location : Country : STRING | uppercase
         Name : TUPLE[ FirstName : STRING, LastName : STRING ] | unique
         NameSet : SET[ TUPLE[ FirstName : STRING, LastName : STRING ] ] | count 2
-        CompanyMap : MAP[ Phone : STRING, Company : STRING ] | count 2
-        EmailSet : SET[ Email : STRING ] | count 2
         PhoneList : LIST[ Phone : STRING ] | count 2
+        EmailSet : SET[ Email : STRING ] | count 2
+        CompanyMap : MAP[ Phone : STRING, Company : STRING ] | count 2
         SimpleDate : SIMPLE.Date
         SimpleDateMap : MAP[ COMPOUND.Name, SIMPLE.Date ] | count 2
         SimpleDateSet : SET[ SIMPLE.Date ] | count 2

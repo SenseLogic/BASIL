@@ -2,14 +2,14 @@
 
 # Basil
 
-Textual database designer.
+Database builder.
 
 ## Features
 
-*   Database design using a concise textual specification.
-*   Random data generation from the column name, type, size and properties.
-*   Lorem ipsum sentences in Latin or English.
-*   Multiple export formats :
+*   Creates databases using a concise textual specification.
+*   Fills them with fake data based on the column name, type and properties.
+*   Generates lorem ipsum sentences in Latin or English.
+*   Exports the database schema and data in several formats :
     *   UML schema file.
     *   SQL schema and data files.
     *   CQL schema and data files.
@@ -111,9 +111,9 @@ TEST | count 10
         Location : Country : STRING | uppercase
         Name : TUPLE[ FirstName : STRING, LastName : STRING ] | unique
         NameSet : SET[ TUPLE[ FirstName : STRING, LastName : STRING ] ] | count 2
-        CompanyMap : MAP[ Phone : STRING, Company : STRING ] | count 2
-        EmailSet : SET[ Email : STRING ] | count 2
         PhoneList : LIST[ Phone : STRING ] | count 2
+        EmailSet : SET[ Email : STRING ] | count 2
+        CompanyMap : MAP[ Phone : STRING, Company : STRING ] | count 2
         SimpleDate : SIMPLE.Date
         SimpleDateMap : MAP[ COMPOUND.Name, SIMPLE.Date ] | count 2
         SimpleDateSet : SET[ SIMPLE.Date ] | count 2
@@ -232,17 +232,17 @@ DATE
 DATETIME
 UUID
 BLOB
+TABLE_NAME.ColumnName
 TUPLE[ FIELD_TYPE, FIELD_TYPE, ... ]
 TUPLE[ FieldName : FIELD_TYPE, FieldName : FIELD_TYPE, ... ]
-MAP[ KEY_TYPE, ELEMENT_TYPE ]
-MAP[ KeyName : KEY_TYPE, ElementName : ELEMENT_TYPE ]
-SET[ ELEMENT_TYPE ]
-SET[ ElementName : ELEMENT_TYPE ]
 LIST[ ELEMENT_TYPE ]
 LIST[ ElementName : ELEMENT_TYPE ]
+SET[ ELEMENT_TYPE ]
+SET[ ElementName : ELEMENT_TYPE ]
+MAP[ KEY_TYPE, ELEMENT_TYPE ]
+MAP[ KeyName : KEY_TYPE, ElementName : ELEMENT_TYPE ]
 ARRAY[ ELEMENT_TYPE ] | !stored
 POINTER[ ELEMENT_TYPE ] | !stored
-TABLE_NAME.ColumnName
 ```
 
 ## Installation

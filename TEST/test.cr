@@ -20,16 +20,16 @@ end
 class COMPOUND
     @id : Int32
     @location : String
-    @name : Tuple(String,String)
-    @name_set : Set(Tuple(String,String))
-    @company_map : Map(String,String)
-    @email_set : Set(String)
+    @name : Tuple(String)
+    @name_set : Set(Tuple(String))
     @phone_list : List(String)
+    @email_set : Set(String)
+    @company_map : Map(String)
     @simple_date : String
-    @simple_date_map : Map(Tuple(String,String),String)
+    @simple_date_map : Map(String)
     @simple_date_set : Set(String)
     @simple_date_list : List(String)
-    @name_set_map : Map(String,Set(Tuple(String,String)))
+    @name_set_map : Map(Set(Tuple(String)))
     @simple_pointer_array : ARRAY[POINTER[SIMPLE]]
 end
 

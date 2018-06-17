@@ -468,6 +468,13 @@ class RANDOM
 
     // ~~
 
+    char MakeHexadecimalDigit()
+    {
+        return "0123456789ABCDEF"[ MakeIndex( 10 ) ];
+    }
+
+    // ~~
+
     char MakeSeparator()
     {
         return ".,;:!?+-=*/%^&#@"[ MakeIndex( 16 ) ];
@@ -501,42 +508,37 @@ class RANDOM
 
     // ~~
 
-    string MakeUuid(
-        )
-    {
-        string
-            uuid;
-
-        while ( uuid.length < 128 )
-        {
-            uuid ~= ( Random.MakeNatural() & 63 ).to!string();
-        }
-
-        uuid.length = 32;
-
-        return uuid;
-    }
-
-    // ~~
-
     string MakeBlob(
+        long hexadecimal_digit_count
         )
     {
-        long
-            blob_length;
         string
             blob;
 
-        blob_length = MakeInteger( 32, 128 );
-
-        while ( blob.length < blob_length )
+        foreach ( hexadecimal_digit_index; 0 .. hexadecimal_digit_count )
         {
-            blob ~= ( Random.MakeNatural() & 63 ).to!string();
+            blob ~= MakeHexadecimalDigit();
         }
 
-        blob.length = blob_length;
-
         return blob;
+    }
+
+
+    // ~~
+
+    string MakeUuid(
+        )
+    {
+        return
+            MakeBlob( 8 )
+            ~ "-"
+            ~ MakeBlob( 4 )
+            ~ "-"
+            ~ MakeBlob( 4 )
+            ~ "-"
+            ~ MakeBlob( 4 )
+            ~ "-"
+            ~ MakeBlob( 12 );
     }
 
     // ~~
@@ -991,7 +993,7 @@ class TYPE
         }
         else if ( type_name == "UUID" )
         {
-            return "BINARY(16)";
+            return "VARCHAR(36)";
         }
         else if ( type_name == "BLOB" )
         {
@@ -1005,34 +1007,53 @@ class TYPE
 
     // ~~
 
-    string GetSubTextSqlText(
+    string GetSubTypesSqlText(
+        bool type_is_frozen
         )
     {
         string
-            sub_type_cql_text;
+            sub_types_cql_text;
 
         foreach ( ref sub_type; ActualType.SubTypeArray )
         {
-            if ( sub_type_cql_text != "" )
+            if ( sub_types_cql_text != "" )
             {
-                sub_type_cql_text ~= ",";
+                sub_types_cql_text ~= ",";
             }
 
-            sub_type_cql_text ~= sub_type.GetCqlText();
+            sub_types_cql_text ~= sub_type.GetCqlText( true, type_is_frozen );
         }
 
-        return sub_type_cql_text;
+        return sub_types_cql_text;
     }
 
     // ~~
 
     string GetCqlText(
+        bool type_is_nested = false,
+        bool type_is_frozen = false
         )
     {
         string
+            type_prefix,
+            type_suffix,
             type_name;
 
+
         type_name = ActualType.BaseName;
+
+        if ( type_is_nested
+             && !type_is_frozen
+             && ( type_name == "TUPLE"
+                  || type_name == "LIST"
+                  || type_name == "SET"
+                  || type_name == "MAP" ) )
+        {
+            type_is_frozen = true;
+
+            type_prefix = "frozen<";
+            type_suffix = ">";
+        }
 
         if ( type_name == "BOOL" )
         {
@@ -1100,19 +1121,19 @@ class TYPE
         }
         else if ( type_name == "TUPLE" )
         {
-            return "tuple<" ~ GetSubTextSqlText() ~ ">";
-        }
-        else if ( type_name == "MAP" )
-        {
-            return "map<" ~ GetSubTextSqlText() ~ ">";
-        }
-        else if ( type_name == "SET" )
-        {
-            return "set<" ~ GetSubTextSqlText() ~ ">";
+            return type_prefix ~ "tuple<" ~ GetSubTypesSqlText( type_is_frozen ) ~ ">" ~ type_suffix;
         }
         else if ( type_name == "LIST" )
         {
-            return "list<" ~ GetSubTextSqlText() ~ ">";
+            return type_prefix ~ "list<" ~ GetSubTypesSqlText( type_is_frozen ) ~ ">" ~ type_suffix;
+        }
+        else if ( type_name == "SET" )
+        {
+            return type_prefix ~ "set<" ~ GetSubTypesSqlText( type_is_frozen ) ~ ">" ~ type_suffix;
+        }
+        else if ( type_name == "MAP" )
+        {
+            return type_prefix ~ "map<" ~ GetSubTypesSqlText( type_is_frozen ) ~ ">" ~ type_suffix;
         }
         else
         {
@@ -1210,23 +1231,23 @@ class TYPE
 
     // ~~
 
-    string GetSubTypeCrystalText(
+    string GetSubTypesCrystalText(
         )
     {
         string
-            sub_type_crystal_text;
+            sub_types_crystal_text;
 
         foreach ( ref sub_type; ActualType.SubTypeArray )
         {
-            if ( sub_type_crystal_text != "" )
+            if ( sub_types_crystal_text != "" )
             {
-                sub_type_crystal_text ~= ",";
+                sub_types_crystal_text ~= ",";
             }
 
-            sub_type_crystal_text ~= sub_type.GetCrystalText();
+            sub_types_crystal_text = sub_type.GetCrystalText();
         }
 
-        return sub_type_crystal_text;
+        return sub_types_crystal_text;
     }
 
     // ~~
@@ -1305,19 +1326,19 @@ class TYPE
         }
         else if ( type_name == "TUPLE" )
         {
-            return "Tuple(" ~ GetSubTypeCrystalText() ~ ")";
-        }
-        else if ( type_name == "MAP" )
-        {
-            return "Map(" ~ GetSubTypeCrystalText() ~ ")";
-        }
-        else if ( type_name == "SET" )
-        {
-            return "Set(" ~ GetSubTypeCrystalText() ~ ")";
+            return "Tuple(" ~ GetSubTypesCrystalText() ~ ")";
         }
         else if ( type_name == "LIST" )
         {
-            return "List(" ~ GetSubTypeCrystalText() ~ ")";
+            return "List(" ~ GetSubTypesCrystalText() ~ ")";
+        }
+        else if ( type_name == "SET" )
+        {
+            return "Set(" ~ GetSubTypesCrystalText() ~ ")";
+        }
+        else if ( type_name == "MAP" )
+        {
+            return "Map(" ~ GetSubTypesCrystalText() ~ ")";
         }
         else
         {
@@ -1503,6 +1524,7 @@ class VALUE
         )
     {
         long
+            blob_byte_count,
             element_value_count,
             element_value_index,
             prior_row_index;
@@ -1513,11 +1535,6 @@ class VALUE
             prior_title;
         ulong
             random_natural;
-
-        foreach ( ref sub_value; SubValueArray )
-        {
-            sub_value.Make( row_index, row_count, true );
-        }
 
         do
         {
@@ -1894,7 +1911,49 @@ class VALUE
             }
             else if ( Type.BaseName == "BLOB" )
             {
-                Text = Random.MakeBlob();
+                blob_byte_count = Random.MakeInteger( Type.Column.MinimumRandomCount, Type.Column.MaximumRandomCount );
+
+                Text = Random.MakeBlob( blob_byte_count * 2 );
+            }
+            else if ( Type.BaseName == "TUPLE" )
+            {
+                foreach ( ref sub_value; SubValueArray )
+                {
+                    sub_value.Make( row_index, row_count, true );
+                }
+            }
+            else if ( Type.BaseName == "LIST" )
+            {
+                element_value_count = Random.MakeInteger( Type.Column.MinimumRandomCount, Type.Column.MaximumRandomCount );
+
+                ElementValueArray = new VALUE[ element_value_count ];
+
+                for ( element_value_index = 0;
+                      element_value_index < element_value_count;
+                      ++element_value_index )
+                {
+                    ElementValueArray[ element_value_index ] = new VALUE( Type.SubTypeArray[ 0 ] );
+                    ElementValueArray[ element_value_index ].Make( row_index, row_count, true );
+                }
+            }
+            else if ( Type.BaseName == "SET" )
+            {
+                element_value_count = Random.MakeInteger( Type.Column.MinimumRandomCount, Type.Column.MaximumRandomCount );
+
+                ElementValueArray = new VALUE[ element_value_count ];
+
+                for ( element_value_index = 0;
+                      element_value_index < element_value_count;
+                      ++element_value_index )
+                {
+                    ElementValueArray[ element_value_index ] = new VALUE( Type.SubTypeArray[ 0 ] );
+                    ElementValueArray[ element_value_index ].Make( row_index, row_count, true );
+
+                    if ( IsPriorValue( ElementValueArray, element_value_index ) )
+                    {
+                        --element_value_index;
+                    }
+                }
             }
             else if ( Type.BaseName == "MAP" )
             {
@@ -1919,39 +1978,6 @@ class VALUE
                     }
                 }
             }
-            else if ( Type.BaseName == "SET" )
-            {
-                element_value_count = Random.MakeInteger( Type.Column.MinimumRandomCount, Type.Column.MaximumRandomCount );
-
-                ElementValueArray = new VALUE[ element_value_count ];
-
-                for ( element_value_index = 0;
-                      element_value_index < element_value_count;
-                      ++element_value_index )
-                {
-                    ElementValueArray[ element_value_index ] = new VALUE( Type.SubTypeArray[ 0 ] );
-                    ElementValueArray[ element_value_index ].Make( row_index, row_count, true );
-
-                    if ( IsPriorValue( ElementValueArray, element_value_index ) )
-                    {
-                        --element_value_index;
-                    }
-                }
-            }
-            else if ( Type.BaseName == "LIST" )
-            {
-                element_value_count = Random.MakeInteger( Type.Column.MinimumRandomCount, Type.Column.MaximumRandomCount );
-
-                ElementValueArray = new VALUE[ element_value_count ];
-
-                for ( element_value_index = 0;
-                      element_value_index < element_value_count;
-                      ++element_value_index )
-                {
-                    ElementValueArray[ element_value_index ] = new VALUE( Type.SubTypeArray[ 0 ] );
-                    ElementValueArray[ element_value_index ].Make( row_index, row_count, true );
-                }
-            }
 
             if ( Type.Column.IsLowercase )
             {
@@ -1971,6 +1997,7 @@ class VALUE
     // ~~
 
     string GetSqlText(
+        bool it_is_sub_value = false
         )
     {
         string
@@ -1988,7 +2015,35 @@ class VALUE
                     sql_text ~= ", ";
                 }
 
-                sql_text ~= sub_value.GetSqlText();
+                sql_text ~= sub_value.GetSqlText( true );
+            }
+
+            sql_text = "( " ~ sql_text ~ " )";
+        }
+        else if ( type_name == "LIST" )
+        {
+            foreach ( element_value_index, ref element_value; ElementValueArray )
+            {
+                if ( element_value_index > 0 )
+                {
+                    sql_text ~= ", ";
+                }
+
+                sql_text ~= element_value.GetSqlText( true );
+            }
+
+            sql_text = "[ " ~ sql_text ~ " ]";
+        }
+        else if ( type_name == "SET" )
+        {
+            foreach ( element_value_index, ref element_value; ElementValueArray )
+            {
+                if ( element_value_index > 0 )
+                {
+                    sql_text ~= ", ";
+                }
+
+                sql_text ~= element_value.GetSqlText( true );
             }
 
             sql_text = "{ " ~ sql_text ~ " }";
@@ -2002,45 +2057,22 @@ class VALUE
                     sql_text ~= ", ";
                 }
 
-                sql_text ~= KeyValueArray[ element_value_index ].GetSqlText() ~ " : " ~ element_value.GetSqlText();
+                sql_text ~= KeyValueArray[ element_value_index ].GetSqlText( true ) ~ " : " ~ element_value.GetSqlText( true );
             }
 
             sql_text = "{ " ~ sql_text ~ " }";
-        }
-        else if ( type_name == "SET" )
-        {
-            foreach ( element_value_index, ref element_value; ElementValueArray )
-            {
-                if ( element_value_index > 0 )
-                {
-                    sql_text ~= ", ";
-                }
-
-                sql_text ~= element_value.GetSqlText();
-            }
-
-            sql_text = "{ " ~ sql_text ~ " }";
-        }
-        else if ( type_name == "LIST" )
-        {
-            foreach ( element_value_index, ref element_value; ElementValueArray )
-            {
-                if ( element_value_index > 0 )
-                {
-                    sql_text ~= ", ";
-                }
-
-                sql_text ~= element_value.GetSqlText();
-            }
-
-            sql_text = "[ " ~ sql_text ~ " ]";
         }
         else
         {
             sql_text = Text;
         }
 
-        return "\"" ~ sql_text.replace( "\"", "\\\"" ) ~ "\"";
+        if ( !it_is_sub_value )
+        {
+            sql_text = sql_text.replace( "\"", "\\\"" );
+        }
+
+        return "\"" ~ sql_text ~ "\"";
     }
 
     // ~~
@@ -2085,11 +2117,11 @@ class VALUE
         }
         else if ( type_name == "UUID" )
         {
-            cql_text = "'" ~ Text ~ "'";
+            cql_text = Text;
         }
         else if ( type_name == "BLOB" )
         {
-            cql_text = "'" ~ Text ~ "'";
+            cql_text = "0x" ~ Text;
         }
         else if ( type_name == "TUPLE" )
         {
@@ -2101,6 +2133,34 @@ class VALUE
                 }
 
                 cql_text ~= sub_value.GetCqlText();
+            }
+
+            cql_text = "( " ~ cql_text ~ " )";
+        }
+        else if ( type_name == "LIST" )
+        {
+            foreach ( element_value_index, ref element_value; ElementValueArray )
+            {
+                if ( element_value_index > 0 )
+                {
+                    cql_text ~= ", ";
+                }
+
+                cql_text ~= element_value.GetCqlText();
+            }
+
+            cql_text = "[ " ~ cql_text ~ " ]";
+        }
+        else if ( type_name == "SET" )
+        {
+            foreach ( element_value_index, ref element_value; ElementValueArray )
+            {
+                if ( element_value_index > 0 )
+                {
+                    cql_text ~= ", ";
+                }
+
+                cql_text ~= element_value.GetCqlText();
             }
 
             cql_text = "{ " ~ cql_text ~ " }";
@@ -2118,34 +2178,6 @@ class VALUE
             }
 
             cql_text = "{ " ~ cql_text ~ " }";
-        }
-        else if ( type_name == "SET" )
-        {
-            foreach ( element_value_index, ref element_value; ElementValueArray )
-            {
-                if ( element_value_index > 0 )
-                {
-                    cql_text ~= ", ";
-                }
-
-                cql_text ~= element_value.GetCqlText();
-            }
-
-            cql_text = "{ " ~ cql_text ~ " }";
-        }
-        else if ( type_name == "LIST" )
-        {
-            foreach ( element_value_index, ref element_value; ElementValueArray )
-            {
-                if ( element_value_index > 0 )
-                {
-                    cql_text ~= ", ";
-                }
-
-                cql_text ~= element_value.GetCqlText();
-            }
-
-            cql_text = "[ " ~ cql_text ~ " ]";
         }
         else
         {
@@ -2204,7 +2236,7 @@ class VALUE
 
             go_text = "{ " ~ go_text ~ " }";
         }
-        else if ( type_name == "MAP" )
+        else if ( type_name == "LIST" )
         {
             foreach ( element_value_index, ref element_value; ElementValueArray )
             {
@@ -2213,10 +2245,10 @@ class VALUE
                     go_text ~= ", ";
                 }
 
-                go_text ~= KeyValueArray[ element_value_index ].GetGoText() ~ " : " ~ element_value.GetGoText();
+                go_text ~= element_value.GetGoText();
             }
 
-            go_text = "{ " ~ go_text ~ " }";
+            go_text = "[ " ~ go_text ~ " ]";
         }
         else if ( type_name == "SET" )
         {
@@ -2232,7 +2264,7 @@ class VALUE
 
             go_text = "{ " ~ go_text ~ " }";
         }
-        else if ( type_name == "LIST" )
+        else if ( type_name == "MAP" )
         {
             foreach ( element_value_index, ref element_value; ElementValueArray )
             {
@@ -2241,10 +2273,10 @@ class VALUE
                     go_text ~= ", ";
                 }
 
-                go_text ~= element_value.GetGoText();
+                go_text ~= KeyValueArray[ element_value_index ].GetGoText() ~ " : " ~ element_value.GetGoText();
             }
 
-            go_text = "[ " ~ go_text ~ " ]";
+            go_text = "{ " ~ go_text ~ " }";
         }
         else
         {
@@ -2303,7 +2335,7 @@ class VALUE
 
             crystal_text = "{ " ~ crystal_text ~ " }";
         }
-        else if ( type_name == "MAP" )
+        else if ( type_name == "LIST" )
         {
             foreach ( element_value_index, ref element_value; ElementValueArray )
             {
@@ -2312,10 +2344,10 @@ class VALUE
                     crystal_text ~= ", ";
                 }
 
-                crystal_text ~= KeyValueArray[ element_value_index ].GetCrystalText() ~ " : " ~ element_value.GetCrystalText();
+                crystal_text ~= element_value.GetCrystalText();
             }
 
-            crystal_text = "{ " ~ crystal_text ~ " }";
+            crystal_text = "[ " ~ crystal_text ~ " ]";
         }
         else if ( type_name == "SET" )
         {
@@ -2331,7 +2363,7 @@ class VALUE
 
             crystal_text = "{ " ~ crystal_text ~ " }";
         }
-        else if ( type_name == "LIST" )
+        else if ( type_name == "MAP" )
         {
             foreach ( element_value_index, ref element_value; ElementValueArray )
             {
@@ -2340,10 +2372,10 @@ class VALUE
                     crystal_text ~= ", ";
                 }
 
-                crystal_text ~= element_value.GetCrystalText();
+                crystal_text ~= KeyValueArray[ element_value_index ].GetCrystalText() ~ " : " ~ element_value.GetCrystalText();
             }
 
-            crystal_text = "[ " ~ crystal_text ~ " ]";
+            crystal_text = "{ " ~ crystal_text ~ " }";
         }
         else
         {
@@ -3245,7 +3277,8 @@ class SCHEMA
             foreach ( ref column; table.ColumnArray )
             {
                 if ( column.IsStored
-                     && column.IsForeign )
+                     && column.IsForeign
+                     && column.ForeignColumn.IsKey )
                 {
                     ++foreign_key_index;
 
@@ -3267,7 +3300,8 @@ class SCHEMA
             foreach ( ref column; table.ColumnArray )
             {
                 if ( column.IsStored
-                     && column.IsForeign )
+                     && column.IsForeign
+                     && column.ForeignColumn.IsKey )
                 {
                     ++foreign_key_index;
 
