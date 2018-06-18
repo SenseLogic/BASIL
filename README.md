@@ -2,19 +2,19 @@
 
 # Basil
 
-Database builder.
+Versatile database builder.
 
 ## Features
 
-*   Creates databases using a concise textual specification.
-*   Fills them with fake data based on the column name, type and properties.
-*   Generates lorem ipsum sentences in Latin or English.
+*   Describes database schemas through a concise textual specification.
+*   Generates fake data based on the column name, type and properties.
 *   Exports the database schema and data in several formats :
     *   UML schema file.
     *   SQL schema and data files.
     *   CQL schema and data files.
     *   Go SQL schema file.
     *   Go CQL schema file.
+    *   Rust schema file.
     *   Crystal schema file.
 
 ## Sample
@@ -163,6 +163,7 @@ capacity {maximum character count}
 sqlname {SQL column name}
 cqlname {CQL column name}
 goname {Go field name}
+rustname {Rust field name}
 crystalname {Crystal field name}
 firstname
 lastname
@@ -271,6 +272,7 @@ basil [options] script_file.basil
 --cql : generate the CQL schema and data files
 --gosql : generate the Go SQL schema file
 --gocql : generate the Go CQL schema file
+--rust : generate the Rust schema file
 --crystal : generate the Crystal schema file
 ```
 

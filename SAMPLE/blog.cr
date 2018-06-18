@@ -32,8 +32,8 @@ class ARTICLE
     @text : String
     @image : String
     @date : String
-    @section : POINTER[SECTION]
-    @user : POINTER[USER]
+    @section : SECTION
+    @user : USER
     @image_index : Uint64
 end
 
@@ -43,8 +43,8 @@ class COMMENT
     @user_id : Uint64
     @text : String
     @date_time : String
-    @article : POINTER[ARTICLE]
-    @user : POINTER[USER]
+    @article : ARTICLE
+    @user : USER
 end
 
 class SUBSCRIBER

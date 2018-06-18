@@ -1007,7 +1007,7 @@ class TYPE
 
     // ~~
 
-    string GetSubTypesSqlText(
+    string GetSubTypeSqlText(
         bool type_is_frozen
         )
     {
@@ -1121,19 +1121,19 @@ class TYPE
         }
         else if ( type_name == "TUPLE" )
         {
-            return type_prefix ~ "tuple<" ~ GetSubTypesSqlText( type_is_frozen ) ~ ">" ~ type_suffix;
+            return type_prefix ~ "tuple<" ~ GetSubTypeSqlText( type_is_frozen ) ~ ">" ~ type_suffix;
         }
         else if ( type_name == "LIST" )
         {
-            return type_prefix ~ "list<" ~ GetSubTypesSqlText( type_is_frozen ) ~ ">" ~ type_suffix;
+            return type_prefix ~ "list<" ~ GetSubTypeSqlText( type_is_frozen ) ~ ">" ~ type_suffix;
         }
         else if ( type_name == "SET" )
         {
-            return type_prefix ~ "set<" ~ GetSubTypesSqlText( type_is_frozen ) ~ ">" ~ type_suffix;
+            return type_prefix ~ "set<" ~ GetSubTypeSqlText( type_is_frozen ) ~ ">" ~ type_suffix;
         }
         else if ( type_name == "MAP" )
         {
-            return type_prefix ~ "map<" ~ GetSubTypesSqlText( type_is_frozen ) ~ ">" ~ type_suffix;
+            return type_prefix ~ "map<" ~ GetSubTypeSqlText( type_is_frozen ) ~ ">" ~ type_suffix;
         }
         else
         {
@@ -1143,7 +1143,7 @@ class TYPE
 
     // ~~
 
-    string GetSubTypesGoText(
+    string GetSubTypeGoText(
         )
     {
         string
@@ -1238,27 +1238,27 @@ class TYPE
         }
         else if ( type_name == "POINTER" )
         {
-            return "* " ~ SubTypeArray[ 0 ].GetGoText();
+            return "* " ~ GetSubTypeGoText();
         }
         else if ( type_name == "ARRAY" )
         {
-            return "[] " ~ SubTypeArray[ 0 ].GetGoText();
+            return "[] " ~ GetSubTypeGoText();
         }
         else if ( type_name == "TUPLE" )
         {
-            return GetSubTypesGoText().toUpper() ~ "_TUPLE";
+            return GetSubTypeGoText().toUpper() ~ "_TUPLE";
         }
         else if ( type_name == "LIST" )
         {
-            return GetSubTypesGoText().toUpper() ~ "_LIST";
+            return GetSubTypeGoText().toUpper() ~ "_LIST";
         }
         else if ( type_name == "SET" )
         {
-            return GetSubTypesGoText().toUpper() ~ "_SET";
+            return GetSubTypeGoText().toUpper() ~ "_SET";
         }
         else if ( type_name == "MAP" )
         {
-            return GetSubTypesGoText().toUpper() ~ "_MAP";
+            return GetSubTypeGoText().toUpper() ~ "_MAP";
         }
         else
         {
@@ -1268,7 +1268,132 @@ class TYPE
 
     // ~~
 
-    string GetSubTypesCrystalText(
+    string GetSubTypeRustText(
+        )
+    {
+        string
+            sub_types_rust_text;
+
+        foreach ( ref sub_type; ActualType.SubTypeArray )
+        {
+            if ( sub_types_rust_text != "" )
+            {
+                sub_types_rust_text ~= ",";
+            }
+
+            sub_types_rust_text ~= sub_type.GetRustText();
+        }
+
+        return sub_types_rust_text;
+    }
+
+    // ~~
+
+    string GetRustText(
+        )
+    {
+        string
+            type_name;
+
+        type_name = ActualType.BaseName;
+
+        if ( type_name == "BOOL" )
+        {
+            return "bool";
+        }
+        else if ( type_name == "INT8" )
+        {
+            return "i8";
+        }
+        else if ( type_name == "UINT8" )
+        {
+            return "u8";
+        }
+        else if ( type_name == "INT16" )
+        {
+            return "i16";
+        }
+        else if ( type_name == "UINT16" )
+        {
+            return "u16";
+        }
+        else if ( type_name == "INT32" )
+        {
+            return "i32";
+        }
+        else if ( type_name == "UINT32" )
+        {
+            return "u32";
+        }
+        else if ( type_name == "INT64" )
+        {
+            return "i64";
+        }
+        else if ( type_name == "UINT64" )
+        {
+            return "u64";
+        }
+        else if ( type_name == "FLOAT32" )
+        {
+            return "f32";
+        }
+        else if ( type_name == "FLOAT64" )
+        {
+            return "f64";
+        }
+        else if ( type_name == "STRING" )
+        {
+            return "String";
+        }
+        else if ( type_name == "DATE" )
+        {
+            return "String";
+        }
+        else if ( type_name == "DATETIME" )
+        {
+            return "String";
+        }
+        else if ( type_name == "UUID" )
+        {
+            return "String";
+        }
+        else if ( type_name == "BLOB" )
+        {
+            return "String";
+        }
+        else if ( type_name == "POINTER" )
+        {
+            return "&" ~ GetSubTypeRustText();
+        }
+        else if ( type_name == "ARRAY" )
+        {
+            return "Vec<" ~ GetSubTypeRustText() ~ ">";
+        }
+        else if ( type_name == "TUPLE" )
+        {
+            return "(" ~ GetSubTypeRustText() ~ ")";
+        }
+        else if ( type_name == "LIST" )
+        {
+            return "List<" ~ GetSubTypeRustText() ~ ">";
+        }
+        else if ( type_name == "SET" )
+        {
+            return "List<" ~ GetSubTypeRustText() ~ ">";
+        }
+        else if ( type_name == "MAP" )
+        {
+            return "Map<" ~ GetSubTypeRustText() ~ ">";
+        }
+        else
+        {
+            return Name;
+        }
+    }
+
+    // ~~
+
+    string GetSubTypeCrystalText(
         )
     {
         string
@@ -1363,27 +1488,27 @@ class TYPE
         }
         else if ( type_name == "POINTER" )
         {
-            return GetSubTypesCrystalText();
+            return GetSubTypeCrystalText();
         }
         else if ( type_name == "ARRAY" )
         {
-            return "Array(" ~ GetSubTypesCrystalText() ~ ")";
+            return "Array(" ~ GetSubTypeCrystalText() ~ ")";
         }
         else if ( type_name == "TUPLE" )
         {
-            return "Tuple(" ~ GetSubTypesCrystalText() ~ ")";
+            return "Tuple(" ~ GetSubTypeCrystalText() ~ ")";
         }
         else if ( type_name == "LIST" )
         {
-            return "List(" ~ GetSubTypesCrystalText() ~ ")";
+            return "List(" ~ GetSubTypeCrystalText() ~ ")";
         }
         else if ( type_name == "SET" )
         {
-            return "Set(" ~ GetSubTypesCrystalText() ~ ")";
+            return "Set(" ~ GetSubTypeCrystalText() ~ ")";
         }
         else if ( type_name == "MAP" )
         {
-            return "Hash(" ~ GetSubTypesCrystalText() ~ ")";
+            return "Hash(" ~ GetSubTypeCrystalText() ~ ")";
         }
         else
         {
@@ -2231,204 +2356,6 @@ class VALUE
 
         return cql_text;
     }
-
-    // ~~
-
-    string GetGoText(
-        )
-    {
-        string
-            go_text,
-            type_name;
-
-        type_name = Type.ActualType.BaseName;
-
-        if ( type_name == "BOOL" )
-        {
-            if ( Text == "1" )
-            {
-                go_text = "true";
-            }
-            else
-            {
-                go_text = "false";
-            }
-        }
-        else if ( type_name == "INT8"
-                  || type_name == "UINT8"
-                  || type_name == "INT16"
-                  || type_name == "UINT16"
-                  || type_name == "INT32"
-                  || type_name == "UINT32"
-                  || type_name == "INT64"
-                  || type_name == "UINT64"
-                  || type_name == "FLOAT32"
-                  || type_name == "FLOAT64" )
-        {
-            go_text = Text;
-        }
-        else if ( type_name == "TUPLE" )
-        {
-            foreach ( sub_value_index, ref sub_value; SubValueArray )
-            {
-                if ( sub_value_index > 0 )
-                {
-                    go_text ~= ", ";
-                }
-
-                go_text ~= sub_value.GetGoText();
-            }
-
-            go_text = "{ " ~ go_text ~ " }";
-        }
-        else if ( type_name == "LIST" )
-        {
-            foreach ( element_value_index, ref element_value; ElementValueArray )
-            {
-                if ( element_value_index > 0 )
-                {
-                    go_text ~= ", ";
-                }
-
-                go_text ~= element_value.GetGoText();
-            }
-
-            go_text = "[ " ~ go_text ~ " ]";
-        }
-        else if ( type_name == "SET" )
-        {
-            foreach ( element_value_index, ref element_value; ElementValueArray )
-            {
-                if ( element_value_index > 0 )
-                {
-                    go_text ~= ", ";
-                }
-
-                go_text ~= element_value.GetGoText();
-            }
-
-            go_text = "{ " ~ go_text ~ " }";
-        }
-        else if ( type_name == "MAP" )
-        {
-            foreach ( element_value_index, ref element_value; ElementValueArray )
-            {
-                if ( element_value_index > 0 )
-                {
-                    go_text ~= ", ";
-                }
-
-                go_text ~= KeyValueArray[ element_value_index ].GetGoText() ~ " : " ~ element_value.GetGoText();
-            }
-
-            go_text = "{ " ~ go_text ~ " }";
-        }
-        else
-        {
-            go_text = "\"" ~ Text ~ "\"";
-        }
-
-        return go_text;
-    }
-
-    // ~~
-
-    string GetCrystalText(
-        )
-    {
-        string
-            crystal_text,
-            type_name;
-
-        type_name = Type.ActualType.BaseName;
-
-        if ( type_name == "BOOL" )
-        {
-            if ( Text == "1" )
-            {
-                crystal_text = "true";
-            }
-            else
-            {
-                crystal_text = "false";
-            }
-        }
-        else if ( type_name == "INT8"
-                  || type_name == "UINT8"
-                  || type_name == "INT16"
-                  || type_name == "UINT16"
-                  || type_name == "INT32"
-                  || type_name == "UINT32"
-                  || type_name == "INT64"
-                  || type_name == "UINT64"
-                  || type_name == "FLOAT32"
-                  || type_name == "FLOAT64" )
-        {
-            crystal_text = Text;
-        }
-        else if ( type_name == "TUPLE" )
-        {
-            foreach ( sub_value_index, ref sub_value; SubValueArray )
-            {
-                if ( sub_value_index > 0 )
-                {
-                    crystal_text ~= ", ";
-                }
-
-                crystal_text ~= sub_value.GetCrystalText();
-            }
-
-            crystal_text = "{ " ~ crystal_text ~ " }";
-        }
-        else if ( type_name == "LIST" )
-        {
-            foreach ( element_value_index, ref element_value; ElementValueArray )
-            {
-                if ( element_value_index > 0 )
-                {
-                    crystal_text ~= ", ";
-                }
-
-                crystal_text ~= element_value.GetCrystalText();
-            }
-
-            crystal_text = "[ " ~ crystal_text ~ " ]";
-        }
-        else if ( type_name == "SET" )
-        {
-            foreach ( element_value_index, ref element_value; ElementValueArray )
-            {
-                if ( element_value_index > 0 )
-                {
-                    crystal_text ~= ", ";
-                }
-
-                crystal_text ~= element_value.GetCrystalText();
-            }
-
-            crystal_text = "{ " ~ crystal_text ~ " }";
-        }
-        else if ( type_name == "MAP" )
-        {
-            foreach ( element_value_index, ref element_value; ElementValueArray )
-            {
-                if ( element_value_index > 0 )
-                {
-                    crystal_text ~= ", ";
-                }
-
-                crystal_text ~= KeyValueArray[ element_value_index ].GetCrystalText() ~ " : " ~ element_value.GetCrystalText();
-            }
-
-            crystal_text = "{ " ~ crystal_text ~ " }";
-        }
-        else
-        {
-            crystal_text = "\"" ~ Text ~ "\"";
-        }
-
-        return crystal_text;
-    }
 }
 
 // ~~
@@ -2501,6 +2428,8 @@ class COLUMN
         CqlType,
         GoName,
         GoType,
+        RustName,
+        RustType,
         CrystalName,
         CrystalType;
 
@@ -2647,6 +2576,10 @@ class COLUMN
                 {
                     GoName = value_text_array[ 1 ];
                 }
+                else if ( property_name == "rustname" )
+                {
+                    RustName = value_text_array[ 1 ];
+                }
                 else if ( property_name == "crystalname" )
                 {
                     CrystalName = value_text_array[ 1 ];
@@ -2786,6 +2719,11 @@ class COLUMN
             GoName = Name;
         }
 
+        if ( RustName == "" )
+        {
+            RustName = Name;
+        }
+
         if ( CrystalName == "" )
         {
             CrystalName = GetSnakeCaseText( Name );
@@ -2794,6 +2732,7 @@ class COLUMN
         SqlType = Type.GetSqlText();
         CqlType = Type.GetCqlText();
         GoType = Type.GetGoText();
+        RustType = Type.GetRustText();
         CrystalType = Type.GetCrystalText();
 
         if ( IsKey || IsRequired )
@@ -3691,6 +3630,47 @@ class SCHEMA
 
     // ~~
 
+    void WriteRustSchemaFile(
+        string rust_schema_file_path
+        )
+    {
+        string
+            rust_schema_file_text;
+
+        writeln( "Writing Rust schema file : ", rust_schema_file_path );
+
+        rust_schema_file_text = "";
+
+        foreach ( ref table; TableArray )
+        {
+            table.Type = table.Name;
+
+            rust_schema_file_text ~= "struct " ~ table.Type ~ "\n{\n";
+
+            foreach ( column_index, ref column; table.ColumnArray )
+            {
+                rust_schema_file_text
+                    ~= "    "
+                       ~ column.RustName
+                       ~ " : "
+                       ~ column.RustType;
+
+                if ( column_index + 1 < table.ColumnArray.length )
+                {
+                    rust_schema_file_text ~= ",";
+                }
+
+                rust_schema_file_text ~= "\n";
+            }
+
+            rust_schema_file_text ~= "}\n\n";
+        }
+
+        rust_schema_file_path.write( rust_schema_file_text );
+    }
+
+    // ~~
+
     void WriteCrystalSchemaFile(
         string crystal_schema_file_path
         )
@@ -3950,6 +3930,10 @@ void ProcessFile(
         {
             Schema.WriteGoCqlSchemaFile( base_file_path ~ "_cql.go" );
         }
+        else if ( output_format == "rust" )
+        {
+            Schema.WriteRustSchemaFile( base_file_path ~ ".rs" );
+        }
         else if ( output_format == "crystal" )
         {
             Schema.WriteCrystalSchemaFile( base_file_path ~ ".cr" );
@@ -3997,6 +3981,10 @@ void main(
         {
             output_format_array ~= "gocql";
         }
+        else if ( option == "--rust" )
+        {
+            output_format_array ~= "rust";
+        }
         else if ( option == "--crystal" )
         {
             output_format_array ~= "crystal";
@@ -4021,6 +4009,7 @@ void main(
         writeln( "    --cql : generate the CQL schema and data files" );
         writeln( "    --gosql : generate the Go SQL schema file" );
         writeln( "    --gocql : generate the Go CQL schema file" );
+        writeln( "    --rust : generate the Rust schema file" );
         writeln( "    --crystal : generate the Crystal schema file" );
         writeln( "Examples :" );
         writeln( "    basil --uml script_file.basil" );
