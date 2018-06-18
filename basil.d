@@ -1143,6 +1143,27 @@ class TYPE
 
     // ~~
 
+    string GetSubTypesGoText(
+        )
+    {
+        string
+            sub_types_go_text;
+
+        foreach ( ref sub_type; ActualType.SubTypeArray )
+        {
+            if ( sub_types_go_text != "" )
+            {
+                sub_types_go_text ~= "_";
+            }
+
+            sub_types_go_text ~= sub_type.GetGoText();
+        }
+
+        return sub_types_go_text;
+    }
+
+    // ~~
+
     string GetGoText(
         )
     {
@@ -1223,6 +1244,22 @@ class TYPE
         {
             return "[] " ~ SubTypeArray[ 0 ].GetGoText();
         }
+        else if ( type_name == "TUPLE" )
+        {
+            return GetSubTypesGoText().toUpper() ~ "_TUPLE";
+        }
+        else if ( type_name == "LIST" )
+        {
+            return GetSubTypesGoText().toUpper() ~ "_LIST";
+        }
+        else if ( type_name == "SET" )
+        {
+            return GetSubTypesGoText().toUpper() ~ "_SET";
+        }
+        else if ( type_name == "MAP" )
+        {
+            return GetSubTypesGoText().toUpper() ~ "_MAP";
+        }
         else
         {
             return Name;
@@ -1244,7 +1281,7 @@ class TYPE
                 sub_types_crystal_text ~= ",";
             }
 
-            sub_types_crystal_text = sub_type.GetCrystalText();
+            sub_types_crystal_text ~= sub_type.GetCrystalText();
         }
 
         return sub_types_crystal_text;
@@ -1324,6 +1361,14 @@ class TYPE
         {
             return "String";
         }
+        else if ( type_name == "POINTER" )
+        {
+            return GetSubTypesCrystalText();
+        }
+        else if ( type_name == "ARRAY" )
+        {
+            return "Array(" ~ GetSubTypesCrystalText() ~ ")";
+        }
         else if ( type_name == "TUPLE" )
         {
             return "Tuple(" ~ GetSubTypesCrystalText() ~ ")";
@@ -1338,7 +1383,7 @@ class TYPE
         }
         else if ( type_name == "MAP" )
         {
-            return "Map(" ~ GetSubTypesCrystalText() ~ ")";
+            return "Hash(" ~ GetSubTypesCrystalText() ~ ")";
         }
         else
         {

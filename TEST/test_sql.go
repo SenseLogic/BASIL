@@ -22,16 +22,16 @@ type SIMPLE struct {
 type COMPOUND struct {
     Id int32 `db:"Id"`;
     Location string `db:"Location"`;
-    Name TUPLE[FirstName:STRING,LastName:STRING] `db:"Name"`;
-    NameSet SET[TUPLE[FirstName:STRING,LastName:STRING]] `db:"NameSet"`;
-    PhoneList LIST[Phone:STRING] `db:"PhoneList"`;
-    EmailSet SET[Email:STRING] `db:"EmailSet"`;
-    CompanyMap MAP[Phone:STRING,Company:STRING] `db:"CompanyMap"`;
+    Name STRING_STRING_TUPLE `db:"Name"`;
+    NameSet STRING_STRING_TUPLE_SET `db:"NameSet"`;
+    PhoneList STRING_LIST `db:"PhoneList"`;
+    EmailSet STRING_SET `db:"EmailSet"`;
+    CompanyMap STRING_STRING_MAP `db:"CompanyMap"`;
     SimpleDate string `db:"SimpleDate"`;
-    SimpleDateMap MAP[COMPOUND.Name,SIMPLE.Date] `db:"SimpleDateMap"`;
-    SimpleDateSet SET[SIMPLE.Date] `db:"SimpleDateSet"`;
-    SimpleDateList LIST[SIMPLE.Date] `db:"SimpleDateList"`;
-    NameSetMap MAP[SIMPLE.Date,COMPOUND.NameSet] `db:"NameSetMap"`;
+    SimpleDateMap STRING_STRING_TUPLE_STRING_MAP `db:"SimpleDateMap"`;
+    SimpleDateSet STRING_SET `db:"SimpleDateSet"`;
+    SimpleDateList STRING_LIST `db:"SimpleDateList"`;
+    NameSetMap STRING_STRING_STRING_TUPLE_SET_MAP `db:"NameSetMap"`;
     SimplePointerArray [] * SIMPLE;
 }
 
