@@ -210,9 +210,9 @@ Isbn
 Tags
 ```
 
-The "Email", "Login" and "Pseudonym" columns are based on the prior "FirstName" and "LastName" columns if they are defined before them.
+The "Email", "Login" and "Pseudonym" columns are based on the prior "FirstName" and "LastName" columns if they exist.
 
-The "Slug" column is based on the prior "Title" or "Name" column if it is defined before it.
+The "Slug" column is based on the prior "Title" or "Name" column if it exists.
 
 ### Column types
 
