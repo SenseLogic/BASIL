@@ -1,60 +1,60 @@
 struct SECTION
 {
-    Id : u64,
-    Number : u64,
-    Name : String,
-    Text : String,
-    Image : String,
-    ImageIndex : u64
+    id : u64,
+    number : u64,
+    name : String,
+    text : String,
+    image : String,
+    image_index : u64
 }
 
 struct USER
 {
-    Id : u64,
-    FirstName : String,
-    LastName : String,
-    Email : String,
-    Pseudonym : String,
-    Password : String,
-    Phone : String,
-    Street : String,
-    City : String,
-    Code : String,
-    Region : String,
-    Country : String,
-    Company : String,
-    ItIsAdministrator : bool
+    id : u64,
+    first_name : String,
+    last_name : String,
+    email : String,
+    pseudonym : String,
+    password : String,
+    phone : String,
+    street : String,
+    city : String,
+    code : String,
+    region : String,
+    country : String,
+    company : String,
+    it_is_administrator : bool
 }
 
 struct ARTICLE
 {
-    Id : u64,
-    SectionId : u64,
-    UserId : u64,
-    Title : String,
-    Text : String,
-    Image : String,
-    Date : String,
-    Section : &SECTION,
-    User : &USER,
-    ImageIndex : u64
+    id : u64,
+    section_id : u64,
+    user_id : u64,
+    title : String,
+    text : String,
+    image : String,
+    date : String,
+    section : Weak<SECTION>,
+    user : Weak<USER>,
+    image_index : u64
 }
 
 struct COMMENT
 {
-    Id : u64,
-    ArticleId : u64,
-    UserId : u64,
-    Text : String,
-    DateTime : String,
-    Article : &ARTICLE,
-    User : &USER
+    id : u64,
+    article_id : u64,
+    user_id : u64,
+    text : String,
+    date_time : String,
+    article : Weak<ARTICLE>,
+    user : Weak<USER>
 }
 
 struct SUBSCRIBER
 {
-    Id : u64,
-    Name : String,
-    Email : String
+    id : u64,
+    name : String,
+    email : String
 }
 

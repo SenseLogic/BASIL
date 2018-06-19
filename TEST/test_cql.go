@@ -17,8 +17,6 @@ type SIMPLE struct {
     Blob []byte;
 }
 
-// ~~
-
 type COMPOUND struct {
     Id int32;
     Location string;
@@ -34,6 +32,4 @@ type COMPOUND struct {
     NameSetMap STRING_STRING_STRING_TUPLE_SET_MAP;
     SimplePointerArray [] * SIMPLE `db:"-"`;
 }
-
-// ~~
 

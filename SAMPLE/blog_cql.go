@@ -7,8 +7,6 @@ type SECTION struct {
     ImageIndex uint64 `db:"-"`;
 }
 
-// ~~
-
 type USER struct {
     Id uint64;
     FirstName string;
@@ -26,8 +24,6 @@ type USER struct {
     ItIsAdministrator bool;
 }
 
-// ~~
-
 type ARTICLE struct {
     Id uint64;
     SectionId uint64;
@@ -41,8 +37,6 @@ type ARTICLE struct {
     ImageIndex uint64 `db:"-"`;
 }
 
-// ~~
-
 type COMMENT struct {
     Id uint64;
     ArticleId uint64;
@@ -53,13 +47,9 @@ type COMMENT struct {
     User * USER `db:"-"`;
 }
 
-// ~~
-
 type SUBSCRIBER struct {
     Id uint64;
     Name string;
     Email string;
 }
-
-// ~~
 

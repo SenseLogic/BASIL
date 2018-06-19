@@ -1,37 +1,37 @@
 struct SIMPLE
 {
-    Uuid : String,
-    Bool : bool,
-    Int8 : i8,
-    Uint8 : u8,
-    Int16 : i16,
-    Uint16 : u16,
-    Int32 : i32,
-    Uint32 : u32,
-    Int64 : i64,
-    Uint64 : u64,
-    Float32 : f32,
-    Float64 : f64,
-    String : String,
-    Date : String,
-    DateTime : String,
-    Blob : String
+    uuid : String,
+    bool : bool,
+    int8 : i8,
+    uint8 : u8,
+    int16 : i16,
+    uint16 : u16,
+    int32 : i32,
+    uint32 : u32,
+    int64 : i64,
+    uint64 : u64,
+    float32 : f32,
+    float64 : f64,
+    string : String,
+    date : String,
+    date_time : String,
+    blob : String
 }
 
 struct COMPOUND
 {
-    Id : i32,
-    Location : String,
-    Name : (String,String),
-    NameSet : List<(String,String)>,
-    PhoneList : List<String>,
-    EmailSet : List<String>,
-    CompanyMap : Map<String,String>,
-    SimpleDate : String,
-    SimpleDateMap : Map<(String,String),String>,
-    SimpleDateSet : List<String>,
-    SimpleDateList : List<String>,
-    NameSetMap : Map<String,List<(String,String)>>,
-    SimplePointerArray : Vec<&SIMPLE>
+    id : i32,
+    location : String,
+    name : (String,String),
+    name_set : List<(String,String)>,
+    phone_list : List<String>,
+    email_set : List<String>,
+    company_map : Map<String,String>,
+    simple_date : String,
+    simple_date_map : Map<(String,String),String>,
+    simple_date_set : List<String>,
+    simple_date_list : List<String>,
+    name_set_map : Map<String,List<(String,String)>>,
+    simple_pointer_array : Vec<Weak<SIMPLE>>
 }
 

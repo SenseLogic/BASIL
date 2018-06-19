@@ -1363,7 +1363,7 @@ class TYPE
         }
         else if ( type_name == "POINTER" )
         {
-            return "&" ~ GetSubTypeRustText();
+            return "Weak<" ~ GetSubTypeRustText() ~ ">";
         }
         else if ( type_name == "ARRAY" )
         {
@@ -2721,7 +2721,7 @@ class COLUMN
 
         if ( RustName == "" )
         {
-            RustName = Name;
+            RustName = GetSnakeCaseText( Name );
         }
 
         if ( CrystalName == "" )
@@ -3580,7 +3580,7 @@ class SCHEMA
                 go_sql_schema_file_text ~= ";\n";
             }
 
-            go_sql_schema_file_text ~= "}\n\n// ~~\n\n";
+            go_sql_schema_file_text ~= "}\n\n";
         }
 
         go_sql_schema_file_path.write( go_sql_schema_file_text );
@@ -3622,7 +3622,7 @@ class SCHEMA
                 go_cql_schema_file_text ~= ";\n";
             }
 
-            go_cql_schema_file_text ~= "}\n\n// ~~\n\n";
+            go_cql_schema_file_text ~= "}\n\n";
         }
 
         go_cql_schema_file_path.write( go_cql_schema_file_text );
