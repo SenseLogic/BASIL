@@ -2,7 +2,7 @@
 
 # Basil
 
-Database builder.
+Versatile database generator.
 
 ## Features
 
