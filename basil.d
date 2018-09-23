@@ -1699,6 +1699,7 @@ class VALUE
             element_value_index,
             prior_row_index;
         string
+            prior_email,
             prior_first_name,
             prior_last_name,
             prior_name,
@@ -1803,12 +1804,21 @@ class VALUE
                 else if ( Type.ColumnName.endsWith( "Login" )
                           || Type.ColumnName.endsWith( "Pseudonym" ) )
                 {
-                    prior_first_name = Type.Column.FindPriorColumnValue( "FirstName", row_index );
-                    prior_last_name = Type.Column.FindPriorColumnValue( "LastName", row_index );
+                    prior_email = Type.Column.FindPriorColumnValue( "Email", row_index );
 
-                    Text
-                        = ( ( prior_first_name != "" ) ? prior_first_name : Random.MakeFirstName() ).toLower()
-                          ~ ( ( prior_last_name != "" ) ? prior_last_name : Random.MakeLastName() ).toLower();
+                    if ( prior_email != "" )
+                    {
+                        Text = prior_email.split( '@' )[ 0 ].replace( ".", "" );
+                    }
+                    else
+                    {
+                        prior_first_name = Type.Column.FindPriorColumnValue( "FirstName", row_index );
+                        prior_last_name = Type.Column.FindPriorColumnValue( "LastName", row_index );
+
+                        Text
+                            = ( ( prior_first_name != "" ) ? prior_first_name : Random.MakeFirstName() ).toLower()
+                              ~ ( ( prior_last_name != "" ) ? prior_last_name : Random.MakeLastName() ).toLower();
+                    }
                 }
                 else if ( Type.ColumnName.endsWith( "Password" ) )
                 {
