@@ -79,7 +79,7 @@ class VERTEX
     {
         Word = word;
         IsInitial = false;
-        LinkArray = [];
+        LinkArray = null;
     }
 }
 
@@ -282,7 +282,7 @@ class RANDOM
         text = GetExecutablePath( "english_text.txt" ).readText();
         verse_array = text.strip().replace( "\r", "" ).split( '\n' );
 
-        VertexArray = [];
+        VertexArray = null;
         VertexIndexMap = null;
 
         foreach ( ref verse; verse_array )
@@ -662,7 +662,7 @@ class RANDOM
             }
             while ( !vertex.IsInitial );
 
-            word_array = [];
+            word_array = null;
             word_array ~= vertex.Word;
 
             prior_vertex = vertex;
@@ -2824,8 +2824,8 @@ class TABLE
         SchemaName = schema.Name;
         Name = name;
         Type = "";
-        KeyNameArray = [];
-        ColumnArray = [];
+        KeyNameArray = null;
+        ColumnArray = null;
         RowCount = schema.RowCount;
     }
 
@@ -3061,7 +3061,7 @@ class SCHEMA
         writeln( "Reading schema file : ", basil_schema_file_path );
 
         basil_schema_file_text = basil_schema_file_path.readText();
-        TableArray = [];
+        TableArray = null;
         table = null;
 
         foreach ( ref line; basil_schema_file_text.lineSplitter() )
