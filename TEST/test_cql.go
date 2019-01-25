@@ -1,5 +1,5 @@
 type SIMPLE struct {
-    Uuid string;
+    Uuid gocql.UUID;
     Bool bool;
     Int8 int8;
     Uint8 uint8;

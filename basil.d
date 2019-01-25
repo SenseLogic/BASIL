@@ -1230,7 +1230,7 @@ class TYPE
         }
         else if ( type_name == "UUID" )
         {
-            return "string";
+            return "gocql.UUID";
         }
         else if ( type_name == "BLOB" )
         {

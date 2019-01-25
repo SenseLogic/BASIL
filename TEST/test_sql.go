@@ -1,5 +1,5 @@
 type SIMPLE struct {
-    Uuid string `db:"Uuid"`;
+    Uuid gocql.UUID `db:"Uuid"`;
     Bool bool `db:"Bool"`;
     Int8 int8 `db:"Int8"`;
     Uint8 uint8 `db:"Uint8"`;
