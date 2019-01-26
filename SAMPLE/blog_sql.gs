@@ -1,41 +1,41 @@
 type SECTION struct {
-    Id uint64 `db:"-"`;
-    Number uint64 `db:"-"`;
-    Name string `db:"-"`;
-    Text string `db:"-"`;
-    Image string `db:"-"`;
+    Id uint64 `db:"Id"`;
+    Number uint64 `db:"Number"`;
+    Name string `db:"Name"`;
+    Text string `db:"Text"`;
+    Image string `db:"Image"`;
     ImageIndex uint64;
 }
 
 // ~~
 
 type USER struct {
-    Id uint64 `db:"-"`;
-    FirstName string `db:"-"`;
-    LastName string `db:"-"`;
-    Email string `db:"-"`;
-    Pseudonym string `db:"-"`;
-    Password string `db:"-"`;
-    Phone string `db:"-"`;
-    Street string `db:"-"`;
-    City string `db:"-"`;
-    Code string `db:"-"`;
-    Region string `db:"-"`;
-    Country string `db:"-"`;
-    Company string `db:"-"`;
-    ItIsAdministrator bool `db:"-"`;
+    Id uint64 `db:"Id"`;
+    FirstName string `db:"FirstName"`;
+    LastName string `db:"LastName"`;
+    Email string `db:"Email"`;
+    Pseudonym string `db:"Pseudonym"`;
+    Password string `db:"Password"`;
+    Phone string `db:"Phone"`;
+    Street string `db:"Street"`;
+    City string `db:"City"`;
+    Code string `db:"Code"`;
+    Region string `db:"Region"`;
+    Country string `db:"Country"`;
+    Company string `db:"Company"`;
+    ItIsAdministrator bool `db:"ItIsAdministrator"`;
 }
 
 // ~~
 
 type ARTICLE struct {
-    Id uint64 `db:"-"`;
-    SectionId uint64 `db:"-"`;
-    UserId uint64 `db:"-"`;
-    Title string `db:"-"`;
-    Text string `db:"-"`;
-    Image string `db:"-"`;
-    Date string `db:"-"`;
+    Id uint64 `db:"Id"`;
+    SectionId uint64 `db:"SectionId"`;
+    UserId uint64 `db:"UserId"`;
+    Title string `db:"Title"`;
+    Text string `db:"Text"`;
+    Image string `db:"Image"`;
+    Date string `db:"Date"`;
     Section * SECTION;
     User * USER;
     ImageIndex uint64;
@@ -44,11 +44,11 @@ type ARTICLE struct {
 // ~~
 
 type COMMENT struct {
-    Id uint64 `db:"-"`;
-    ArticleId uint64 `db:"-"`;
-    UserId uint64 `db:"-"`;
-    Text string `db:"-"`;
-    DateTime string `db:"-"`;
+    Id uint64 `db:"Id"`;
+    ArticleId uint64 `db:"ArticleId"`;
+    UserId uint64 `db:"UserId"`;
+    Text string `db:"Text"`;
+    DateTime string `db:"DateTime"`;
     Article * ARTICLE;
     User * USER;
 }
@@ -56,9 +56,9 @@ type COMMENT struct {
 // ~~
 
 type SUBSCRIBER struct {
-    Id uint64 `db:"-"`;
-    Name string `db:"-"`;
-    Email string `db:"-"`;
+    Id uint64 `db:"Id"`;
+    Name string `db:"Name"`;
+    Email string `db:"Email"`;
 }
 
 // ~~
@@ -94,12 +94,12 @@ func SetDatabaseSection(
 {
     error_
         := DatabaseSession.Query(
-               "insert into SECTION( Id, Number, Name, Text, Image ) values( ?, ?, ?, ?, ? )",
-               section.Id,
+               "update SECTION set Number = ?, Name = ?, Text = ?, Image = ? where Id = ?",
                section.Number,
                section.Name,
                section.Text,
-               section.Image
+               section.Image,
+               section.Id
                ).Exec();
 
     if ( error_ == nil )
@@ -198,8 +198,7 @@ func SetDatabaseUser(
 {
     error_
         := DatabaseSession.Query(
-               "insert into USER( Id, FirstName, LastName, Email, Pseudonym, Password, Phone, Street, City, Code, Region, Country, Company, ItIsAdministrator ) values( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? )",
-               user.Id,
+               "update USER set FirstName = ?, LastName = ?, Email = ?, Pseudonym = ?, Password = ?, Phone = ?, Street = ?, City = ?, Code = ?, Region = ?, Country = ?, Company = ?, ItIsAdministrator = ? where Id = ?",
                user.FirstName,
                user.LastName,
                user.Email,
@@ -212,7 +211,8 @@ func SetDatabaseUser(
                user.Region,
                user.Country,
                user.Company,
-               user.ItIsAdministrator
+               user.ItIsAdministrator,
+               user.Id
                ).Exec();
 
     if ( error_ == nil )
@@ -304,14 +304,14 @@ func SetDatabaseArticle(
 {
     error_
         := DatabaseSession.Query(
-               "insert into ARTICLE( Id, SectionId, UserId, Title, Text, Image, Date ) values( ?, ?, ?, ?, ?, ?, ? )",
-               article.Id,
+               "update ARTICLE set SectionId = ?, UserId = ?, Title = ?, Text = ?, Image = ?, Date = ? where Id = ?",
                article.SectionId,
                article.UserId,
                article.Title,
                article.Text,
                article.Image,
-               article.Date
+               article.Date,
+               article.Id
                ).Exec();
 
     if ( error_ == nil )
@@ -401,12 +401,12 @@ func SetDatabaseComment(
 {
     error_
         := DatabaseSession.Query(
-               "insert into COMMENT( Id, ArticleId, UserId, Text, DateTime ) values( ?, ?, ?, ?, ? )",
-               comment.Id,
+               "update COMMENT set ArticleId = ?, UserId = ?, Text = ?, DateTime = ? where Id = ?",
                comment.ArticleId,
                comment.UserId,
                comment.Text,
-               comment.DateTime
+               comment.DateTime,
+               comment.Id
                ).Exec();
 
     if ( error_ == nil )
@@ -494,10 +494,10 @@ func SetDatabaseSubscriber(
 {
     error_
         := DatabaseSession.Query(
-               "insert into SUBSCRIBER( Id, Name, Email ) values( ?, ?, ? )",
-               subscriber.Id,
+               "update SUBSCRIBER set Name = ?, Email = ? where Id = ?",
                subscriber.Name,
-               subscriber.Email
+               subscriber.Email,
+               subscriber.Id
                ).Exec();
 
     if ( error_ == nil )

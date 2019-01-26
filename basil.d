@@ -1281,7 +1281,7 @@ class TYPE
 
         return sub_types_go_text;
     }
-    
+
     // ~~
 
     string GetGoFunctionText(
@@ -2866,19 +2866,19 @@ class COLUMN
 
         SqlType = Type.GetSqlText();
         CqlType = Type.GetCqlText();
-        
+
         if ( SqlOptionIsEnabled )
         {
             StoredName = SqlName;
             StoredType = SqlType;
         }
-        
+
         if ( CqlOptionIsEnabled )
         {
             StoredName = CqlName;
             StoredType = CqlType;
         }
-        
+
         GoType = Type.GetGoText();
         GoFunction = Type.GetGoFunctionText();
         GoVariable = GoName.GetSnakeCaseText();
@@ -3041,7 +3041,7 @@ class TABLE
             {
                 last_stored_column = column;
             }
-            
+
             if ( column.IsKey )
             {
                 last_key_column = column;
@@ -3731,7 +3731,7 @@ class SCHEMA
 
                 if ( column.IsStored )
                 {
-                    if ( CqlOptionIsEnabled )
+                    if ( SqlOptionIsEnabled )
                     {
                         go_schema_file_text ~= " `db:\"" ~ column.StoredName ~ "\"`";
                     }
@@ -3749,7 +3749,7 @@ class SCHEMA
 
         go_schema_file_path.write( go_schema_file_text );
     }
-    
+
     // ~~
 
     void WriteGsSchemaFile(
@@ -3776,7 +3776,7 @@ class SCHEMA
 
                 if ( column.IsStored )
                 {
-                    if ( CqlOptionIsEnabled )
+                    if ( SqlOptionIsEnabled )
                     {
                         gs_schema_file_text ~= " `db:\"" ~ column.StoredName ~ "\"`";
                     }
@@ -3794,100 +3794,175 @@ class SCHEMA
 
         foreach ( ref table; TableArray )
         {
-            gs_schema_file_text 
+            gs_schema_file_text
                 ~= "func AddDatabase" ~ table.GoFunction ~ "(\n"
                    ~ "    " ~ table.GoVariable ~ " * " ~ table.GoType ~ "\n"
                    ~ "    ) bool\n"
                    ~ "{\n";
-                   
+
             column_count = 0;
-            
+
             foreach ( ref column; table.ColumnArray )
             {
                 if ( column.IsKey
                      && column.IsUnique
                      && column.StoredType == "uuid" )
                 {
-                    gs_schema_file_text 
+                    gs_schema_file_text
                         ~= "    " ~ table.GoVariable ~ "." ~ column.GoName ~ " = gocql.TimeUUID();\n";
-                        
+
                     ++column_count;
                 }
-            }                   
-            
+            }
+
             if ( column_count > 0 )
             {
                 gs_schema_file_text ~="\n";
             }
-            
-            gs_schema_file_text 
-                ~= "    error_\n"
-                   ~ "        := DatabaseSession.Query(\n"
-                   ~ "               \"insert into " ~ table.Name ~ "( ";
-            
-            column_count = 0;
-            
-            foreach ( ref column; table.ColumnArray )
+
+            if ( SqlOptionIsEnabled )
             {
-                if ( column.IsStored
-                     && !column.IsIncremented )
+                gs_schema_file_text
+                    ~= "    error_\n"
+                       ~ "        := DatabaseSession.Query(\n"
+                       ~ "               \"insert into " ~ table.Name ~ "( ";
+
+                column_count = 0;
+
+                foreach ( ref column; table.ColumnArray )
                 {
-                    if ( column_count > 0 )
+                    if ( column.IsStored
+                         && !column.IsIncremented )
                     {
-                        gs_schema_file_text ~= ", ";
+                        if ( column_count > 0 )
+                        {
+                            gs_schema_file_text ~= ", ";
+                        }
+
+                        gs_schema_file_text ~= column.StoredName;
+
+                        ++column_count;
                     }
-                    
-                    gs_schema_file_text ~= column.StoredName;
-                    
-                    ++column_count;
                 }
+
+                gs_schema_file_text ~= " ) values( ";
+
+                column_count = 0;
+
+                foreach ( ref column; table.ColumnArray )
+                {
+                    if ( column.IsStored
+                         && !column.IsIncremented )
+                    {
+                        if ( column_count > 0 )
+                        {
+                            gs_schema_file_text ~= ", ";
+                        }
+
+                        gs_schema_file_text ~= "?";
+
+                        ++column_count;
+                    }
+                }
+
+                gs_schema_file_text ~= " )\",\n";
+
+                column_index = 0;
+
+                foreach ( ref column; table.ColumnArray )
+                {
+                    if ( column.IsStored
+                         && !column.IsIncremented )
+                    {
+                        gs_schema_file_text ~= "               " ~ table.GoVariable ~ "." ~ column.GoName;
+
+                        if ( column_index + 1 < column_count )
+                        {
+                            gs_schema_file_text ~= ",";
+                        }
+
+                        gs_schema_file_text ~= "\n";
+
+                        ++column_index;
+                    }
+                }
+
+                gs_schema_file_text
+                    ~= "               ).Exec();\n";
             }
-                   
-            gs_schema_file_text ~= " ) values( ";
-                
-            column_count = 0;
-            
-            foreach ( ref column; table.ColumnArray )
+            else
             {
-                if ( column.IsStored
-                     && !column.IsIncremented )
+                gs_schema_file_text
+                    ~= "    error_\n"
+                       ~ "        := DatabaseSession.Query(\n"
+                       ~ "               \"insert into " ~ table.Name ~ "( ";
+
+                column_count = 0;
+
+                foreach ( ref column; table.ColumnArray )
                 {
-                    if ( column_count > 0 )
+                    if ( column.IsStored
+                         && !column.IsIncremented )
                     {
-                        gs_schema_file_text ~= ", ";
+                        if ( column_count > 0 )
+                        {
+                            gs_schema_file_text ~= ", ";
+                        }
+
+                        gs_schema_file_text ~= column.StoredName;
+
+                        ++column_count;
                     }
-                    
-                    gs_schema_file_text ~= "?";
-                    
-                    ++column_count;
                 }
-            }
-            
-            gs_schema_file_text ~= " )\",\n";
-                
-            column_index = 0;
-            
-            foreach ( ref column; table.ColumnArray )
-            {
-                if ( column.IsStored
-                     && !column.IsIncremented )
+
+                gs_schema_file_text ~= " ) values( ";
+
+                column_count = 0;
+
+                foreach ( ref column; table.ColumnArray )
                 {
-                    gs_schema_file_text ~= "               " ~ table.GoVariable ~ "." ~ column.GoName;
-                    
-                    if ( column_index + 1 < column_count )
+                    if ( column.IsStored
+                         && !column.IsIncremented )
                     {
-                        gs_schema_file_text ~= ",";
+                        if ( column_count > 0 )
+                        {
+                            gs_schema_file_text ~= ", ";
+                        }
+
+                        gs_schema_file_text ~= "?";
+
+                        ++column_count;
                     }
-                    
-                    gs_schema_file_text ~= "\n";
-                    
-                    ++column_index;
                 }
+
+                gs_schema_file_text ~= " )\",\n";
+
+                column_index = 0;
+
+                foreach ( ref column; table.ColumnArray )
+                {
+                    if ( column.IsStored
+                         && !column.IsIncremented )
+                    {
+                        gs_schema_file_text ~= "               " ~ table.GoVariable ~ "." ~ column.GoName;
+
+                        if ( column_index + 1 < column_count )
+                        {
+                            gs_schema_file_text ~= ",";
+                        }
+
+                        gs_schema_file_text ~= "\n";
+
+                        ++column_index;
+                    }
+                }
+
+                gs_schema_file_text
+                    ~= "               ).Exec();\n";
             }
-                
-            gs_schema_file_text 
-                ~= "               ).Exec();\n"
-                   ~ "\n"
+
+            gs_schema_file_text
+                ~= "\n"
                    ~ "    if ( error_ == nil )\n"
                    ~ "    {\n"
                    ~ "        return true;\n"
@@ -3903,59 +3978,135 @@ class SCHEMA
                    ~ "func SetDatabase" ~ table.GoFunction ~ "(\n"
                    ~ "    " ~ table.GoVariable ~ " * " ~ table.GoType ~ "\n"
                    ~ "    ) bool\n"
-                   ~ "{\n"
-                   ~ "    error_\n"
-                   ~ "        := DatabaseSession.Query(\n"
-                   ~ "               \"insert into " ~ table.Name ~ "( ";
-            
-            foreach ( ref column; table.ColumnArray )
+                   ~ "{\n";
+
+            if ( SqlOptionIsEnabled )
             {
-                if ( column.IsStored )
+                gs_schema_file_text
+                    ~= "    error_\n"
+                       ~ "        := DatabaseSession.Query(\n"
+                       ~ "               \"update " ~ table.Name ~ " set ";
+
+                column_count = 0;
+
+                foreach ( ref column; table.ColumnArray )
                 {
-                    gs_schema_file_text ~= column.StoredName;
-                    
-                    if ( !column.IsLastStored )
+                    if ( column.IsStored
+                         && !column.IsKey )
                     {
-                        gs_schema_file_text ~= ", ";
+                        if ( column_count > 0 )
+                        {
+                            gs_schema_file_text ~= ", ";
+                        }
+
+                        gs_schema_file_text ~= column.StoredName ~ " = ?";
+
+                        ++column_count;
                     }
                 }
-            }
-                   
-            gs_schema_file_text ~= " ) values( ";
-                
-            foreach ( ref column; table.ColumnArray )
-            {
-                if ( column.IsStored )
+
+                gs_schema_file_text ~= " where ";
+
+                foreach ( ref column; table.ColumnArray )
                 {
-                    gs_schema_file_text ~= "?";
-                    
-                    if ( !column.IsLastStored )
+                    if ( column.IsKey )
                     {
-                        gs_schema_file_text ~= ", ";
+                        gs_schema_file_text ~= column.StoredName ~ " = ?";
+
+                        if ( !column.IsLastKey )
+                        {
+                            gs_schema_file_text ~= ", ";
+                        }
                     }
                 }
-            }
-            
-            gs_schema_file_text ~= " )\",\n";
-                
-            foreach ( ref column; table.ColumnArray )
-            {
-                if ( column.IsStored )
+
+                gs_schema_file_text ~= "\",\n";
+
+                foreach ( ref column; table.ColumnArray )
                 {
-                    gs_schema_file_text ~= "               " ~ table.GoVariable ~ "." ~ column.GoName;
-                    
-                    if ( !column.IsLastStored )
+                    if ( column.IsStored
+                         && !column.IsKey )
                     {
-                        gs_schema_file_text ~= ",";
+                        gs_schema_file_text ~= "               " ~ table.GoVariable ~ "." ~ column.GoName ~ ",\n";
                     }
-                    
-                    gs_schema_file_text ~= "\n";
                 }
+
+                foreach ( ref column; table.ColumnArray )
+                {
+                    if ( column.IsKey )
+                    {
+                        gs_schema_file_text ~= "               " ~ table.GoVariable ~ "." ~ column.GoName;
+
+                        if ( !column.IsLastKey )
+                        {
+                            gs_schema_file_text ~= ",";
+                        }
+
+                        gs_schema_file_text ~= "\n";
+                    }
+                }
+
+                gs_schema_file_text
+                    ~= "               ).Exec();\n";
             }
-                
-            gs_schema_file_text 
-                ~= "               ).Exec();\n"
-                   ~ "\n"
+            else
+            {
+                gs_schema_file_text
+                    ~= "    error_\n"
+                       ~ "        := DatabaseSession.Query(\n"
+                       ~ "               \"insert into " ~ table.Name ~ "( ";
+
+                foreach ( ref column; table.ColumnArray )
+                {
+                    if ( column.IsStored )
+                    {
+                        gs_schema_file_text ~= column.StoredName;
+
+                        if ( !column.IsLastStored )
+                        {
+                            gs_schema_file_text ~= ", ";
+                        }
+                    }
+                }
+
+                gs_schema_file_text ~= " ) values( ";
+
+                foreach ( ref column; table.ColumnArray )
+                {
+                    if ( column.IsStored )
+                    {
+                        gs_schema_file_text ~= "?";
+
+                        if ( !column.IsLastStored )
+                        {
+                            gs_schema_file_text ~= ", ";
+                        }
+                    }
+                }
+
+                gs_schema_file_text ~= " )\",\n";
+
+                foreach ( ref column; table.ColumnArray )
+                {
+                    if ( column.IsStored )
+                    {
+                        gs_schema_file_text ~= "               " ~ table.GoVariable ~ "." ~ column.GoName;
+
+                        if ( !column.IsLastStored )
+                        {
+                            gs_schema_file_text ~= ",";
+                        }
+
+                        gs_schema_file_text ~= "\n";
+                    }
+                }
+
+                gs_schema_file_text
+                    ~= "               ).Exec();\n";
+            }
+
+            gs_schema_file_text
+                ~= "\n"
                    ~ "    if ( error_ == nil )\n"
                    ~ "    {\n"
                    ~ "        return true;\n"
@@ -3973,42 +4124,87 @@ class SCHEMA
                    ~ "    ) bool\n"
                    ~ "{\n"
                    ~ "    error_\n"
-                   ~ "        := DatabaseSession.Query(\n"
-                   ~ "               \"delete from " ~ table.Name ~ " where ";
-                   
-            foreach ( ref column; table.ColumnArray )
+                   ~ "        := DatabaseSession.Query(\n";
+
+            if ( SqlOptionIsEnabled )
             {
-                if ( column.IsKey )
+                gs_schema_file_text
+                    ~= "               \"delete from " ~ table.Name ~ " where ";
+
+                foreach ( ref column; table.ColumnArray )
                 {
-                    gs_schema_file_text ~= column.StoredName ~ " = ?";
-                    
-                    if ( !column.IsLastKey )
+                    if ( column.IsKey )
                     {
-                        gs_schema_file_text ~= " and ";
+                        gs_schema_file_text ~= column.StoredName ~ " = ?";
+
+                        if ( !column.IsLastKey )
+                        {
+                            gs_schema_file_text ~= " and ";
+                        }
                     }
                 }
-            }
-            
-            gs_schema_file_text ~= "\",\n";
-                   
-            foreach ( ref column; table.ColumnArray )
-            {
-                if ( column.IsKey )
+
+                gs_schema_file_text ~= "\",\n";
+
+                foreach ( ref column; table.ColumnArray )
                 {
-                    gs_schema_file_text ~= "               " ~ table.GoVariable ~ "." ~ column.GoName;
-                    
-                    if ( !column.IsLastKey )
+                    if ( column.IsKey )
                     {
-                        gs_schema_file_text ~= ", ";
+                        gs_schema_file_text ~= "               " ~ table.GoVariable ~ "." ~ column.GoName;
+
+                        if ( !column.IsLastKey )
+                        {
+                            gs_schema_file_text ~= ", ";
+                        }
+
+                        gs_schema_file_text ~= "\n";
                     }
-                    
-                    gs_schema_file_text ~= "\n";
                 }
+
+                gs_schema_file_text
+                    ~= "               ).Exec();\n";
             }
-            
-            gs_schema_file_text 
-                ~= "               ).Exec();\n"
-                   ~ "\n"
+            else
+            {
+                gs_schema_file_text
+                    ~= "               \"delete from " ~ table.Name ~ " where ";
+
+                foreach ( ref column; table.ColumnArray )
+                {
+                    if ( column.IsKey )
+                    {
+                        gs_schema_file_text ~= column.StoredName ~ " = ?";
+
+                        if ( !column.IsLastKey )
+                        {
+                            gs_schema_file_text ~= " and ";
+                        }
+                    }
+                }
+
+                gs_schema_file_text ~= "\",\n";
+
+                foreach ( ref column; table.ColumnArray )
+                {
+                    if ( column.IsKey )
+                    {
+                        gs_schema_file_text ~= "               " ~ table.GoVariable ~ "." ~ column.GoName;
+
+                        if ( !column.IsLastKey )
+                        {
+                            gs_schema_file_text ~= ", ";
+                        }
+
+                        gs_schema_file_text ~= "\n";
+                    }
+                }
+
+                gs_schema_file_text
+                    ~= "               ).Exec();\n";
+            }
+
+            gs_schema_file_text
+                ~= "\n"
                    ~ "    if ( error_ == nil )\n"
                    ~ "    {\n"
                    ~ "        return true;\n"
@@ -4024,82 +4220,167 @@ class SCHEMA
                    ~ "func GetDatabase" ~ table.GoFunction ~ "(\n"
                    ~ "    " ~ table.GoVariable ~ " * " ~ table.GoType ~ "\n"
                    ~ "    ) bool\n"
-                   ~ "{\n"
-                   ~ "    error_\n"
-                   ~ "        := DatabaseSession.Query(\n"
-                   ~ "               \"select ";
-            
-            column_count = 0;
-            
-            foreach ( ref column; table.ColumnArray )
-            {
-                if ( !column.IsKey )
-                {
-                    if ( column_count > 0 )
-                    {
-                        gs_schema_file_text ~= ", ";
-                    }
-                    
-                    gs_schema_file_text ~= column.StoredName;
-                    
-                    ++column_count;
-                }
-            }
-            
-            gs_schema_file_text ~= " from " ~ table.Name ~ " where ";
-                
-            foreach ( ref column; table.ColumnArray )
-            {
-                if ( column.IsKey )
-                {
-                    gs_schema_file_text ~= column.StoredName ~ " = ?";
-                    
-                    if ( !column.IsLastKey )
-                    {
-                        gs_schema_file_text ~= " and ";
-                    }
-                }
-            }
-                
-            gs_schema_file_text ~= "\",\n";
-                
-            foreach ( ref column; table.ColumnArray )
-            {
-                if ( column.IsKey )
-                {
-                    gs_schema_file_text ~= "               " ~ table.GoVariable ~ "." ~ column.GoName;
-                    
-                    if ( !column.IsLastKey )
-                    {
-                        gs_schema_file_text ~= ",";
-                    }
-                    
-                    gs_schema_file_text ~= "\n";
-                }
-            }
-                
-            gs_schema_file_text ~= "               ).Consistency( gocql.One ).Scan( ";
+                   ~ "{\n";
 
-            column_count = 0;
-            
-            foreach ( ref column; table.ColumnArray )
+            if ( SqlOptionIsEnabled )
             {
-                if ( !column.IsKey )
+                gs_schema_file_text
+                    ~= "    error_\n"
+                       ~ "        := DatabaseSession.Query(\n"
+                       ~ "               \"select ";
+
+                column_count = 0;
+
+                foreach ( ref column; table.ColumnArray )
                 {
-                    if ( column_count > 0 )
+                    if ( !column.IsKey )
                     {
-                        gs_schema_file_text ~= ", ";
+                        if ( column_count > 0 )
+                        {
+                            gs_schema_file_text ~= ", ";
+                        }
+
+                        gs_schema_file_text ~= column.StoredName;
+
+                        ++column_count;
                     }
-                    
-                    gs_schema_file_text ~= "&" ~ table.GoVariable ~ "." ~ column.GoName;
-                    
-                    ++column_count;
                 }
+
+                gs_schema_file_text ~= " from " ~ table.Name ~ " where ";
+
+                foreach ( ref column; table.ColumnArray )
+                {
+                    if ( column.IsKey )
+                    {
+                        gs_schema_file_text ~= column.StoredName ~ " = ?";
+
+                        if ( !column.IsLastKey )
+                        {
+                            gs_schema_file_text ~= " and ";
+                        }
+                    }
+                }
+
+                gs_schema_file_text ~= "\",\n";
+
+                foreach ( ref column; table.ColumnArray )
+                {
+                    if ( column.IsKey )
+                    {
+                        gs_schema_file_text ~= "               " ~ table.GoVariable ~ "." ~ column.GoName;
+
+                        if ( !column.IsLastKey )
+                        {
+                            gs_schema_file_text ~= ",";
+                        }
+
+                        gs_schema_file_text ~= "\n";
+                    }
+                }
+
+                gs_schema_file_text ~= "               ).Consistency( gocql.One ).Scan( ";
+
+                column_count = 0;
+
+                foreach ( ref column; table.ColumnArray )
+                {
+                    if ( !column.IsKey )
+                    {
+                        if ( column_count > 0 )
+                        {
+                            gs_schema_file_text ~= ", ";
+                        }
+
+                        gs_schema_file_text ~= "&" ~ table.GoVariable ~ "." ~ column.GoName;
+
+                        ++column_count;
+                    }
+                }
+
+                gs_schema_file_text
+                    ~= " );\n";
             }
-                
-            gs_schema_file_text 
-                ~= " );\n"
-                   ~ "\n"
+            else
+            {
+                gs_schema_file_text
+                    ~= "    error_\n"
+                       ~ "        := DatabaseSession.Query(\n"
+                       ~ "               \"select ";
+
+                column_count = 0;
+
+                foreach ( ref column; table.ColumnArray )
+                {
+                    if ( !column.IsKey )
+                    {
+                        if ( column_count > 0 )
+                        {
+                            gs_schema_file_text ~= ", ";
+                        }
+
+                        gs_schema_file_text ~= column.StoredName;
+
+                        ++column_count;
+                    }
+                }
+
+                gs_schema_file_text ~= " from " ~ table.Name ~ " where ";
+
+                foreach ( ref column; table.ColumnArray )
+                {
+                    if ( column.IsKey )
+                    {
+                        gs_schema_file_text ~= column.StoredName ~ " = ?";
+
+                        if ( !column.IsLastKey )
+                        {
+                            gs_schema_file_text ~= " and ";
+                        }
+                    }
+                }
+
+                gs_schema_file_text ~= "\",\n";
+
+                foreach ( ref column; table.ColumnArray )
+                {
+                    if ( column.IsKey )
+                    {
+                        gs_schema_file_text ~= "               " ~ table.GoVariable ~ "." ~ column.GoName;
+
+                        if ( !column.IsLastKey )
+                        {
+                            gs_schema_file_text ~= ",";
+                        }
+
+                        gs_schema_file_text ~= "\n";
+                    }
+                }
+
+                gs_schema_file_text ~= "               ).Consistency( gocql.One ).Scan( ";
+
+                column_count = 0;
+
+                foreach ( ref column; table.ColumnArray )
+                {
+                    if ( !column.IsKey )
+                    {
+                        if ( column_count > 0 )
+                        {
+                            gs_schema_file_text ~= ", ";
+                        }
+
+                        gs_schema_file_text ~= "&" ~ table.GoVariable ~ "." ~ column.GoName;
+
+                        ++column_count;
+                    }
+                }
+
+                gs_schema_file_text
+                    ~= " );\n";
+            }
+
+            gs_schema_file_text
+                ~= "\n"
                    ~ "    if ( error_ == nil )\n"
                    ~ "    {\n"
                    ~ "        return true;\n"
@@ -4113,38 +4394,38 @@ class SCHEMA
                    ~ "// ~~\n"
                    ~ "\n";
         }
-        
+
         foreach ( ref table; TableArray )
         {
-            gs_schema_file_text 
+            gs_schema_file_text
                 ~= "func WriteJson" ~ table.GoFunction ~ "(\n"
                    ~ "    response_writer http.ResponseWriter,\n"
                    ~ "    " ~ table.GoVariable ~ " * " ~ table.GoType ~ "\n"
                    ~ "    )\n"
                    ~ "{\n"
                    ~ "    WriteJsonText( response_writer, \"{\");\n";
-                    
+
             foreach ( ref column; table.ColumnArray )
             {
                 if ( column.IsStored )
                 {
-                    gs_schema_file_text 
+                    gs_schema_file_text
                         ~= "    WriteJsonText( response_writer, \"\\\"" ~ column.GoName ~ "\\\":\" );\n"
                            ~ "    WriteJson" ~ column.GoFunction ~ "( response_writer, " ~ table.GoVariable ~ "." ~ column.GoName ~ " );\n";
                 }
             }
-            
-            gs_schema_file_text 
+
+            gs_schema_file_text
                 ~= "    WriteJsonText( response_writer, \"}\" );\n"
                    ~ "}\n"
                    ~ "\n"
                    ~ "// ~~\n"
                    ~ "\n";
         }
-        
+
         foreach ( ref table; TableArray )
         {
-            gs_schema_file_text 
+            gs_schema_file_text
                 ~= "func HandleAdd" ~ table.GoFunction ~ "(\n"
                    ~ "    response_writer http.ResponseWriter,\n"
                    ~ "    request * http.Request\n"
@@ -4153,14 +4434,14 @@ class SCHEMA
                    ~ "    var\n"
                    ~ "        " ~ table.GoVariable ~ " " ~ table.GoType ~ ";\n"
                    ~ "\n";
-            
+
             gs_schema_file_text ~= "    if ( ";
-            
+
             column_count = 0;
-            
+
             foreach ( ref column; table.ColumnArray )
             {
-                if ( column.IsStored 
+                if ( column.IsStored
                      && !( column.IsKey
                            && column.IsUnique
                            && ( column.StoredType == "uuid"
@@ -4170,15 +4451,15 @@ class SCHEMA
                     {
                         gs_schema_file_text ~= "         && ";
                     }
-            
-                    gs_schema_file_text 
+
+                    gs_schema_file_text
                         ~= "GetRequest" ~ column.GoFunction ~ "( &" ~ table.GoVariable ~ "." ~ column.GoName ~ ", request, \"" ~ column.StoredName ~ "\" )\n";
-                           
+
                     ++column_count;
                 }
             }
-                
-            gs_schema_file_text 
+
+            gs_schema_file_text
                 ~= "         && AddDatabase" ~ table.GoFunction ~ "( &" ~ table.GoVariable ~ " ) )\n"
                    ~ "    {\n"
                    ~ "        WriteJsonSuccess( response_writer );\n"
@@ -4200,22 +4481,22 @@ class SCHEMA
                    ~ "        " ~ table.GoVariable ~ " " ~ table.GoType ~ ";\n"
                    ~ "\n"
                    ~ "    if ( ";
-                   
+
             foreach ( ref column; table.ColumnArray )
             {
                 if ( column.IsStored )
                 {
-                    gs_schema_file_text 
+                    gs_schema_file_text
                         ~= "GetRequest" ~ column.GoFunction ~ "( &" ~ table.GoVariable ~ "." ~ column.GoName ~ ", request, \"" ~ column.StoredName ~ "\" )\n";
-                           
+
                     if ( !column.IsLastStored )
                     {
                         gs_schema_file_text ~= "         && ";
                     }
                 }
             }
-            
-            gs_schema_file_text 
+
+            gs_schema_file_text
                 ~= "         && SetDatabase" ~ table.GoFunction ~ "( &" ~ table.GoVariable ~ " ) )\n"
                    ~ "    {\n"
                    ~ "        WriteJsonSuccess( response_writer );\n"
@@ -4237,12 +4518,12 @@ class SCHEMA
                    ~ "        " ~ table.GoVariable ~ " " ~ table.GoType ~ ";\n"
                    ~ "\n"
                    ~ "    if ( ";
-                   
+
             foreach ( ref column; table.ColumnArray )
             {
                 if ( column.IsKey )
                 {
-                    gs_schema_file_text 
+                    gs_schema_file_text
                         ~= "GetRequest" ~ column.GoFunction ~ "( &" ~ table.GoVariable ~ "." ~ column.GoName ~ ", request, \"" ~ column.StoredName ~ "\" )\n";
 
                     if ( !column.IsKey )
@@ -4251,8 +4532,8 @@ class SCHEMA
                     }
                 }
             }
-            
-            gs_schema_file_text 
+
+            gs_schema_file_text
                 ~= "         && RemoveDatabase" ~ table.GoFunction ~ "( &" ~ table.GoVariable ~ " ) )\n"
                    ~ "    {\n"
                    ~ "        WriteJsonSuccess( response_writer );\n"
@@ -4274,22 +4555,22 @@ class SCHEMA
                    ~ "        " ~ table.GoVariable ~ " " ~ table.GoType ~ ";\n"
                    ~ "\n"
                    ~ "    if ( ";
-            
+
             foreach ( ref column; table.ColumnArray )
             {
                 if ( column.IsKey )
                 {
-                    gs_schema_file_text 
+                    gs_schema_file_text
                         ~= "GetRequest" ~ column.GoFunction ~ "( &" ~ table.GoVariable ~ "." ~ column.GoName ~ ", request, \"" ~ column.StoredName ~ "\" )\n";
-                    
+
                     if ( !column.IsKey )
                     {
                         gs_schema_file_text ~= "         && ";
                     }
                 }
             }
-            
-            gs_schema_file_text 
+
+            gs_schema_file_text
                 ~= "         && GetDatabase" ~ table.GoFunction ~ "( &" ~ table.GoVariable ~ " ) )\n"
                    ~ "    {\n"
                    ~ "        WriteJson" ~ table.GoFunction ~ "( response_writer, &" ~ table.GoVariable ~ " );\n"
@@ -4626,9 +4907,9 @@ void main(
 {
     string
         option;
-        
+
     argument_array = argument_array[ 1 .. $ ];
-        
+
     SqlOptionIsEnabled = false;
     CqlOptionIsEnabled = false;
     OutputFormatArray = null;
@@ -4649,7 +4930,7 @@ void main(
                   && StoredFormat == "" )
         {
             SqlOptionIsEnabled = true;
-            
+
             OutputFormatArray ~= "sql";
             StoredFormat = "sql";
         }
@@ -4657,7 +4938,7 @@ void main(
                   && StoredFormat == "" )
         {
             CqlOptionIsEnabled = true;
-            
+
             OutputFormatArray ~= "cql";
             StoredFormat = "cql";
         }
