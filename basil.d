@@ -1268,6 +1268,125 @@ class TYPE
 
     // ~~
 
+    string GetSubTypeGsFunctionText(
+        )
+    {
+        string
+            sub_types_go_text;
+
+        foreach ( ref sub_type; ActualType.SubTypeArray )
+        {
+            sub_types_go_text ~= sub_type.GetGsFunctionText();
+        }
+
+        return sub_types_go_text;
+    }
+    // ~~
+
+    string GetGsFunctionText(
+        )
+    {
+        string
+            type_name;
+
+        type_name = ActualType.BaseName;
+
+        if ( type_name == "BOOL" )
+        {
+            return "Bool";
+        }
+        else if ( type_name == "INT8" )
+        {
+            return "Int8";
+        }
+        else if ( type_name == "UINT8" )
+        {
+            return "Uint8";
+        }
+        else if ( type_name == "INT16" )
+        {
+            return "Int16";
+        }
+        else if ( type_name == "UINT16" )
+        {
+            return "Uint16";
+        }
+        else if ( type_name == "INT32" )
+        {
+            return "Int32";
+        }
+        else if ( type_name == "UINT32" )
+        {
+            return "Uint32";
+        }
+        else if ( type_name == "INT64" )
+        {
+            return "Int64";
+        }
+        else if ( type_name == "UINT64" )
+        {
+            return "Uint64";
+        }
+        else if ( type_name == "FLOAT32" )
+        {
+            return "Float32";
+        }
+        else if ( type_name == "FLOAT64" )
+        {
+            return "Float64";
+        }
+        else if ( type_name == "STRING" )
+        {
+            return "String";
+        }
+        else if ( type_name == "DATE" )
+        {
+            return "String";
+        }
+        else if ( type_name == "DATETIME" )
+        {
+            return "String";
+        }
+        else if ( type_name == "UUID" )
+        {
+            return "Uuid";
+        }
+        else if ( type_name == "BLOB" )
+        {
+            return "Blob";
+        }
+        else if ( type_name == "POINTER" )
+        {
+            return GetSubTypeGsFunctionText() ~ "Pointer";
+        }
+        else if ( type_name == "ARRAY" )
+        {
+            return GetSubTypeGsFunctionText() ~ "Array";
+        }
+        else if ( type_name == "TUPLE" )
+        {
+            return GetSubTypeGsFunctionText() ~ "Tuple";
+        }
+        else if ( type_name == "LIST" )
+        {
+            return GetSubTypeGsFunctionText() ~ "List";
+        }
+        else if ( type_name == "SET" )
+        {
+            return GetSubTypeGsFunctionText() ~ "Set";
+        }
+        else if ( type_name == "MAP" )
+        {
+            return GetSubTypeGsFunctionText() ~ "Map";
+        }
+        else
+        {
+            return Name;
+        }
+    }
+
+    // ~~
+
     string GetSubTypeRustText(
         )
     {
@@ -2385,6 +2504,7 @@ class COLUMN
         IsLastStored,
         IsUnique,
         IsKey,
+        IsLastKey,
         IsPartitioned,
         IsClustered,
         IsIndexed,
@@ -2438,6 +2558,10 @@ class COLUMN
         CqlType,
         GoName,
         GoType,
+        GsName,
+        GsType,
+        GsFunction,
+        GsVariable,
         RustName,
         RustType,
         CrystalName,
@@ -2586,6 +2710,10 @@ class COLUMN
                 {
                     GoName = value_text_array[ 1 ];
                 }
+                else if ( property_name == "gsname" )
+                {
+                    GsName = value_text_array[ 1 ];
+                }
                 else if ( property_name == "rustname" )
                 {
                     RustName = value_text_array[ 1 ];
@@ -2729,6 +2857,11 @@ class COLUMN
             GoName = Name;
         }
 
+        if ( GsName == "" )
+        {
+            GsName = Name;
+        }
+
         if ( RustName == "" )
         {
             RustName = GetSnakeCaseText( Name );
@@ -2742,6 +2875,9 @@ class COLUMN
         SqlType = Type.GetSqlText();
         CqlType = Type.GetCqlText();
         GoType = Type.GetGoText();
+        GsType = GoType;
+        GsFunction = Type.GetGsFunctionText();
+        GsVariable = GsName.GetSnakeCaseText();
         RustType = Type.GetRustText();
         CrystalType = Type.GetCrystalText();
 
@@ -2806,7 +2942,10 @@ class TABLE
     string
         SchemaName,
         Name,
-        Type;
+        Type,
+        GsType,
+        GsFunction,
+        GsVariable;
     string[]
         KeyNameArray;
     COLUMN[]
@@ -2824,6 +2963,9 @@ class TABLE
         SchemaName = schema.Name;
         Name = name;
         Type = "";
+        GsType = name;
+        GsFunction = name.GetPascalCaseText();
+        GsVariable = name.GetSnakeCaseText();
         KeyNameArray = null;
         ColumnArray = null;
         RowCount = schema.RowCount;
@@ -2876,6 +3018,7 @@ class TABLE
         )
     {
         COLUMN
+            last_key_column,
             last_stored_column;
 
         writeln( "Processing table : ", Name );
@@ -2886,6 +3029,7 @@ class TABLE
         }
 
         last_stored_column = null;
+        last_key_column = null;
 
         foreach ( ref column; ColumnArray )
         {
@@ -2893,11 +3037,21 @@ class TABLE
             {
                 last_stored_column = column;
             }
+            
+            if ( column.IsKey )
+            {
+                last_key_column = column;
+            }
         }
 
         if ( last_stored_column !is null )
         {
             last_stored_column.IsLastStored = true;
+        }
+
+        if ( last_key_column !is null )
+        {
+            last_key_column.IsLastKey = true;
         }
     }
 
@@ -3590,7 +3744,7 @@ class SCHEMA
                 go_sql_schema_file_text ~= ";\n";
             }
 
-            go_sql_schema_file_text ~= "}\n\n";
+            go_sql_schema_file_text ~= "}\n\n// ~~\n\n";
         }
 
         go_sql_schema_file_path.write( go_sql_schema_file_text );
@@ -3623,7 +3777,7 @@ class SCHEMA
                        ~ " "
                        ~ column.GoType;
 
-                if ( !column.IsStored )
+                if ( column.IsStored )
                 {
                     go_cql_schema_file_text
                         ~= " `db:\"-\"`";
@@ -3632,10 +3786,575 @@ class SCHEMA
                 go_cql_schema_file_text ~= ";\n";
             }
 
-            go_cql_schema_file_text ~= "}\n\n";
+            go_cql_schema_file_text ~= "}\n\n// ~~\n\n";
         }
 
         go_cql_schema_file_path.write( go_cql_schema_file_text );
+    }
+    
+    // ~~
+
+    void WriteGsCqlSchemaFile(
+        string generis_cql_schema_file_path
+        )
+    {
+        long
+            column_count,
+            column_index;
+        string
+            generis_cql_schema_file_text;
+
+        writeln( "Writing Gs CQL file : ", generis_cql_schema_file_path );
+
+        generis_cql_schema_file_text = "";
+
+        foreach ( ref table; TableArray )
+        {
+            generis_cql_schema_file_text ~= "type " ~ table.GsType ~ " struct {\n";
+
+            foreach ( ref column; table.ColumnArray )
+            {
+                generis_cql_schema_file_text
+                    ~= "    "
+                       ~ column.GsName
+                       ~ " "
+                       ~ column.GsType;
+
+                if ( column.IsStored )
+                {
+                    generis_cql_schema_file_text
+                        ~= " `db:\"-\"`";
+                }
+
+                generis_cql_schema_file_text ~= ";\n";
+            }
+
+            generis_cql_schema_file_text ~= "}\n\n// ~~\n\n";
+        }
+
+        foreach ( ref table; TableArray )
+        {
+            generis_cql_schema_file_text 
+                ~= "func AddDatabase" ~ table.GsFunction ~ "(\n"
+                   ~ "    " ~ table.GsVariable ~ " * " ~ table.GsType ~ "\n"
+                   ~ "    ) bool\n"
+                   ~ "{\n";
+                   
+            column_count = 0;
+            
+            foreach ( ref column; table.ColumnArray )
+            {
+                if ( column.IsKey
+                     && column.IsUnique
+                     && column.CqlType == "uuid" )
+                {
+                    generis_cql_schema_file_text 
+                        ~= "    " ~ table.GsVariable ~ "." ~ column.GsName ~ " = gocql.TimeUUID();\n";
+                        
+                    ++column_count;
+                }
+            }                   
+            
+            if ( column_count > 0 )
+            {
+                generis_cql_schema_file_text ~="\n";
+            }
+            
+            generis_cql_schema_file_text 
+                ~= "    error_\n"
+                   ~ "        := DatabaseSession.Query(\n"
+                   ~ "               \"insert into " ~ table.Name ~ "( ";
+            
+            column_count = 0;
+            
+            foreach ( ref column; table.ColumnArray )
+            {
+                if ( column.IsStored
+                     && !column.IsIncremented )
+                {
+                    if ( column_count > 0 )
+                    {
+                        generis_cql_schema_file_text ~= ", ";
+                    }
+                    
+                    generis_cql_schema_file_text ~= column.CqlName;
+                    
+                    ++column_count;
+                }
+            }
+                   
+            generis_cql_schema_file_text 
+                ~= " ) values( ";
+                
+            column_count = 0;
+            
+            foreach ( ref column; table.ColumnArray )
+            {
+                if ( column.IsStored
+                     && !column.IsIncremented )
+                {
+                    if ( column_count > 0 )
+                    {
+                        generis_cql_schema_file_text ~= ", ";
+                    }
+                    
+                    generis_cql_schema_file_text ~= "?";
+                    
+                    ++column_count;
+                }
+            }
+            
+            generis_cql_schema_file_text 
+                ~= " )\",\n";
+                
+            column_index = 0;
+            
+            foreach ( ref column; table.ColumnArray )
+            {
+                if ( column.IsStored
+                     && !column.IsIncremented )
+                {
+                    generis_cql_schema_file_text ~= "               " ~ table.GsVariable ~ "." ~ column.GsName;
+                    
+                    if ( column_index + 1 < column_count )
+                    {
+                        generis_cql_schema_file_text ~= ",";
+                    }
+                    
+                    generis_cql_schema_file_text ~= "\n";
+                    
+                    ++column_index;
+                }
+            }
+                
+            generis_cql_schema_file_text 
+                ~= "               ).Exec();\n"
+                   ~ "\n"
+                   ~ "    if ( error_ == nil )\n"
+                   ~ "    {\n"
+                   ~ "        return true;\n"
+                   ~ "    }\n"
+                   ~ "\n"
+                   ~ "    LogError( error_ );\n"
+                   ~ "\n"
+                   ~ "    return false;\n"
+                   ~ "}\n"
+                   ~ "\n"
+                   ~ "// ~~\n"
+                   ~ "\n"
+                   ~ "func SetDatabase" ~ table.GsFunction ~ "(\n"
+                   ~ "    " ~ table.GsVariable ~ " * " ~ table.GsType ~ "\n"
+                   ~ "    ) bool\n"
+                   ~ "{\n"
+                   ~ "    error_\n"
+                   ~ "        := DatabaseSession.Query(\n"
+                   ~ "               \"insert into " ~ table.Name ~ "( ";
+            
+            foreach ( ref column; table.ColumnArray )
+            {
+                if ( column.IsStored )
+                {
+                    generis_cql_schema_file_text ~= column.CqlName;
+                    
+                    if ( !column.IsLastStored )
+                    {
+                        generis_cql_schema_file_text ~= ", ";
+                    }
+                }
+            }
+                   
+            generis_cql_schema_file_text 
+                ~= " ) values( ";
+                
+            foreach ( ref column; table.ColumnArray )
+            {
+                if ( column.IsStored )
+                {
+                    generis_cql_schema_file_text ~= "?";
+                    
+                    if ( !column.IsLastStored )
+                    {
+                        generis_cql_schema_file_text ~= ", ";
+                    }
+                }
+            }
+            
+            generis_cql_schema_file_text 
+                ~= " )\",\n";
+                
+            foreach ( ref column; table.ColumnArray )
+            {
+                if ( column.IsStored )
+                {
+                    generis_cql_schema_file_text ~= "               " ~ table.GsVariable ~ "." ~ column.GsName;
+                    
+                    if ( !column.IsLastStored )
+                    {
+                        generis_cql_schema_file_text ~= ",";
+                    }
+                    
+                    generis_cql_schema_file_text ~= "\n";
+                }
+            }
+                
+            generis_cql_schema_file_text 
+                ~= "               ).Exec();\n"
+                   ~ "\n"
+                   ~ "    if ( error_ == nil )\n"
+                   ~ "    {\n"
+                   ~ "        return true;\n"
+                   ~ "    }\n"
+                   ~ "\n"
+                   ~ "    LogError( error_ );\n"
+                   ~ "\n"
+                   ~ "    return false;\n"
+                   ~ "}\n"
+                   ~ "\n"
+                   ~ "// ~~\n"
+                   ~ "\n"
+                   ~ "func RemoveDatabase" ~ table.GsFunction ~ "(\n"
+                   ~ "    " ~ table.GsVariable ~ " * " ~ table.GsType ~ "\n"
+                   ~ "    ) bool\n"
+                   ~ "{\n"
+                   ~ "    error_\n"
+                   ~ "        := DatabaseSession.Query(\n"
+                   ~ "               \"delete from " ~ table.Name ~ " where ";
+                   
+            foreach ( ref column; table.ColumnArray )
+            {
+                if ( column.IsKey )
+                {
+                    generis_cql_schema_file_text ~= column.CqlName ~ " = ?";
+                    
+                    if ( !column.IsLastKey )
+                    {
+                        generis_cql_schema_file_text ~= " and ";
+                    }
+                }
+            }
+            
+            generis_cql_schema_file_text 
+                ~= "\",\n";
+                   
+            foreach ( ref column; table.ColumnArray )
+            {
+                if ( column.IsKey )
+                {
+                    generis_cql_schema_file_text ~= "               " ~ table.GsVariable ~ "." ~ column.GsName;
+                    
+                    if ( !column.IsLastKey )
+                    {
+                        generis_cql_schema_file_text ~= ", ";
+                    }
+                    
+                    generis_cql_schema_file_text ~= "\n";
+                }
+            }
+            
+            generis_cql_schema_file_text 
+                ~= "               ).Exec();\n"
+                   ~ "\n"
+                   ~ "    if ( error_ == nil )\n"
+                   ~ "    {\n"
+                   ~ "        return true;\n"
+                   ~ "    }\n"
+                   ~ "\n"
+                   ~ "    LogError( error_ );\n"
+                   ~ "\n"
+                   ~ "    return false;\n"
+                   ~ "}\n"
+                   ~ "\n"
+                   ~ "// ~~\n"
+                   ~ "\n"
+                   ~ "func GetDatabase" ~ table.GsFunction ~ "(\n"
+                   ~ "    " ~ table.GsVariable ~ " * " ~ table.GsType ~ "\n"
+                   ~ "    ) bool\n"
+                   ~ "{\n"
+                   ~ "    error_\n"
+                   ~ "        := DatabaseSession.Query(\n"
+                   ~ "               \"select ";
+            
+            column_count = 0;
+            
+            foreach ( ref column; table.ColumnArray )
+            {
+                if ( !column.IsKey )
+                {
+                    if ( column_count > 0 )
+                    {
+                        generis_cql_schema_file_text ~= ", ";
+                    }
+                    
+                    generis_cql_schema_file_text ~= column.CqlName;
+                    
+                    ++column_count;
+                }
+            }
+            
+            generis_cql_schema_file_text 
+                ~= " from " ~ table.Name ~ " where ";
+                
+            foreach ( ref column; table.ColumnArray )
+            {
+                if ( column.IsKey )
+                {
+                    generis_cql_schema_file_text ~= column.CqlName ~ " = ?";
+                    
+                    if ( !column.IsLastKey )
+                    {
+                        generis_cql_schema_file_text ~= " and ";
+                    }
+                }
+            }
+                
+            generis_cql_schema_file_text 
+                ~= "\",\n";
+                
+            foreach ( ref column; table.ColumnArray )
+            {
+                if ( column.IsKey )
+                {
+                    generis_cql_schema_file_text ~= "               " ~ table.GsVariable ~ "." ~ column.GsName;
+                    
+                    if ( !column.IsLastKey )
+                    {
+                        generis_cql_schema_file_text ~= ",";
+                    }
+                    
+                    generis_cql_schema_file_text ~= "\n";
+                }
+            }
+                
+            generis_cql_schema_file_text 
+                ~= "               ).Consistency( gocql.One ).Scan( ";
+
+            column_count = 0;
+            
+            foreach ( ref column; table.ColumnArray )
+            {
+                if ( !column.IsKey )
+                {
+                    if ( column_count > 0 )
+                    {
+                        generis_cql_schema_file_text ~= ", ";
+                    }
+                    
+                    generis_cql_schema_file_text ~= "&" ~ table.GsVariable ~ "." ~ column.GsName;
+                    
+                    ++column_count;
+                }
+            }
+                
+            generis_cql_schema_file_text 
+                ~= " );\n"
+                   ~ "\n"
+                   ~ "    if ( error_ == nil )\n"
+                   ~ "    {\n"
+                   ~ "        return true;\n"
+                   ~ "    }\n"
+                   ~ "\n"
+                   ~ "    LogError( error_ );\n"
+                   ~ "\n"
+                   ~ "    return false;\n"
+                   ~ "}\n"
+                   ~ "\n"
+                   ~ "// ~~\n"
+                   ~ "\n";
+        }
+        
+        foreach ( ref table; TableArray )
+        {
+            generis_cql_schema_file_text 
+                ~= "func WriteJson" ~ table.GsFunction ~ "(\n"
+                   ~ "    response_writer http.ResponseWriter,\n"
+                   ~ "    " ~ table.GsVariable ~ " * " ~ table.GsType ~ "\n"
+                   ~ "    )\n"
+                   ~ "{\n"
+                   ~ "    WriteJsonText( response_writer, \"{\");\n";
+                    
+            foreach ( ref column; table.ColumnArray )
+            {
+                if ( column.IsStored )
+                {
+                    generis_cql_schema_file_text 
+                        ~= "    WriteJsonText( response_writer, \"\\\"" ~ column.GsName ~ "\\\":\" );\n"
+                           ~ "    WriteJson" ~ column.GsFunction ~ "( response_writer, " ~ table.GsVariable ~ "." ~ column.GsName ~ " );\n";
+                }
+            }
+            
+            generis_cql_schema_file_text 
+                ~= "    WriteJsonText( response_writer, \"}\" );\n"
+                   ~ "}\n"
+                   ~ "\n"
+                   ~ "// ~~\n"
+                   ~ "\n";
+        }
+        
+        foreach ( ref table; TableArray )
+        {
+            generis_cql_schema_file_text 
+                ~= "func HandleAdd" ~ table.GsFunction ~ "(\n"
+                   ~ "    response_writer http.ResponseWriter,\n"
+                   ~ "    request * http.Request\n"
+                   ~ "    )\n"
+                   ~ "{\n"
+                   ~ "    var\n"
+                   ~ "        " ~ table.GsVariable ~ " " ~ table.GsType ~ ";\n"
+                   ~ "\n";
+            
+            generis_cql_schema_file_text 
+                ~= "    if ( ";
+            
+            column_count = 0;
+            
+            foreach ( ref column; table.ColumnArray )
+            {
+                if ( column.IsStored 
+                     && !( column.IsKey
+                           && column.IsUnique
+                           && ( column.CqlType == "uuid"
+                                || column.IsIncremented ) ) )
+                {
+                    if ( column_count > 0 )
+                    {
+                        generis_cql_schema_file_text 
+                            ~= "         && ";
+                    }
+            
+                    generis_cql_schema_file_text 
+                        ~= "GetRequest" ~ column.GsFunction ~ "( &" ~ table.GsVariable ~ "." ~ column.GsName ~ ", request, \"" ~ column.CqlName ~ "\" )\n";
+                           
+                    ++column_count;
+                }
+            }
+                
+            generis_cql_schema_file_text 
+                ~= "         && AddDatabase" ~ table.GsFunction ~ "( &" ~ table.GsVariable ~ " ) )\n"
+                   ~ "    {\n"
+                   ~ "        WriteJsonSuccess( response_writer );\n"
+                   ~ "    }\n"
+                   ~ "    else\n"
+                   ~ "    {\n"
+                   ~ "        WriteJsonError( response_writer );\n"
+                   ~ "    }\n"
+                   ~ "}\n"
+                   ~ "\n"
+                   ~ "// ~~\n"
+                   ~ "\n"
+                   ~ "func HandleSet" ~ table.GsFunction ~ "(\n"
+                   ~ "    response_writer http.ResponseWriter,\n"
+                   ~ "    request * http.Request\n"
+                   ~ "    )\n"
+                   ~ "{\n"
+                   ~ "    var\n"
+                   ~ "        " ~ table.GsVariable ~ " " ~ table.GsType ~ ";\n"
+                   ~ "\n"
+                   ~ "    if ( ";
+                   
+            foreach ( ref column; table.ColumnArray )
+            {
+                if ( column.IsStored )
+                {
+                    generis_cql_schema_file_text 
+                        ~= "GetRequest" ~ column.GsFunction ~ "( &" ~ table.GsVariable ~ "." ~ column.GsName ~ ", request, \"" ~ column.CqlName ~ "\" )\n";
+                           
+                    if ( !column.IsLastStored )
+                    {
+                        generis_cql_schema_file_text ~= "         && ";
+                    }
+                }
+            }
+            
+            generis_cql_schema_file_text 
+                ~= "         && SetDatabase" ~ table.GsFunction ~ "( &" ~ table.GsVariable ~ " ) )\n"
+                   ~ "    {\n"
+                   ~ "        WriteJsonSuccess( response_writer );\n"
+                   ~ "    }\n"
+                   ~ "    else\n"
+                   ~ "    {\n"
+                   ~ "        WriteJsonError( response_writer );\n"
+                   ~ "    }\n"
+                   ~ "}\n"
+                   ~ "\n"
+                   ~ "// ~~\n"
+                   ~ "\n"
+                   ~ "func HandleRemove" ~ table.GsFunction ~ "(\n"
+                   ~ "    response_writer http.ResponseWriter,\n"
+                   ~ "    request * http.Request\n"
+                   ~ "    )\n"
+                   ~ "{\n"
+                   ~ "    var\n"
+                   ~ "        " ~ table.GsVariable ~ " " ~ table.GsType ~ ";\n"
+                   ~ "\n"
+                   ~ "    if ( ";
+                   
+            foreach ( ref column; table.ColumnArray )
+            {
+                if ( column.IsKey )
+                {
+                    generis_cql_schema_file_text 
+                        ~= "GetRequest" ~ column.GsFunction ~ "( &" ~ table.GsVariable ~ "." ~ column.GsName ~ ", request, \"" ~ column.CqlName ~ "\" )\n";
+
+                    if ( !column.IsKey )
+                    {
+                        generis_cql_schema_file_text ~= "         && ";
+                    }
+                }
+            }
+            
+            generis_cql_schema_file_text 
+                ~= "         && RemoveDatabase" ~ table.GsFunction ~ "( &" ~ table.GsVariable ~ " ) )\n"
+                   ~ "    {\n"
+                   ~ "        WriteJsonSuccess( response_writer );\n"
+                   ~ "    }\n"
+                   ~ "    else\n"
+                   ~ "    {\n"
+                   ~ "        WriteJsonError( response_writer );\n"
+                   ~ "    }\n"
+                   ~ "}\n"
+                   ~ "\n"
+                   ~ "// ~~\n"
+                   ~ "\n"
+                   ~ "func HandleGet" ~ table.GsFunction ~ "(\n"
+                   ~ "    response_writer http.ResponseWriter,\n"
+                   ~ "    request * http.Request\n"
+                   ~ "    )\n"
+                   ~ "{\n"
+                   ~ "    var\n"
+                   ~ "        " ~ table.GsVariable ~ " " ~ table.GsType ~ ";\n"
+                   ~ "\n"
+                   ~ "    if ( ";
+            
+            foreach ( ref column; table.ColumnArray )
+            {
+                if ( column.IsKey )
+                {
+                    generis_cql_schema_file_text 
+                        ~= "GetRequest" ~ column.GsFunction ~ "( &" ~ table.GsVariable ~ "." ~ column.GsName ~ ", request, \"" ~ column.CqlName ~ "\" )\n";
+                    
+                    if ( !column.IsKey )
+                    {
+                        generis_cql_schema_file_text ~= "         && ";
+                    }
+                }
+            }
+            
+            generis_cql_schema_file_text 
+                ~= "         && GetDatabase" ~ table.GsFunction ~ "( &" ~ table.GsVariable ~ " ) )\n"
+                   ~ "    {\n"
+                   ~ "        WriteJson" ~ table.GsFunction ~ "( response_writer, &" ~ table.GsVariable ~ " );\n"
+                   ~ "    }\n"
+                   ~ "    else\n"
+                   ~ "    {\n"
+                   ~ "        WriteJsonError( response_writer );\n"
+                   ~ "    }\n"
+                   ~ "}\n"
+                   ~ "\n"
+                   ~ "// ~~\n"
+                   ~ "\n";
+        }
+
+        generis_cql_schema_file_path.write( generis_cql_schema_file_text );
     }
 
     // ~~
@@ -3940,6 +4659,10 @@ void ProcessFile(
         {
             Schema.WriteGoCqlSchemaFile( base_file_path ~ "_cql.go" );
         }
+        else if ( output_format == "generiscql" )
+        {
+            Schema.WriteGsCqlSchemaFile( base_file_path ~ "_cql.gs" );
+        }
         else if ( output_format == "rust" )
         {
             Schema.WriteRustSchemaFile( base_file_path ~ ".rs" );
@@ -3991,6 +4714,10 @@ void main(
         {
             output_format_array ~= "gocql";
         }
+        else if ( option == "--generiscql" )
+        {
+            output_format_array ~= "generiscql";
+        }
         else if ( option == "--rust" )
         {
             output_format_array ~= "rust";
@@ -4019,6 +4746,7 @@ void main(
         writeln( "    --cql : generate the CQL schema and data files" );
         writeln( "    --gosql : generate the Go SQL schema file" );
         writeln( "    --gocql : generate the Go CQL schema file" );
+        writeln( "    --generiscql : generate the Gs CQL file" );
         writeln( "    --rust : generate the Rust schema file" );
         writeln( "    --crystal : generate the Crystal schema file" );
         writeln( "Examples :" );

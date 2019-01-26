@@ -14,6 +14,7 @@ Versatile database generator.
     *   CQL schema and data files.
     *   Go SQL schema file.
     *   Go CQL schema file.
+    *   Gs CQL schema file.
     *   Rust schema file.
     *   Crystal schema file.
 
@@ -274,6 +275,7 @@ basil [options] script_file.basil
 --cql : generate the CQL schema and data files
 --gosql : generate the Go SQL schema file
 --gocql : generate the Go CQL schema file
+--generiscql : generate the Gs CQL file
 --rust : generate the Rust schema file
 --crystal : generate the Crystal schema file
 ```

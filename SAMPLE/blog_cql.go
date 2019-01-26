@@ -1,55 +1,65 @@
 type SECTION struct {
-    Id uint64;
-    Number uint64;
-    Name string;
-    Text string;
-    Image string;
-    ImageIndex uint64 `db:"-"`;
+    Id uint64 `db:"-"`;
+    Number uint64 `db:"-"`;
+    Name string `db:"-"`;
+    Text string `db:"-"`;
+    Image string `db:"-"`;
+    ImageIndex uint64;
 }
+
+// ~~
 
 type USER struct {
-    Id uint64;
-    FirstName string;
-    LastName string;
-    Email string;
-    Pseudonym string;
-    Password string;
-    Phone string;
-    Street string;
-    City string;
-    Code string;
-    Region string;
-    Country string;
-    Company string;
-    ItIsAdministrator bool;
+    Id uint64 `db:"-"`;
+    FirstName string `db:"-"`;
+    LastName string `db:"-"`;
+    Email string `db:"-"`;
+    Pseudonym string `db:"-"`;
+    Password string `db:"-"`;
+    Phone string `db:"-"`;
+    Street string `db:"-"`;
+    City string `db:"-"`;
+    Code string `db:"-"`;
+    Region string `db:"-"`;
+    Country string `db:"-"`;
+    Company string `db:"-"`;
+    ItIsAdministrator bool `db:"-"`;
 }
+
+// ~~
 
 type ARTICLE struct {
-    Id uint64;
-    SectionId uint64;
-    UserId uint64;
-    Title string;
-    Text string;
-    Image string;
-    Date string;
-    Section * SECTION `db:"-"`;
-    User * USER `db:"-"`;
-    ImageIndex uint64 `db:"-"`;
+    Id uint64 `db:"-"`;
+    SectionId uint64 `db:"-"`;
+    UserId uint64 `db:"-"`;
+    Title string `db:"-"`;
+    Text string `db:"-"`;
+    Image string `db:"-"`;
+    Date string `db:"-"`;
+    Section * SECTION;
+    User * USER;
+    ImageIndex uint64;
 }
+
+// ~~
 
 type COMMENT struct {
-    Id uint64;
-    ArticleId uint64;
-    UserId uint64;
-    Text string;
-    DateTime string;
-    Article * ARTICLE `db:"-"`;
-    User * USER `db:"-"`;
+    Id uint64 `db:"-"`;
+    ArticleId uint64 `db:"-"`;
+    UserId uint64 `db:"-"`;
+    Text string `db:"-"`;
+    DateTime string `db:"-"`;
+    Article * ARTICLE;
+    User * USER;
 }
 
+// ~~
+
 type SUBSCRIBER struct {
-    Id uint64;
-    Name string;
-    Email string;
+    Id uint64 `db:"-"`;
+    Name string `db:"-"`;
+    Email string `db:"-"`;
 }
+
+// ~~
 
