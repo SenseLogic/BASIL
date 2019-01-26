@@ -1268,7 +1268,7 @@ class TYPE
 
     // ~~
 
-    string GetSubTypeGsFunctionText(
+    string GetSubTypeGoFunctionText(
         )
     {
         string
@@ -1276,14 +1276,15 @@ class TYPE
 
         foreach ( ref sub_type; ActualType.SubTypeArray )
         {
-            sub_types_go_text ~= sub_type.GetGsFunctionText();
+            sub_types_go_text ~= sub_type.GetGoFunctionText();
         }
 
         return sub_types_go_text;
     }
+    
     // ~~
 
-    string GetGsFunctionText(
+    string GetGoFunctionText(
         )
     {
         string
@@ -1357,27 +1358,27 @@ class TYPE
         }
         else if ( type_name == "POINTER" )
         {
-            return GetSubTypeGsFunctionText() ~ "Pointer";
+            return GetSubTypeGoFunctionText() ~ "Pointer";
         }
         else if ( type_name == "ARRAY" )
         {
-            return GetSubTypeGsFunctionText() ~ "Array";
+            return GetSubTypeGoFunctionText() ~ "Array";
         }
         else if ( type_name == "TUPLE" )
         {
-            return GetSubTypeGsFunctionText() ~ "Tuple";
+            return GetSubTypeGoFunctionText() ~ "Tuple";
         }
         else if ( type_name == "LIST" )
         {
-            return GetSubTypeGsFunctionText() ~ "List";
+            return GetSubTypeGoFunctionText() ~ "List";
         }
         else if ( type_name == "SET" )
         {
-            return GetSubTypeGsFunctionText() ~ "Set";
+            return GetSubTypeGoFunctionText() ~ "Set";
         }
         else if ( type_name == "MAP" )
         {
-            return GetSubTypeGsFunctionText() ~ "Map";
+            return GetSubTypeGoFunctionText() ~ "Map";
         }
         else
         {
@@ -2556,12 +2557,12 @@ class COLUMN
     string
         CqlName,
         CqlType,
+        StoredName,
+        StoredType,
         GoName,
         GoType,
-        GsName,
-        GsType,
-        GsFunction,
-        GsVariable,
+        GoFunction,
+        GoVariable,
         RustName,
         RustType,
         CrystalName,
@@ -2710,10 +2711,6 @@ class COLUMN
                 {
                     GoName = value_text_array[ 1 ];
                 }
-                else if ( property_name == "gsname" )
-                {
-                    GsName = value_text_array[ 1 ];
-                }
                 else if ( property_name == "rustname" )
                 {
                     RustName = value_text_array[ 1 ];
@@ -2857,11 +2854,6 @@ class COLUMN
             GoName = Name;
         }
 
-        if ( GsName == "" )
-        {
-            GsName = Name;
-        }
-
         if ( RustName == "" )
         {
             RustName = GetSnakeCaseText( Name );
@@ -2874,10 +2866,22 @@ class COLUMN
 
         SqlType = Type.GetSqlText();
         CqlType = Type.GetCqlText();
+        
+        if ( SqlOptionIsEnabled )
+        {
+            StoredName = SqlName;
+            StoredType = SqlType;
+        }
+        
+        if ( CqlOptionIsEnabled )
+        {
+            StoredName = CqlName;
+            StoredType = CqlType;
+        }
+        
         GoType = Type.GetGoText();
-        GsType = GoType;
-        GsFunction = Type.GetGsFunctionText();
-        GsVariable = GsName.GetSnakeCaseText();
+        GoFunction = Type.GetGoFunctionText();
+        GoVariable = GoName.GetSnakeCaseText();
         RustType = Type.GetRustText();
         CrystalType = Type.GetCrystalText();
 
@@ -2943,9 +2947,9 @@ class TABLE
         SchemaName,
         Name,
         Type,
-        GsType,
-        GsFunction,
-        GsVariable;
+        GoType,
+        GoFunction,
+        GoVariable;
     string[]
         KeyNameArray;
     COLUMN[]
@@ -2963,9 +2967,9 @@ class TABLE
         SchemaName = schema.Name;
         Name = name;
         Type = "";
-        GsType = name;
-        GsFunction = name.GetPascalCaseText();
-        GsVariable = name.GetSnakeCaseText();
+        GoType = name;
+        GoFunction = name.GetPascalCaseText();
+        GoVariable = name.GetSnakeCaseText();
         KeyNameArray = null;
         ColumnArray = null;
         RowCount = schema.RowCount;
@@ -3358,8 +3362,7 @@ class SCHEMA
             {
                 if ( column.IsForeign )
                 {
-                    uml_schema_file_text
-                        ~= "\n" ~ column.ForeignColumn.Table.Name ~ " <-- " ~ table.Name ~ "\n";
+                    uml_schema_file_text ~= "\n" ~ column.ForeignColumn.Table.Name ~ " <-- " ~ table.Name ~ "\n";
                 }
             }
         }
@@ -3508,8 +3511,7 @@ class SCHEMA
 
             foreach ( row_index; 0 .. table.RowCount )
             {
-                sql_data_file_text
-                    ~= "replace into `" ~ table.SchemaName ~ "`.`" ~ table.Name ~ "`\n    (\n        " ;
+                sql_data_file_text ~= "replace into `" ~ table.SchemaName ~ "`.`" ~ table.Name ~ "`\n    (\n        " ;
 
                 foreach ( ref column; table.ColumnArray )
                 {
@@ -3640,8 +3642,7 @@ class SCHEMA
                 if ( column.IsStored
                      && column.IsIndexed )
                 {
-                    cql_schema_file_text
-                        ~= "create index on " ~ Name ~ "." ~ table.Name ~ " ( " ~ column.Name ~ " );\n";
+                    cql_schema_file_text ~= "create index on " ~ Name ~ "." ~ table.Name ~ " ( " ~ column.Name ~ " );\n";
                 }
             }
         }
@@ -3668,8 +3669,7 @@ class SCHEMA
 
             foreach ( row_index; 0 .. table.RowCount )
             {
-                cql_data_file_text
-                    ~= "insert into " ~ table.SchemaName ~ "." ~ table.Name ~ " ( " ;
+                cql_data_file_text ~= "insert into " ~ table.SchemaName ~ "." ~ table.Name ~ " ( " ;
 
                 foreach ( ref column; table.ColumnArray )
                 {
@@ -3708,135 +3708,95 @@ class SCHEMA
 
     // ~~
 
-    void WriteGoSqlSchemaFile(
-        string go_sql_schema_file_path
+    void WriteGoSchemaFile(
+        string go_schema_file_path
         )
     {
         string
-            go_sql_schema_file_text;
+            go_schema_file_text;
 
-        writeln( "Writing Go SQL schema file : ", go_sql_schema_file_path );
+        writeln( "Writing Go schema file : ", go_schema_file_path );
 
-        go_sql_schema_file_text = "";
+        go_schema_file_text = "";
 
         foreach ( ref table; TableArray )
         {
             table.Type = table.Name.toUpper();
 
-            go_sql_schema_file_text ~= "type " ~ table.Type ~ " struct {\n";
+            go_schema_file_text ~= "type " ~ table.Type ~ " struct {\n";
 
             foreach ( ref column; table.ColumnArray )
             {
-                go_sql_schema_file_text
-                    ~= "    "
-                       ~ column.GoName
-                       ~ " "
-                       ~ column.GoType;
+                go_schema_file_text ~= "    " ~ column.GoName ~ " " ~ column.GoType;
 
                 if ( column.IsStored )
                 {
-                    go_sql_schema_file_text
-                        ~= " `db:\""
-                           ~ column.SqlName
-                           ~ "\"`";
+                    if ( CqlOptionIsEnabled )
+                    {
+                        go_schema_file_text ~= " `db:\"" ~ column.StoredName ~ "\"`";
+                    }
+                    else
+                    {
+                        go_schema_file_text ~= " `db:\"-\"`";
+                    }
                 }
 
-                go_sql_schema_file_text ~= ";\n";
+                go_schema_file_text ~= ";\n";
             }
 
-            go_sql_schema_file_text ~= "}\n\n// ~~\n\n";
+            go_schema_file_text ~= "}\n\n// ~~\n\n";
         }
 
-        go_sql_schema_file_path.write( go_sql_schema_file_text );
-    }
-
-    // ~~
-
-    void WriteGoCqlSchemaFile(
-        string go_cql_schema_file_path
-        )
-    {
-        string
-            go_cql_schema_file_text;
-
-        writeln( "Writing Go CQL schema file : ", go_cql_schema_file_path );
-
-        go_cql_schema_file_text = "";
-
-        foreach ( ref table; TableArray )
-        {
-            table.Type = table.Name.toUpper();
-
-            go_cql_schema_file_text ~= "type " ~ table.Type ~ " struct {\n";
-
-            foreach ( ref column; table.ColumnArray )
-            {
-                go_cql_schema_file_text
-                    ~= "    "
-                       ~ column.GoName
-                       ~ " "
-                       ~ column.GoType;
-
-                if ( column.IsStored )
-                {
-                    go_cql_schema_file_text
-                        ~= " `db:\"-\"`";
-                }
-
-                go_cql_schema_file_text ~= ";\n";
-            }
-
-            go_cql_schema_file_text ~= "}\n\n// ~~\n\n";
-        }
-
-        go_cql_schema_file_path.write( go_cql_schema_file_text );
+        go_schema_file_path.write( go_schema_file_text );
     }
     
     // ~~
 
-    void WriteGsCqlSchemaFile(
-        string generis_cql_schema_file_path
+    void WriteGsSchemaFile(
+        string gs_schema_file_path
         )
     {
         long
             column_count,
             column_index;
         string
-            generis_cql_schema_file_text;
+            gs_schema_file_text;
 
-        writeln( "Writing Gs CQL file : ", generis_cql_schema_file_path );
+        writeln( "Writing Gs schema file : ", gs_schema_file_path );
 
-        generis_cql_schema_file_text = "";
+        gs_schema_file_text = "";
 
         foreach ( ref table; TableArray )
         {
-            generis_cql_schema_file_text ~= "type " ~ table.GsType ~ " struct {\n";
+            gs_schema_file_text ~= "type " ~ table.GoType ~ " struct {\n";
 
             foreach ( ref column; table.ColumnArray )
             {
-                generis_cql_schema_file_text
-                    ~= "    "
-                       ~ column.GsName
-                       ~ " "
-                       ~ column.GsType;
+                gs_schema_file_text ~= "    " ~ column.GoName ~ " " ~ column.GoType;
 
                 if ( column.IsStored )
                 {
-                    generis_cql_schema_file_text
-                        ~= " `db:\"-\"`";
+                    if ( CqlOptionIsEnabled )
+                    {
+                        gs_schema_file_text ~= " `db:\"" ~ column.StoredName ~ "\"`";
+                    }
+                    else
+                    {
+                        gs_schema_file_text ~= " `db:\"-\"`";
+                    }
                 }
 
-                generis_cql_schema_file_text ~= ";\n";
+                gs_schema_file_text ~= ";\n";
             }
 
-            generis_cql_schema_file_text ~= "}\n\n// ~~\n\n";
+            gs_schema_file_text ~= "}\n\n// ~~\n\n";
         }
 
         foreach ( ref table; TableArray )
         {
-            generis_cql_schema_file_text 
-                ~= "func AddDatabase" ~ table.GsFunction ~ "(\n"
-                   ~ "    " ~ table.GsVariable ~ " * " ~ table.GsType ~ "\n"
+            gs_schema_file_text 
+                ~= "func AddDatabase" ~ table.GoFunction ~ "(\n"
+                   ~ "    " ~ table.GoVariable ~ " * " ~ table.GoType ~ "\n"
                    ~ "    ) bool\n"
                    ~ "{\n";
                    
@@ -3846,10 +3806,10 @@ class SCHEMA
             {
                 if ( column.IsKey
                      && column.IsUnique
-                     && column.CqlType == "uuid" )
+                     && column.StoredType == "uuid" )
                 {
-                    generis_cql_schema_file_text 
-                        ~= "    " ~ table.GsVariable ~ "." ~ column.GsName ~ " = gocql.TimeUUID();\n";
+                    gs_schema_file_text 
+                        ~= "    " ~ table.GoVariable ~ "." ~ column.GoName ~ " = gocql.TimeUUID();\n";
                         
                     ++column_count;
                 }
@@ -3857,10 +3817,10 @@ class SCHEMA
             
             if ( column_count > 0 )
             {
-                generis_cql_schema_file_text ~="\n";
+                gs_schema_file_text ~="\n";
             }
             
-            generis_cql_schema_file_text 
+            gs_schema_file_text 
                 ~= "    error_\n"
                    ~ "        := DatabaseSession.Query(\n"
                    ~ "               \"insert into " ~ table.Name ~ "( ";
@@ -3874,17 +3834,16 @@ class SCHEMA
                 {
                     if ( column_count > 0 )
                     {
-                        generis_cql_schema_file_text ~= ", ";
+                        gs_schema_file_text ~= ", ";
                     }
                     
-                    generis_cql_schema_file_text ~= column.CqlName;
+                    gs_schema_file_text ~= column.StoredName;
                     
                     ++column_count;
                 }
             }
                    
-            generis_cql_schema_file_text 
-                ~= " ) values( ";
+            gs_schema_file_text ~= " ) values( ";
                 
             column_count = 0;
             
@@ -3895,17 +3854,16 @@ class SCHEMA
                 {
                     if ( column_count > 0 )
                     {
-                        generis_cql_schema_file_text ~= ", ";
+                        gs_schema_file_text ~= ", ";
                     }
                     
-                    generis_cql_schema_file_text ~= "?";
+                    gs_schema_file_text ~= "?";
                     
                     ++column_count;
                 }
             }
             
-            generis_cql_schema_file_text 
-                ~= " )\",\n";
+            gs_schema_file_text ~= " )\",\n";
                 
             column_index = 0;
             
@@ -3914,20 +3872,20 @@ class SCHEMA
                 if ( column.IsStored
                      && !column.IsIncremented )
                 {
-                    generis_cql_schema_file_text ~= "               " ~ table.GsVariable ~ "." ~ column.GsName;
+                    gs_schema_file_text ~= "               " ~ table.GoVariable ~ "." ~ column.GoName;
                     
                     if ( column_index + 1 < column_count )
                     {
-                        generis_cql_schema_file_text ~= ",";
+                        gs_schema_file_text ~= ",";
                     }
                     
-                    generis_cql_schema_file_text ~= "\n";
+                    gs_schema_file_text ~= "\n";
                     
                     ++column_index;
                 }
             }
                 
-            generis_cql_schema_file_text 
+            gs_schema_file_text 
                 ~= "               ).Exec();\n"
                    ~ "\n"
                    ~ "    if ( error_ == nil )\n"
@@ -3942,8 +3900,8 @@ class SCHEMA
                    ~ "\n"
                    ~ "// ~~\n"
                    ~ "\n"
-                   ~ "func SetDatabase" ~ table.GsFunction ~ "(\n"
-                   ~ "    " ~ table.GsVariable ~ " * " ~ table.GsType ~ "\n"
+                   ~ "func SetDatabase" ~ table.GoFunction ~ "(\n"
+                   ~ "    " ~ table.GoVariable ~ " * " ~ table.GoType ~ "\n"
                    ~ "    ) bool\n"
                    ~ "{\n"
                    ~ "    error_\n"
@@ -3954,50 +3912,48 @@ class SCHEMA
             {
                 if ( column.IsStored )
                 {
-                    generis_cql_schema_file_text ~= column.CqlName;
+                    gs_schema_file_text ~= column.StoredName;
                     
                     if ( !column.IsLastStored )
                     {
-                        generis_cql_schema_file_text ~= ", ";
+                        gs_schema_file_text ~= ", ";
                     }
                 }
             }
                    
-            generis_cql_schema_file_text 
-                ~= " ) values( ";
+            gs_schema_file_text ~= " ) values( ";
                 
             foreach ( ref column; table.ColumnArray )
             {
                 if ( column.IsStored )
                 {
-                    generis_cql_schema_file_text ~= "?";
+                    gs_schema_file_text ~= "?";
                     
                     if ( !column.IsLastStored )
                     {
-                        generis_cql_schema_file_text ~= ", ";
+                        gs_schema_file_text ~= ", ";
                     }
                 }
             }
             
-            generis_cql_schema_file_text 
-                ~= " )\",\n";
+            gs_schema_file_text ~= " )\",\n";
                 
             foreach ( ref column; table.ColumnArray )
             {
                 if ( column.IsStored )
                 {
-                    generis_cql_schema_file_text ~= "               " ~ table.GsVariable ~ "." ~ column.GsName;
+                    gs_schema_file_text ~= "               " ~ table.GoVariable ~ "." ~ column.GoName;
                     
                     if ( !column.IsLastStored )
                     {
-                        generis_cql_schema_file_text ~= ",";
+                        gs_schema_file_text ~= ",";
                     }
                     
-                    generis_cql_schema_file_text ~= "\n";
+                    gs_schema_file_text ~= "\n";
                 }
             }
                 
-            generis_cql_schema_file_text 
+            gs_schema_file_text 
                 ~= "               ).Exec();\n"
                    ~ "\n"
                    ~ "    if ( error_ == nil )\n"
@@ -4012,8 +3968,8 @@ class SCHEMA
                    ~ "\n"
                    ~ "// ~~\n"
                    ~ "\n"
-                   ~ "func RemoveDatabase" ~ table.GsFunction ~ "(\n"
-                   ~ "    " ~ table.GsVariable ~ " * " ~ table.GsType ~ "\n"
+                   ~ "func RemoveDatabase" ~ table.GoFunction ~ "(\n"
+                   ~ "    " ~ table.GoVariable ~ " * " ~ table.GoType ~ "\n"
                    ~ "    ) bool\n"
                    ~ "{\n"
                    ~ "    error_\n"
@@ -4024,34 +3980,33 @@ class SCHEMA
             {
                 if ( column.IsKey )
                 {
-                    generis_cql_schema_file_text ~= column.CqlName ~ " = ?";
+                    gs_schema_file_text ~= column.StoredName ~ " = ?";
                     
                     if ( !column.IsLastKey )
                     {
-                        generis_cql_schema_file_text ~= " and ";
+                        gs_schema_file_text ~= " and ";
                     }
                 }
             }
             
-            generis_cql_schema_file_text 
-                ~= "\",\n";
+            gs_schema_file_text ~= "\",\n";
                    
             foreach ( ref column; table.ColumnArray )
             {
                 if ( column.IsKey )
                 {
-                    generis_cql_schema_file_text ~= "               " ~ table.GsVariable ~ "." ~ column.GsName;
+                    gs_schema_file_text ~= "               " ~ table.GoVariable ~ "." ~ column.GoName;
                     
                     if ( !column.IsLastKey )
                     {
-                        generis_cql_schema_file_text ~= ", ";
+                        gs_schema_file_text ~= ", ";
                     }
                     
-                    generis_cql_schema_file_text ~= "\n";
+                    gs_schema_file_text ~= "\n";
                 }
             }
             
-            generis_cql_schema_file_text 
+            gs_schema_file_text 
                 ~= "               ).Exec();\n"
                    ~ "\n"
                    ~ "    if ( error_ == nil )\n"
@@ -4066,8 +4021,8 @@ class SCHEMA
                    ~ "\n"
                    ~ "// ~~\n"
                    ~ "\n"
-                   ~ "func GetDatabase" ~ table.GsFunction ~ "(\n"
-                   ~ "    " ~ table.GsVariable ~ " * " ~ table.GsType ~ "\n"
+                   ~ "func GetDatabase" ~ table.GoFunction ~ "(\n"
+                   ~ "    " ~ table.GoVariable ~ " * " ~ table.GoType ~ "\n"
                    ~ "    ) bool\n"
                    ~ "{\n"
                    ~ "    error_\n"
@@ -4082,51 +4037,48 @@ class SCHEMA
                 {
                     if ( column_count > 0 )
                     {
-                        generis_cql_schema_file_text ~= ", ";
+                        gs_schema_file_text ~= ", ";
                     }
                     
-                    generis_cql_schema_file_text ~= column.CqlName;
+                    gs_schema_file_text ~= column.StoredName;
                     
                     ++column_count;
                 }
             }
             
-            generis_cql_schema_file_text 
-                ~= " from " ~ table.Name ~ " where ";
+            gs_schema_file_text ~= " from " ~ table.Name ~ " where ";
                 
             foreach ( ref column; table.ColumnArray )
             {
                 if ( column.IsKey )
                 {
-                    generis_cql_schema_file_text ~= column.CqlName ~ " = ?";
+                    gs_schema_file_text ~= column.StoredName ~ " = ?";
                     
                     if ( !column.IsLastKey )
                     {
-                        generis_cql_schema_file_text ~= " and ";
+                        gs_schema_file_text ~= " and ";
                     }
                 }
             }
                 
-            generis_cql_schema_file_text 
-                ~= "\",\n";
+            gs_schema_file_text ~= "\",\n";
                 
             foreach ( ref column; table.ColumnArray )
             {
                 if ( column.IsKey )
                 {
-                    generis_cql_schema_file_text ~= "               " ~ table.GsVariable ~ "." ~ column.GsName;
+                    gs_schema_file_text ~= "               " ~ table.GoVariable ~ "." ~ column.GoName;
                     
                     if ( !column.IsLastKey )
                     {
-                        generis_cql_schema_file_text ~= ",";
+                        gs_schema_file_text ~= ",";
                     }
                     
-                    generis_cql_schema_file_text ~= "\n";
+                    gs_schema_file_text ~= "\n";
                 }
             }
                 
-            generis_cql_schema_file_text 
-                ~= "               ).Consistency( gocql.One ).Scan( ";
+            gs_schema_file_text ~= "               ).Consistency( gocql.One ).Scan( ";
 
             column_count = 0;
             
@@ -4136,16 +4088,16 @@ class SCHEMA
                 {
                     if ( column_count > 0 )
                     {
-                        generis_cql_schema_file_text ~= ", ";
+                        gs_schema_file_text ~= ", ";
                     }
                     
-                    generis_cql_schema_file_text ~= "&" ~ table.GsVariable ~ "." ~ column.GsName;
+                    gs_schema_file_text ~= "&" ~ table.GoVariable ~ "." ~ column.GoName;
                     
                     ++column_count;
                 }
             }
                 
-            generis_cql_schema_file_text 
+            gs_schema_file_text 
                 ~= " );\n"
                    ~ "\n"
                    ~ "    if ( error_ == nil )\n"
@@ -4164,10 +4116,10 @@ class SCHEMA
         
         foreach ( ref table; TableArray )
         {
-            generis_cql_schema_file_text 
-                ~= "func WriteJson" ~ table.GsFunction ~ "(\n"
+            gs_schema_file_text 
+                ~= "func WriteJson" ~ table.GoFunction ~ "(\n"
                    ~ "    response_writer http.ResponseWriter,\n"
-                   ~ "    " ~ table.GsVariable ~ " * " ~ table.GsType ~ "\n"
+                   ~ "    " ~ table.GoVariable ~ " * " ~ table.GoType ~ "\n"
                    ~ "    )\n"
                    ~ "{\n"
                    ~ "    WriteJsonText( response_writer, \"{\");\n";
@@ -4176,13 +4128,13 @@ class SCHEMA
             {
                 if ( column.IsStored )
                 {
-                    generis_cql_schema_file_text 
-                        ~= "    WriteJsonText( response_writer, \"\\\"" ~ column.GsName ~ "\\\":\" );\n"
-                           ~ "    WriteJson" ~ column.GsFunction ~ "( response_writer, " ~ table.GsVariable ~ "." ~ column.GsName ~ " );\n";
+                    gs_schema_file_text 
+                        ~= "    WriteJsonText( response_writer, \"\\\"" ~ column.GoName ~ "\\\":\" );\n"
+                           ~ "    WriteJson" ~ column.GoFunction ~ "( response_writer, " ~ table.GoVariable ~ "." ~ column.GoName ~ " );\n";
                 }
             }
             
-            generis_cql_schema_file_text 
+            gs_schema_file_text 
                 ~= "    WriteJsonText( response_writer, \"}\" );\n"
                    ~ "}\n"
                    ~ "\n"
@@ -4192,18 +4144,17 @@ class SCHEMA
         
         foreach ( ref table; TableArray )
         {
-            generis_cql_schema_file_text 
-                ~= "func HandleAdd" ~ table.GsFunction ~ "(\n"
+            gs_schema_file_text 
+                ~= "func HandleAdd" ~ table.GoFunction ~ "(\n"
                    ~ "    response_writer http.ResponseWriter,\n"
                    ~ "    request * http.Request\n"
                    ~ "    )\n"
                    ~ "{\n"
                    ~ "    var\n"
-                   ~ "        " ~ table.GsVariable ~ " " ~ table.GsType ~ ";\n"
+                   ~ "        " ~ table.GoVariable ~ " " ~ table.GoType ~ ";\n"
                    ~ "\n";
             
-            generis_cql_schema_file_text 
-                ~= "    if ( ";
+            gs_schema_file_text ~= "    if ( ";
             
             column_count = 0;
             
@@ -4212,24 +4163,23 @@ class SCHEMA
                 if ( column.IsStored 
                      && !( column.IsKey
                            && column.IsUnique
-                           && ( column.CqlType == "uuid"
-                                || column.IsIncremented ) ) )
+                           && ( column.StoredType == "uuid"
+                                || column.IsIncremented) ) )
                 {
                     if ( column_count > 0 )
                     {
-                        generis_cql_schema_file_text 
-                            ~= "         && ";
+                        gs_schema_file_text ~= "         && ";
                     }
             
-                    generis_cql_schema_file_text 
-                        ~= "GetRequest" ~ column.GsFunction ~ "( &" ~ table.GsVariable ~ "." ~ column.GsName ~ ", request, \"" ~ column.CqlName ~ "\" )\n";
+                    gs_schema_file_text 
+                        ~= "GetRequest" ~ column.GoFunction ~ "( &" ~ table.GoVariable ~ "." ~ column.GoName ~ ", request, \"" ~ column.StoredName ~ "\" )\n";
                            
                     ++column_count;
                 }
             }
                 
-            generis_cql_schema_file_text 
-                ~= "         && AddDatabase" ~ table.GsFunction ~ "( &" ~ table.GsVariable ~ " ) )\n"
+            gs_schema_file_text 
+                ~= "         && AddDatabase" ~ table.GoFunction ~ "( &" ~ table.GoVariable ~ " ) )\n"
                    ~ "    {\n"
                    ~ "        WriteJsonSuccess( response_writer );\n"
                    ~ "    }\n"
@@ -4241,13 +4191,13 @@ class SCHEMA
                    ~ "\n"
                    ~ "// ~~\n"
                    ~ "\n"
-                   ~ "func HandleSet" ~ table.GsFunction ~ "(\n"
+                   ~ "func HandleSet" ~ table.GoFunction ~ "(\n"
                    ~ "    response_writer http.ResponseWriter,\n"
                    ~ "    request * http.Request\n"
                    ~ "    )\n"
                    ~ "{\n"
                    ~ "    var\n"
-                   ~ "        " ~ table.GsVariable ~ " " ~ table.GsType ~ ";\n"
+                   ~ "        " ~ table.GoVariable ~ " " ~ table.GoType ~ ";\n"
                    ~ "\n"
                    ~ "    if ( ";
                    
@@ -4255,18 +4205,18 @@ class SCHEMA
             {
                 if ( column.IsStored )
                 {
-                    generis_cql_schema_file_text 
-                        ~= "GetRequest" ~ column.GsFunction ~ "( &" ~ table.GsVariable ~ "." ~ column.GsName ~ ", request, \"" ~ column.CqlName ~ "\" )\n";
+                    gs_schema_file_text 
+                        ~= "GetRequest" ~ column.GoFunction ~ "( &" ~ table.GoVariable ~ "." ~ column.GoName ~ ", request, \"" ~ column.StoredName ~ "\" )\n";
                            
                     if ( !column.IsLastStored )
                     {
-                        generis_cql_schema_file_text ~= "         && ";
+                        gs_schema_file_text ~= "         && ";
                     }
                 }
             }
             
-            generis_cql_schema_file_text 
-                ~= "         && SetDatabase" ~ table.GsFunction ~ "( &" ~ table.GsVariable ~ " ) )\n"
+            gs_schema_file_text 
+                ~= "         && SetDatabase" ~ table.GoFunction ~ "( &" ~ table.GoVariable ~ " ) )\n"
                    ~ "    {\n"
                    ~ "        WriteJsonSuccess( response_writer );\n"
                    ~ "    }\n"
@@ -4278,13 +4228,13 @@ class SCHEMA
                    ~ "\n"
                    ~ "// ~~\n"
                    ~ "\n"
-                   ~ "func HandleRemove" ~ table.GsFunction ~ "(\n"
+                   ~ "func HandleRemove" ~ table.GoFunction ~ "(\n"
                    ~ "    response_writer http.ResponseWriter,\n"
                    ~ "    request * http.Request\n"
                    ~ "    )\n"
                    ~ "{\n"
                    ~ "    var\n"
-                   ~ "        " ~ table.GsVariable ~ " " ~ table.GsType ~ ";\n"
+                   ~ "        " ~ table.GoVariable ~ " " ~ table.GoType ~ ";\n"
                    ~ "\n"
                    ~ "    if ( ";
                    
@@ -4292,18 +4242,18 @@ class SCHEMA
             {
                 if ( column.IsKey )
                 {
-                    generis_cql_schema_file_text 
-                        ~= "GetRequest" ~ column.GsFunction ~ "( &" ~ table.GsVariable ~ "." ~ column.GsName ~ ", request, \"" ~ column.CqlName ~ "\" )\n";
+                    gs_schema_file_text 
+                        ~= "GetRequest" ~ column.GoFunction ~ "( &" ~ table.GoVariable ~ "." ~ column.GoName ~ ", request, \"" ~ column.StoredName ~ "\" )\n";
 
                     if ( !column.IsKey )
                     {
-                        generis_cql_schema_file_text ~= "         && ";
+                        gs_schema_file_text ~= "         && ";
                     }
                 }
             }
             
-            generis_cql_schema_file_text 
-                ~= "         && RemoveDatabase" ~ table.GsFunction ~ "( &" ~ table.GsVariable ~ " ) )\n"
+            gs_schema_file_text 
+                ~= "         && RemoveDatabase" ~ table.GoFunction ~ "( &" ~ table.GoVariable ~ " ) )\n"
                    ~ "    {\n"
                    ~ "        WriteJsonSuccess( response_writer );\n"
                    ~ "    }\n"
@@ -4315,13 +4265,13 @@ class SCHEMA
                    ~ "\n"
                    ~ "// ~~\n"
                    ~ "\n"
-                   ~ "func HandleGet" ~ table.GsFunction ~ "(\n"
+                   ~ "func HandleGet" ~ table.GoFunction ~ "(\n"
                    ~ "    response_writer http.ResponseWriter,\n"
                    ~ "    request * http.Request\n"
                    ~ "    )\n"
                    ~ "{\n"
                    ~ "    var\n"
-                   ~ "        " ~ table.GsVariable ~ " " ~ table.GsType ~ ";\n"
+                   ~ "        " ~ table.GoVariable ~ " " ~ table.GoType ~ ";\n"
                    ~ "\n"
                    ~ "    if ( ";
             
@@ -4329,20 +4279,20 @@ class SCHEMA
             {
                 if ( column.IsKey )
                 {
-                    generis_cql_schema_file_text 
-                        ~= "GetRequest" ~ column.GsFunction ~ "( &" ~ table.GsVariable ~ "." ~ column.GsName ~ ", request, \"" ~ column.CqlName ~ "\" )\n";
+                    gs_schema_file_text 
+                        ~= "GetRequest" ~ column.GoFunction ~ "( &" ~ table.GoVariable ~ "." ~ column.GoName ~ ", request, \"" ~ column.StoredName ~ "\" )\n";
                     
                     if ( !column.IsKey )
                     {
-                        generis_cql_schema_file_text ~= "         && ";
+                        gs_schema_file_text ~= "         && ";
                     }
                 }
             }
             
-            generis_cql_schema_file_text 
-                ~= "         && GetDatabase" ~ table.GsFunction ~ "( &" ~ table.GsVariable ~ " ) )\n"
+            gs_schema_file_text 
+                ~= "         && GetDatabase" ~ table.GoFunction ~ "( &" ~ table.GoVariable ~ " ) )\n"
                    ~ "    {\n"
-                   ~ "        WriteJson" ~ table.GsFunction ~ "( response_writer, &" ~ table.GsVariable ~ " );\n"
+                   ~ "        WriteJson" ~ table.GoFunction ~ "( response_writer, &" ~ table.GoVariable ~ " );\n"
                    ~ "    }\n"
                    ~ "    else\n"
                    ~ "    {\n"
@@ -4354,7 +4304,7 @@ class SCHEMA
                    ~ "\n";
         }
 
-        generis_cql_schema_file_path.write( generis_cql_schema_file_text );
+        gs_schema_file_path.write( gs_schema_file_text );
     }
 
     // ~~
@@ -4419,12 +4369,7 @@ class SCHEMA
 
             foreach ( ref column; table.ColumnArray )
             {
-                crystal_schema_file_text
-                    ~= "    @"
-                       ~ column.CrystalName
-                       ~ " : "
-                       ~ column.CrystalType
-                       ~ "\n";
+                crystal_schema_file_text ~= "    @" ~ column.CrystalName ~ " : " ~ column.CrystalType ~ "\n";
             }
 
             crystal_schema_file_text ~= "end\n\n";
@@ -4436,6 +4381,13 @@ class SCHEMA
 
 // -- VARIABLES
 
+bool
+    CqlOptionIsEnabled,
+    SqlOptionIsEnabled;
+string
+    StoredFormat;
+string[]
+    OutputFormatArray;
 RANDOM
     Random;
 SCHEMA
@@ -4621,8 +4573,7 @@ string InsertCharacter(
 // ~~
 
 void ProcessFile(
-    string basil_schema_file_path,
-    ref string[] output_format_array
+    string basil_schema_file_path
     )
 {
     string
@@ -4635,7 +4586,7 @@ void ProcessFile(
     Schema = new SCHEMA();
     Schema.ReadBasilSchemaFile( basil_schema_file_path );
 
-    foreach ( output_format; output_format_array )
+    foreach ( output_format; OutputFormatArray )
     {
         if ( output_format == "uml" )
         {
@@ -4651,25 +4602,18 @@ void ProcessFile(
             Schema.WriteCqlSchemaFile( base_file_path ~ ".cql" );
             Schema.WriteCqlDataFile( base_file_path ~ "_data.cql" );
         }
-        else if ( output_format == "gosql" )
+        else if ( output_format == "go" )
         {
-            Schema.WriteGoSqlSchemaFile( base_file_path ~ "_sql.go" );
-        }
-        else if ( output_format == "gocql" )
-        {
-            Schema.WriteGoCqlSchemaFile( base_file_path ~ "_cql.go" );
-        }
-        else if ( output_format == "generiscql" )
-        {
-            Schema.WriteGsCqlSchemaFile( base_file_path ~ "_cql.gs" );
+            Schema.WriteGoSchemaFile( base_file_path ~ "_" ~ StoredFormat ~ ".go" );
+            Schema.WriteGsSchemaFile( base_file_path ~ "_" ~ StoredFormat ~ ".gs" );
         }
         else if ( output_format == "rust" )
         {
-            Schema.WriteRustSchemaFile( base_file_path ~ ".rs" );
+            Schema.WriteRustSchemaFile( base_file_path ~ "_" ~ StoredFormat ~ ".rs" );
         }
         else if ( output_format == "crystal" )
         {
-            Schema.WriteCrystalSchemaFile( base_file_path ~ ".cr" );
+            Schema.WriteCrystalSchemaFile( base_file_path ~ "_" ~ StoredFormat ~ ".cr" );
         }
     }
 }
@@ -4682,10 +4626,13 @@ void main(
 {
     string
         option;
-    string[]
-        output_format_array;
-
+        
     argument_array = argument_array[ 1 .. $ ];
+        
+    SqlOptionIsEnabled = false;
+    CqlOptionIsEnabled = false;
+    OutputFormatArray = null;
+    StoredFormat = "";
 
     while ( argument_array.length >= 1
             && argument_array[ 0 ].startsWith( "--" ) )
@@ -4696,35 +4643,38 @@ void main(
 
         if ( option == "--uml" )
         {
-            output_format_array ~= "uml";
+            OutputFormatArray ~= "uml";
         }
-        else if ( option == "--sql" )
+        else if ( option == "--sql"
+                  && StoredFormat == "" )
         {
-            output_format_array ~= "sql";
+            SqlOptionIsEnabled = true;
+            
+            OutputFormatArray ~= "sql";
+            StoredFormat = "sql";
         }
-        else if ( option == "--cql" )
+        else if ( option == "--cql"
+                  && StoredFormat == "" )
         {
-            output_format_array ~= "cql";
+            CqlOptionIsEnabled = true;
+            
+            OutputFormatArray ~= "cql";
+            StoredFormat = "cql";
         }
-        else if ( option == "--gosql" )
+        else if ( option == "--go"
+                  && StoredFormat != "" )
         {
-            output_format_array ~= "gosql";
+            OutputFormatArray ~= "go";
         }
-        else if ( option == "--gocql" )
+        else if ( option == "--rust"
+                  && StoredFormat != "" )
         {
-            output_format_array ~= "gocql";
+            OutputFormatArray ~= "rust";
         }
-        else if ( option == "--generiscql" )
+        else if ( option == "--crystal"
+                  && StoredFormat != "" )
         {
-            output_format_array ~= "generiscql";
-        }
-        else if ( option == "--rust" )
-        {
-            output_format_array ~= "rust";
-        }
-        else if ( option == "--crystal" )
-        {
-            output_format_array ~= "crystal";
+            OutputFormatArray ~= "crystal";
         }
         else
         {
@@ -4734,7 +4684,7 @@ void main(
 
     if ( argument_array.length >= 1 )
     {
-        ProcessFile( argument_array[ 0 ], output_format_array );
+        ProcessFile( argument_array[ 0 ] );
     }
     else
     {
@@ -4746,7 +4696,7 @@ void main(
         writeln( "    --cql : generate the CQL schema and data files" );
         writeln( "    --gosql : generate the Go SQL schema file" );
         writeln( "    --gocql : generate the Go CQL schema file" );
-        writeln( "    --generiscql : generate the Gs CQL file" );
+        writeln( "    --gscql : generate the Go CQL file" );
         writeln( "    --rust : generate the Rust schema file" );
         writeln( "    --crystal : generate the Crystal schema file" );
         writeln( "Examples :" );

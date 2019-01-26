@@ -273,12 +273,13 @@ basil [options] script_file.basil
 --uml : generate the UML schema file
 --sql : generate the SQL schema and data files
 --cql : generate the CQL schema and data files
---gosql : generate the Go SQL schema file
---gocql : generate the Go CQL schema file
---generiscql : generate the Gs CQL file
+--go : generate the Go schema file
 --rust : generate the Rust schema file
 --crystal : generate the Crystal schema file
 ```
+
+The `--sql` and `--cql` options are mutually exclusive.
+The `--sql` or `--cql` option is required for the `--go`, `--rust` and `--crystal` options.
 
 ### Examples
 
@@ -289,7 +290,7 @@ basil --uml blog.basil
 Generates "blog.uml" from "blog.basil".
 
 ```bash
-basil --uml --sql --gosql blog.basil
+basil --uml --sql --go blog.basil
 ```
 
 Generates "blog.uml", "blog.sql", "blog_data.sql" and "blog_sql.go" from "blog.basil".

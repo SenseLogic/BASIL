@@ -3,4 +3,4 @@ set -x
 cd ..
 dmd -debug -g -m64 basil.d
 cd TEST
-nemiver ../basil --uml --sql --cql --gosql --gocql --generiscql --rust --crystal test.basil
+nemiver ../basil --uml --cql --go --rust --crystal test.basil
