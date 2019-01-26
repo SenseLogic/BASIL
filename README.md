@@ -279,7 +279,7 @@ basil [options] script_file.basil
 ```
 
 The `--sql` and `--cql` options are mutually exclusive.
-The `--sql` or `--cql` option is required for the `--go`, `--rust` and `--crystal` options.
+An `--sql` or `--cql` option is required for the `--go`, `--rust` and `--crystal` options.
 
 ### Examples
 
@@ -297,7 +297,7 @@ Generates "blog.uml", "blog.sql", "blog_data.sql" and "blog_sql.go" from "blog.b
 
 ## Version
 
-2.1
+3.0
 
 ## Author
 
