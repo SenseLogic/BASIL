@@ -67,23 +67,34 @@ func AddDatabaseSection(
     section * SECTION
     ) bool
 {
-    error_
-        := DatabaseSession.Query(
-               "insert into SECTION( Number, Name, Text, Image ) values( ?, ?, ?, ? )",
+    statement, error_
+        := DatabaseSession.Prepare(
+               "insert into SECTION( Number, Name, Text, Image ) values( ?, ?, ?, ? )"
+               );
+
+    if ( error_ != nil )
+    {
+        HandleError( error_ );
+
+        return false;
+    }
+
+    result, error_
+        := statement.Exec(
                section.Number,
                section.Name,
                section.Text,
                section.Image
-               ).Exec();
+               );
 
-    if ( error_ == nil )
+    if ( error_ != nil )
     {
-        return true;
+        HandleError( error_ );
+
+        return false;
     }
 
-    LogError( error_ );
-
-    return false;
+    return true;
 }
 
 // ~~
@@ -92,24 +103,35 @@ func SetDatabaseSection(
     section * SECTION
     ) bool
 {
-    error_
-        := DatabaseSession.Query(
-               "update SECTION set Number = ?, Name = ?, Text = ?, Image = ? where Id = ?",
+    statement, error_
+        := DatabaseSession.Prepare(
+               "update SECTION set Number = ?, Name = ?, Text = ?, Image = ? where Id = ? )"
+               );
+
+    if ( error_ != nil )
+    {
+        HandleError( error_ );
+
+        return false;
+    }
+
+    result, error_
+        := statement.Exec(
                section.Number,
                section.Name,
                section.Text,
                section.Image,
                section.Id
-               ).Exec();
+               );
 
-    if ( error_ == nil )
+    if ( error_ != nil )
     {
-        return true;
+        HandleError( error_ );
+
+        return false;
     }
 
-    LogError( error_ );
-
-    return false;
+    return true;
 }
 
 // ~~
@@ -118,20 +140,31 @@ func RemoveDatabaseSection(
     section * SECTION
     ) bool
 {
-    error_
-        := DatabaseSession.Query(
-               "delete from SECTION where Id = ?",
-               section.Id
-               ).Exec();
+    statement, error_
+        := DatabaseSession.Prepare(
+               "delete from SECTION where Id = ? )"
+               );
 
-    if ( error_ == nil )
+    if ( error_ != nil )
     {
-        return true;
+        HandleError( error_ );
+
+        return false;
     }
 
-    LogError( error_ );
+    result, error_
+        := statement.Exec(
+               section.Id
+               );
 
-    return false;
+    if ( error_ != nil )
+    {
+        HandleError( error_ );
+
+        return false;
+    }
+
+    return true;
 }
 
 // ~~
@@ -140,20 +173,57 @@ func GetDatabaseSection(
     section * SECTION
     ) bool
 {
-    error_
-        := DatabaseSession.Query(
-               "select Number, Name, Text, Image, ImageIndex from SECTION where Id = ?",
-               section.Id
-               ).Consistency( gocql.One ).Scan( &section.Number, &section.Name, &section.Text, &section.Image, &section.ImageIndex );
+    statement, error_
+        := DatabaseSession.Prepare(
+               "select Number, Name, Text, Image, ImageIndex from SECTION where Id = ? )"
+               );
 
-    if ( error_ == nil )
+    if ( error_ != nil )
     {
-        return true;
+        HandleError( error_ );
+
+        return false;
     }
 
-    LogError( error_ );
+    rows, error_
+        := statement.Query(
+               section.Id
+               );
 
-    return false;
+    if ( error_ != nil )
+    {
+        HandleError( error_ );
+
+        return false;
+    }
+
+    for rows.Next()
+    {
+        error_
+            = rows.Scan(
+                  &section.Number,
+                  &section.Name,
+                  &section.Text,
+                  &section.Image,
+                  &section.ImageIndex
+                  );
+
+        if ( error_ != nil )
+        {
+            HandleError( error_ );
+
+            return false;
+        }
+    }
+
+    if ( error_ != nil )
+    {
+        HandleError( error_ );
+
+        return false;
+    }
+
+    return true;
 }
 
 // ~~
@@ -162,9 +232,20 @@ func AddDatabaseUser(
     user * USER
     ) bool
 {
-    error_
-        := DatabaseSession.Query(
-               "insert into USER( FirstName, LastName, Email, Pseudonym, Password, Phone, Street, City, Code, Region, Country, Company, ItIsAdministrator ) values( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? )",
+    statement, error_
+        := DatabaseSession.Prepare(
+               "insert into USER( FirstName, LastName, Email, Pseudonym, Password, Phone, Street, City, Code, Region, Country, Company, ItIsAdministrator ) values( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? )"
+               );
+
+    if ( error_ != nil )
+    {
+        HandleError( error_ );
+
+        return false;
+    }
+
+    result, error_
+        := statement.Exec(
                user.FirstName,
                user.LastName,
                user.Email,
@@ -178,16 +259,16 @@ func AddDatabaseUser(
                user.Country,
                user.Company,
                user.ItIsAdministrator
-               ).Exec();
+               );
 
-    if ( error_ == nil )
+    if ( error_ != nil )
     {
-        return true;
+        HandleError( error_ );
+
+        return false;
     }
 
-    LogError( error_ );
-
-    return false;
+    return true;
 }
 
 // ~~
@@ -196,9 +277,20 @@ func SetDatabaseUser(
     user * USER
     ) bool
 {
-    error_
-        := DatabaseSession.Query(
-               "update USER set FirstName = ?, LastName = ?, Email = ?, Pseudonym = ?, Password = ?, Phone = ?, Street = ?, City = ?, Code = ?, Region = ?, Country = ?, Company = ?, ItIsAdministrator = ? where Id = ?",
+    statement, error_
+        := DatabaseSession.Prepare(
+               "update USER set FirstName = ?, LastName = ?, Email = ?, Pseudonym = ?, Password = ?, Phone = ?, Street = ?, City = ?, Code = ?, Region = ?, Country = ?, Company = ?, ItIsAdministrator = ? where Id = ? )"
+               );
+
+    if ( error_ != nil )
+    {
+        HandleError( error_ );
+
+        return false;
+    }
+
+    result, error_
+        := statement.Exec(
                user.FirstName,
                user.LastName,
                user.Email,
@@ -213,16 +305,16 @@ func SetDatabaseUser(
                user.Company,
                user.ItIsAdministrator,
                user.Id
-               ).Exec();
+               );
 
-    if ( error_ == nil )
+    if ( error_ != nil )
     {
-        return true;
+        HandleError( error_ );
+
+        return false;
     }
 
-    LogError( error_ );
-
-    return false;
+    return true;
 }
 
 // ~~
@@ -231,20 +323,31 @@ func RemoveDatabaseUser(
     user * USER
     ) bool
 {
-    error_
-        := DatabaseSession.Query(
-               "delete from USER where Id = ?",
-               user.Id
-               ).Exec();
+    statement, error_
+        := DatabaseSession.Prepare(
+               "delete from USER where Id = ? )"
+               );
 
-    if ( error_ == nil )
+    if ( error_ != nil )
     {
-        return true;
+        HandleError( error_ );
+
+        return false;
     }
 
-    LogError( error_ );
+    result, error_
+        := statement.Exec(
+               user.Id
+               );
 
-    return false;
+    if ( error_ != nil )
+    {
+        HandleError( error_ );
+
+        return false;
+    }
+
+    return true;
 }
 
 // ~~
@@ -253,20 +356,65 @@ func GetDatabaseUser(
     user * USER
     ) bool
 {
-    error_
-        := DatabaseSession.Query(
-               "select FirstName, LastName, Email, Pseudonym, Password, Phone, Street, City, Code, Region, Country, Company, ItIsAdministrator from USER where Id = ?",
-               user.Id
-               ).Consistency( gocql.One ).Scan( &user.FirstName, &user.LastName, &user.Email, &user.Pseudonym, &user.Password, &user.Phone, &user.Street, &user.City, &user.Code, &user.Region, &user.Country, &user.Company, &user.ItIsAdministrator );
+    statement, error_
+        := DatabaseSession.Prepare(
+               "select FirstName, LastName, Email, Pseudonym, Password, Phone, Street, City, Code, Region, Country, Company, ItIsAdministrator from USER where Id = ? )"
+               );
 
-    if ( error_ == nil )
+    if ( error_ != nil )
     {
-        return true;
+        HandleError( error_ );
+
+        return false;
     }
 
-    LogError( error_ );
+    rows, error_
+        := statement.Query(
+               user.Id
+               );
 
-    return false;
+    if ( error_ != nil )
+    {
+        HandleError( error_ );
+
+        return false;
+    }
+
+    for rows.Next()
+    {
+        error_
+            = rows.Scan(
+                  &user.FirstName,
+                  &user.LastName,
+                  &user.Email,
+                  &user.Pseudonym,
+                  &user.Password,
+                  &user.Phone,
+                  &user.Street,
+                  &user.City,
+                  &user.Code,
+                  &user.Region,
+                  &user.Country,
+                  &user.Company,
+                  &user.ItIsAdministrator
+                  );
+
+        if ( error_ != nil )
+        {
+            HandleError( error_ );
+
+            return false;
+        }
+    }
+
+    if ( error_ != nil )
+    {
+        HandleError( error_ );
+
+        return false;
+    }
+
+    return true;
 }
 
 // ~~
@@ -275,25 +423,36 @@ func AddDatabaseArticle(
     article * ARTICLE
     ) bool
 {
-    error_
-        := DatabaseSession.Query(
-               "insert into ARTICLE( SectionId, UserId, Title, Text, Image, Date ) values( ?, ?, ?, ?, ?, ? )",
+    statement, error_
+        := DatabaseSession.Prepare(
+               "insert into ARTICLE( SectionId, UserId, Title, Text, Image, Date ) values( ?, ?, ?, ?, ?, ? )"
+               );
+
+    if ( error_ != nil )
+    {
+        HandleError( error_ );
+
+        return false;
+    }
+
+    result, error_
+        := statement.Exec(
                article.SectionId,
                article.UserId,
                article.Title,
                article.Text,
                article.Image,
                article.Date
-               ).Exec();
+               );
 
-    if ( error_ == nil )
+    if ( error_ != nil )
     {
-        return true;
+        HandleError( error_ );
+
+        return false;
     }
 
-    LogError( error_ );
-
-    return false;
+    return true;
 }
 
 // ~~
@@ -302,9 +461,20 @@ func SetDatabaseArticle(
     article * ARTICLE
     ) bool
 {
-    error_
-        := DatabaseSession.Query(
-               "update ARTICLE set SectionId = ?, UserId = ?, Title = ?, Text = ?, Image = ?, Date = ? where Id = ?",
+    statement, error_
+        := DatabaseSession.Prepare(
+               "update ARTICLE set SectionId = ?, UserId = ?, Title = ?, Text = ?, Image = ?, Date = ? where Id = ? )"
+               );
+
+    if ( error_ != nil )
+    {
+        HandleError( error_ );
+
+        return false;
+    }
+
+    result, error_
+        := statement.Exec(
                article.SectionId,
                article.UserId,
                article.Title,
@@ -312,16 +482,16 @@ func SetDatabaseArticle(
                article.Image,
                article.Date,
                article.Id
-               ).Exec();
+               );
 
-    if ( error_ == nil )
+    if ( error_ != nil )
     {
-        return true;
+        HandleError( error_ );
+
+        return false;
     }
 
-    LogError( error_ );
-
-    return false;
+    return true;
 }
 
 // ~~
@@ -330,20 +500,31 @@ func RemoveDatabaseArticle(
     article * ARTICLE
     ) bool
 {
-    error_
-        := DatabaseSession.Query(
-               "delete from ARTICLE where Id = ?",
-               article.Id
-               ).Exec();
+    statement, error_
+        := DatabaseSession.Prepare(
+               "delete from ARTICLE where Id = ? )"
+               );
 
-    if ( error_ == nil )
+    if ( error_ != nil )
     {
-        return true;
+        HandleError( error_ );
+
+        return false;
     }
 
-    LogError( error_ );
+    result, error_
+        := statement.Exec(
+               article.Id
+               );
 
-    return false;
+    if ( error_ != nil )
+    {
+        HandleError( error_ );
+
+        return false;
+    }
+
+    return true;
 }
 
 // ~~
@@ -352,20 +533,61 @@ func GetDatabaseArticle(
     article * ARTICLE
     ) bool
 {
-    error_
-        := DatabaseSession.Query(
-               "select SectionId, UserId, Title, Text, Image, Date, Section, User, ImageIndex from ARTICLE where Id = ?",
-               article.Id
-               ).Consistency( gocql.One ).Scan( &article.SectionId, &article.UserId, &article.Title, &article.Text, &article.Image, &article.Date, &article.Section, &article.User, &article.ImageIndex );
+    statement, error_
+        := DatabaseSession.Prepare(
+               "select SectionId, UserId, Title, Text, Image, Date, Section, User, ImageIndex from ARTICLE where Id = ? )"
+               );
 
-    if ( error_ == nil )
+    if ( error_ != nil )
     {
-        return true;
+        HandleError( error_ );
+
+        return false;
     }
 
-    LogError( error_ );
+    rows, error_
+        := statement.Query(
+               article.Id
+               );
 
-    return false;
+    if ( error_ != nil )
+    {
+        HandleError( error_ );
+
+        return false;
+    }
+
+    for rows.Next()
+    {
+        error_
+            = rows.Scan(
+                  &article.SectionId,
+                  &article.UserId,
+                  &article.Title,
+                  &article.Text,
+                  &article.Image,
+                  &article.Date,
+                  &article.Section,
+                  &article.User,
+                  &article.ImageIndex
+                  );
+
+        if ( error_ != nil )
+        {
+            HandleError( error_ );
+
+            return false;
+        }
+    }
+
+    if ( error_ != nil )
+    {
+        HandleError( error_ );
+
+        return false;
+    }
+
+    return true;
 }
 
 // ~~
@@ -374,23 +596,34 @@ func AddDatabaseComment(
     comment * COMMENT
     ) bool
 {
-    error_
-        := DatabaseSession.Query(
-               "insert into COMMENT( ArticleId, UserId, Text, DateTime ) values( ?, ?, ?, ? )",
+    statement, error_
+        := DatabaseSession.Prepare(
+               "insert into COMMENT( ArticleId, UserId, Text, DateTime ) values( ?, ?, ?, ? )"
+               );
+
+    if ( error_ != nil )
+    {
+        HandleError( error_ );
+
+        return false;
+    }
+
+    result, error_
+        := statement.Exec(
                comment.ArticleId,
                comment.UserId,
                comment.Text,
                comment.DateTime
-               ).Exec();
+               );
 
-    if ( error_ == nil )
+    if ( error_ != nil )
     {
-        return true;
+        HandleError( error_ );
+
+        return false;
     }
 
-    LogError( error_ );
-
-    return false;
+    return true;
 }
 
 // ~~
@@ -399,24 +632,35 @@ func SetDatabaseComment(
     comment * COMMENT
     ) bool
 {
-    error_
-        := DatabaseSession.Query(
-               "update COMMENT set ArticleId = ?, UserId = ?, Text = ?, DateTime = ? where Id = ?",
+    statement, error_
+        := DatabaseSession.Prepare(
+               "update COMMENT set ArticleId = ?, UserId = ?, Text = ?, DateTime = ? where Id = ? )"
+               );
+
+    if ( error_ != nil )
+    {
+        HandleError( error_ );
+
+        return false;
+    }
+
+    result, error_
+        := statement.Exec(
                comment.ArticleId,
                comment.UserId,
                comment.Text,
                comment.DateTime,
                comment.Id
-               ).Exec();
+               );
 
-    if ( error_ == nil )
+    if ( error_ != nil )
     {
-        return true;
+        HandleError( error_ );
+
+        return false;
     }
 
-    LogError( error_ );
-
-    return false;
+    return true;
 }
 
 // ~~
@@ -425,20 +669,31 @@ func RemoveDatabaseComment(
     comment * COMMENT
     ) bool
 {
-    error_
-        := DatabaseSession.Query(
-               "delete from COMMENT where Id = ?",
-               comment.Id
-               ).Exec();
+    statement, error_
+        := DatabaseSession.Prepare(
+               "delete from COMMENT where Id = ? )"
+               );
 
-    if ( error_ == nil )
+    if ( error_ != nil )
     {
-        return true;
+        HandleError( error_ );
+
+        return false;
     }
 
-    LogError( error_ );
+    result, error_
+        := statement.Exec(
+               comment.Id
+               );
 
-    return false;
+    if ( error_ != nil )
+    {
+        HandleError( error_ );
+
+        return false;
+    }
+
+    return true;
 }
 
 // ~~
@@ -447,20 +702,58 @@ func GetDatabaseComment(
     comment * COMMENT
     ) bool
 {
-    error_
-        := DatabaseSession.Query(
-               "select ArticleId, UserId, Text, DateTime, Article, User from COMMENT where Id = ?",
-               comment.Id
-               ).Consistency( gocql.One ).Scan( &comment.ArticleId, &comment.UserId, &comment.Text, &comment.DateTime, &comment.Article, &comment.User );
+    statement, error_
+        := DatabaseSession.Prepare(
+               "select ArticleId, UserId, Text, DateTime, Article, User from COMMENT where Id = ? )"
+               );
 
-    if ( error_ == nil )
+    if ( error_ != nil )
     {
-        return true;
+        HandleError( error_ );
+
+        return false;
     }
 
-    LogError( error_ );
+    rows, error_
+        := statement.Query(
+               comment.Id
+               );
 
-    return false;
+    if ( error_ != nil )
+    {
+        HandleError( error_ );
+
+        return false;
+    }
+
+    for rows.Next()
+    {
+        error_
+            = rows.Scan(
+                  &comment.ArticleId,
+                  &comment.UserId,
+                  &comment.Text,
+                  &comment.DateTime,
+                  &comment.Article,
+                  &comment.User
+                  );
+
+        if ( error_ != nil )
+        {
+            HandleError( error_ );
+
+            return false;
+        }
+    }
+
+    if ( error_ != nil )
+    {
+        HandleError( error_ );
+
+        return false;
+    }
+
+    return true;
 }
 
 // ~~
@@ -469,21 +762,32 @@ func AddDatabaseSubscriber(
     subscriber * SUBSCRIBER
     ) bool
 {
-    error_
-        := DatabaseSession.Query(
-               "insert into SUBSCRIBER( Name, Email ) values( ?, ? )",
-               subscriber.Name,
-               subscriber.Email
-               ).Exec();
+    statement, error_
+        := DatabaseSession.Prepare(
+               "insert into SUBSCRIBER( Name, Email ) values( ?, ? )"
+               );
 
-    if ( error_ == nil )
+    if ( error_ != nil )
     {
-        return true;
+        HandleError( error_ );
+
+        return false;
     }
 
-    LogError( error_ );
+    result, error_
+        := statement.Exec(
+               subscriber.Name,
+               subscriber.Email
+               );
 
-    return false;
+    if ( error_ != nil )
+    {
+        HandleError( error_ );
+
+        return false;
+    }
+
+    return true;
 }
 
 // ~~
@@ -492,22 +796,33 @@ func SetDatabaseSubscriber(
     subscriber * SUBSCRIBER
     ) bool
 {
-    error_
-        := DatabaseSession.Query(
-               "update SUBSCRIBER set Name = ?, Email = ? where Id = ?",
+    statement, error_
+        := DatabaseSession.Prepare(
+               "update SUBSCRIBER set Name = ?, Email = ? where Id = ? )"
+               );
+
+    if ( error_ != nil )
+    {
+        HandleError( error_ );
+
+        return false;
+    }
+
+    result, error_
+        := statement.Exec(
                subscriber.Name,
                subscriber.Email,
                subscriber.Id
-               ).Exec();
+               );
 
-    if ( error_ == nil )
+    if ( error_ != nil )
     {
-        return true;
+        HandleError( error_ );
+
+        return false;
     }
 
-    LogError( error_ );
-
-    return false;
+    return true;
 }
 
 // ~~
@@ -516,20 +831,31 @@ func RemoveDatabaseSubscriber(
     subscriber * SUBSCRIBER
     ) bool
 {
-    error_
-        := DatabaseSession.Query(
-               "delete from SUBSCRIBER where Id = ?",
-               subscriber.Id
-               ).Exec();
+    statement, error_
+        := DatabaseSession.Prepare(
+               "delete from SUBSCRIBER where Id = ? )"
+               );
 
-    if ( error_ == nil )
+    if ( error_ != nil )
     {
-        return true;
+        HandleError( error_ );
+
+        return false;
     }
 
-    LogError( error_ );
+    result, error_
+        := statement.Exec(
+               subscriber.Id
+               );
 
-    return false;
+    if ( error_ != nil )
+    {
+        HandleError( error_ );
+
+        return false;
+    }
+
+    return true;
 }
 
 // ~~
@@ -538,20 +864,54 @@ func GetDatabaseSubscriber(
     subscriber * SUBSCRIBER
     ) bool
 {
-    error_
-        := DatabaseSession.Query(
-               "select Name, Email from SUBSCRIBER where Id = ?",
-               subscriber.Id
-               ).Consistency( gocql.One ).Scan( &subscriber.Name, &subscriber.Email );
+    statement, error_
+        := DatabaseSession.Prepare(
+               "select Name, Email from SUBSCRIBER where Id = ? )"
+               );
 
-    if ( error_ == nil )
+    if ( error_ != nil )
     {
-        return true;
+        HandleError( error_ );
+
+        return false;
     }
 
-    LogError( error_ );
+    rows, error_
+        := statement.Query(
+               subscriber.Id
+               );
 
-    return false;
+    if ( error_ != nil )
+    {
+        HandleError( error_ );
+
+        return false;
+    }
+
+    for rows.Next()
+    {
+        error_
+            = rows.Scan(
+                  &subscriber.Name,
+                  &subscriber.Email
+                  );
+
+        if ( error_ != nil )
+        {
+            HandleError( error_ );
+
+            return false;
+        }
+    }
+
+    if ( error_ != nil )
+    {
+        HandleError( error_ );
+
+        return false;
+    }
+
+    return true;
 }
 
 // ~~
@@ -679,7 +1039,7 @@ func WriteJsonSubscriber(
 
 // ~~
 
-func HandleAddSection(
+func HandleAddSectionRequest(
     response_writer http.ResponseWriter,
     request * http.Request
     )
@@ -703,7 +1063,7 @@ func HandleAddSection(
 
 // ~~
 
-func HandleSetSection(
+func HandleSetSectionRequest(
     response_writer http.ResponseWriter,
     request * http.Request
     )
@@ -728,7 +1088,7 @@ func HandleSetSection(
 
 // ~~
 
-func HandleRemoveSection(
+func HandleRemoveSectionRequest(
     response_writer http.ResponseWriter,
     request * http.Request
     )
@@ -749,7 +1109,7 @@ func HandleRemoveSection(
 
 // ~~
 
-func HandleGetSection(
+func HandleGetSectionRequest(
     response_writer http.ResponseWriter,
     request * http.Request
     )
@@ -770,7 +1130,7 @@ func HandleGetSection(
 
 // ~~
 
-func HandleAddUser(
+func HandleAddUserRequest(
     response_writer http.ResponseWriter,
     request * http.Request
     )
@@ -803,7 +1163,7 @@ func HandleAddUser(
 
 // ~~
 
-func HandleSetUser(
+func HandleSetUserRequest(
     response_writer http.ResponseWriter,
     request * http.Request
     )
@@ -837,7 +1197,7 @@ func HandleSetUser(
 
 // ~~
 
-func HandleRemoveUser(
+func HandleRemoveUserRequest(
     response_writer http.ResponseWriter,
     request * http.Request
     )
@@ -858,7 +1218,7 @@ func HandleRemoveUser(
 
 // ~~
 
-func HandleGetUser(
+func HandleGetUserRequest(
     response_writer http.ResponseWriter,
     request * http.Request
     )
@@ -879,7 +1239,7 @@ func HandleGetUser(
 
 // ~~
 
-func HandleAddArticle(
+func HandleAddArticleRequest(
     response_writer http.ResponseWriter,
     request * http.Request
     )
@@ -905,7 +1265,7 @@ func HandleAddArticle(
 
 // ~~
 
-func HandleSetArticle(
+func HandleSetArticleRequest(
     response_writer http.ResponseWriter,
     request * http.Request
     )
@@ -932,7 +1292,7 @@ func HandleSetArticle(
 
 // ~~
 
-func HandleRemoveArticle(
+func HandleRemoveArticleRequest(
     response_writer http.ResponseWriter,
     request * http.Request
     )
@@ -953,7 +1313,7 @@ func HandleRemoveArticle(
 
 // ~~
 
-func HandleGetArticle(
+func HandleGetArticleRequest(
     response_writer http.ResponseWriter,
     request * http.Request
     )
@@ -974,7 +1334,7 @@ func HandleGetArticle(
 
 // ~~
 
-func HandleAddComment(
+func HandleAddCommentRequest(
     response_writer http.ResponseWriter,
     request * http.Request
     )
@@ -998,7 +1358,7 @@ func HandleAddComment(
 
 // ~~
 
-func HandleSetComment(
+func HandleSetCommentRequest(
     response_writer http.ResponseWriter,
     request * http.Request
     )
@@ -1023,7 +1383,7 @@ func HandleSetComment(
 
 // ~~
 
-func HandleRemoveComment(
+func HandleRemoveCommentRequest(
     response_writer http.ResponseWriter,
     request * http.Request
     )
@@ -1044,7 +1404,7 @@ func HandleRemoveComment(
 
 // ~~
 
-func HandleGetComment(
+func HandleGetCommentRequest(
     response_writer http.ResponseWriter,
     request * http.Request
     )
@@ -1065,7 +1425,7 @@ func HandleGetComment(
 
 // ~~
 
-func HandleAddSubscriber(
+func HandleAddSubscriberRequest(
     response_writer http.ResponseWriter,
     request * http.Request
     )
@@ -1087,7 +1447,7 @@ func HandleAddSubscriber(
 
 // ~~
 
-func HandleSetSubscriber(
+func HandleSetSubscriberRequest(
     response_writer http.ResponseWriter,
     request * http.Request
     )
@@ -1110,7 +1470,7 @@ func HandleSetSubscriber(
 
 // ~~
 
-func HandleRemoveSubscriber(
+func HandleRemoveSubscriberRequest(
     response_writer http.ResponseWriter,
     request * http.Request
     )
@@ -1131,7 +1491,7 @@ func HandleRemoveSubscriber(
 
 // ~~
 
-func HandleGetSubscriber(
+func HandleGetSubscriberRequest(
     response_writer http.ResponseWriter,
     request * http.Request
     )

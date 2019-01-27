@@ -64,14 +64,14 @@ func AddDatabaseSimple(
                simple.Blob
                ).Exec();
 
-    if ( error_ == nil )
+    if ( error_ != nil )
     {
-        return true;
+        HandleError( error_ );
+
+        return false;
     }
 
-    LogError( error_ );
-
-    return false;
+    return true;
 }
 
 // ~~
@@ -101,14 +101,14 @@ func SetDatabaseSimple(
                simple.Blob
                ).Exec();
 
-    if ( error_ == nil )
+    if ( error_ != nil )
     {
-        return true;
+        HandleError( error_ );
+
+        return false;
     }
 
-    LogError( error_ );
-
-    return false;
+    return true;
 }
 
 // ~~
@@ -123,14 +123,14 @@ func RemoveDatabaseSimple(
                simple.Uuid
                ).Exec();
 
-    if ( error_ == nil )
+    if ( error_ != nil )
     {
-        return true;
+        HandleError( error_ );
+
+        return false;
     }
 
-    LogError( error_ );
-
-    return false;
+    return true;
 }
 
 // ~~
@@ -143,16 +143,34 @@ func GetDatabaseSimple(
         := DatabaseSession.Query(
                "select Bool, Int8, Uint8, Int16, Uint16, Int32, Uint32, Int64, Uint64, Float32, Float64, String, Date, DateTime, Blob from SIMPLE where Uuid = ?",
                simple.Uuid
-               ).Consistency( gocql.One ).Scan( &simple.Bool, &simple.Int8, &simple.Uint8, &simple.Int16, &simple.Uint16, &simple.Int32, &simple.Uint32, &simple.Int64, &simple.Uint64, &simple.Float32, &simple.Float64, &simple.String, &simple.Date, &simple.DateTime, &simple.Blob );
+               )
+               .Consistency( gocql.One )
+               .Scan(
+                    &simple.Bool,
+                    &simple.Int8,
+                    &simple.Uint8,
+                    &simple.Int16,
+                    &simple.Uint16,
+                    &simple.Int32,
+                    &simple.Uint32,
+                    &simple.Int64,
+                    &simple.Uint64,
+                    &simple.Float32,
+                    &simple.Float64,
+                    &simple.String,
+                    &simple.Date,
+                    &simple.DateTime,
+                    &simple.Blob
+                    );
 
-    if ( error_ == nil )
+    if ( error_ != nil )
     {
-        return true;
+        HandleError( error_ );
+
+        return false;
     }
 
-    LogError( error_ );
-
-    return false;
+    return true;
 }
 
 // ~~
@@ -177,14 +195,14 @@ func AddDatabaseCompound(
                compound.NameSetMap
                ).Exec();
 
-    if ( error_ == nil )
+    if ( error_ != nil )
     {
-        return true;
+        HandleError( error_ );
+
+        return false;
     }
 
-    LogError( error_ );
-
-    return false;
+    return true;
 }
 
 // ~~
@@ -210,14 +228,14 @@ func SetDatabaseCompound(
                compound.NameSetMap
                ).Exec();
 
-    if ( error_ == nil )
+    if ( error_ != nil )
     {
-        return true;
+        HandleError( error_ );
+
+        return false;
     }
 
-    LogError( error_ );
-
-    return false;
+    return true;
 }
 
 // ~~
@@ -232,14 +250,14 @@ func RemoveDatabaseCompound(
                compound.Id
                ).Exec();
 
-    if ( error_ == nil )
+    if ( error_ != nil )
     {
-        return true;
+        HandleError( error_ );
+
+        return false;
     }
 
-    LogError( error_ );
-
-    return false;
+    return true;
 }
 
 // ~~
@@ -252,16 +270,31 @@ func GetDatabaseCompound(
         := DatabaseSession.Query(
                "select Location, Name, NameSet, PhoneList, EmailSet, CompanyMap, SimpleDate, SimpleDateMap, SimpleDateSet, SimpleDateList, NameSetMap, SimplePointerArray from COMPOUND where Id = ?",
                compound.Id
-               ).Consistency( gocql.One ).Scan( &compound.Location, &compound.Name, &compound.NameSet, &compound.PhoneList, &compound.EmailSet, &compound.CompanyMap, &compound.SimpleDate, &compound.SimpleDateMap, &compound.SimpleDateSet, &compound.SimpleDateList, &compound.NameSetMap, &compound.SimplePointerArray );
+               )
+               .Consistency( gocql.One )
+               .Scan(
+                    &compound.Location,
+                    &compound.Name,
+                    &compound.NameSet,
+                    &compound.PhoneList,
+                    &compound.EmailSet,
+                    &compound.CompanyMap,
+                    &compound.SimpleDate,
+                    &compound.SimpleDateMap,
+                    &compound.SimpleDateSet,
+                    &compound.SimpleDateList,
+                    &compound.NameSetMap,
+                    &compound.SimplePointerArray
+                    );
 
-    if ( error_ == nil )
+    if ( error_ != nil )
     {
-        return true;
+        HandleError( error_ );
+
+        return false;
     }
 
-    LogError( error_ );
-
-    return false;
+    return true;
 }
 
 // ~~
@@ -344,7 +377,7 @@ func WriteJsonCompound(
 
 // ~~
 
-func HandleAddSimple(
+func HandleAddSimpleRequest(
     response_writer http.ResponseWriter,
     request * http.Request
     )
@@ -379,7 +412,7 @@ func HandleAddSimple(
 
 // ~~
 
-func HandleSetSimple(
+func HandleSetSimpleRequest(
     response_writer http.ResponseWriter,
     request * http.Request
     )
@@ -415,7 +448,7 @@ func HandleSetSimple(
 
 // ~~
 
-func HandleRemoveSimple(
+func HandleRemoveSimpleRequest(
     response_writer http.ResponseWriter,
     request * http.Request
     )
@@ -436,7 +469,7 @@ func HandleRemoveSimple(
 
 // ~~
 
-func HandleGetSimple(
+func HandleGetSimpleRequest(
     response_writer http.ResponseWriter,
     request * http.Request
     )
@@ -457,7 +490,7 @@ func HandleGetSimple(
 
 // ~~
 
-func HandleAddCompound(
+func HandleAddCompoundRequest(
     response_writer http.ResponseWriter,
     request * http.Request
     )
@@ -488,7 +521,7 @@ func HandleAddCompound(
 
 // ~~
 
-func HandleSetCompound(
+func HandleSetCompoundRequest(
     response_writer http.ResponseWriter,
     request * http.Request
     )
@@ -520,7 +553,7 @@ func HandleSetCompound(
 
 // ~~
 
-func HandleRemoveCompound(
+func HandleRemoveCompoundRequest(
     response_writer http.ResponseWriter,
     request * http.Request
     )
@@ -541,7 +574,7 @@ func HandleRemoveCompound(
 
 // ~~
 
-func HandleGetCompound(
+func HandleGetCompoundRequest(
     response_writer http.ResponseWriter,
     request * http.Request
     )

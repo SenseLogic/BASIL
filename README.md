@@ -12,11 +12,10 @@ Versatile database generator.
     *   UML schema file.
     *   SQL schema and data files.
     *   CQL schema and data files.
-    *   Go SQL schema file.
-    *   Go CQL schema file.
-    *   Gs CQL schema file.
-    *   Rust schema file.
-    *   Crystal schema file.
+    *   Go code file.
+    *   Generis code file.
+    *   Rust code file.
+    *   Crystal code file.
 
 ## Sample
 
@@ -274,12 +273,14 @@ basil [options] script_file.basil
 --sql : generate the SQL schema and data files
 --cql : generate the CQL schema and data files
 --go : generate the Go code file
+--generis : generate the generis code file
 --rust : generate the Rust code file
 --crystal : generate the Crystal code file
 ```
 
 The `--sql` and `--cql` options are mutually exclusive.
-An `--sql` or `--cql` option is required for the `--go`, `--rust` and `--crystal` options.
+
+The `--go`, `--generis`, `--rust` and `--crystal` options require the `--sql` or `--cql` option.
 
 ### Examples
 

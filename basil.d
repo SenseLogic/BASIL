@@ -2946,10 +2946,11 @@ class TABLE
     string
         SchemaName,
         Name,
-        Type,
         GoType,
         GoFunction,
-        GoVariable;
+        GoVariable,
+        RustType,
+        CrystalType;
     string[]
         KeyNameArray;
     COLUMN[]
@@ -2966,10 +2967,11 @@ class TABLE
     {
         SchemaName = schema.Name;
         Name = name;
-        Type = "";
         GoType = name;
         GoFunction = name.GetPascalCaseText();
         GoVariable = name.GetSnakeCaseText();
+        RustType = name;
+        CrystalType = name;
         KeyNameArray = null;
         ColumnArray = null;
         RowCount = schema.RowCount;
@@ -2990,6 +2992,994 @@ class TABLE
         }
 
         return null;
+    }
+
+    // ~~
+
+    string GetAddDatabaseGenerisCode(
+        )
+    {
+        long
+            column_count,
+            column_index;
+        string
+            generis_code;
+
+        generis_code
+            = "func AddDatabase" ~ GoFunction ~ "(\n"
+              ~ "    " ~ GoVariable ~ " * " ~ GoType ~ "\n"
+              ~ "    ) bool\n"
+              ~ "{\n";
+
+        column_count = 0;
+
+        foreach ( ref column; ColumnArray )
+        {
+            if ( column.IsKey
+                 && column.IsUnique
+                 && column.StoredType == "uuid" )
+            {
+                generis_code
+                    ~= "    " ~ GoVariable ~ "." ~ column.GoName ~ " = gocql.TimeUUID();\n";
+
+                ++column_count;
+            }
+        }
+
+        if ( column_count > 0 )
+        {
+            generis_code ~="\n";
+        }
+
+        if ( SqlOptionIsEnabled )
+        {
+            generis_code
+                ~= "    statement, error_\n"
+                   ~ "        := DatabaseSession.Prepare(\n"
+                   ~ "               \"insert into " ~ Name ~ "( ";
+
+            column_count = 0;
+
+            foreach ( ref column; ColumnArray )
+            {
+                if ( column.IsStored
+                     && !column.IsIncremented )
+                {
+                    if ( column_count > 0 )
+                    {
+                        generis_code ~= ", ";
+                    }
+
+                    generis_code ~= column.StoredName;
+
+                    ++column_count;
+                }
+            }
+
+            generis_code ~= " ) values( ";
+
+            column_count = 0;
+
+            foreach ( ref column; ColumnArray )
+            {
+                if ( column.IsStored
+                     && !column.IsIncremented )
+                {
+                    if ( column_count > 0 )
+                    {
+                        generis_code ~= ", ";
+                    }
+
+                    generis_code ~= "?";
+
+                    ++column_count;
+                }
+            }
+
+            generis_code
+                ~= " )\"\n"
+                   ~ "               );\n"
+                   ~ "\n"
+                   ~ "    if ( error_ != nil )\n"
+                   ~ "    {\n"
+                   ~ "        HandleError( error_ );\n"
+                   ~ "\n"
+                   ~ "        return false;\n"
+                   ~ "    }\n"
+                   ~ "\n"
+                   ~ "    result, error_\n"
+                   ~ "        := statement.Exec(\n";
+
+            column_index = 0;
+
+            foreach ( ref column; ColumnArray )
+            {
+                if ( column.IsStored
+                     && !column.IsIncremented )
+                {
+                    generis_code ~= "               " ~ GoVariable ~ "." ~ column.GoName;
+
+                    if ( column_index + 1 < column_count )
+                    {
+                        generis_code ~= ",";
+                    }
+
+                    generis_code ~= "\n";
+
+                    ++column_index;
+                }
+            }
+
+            generis_code
+                ~= "               );\n";
+        }
+        else
+        {
+            generis_code
+                ~= "    error_\n"
+                   ~ "        := DatabaseSession.Query(\n"
+                   ~ "               \"insert into " ~ Name ~ "( ";
+
+            column_count = 0;
+
+            foreach ( ref column; ColumnArray )
+            {
+                if ( column.IsStored
+                     && !column.IsIncremented )
+                {
+                    if ( column_count > 0 )
+                    {
+                        generis_code ~= ", ";
+                    }
+
+                    generis_code ~= column.StoredName;
+
+                    ++column_count;
+                }
+            }
+
+            generis_code ~= " ) values( ";
+
+            column_count = 0;
+
+            foreach ( ref column; ColumnArray )
+            {
+                if ( column.IsStored
+                     && !column.IsIncremented )
+                {
+                    if ( column_count > 0 )
+                    {
+                        generis_code ~= ", ";
+                    }
+
+                    generis_code ~= "?";
+
+                    ++column_count;
+                }
+            }
+
+            generis_code ~= " )\",\n";
+
+            column_index = 0;
+
+            foreach ( ref column; ColumnArray )
+            {
+                if ( column.IsStored
+                     && !column.IsIncremented )
+                {
+                    generis_code ~= "               " ~ GoVariable ~ "." ~ column.GoName;
+
+                    if ( column_index + 1 < column_count )
+                    {
+                        generis_code ~= ",";
+                    }
+
+                    generis_code ~= "\n";
+
+                    ++column_index;
+                }
+            }
+
+            generis_code
+                ~= "               ).Exec();\n";
+        }
+
+        generis_code
+            ~= "\n"
+               ~ "    if ( error_ != nil )\n"
+               ~ "    {\n"
+               ~ "        HandleError( error_ );\n"
+               ~ "\n"
+               ~ "        return false;\n"
+               ~ "    }\n"
+               ~ "\n"
+               ~ "    return true;\n"
+               ~ "}\n"
+               ~ "\n"
+               ~ "// ~~\n"
+               ~ "\n";
+
+        return generis_code;
+    }
+
+    // ~~
+
+    string GetSetDatabaseGenerisCode(
+        )
+    {
+        long
+            column_count;
+        string
+            generis_code;
+
+        generis_code
+            = "func SetDatabase" ~ GoFunction ~ "(\n"
+              ~ "    " ~ GoVariable ~ " * " ~ GoType ~ "\n"
+              ~ "    ) bool\n"
+              ~ "{\n";
+
+        if ( SqlOptionIsEnabled )
+        {
+            generis_code
+                ~= "    statement, error_\n"
+                   ~ "        := DatabaseSession.Prepare(\n"
+                   ~ "               \"update " ~ Name ~ " set ";
+
+            column_count = 0;
+
+            foreach ( ref column; ColumnArray )
+            {
+                if ( column.IsStored
+                     && !column.IsKey )
+                {
+                    if ( column_count > 0 )
+                    {
+                        generis_code ~= ", ";
+                    }
+
+                    generis_code ~= column.StoredName ~ " = ?";
+
+                    ++column_count;
+                }
+            }
+
+            generis_code ~= " where ";
+
+            foreach ( ref column; ColumnArray )
+            {
+                if ( column.IsKey )
+                {
+                    generis_code ~= column.StoredName ~ " = ?";
+
+                    if ( !column.IsLastKey )
+                    {
+                        generis_code ~= ", ";
+                    }
+                }
+            }
+
+            generis_code
+                ~= " )\"\n"
+                   ~ "               );\n"
+                   ~ "\n"
+                   ~ "    if ( error_ != nil )\n"
+                   ~ "    {\n"
+                   ~ "        HandleError( error_ );\n"
+                   ~ "\n"
+                   ~ "        return false;\n"
+                   ~ "    }\n"
+                   ~ "\n"
+                   ~ "    result, error_\n"
+                   ~ "        := statement.Exec(\n";
+
+            foreach ( ref column; ColumnArray )
+            {
+                if ( column.IsStored
+                     && !column.IsKey )
+                {
+                    generis_code ~= "               " ~ GoVariable ~ "." ~ column.GoName ~ ",\n";
+                }
+            }
+
+            foreach ( ref column; ColumnArray )
+            {
+                if ( column.IsKey )
+                {
+                    generis_code ~= "               " ~ GoVariable ~ "." ~ column.GoName;
+
+                    if ( !column.IsLastKey )
+                    {
+                        generis_code ~= ",";
+                    }
+
+                    generis_code ~= "\n";
+                }
+            }
+
+            generis_code
+                ~= "               );\n";
+        }
+        else
+        {
+            generis_code
+                ~= "    error_\n"
+                   ~ "        := DatabaseSession.Query(\n"
+                   ~ "               \"insert into " ~ Name ~ "( ";
+
+            foreach ( ref column; ColumnArray )
+            {
+                if ( column.IsStored )
+                {
+                    generis_code ~= column.StoredName;
+
+                    if ( !column.IsLastStored )
+                    {
+                        generis_code ~= ", ";
+                    }
+                }
+            }
+
+            generis_code ~= " ) values( ";
+
+            foreach ( ref column; ColumnArray )
+            {
+                if ( column.IsStored )
+                {
+                    generis_code ~= "?";
+
+                    if ( !column.IsLastStored )
+                    {
+                        generis_code ~= ", ";
+                    }
+                }
+            }
+
+            generis_code ~= " )\",\n";
+
+            foreach ( ref column; ColumnArray )
+            {
+                if ( column.IsStored )
+                {
+                    generis_code ~= "               " ~ GoVariable ~ "." ~ column.GoName;
+
+                    if ( !column.IsLastStored )
+                    {
+                        generis_code ~= ",";
+                    }
+
+                    generis_code ~= "\n";
+                }
+            }
+
+            generis_code
+                ~= "               ).Exec();\n";
+        }
+
+        generis_code
+            ~= "\n"
+               ~ "    if ( error_ != nil )\n"
+               ~ "    {\n"
+               ~ "        HandleError( error_ );\n"
+               ~ "\n"
+               ~ "        return false;\n"
+               ~ "    }\n"
+               ~ "\n"
+               ~ "    return true;\n"
+               ~ "}\n"
+               ~ "\n"
+               ~ "// ~~\n"
+               ~ "\n";
+
+        return generis_code;
+    }
+
+    // ~~
+
+    string GetRemoveDatabaseGenerisCode(
+        )
+    {
+        string
+            generis_code;
+
+        generis_code
+            = "func RemoveDatabase" ~ GoFunction ~ "(\n"
+              ~ "    " ~ GoVariable ~ " * " ~ GoType ~ "\n"
+              ~ "    ) bool\n"
+              ~ "{\n";
+
+        if ( SqlOptionIsEnabled )
+        {
+            generis_code
+                ~= "    statement, error_\n"
+                   ~ "        := DatabaseSession.Prepare(\n"
+                   ~ "               \"delete from " ~ Name ~ " where ";
+
+            foreach ( ref column; ColumnArray )
+            {
+                if ( column.IsKey )
+                {
+                    generis_code ~= column.StoredName ~ " = ?";
+
+                    if ( !column.IsLastKey )
+                    {
+                        generis_code ~= " and ";
+                    }
+                }
+            }
+
+            generis_code
+                ~= " )\"\n"
+                   ~ "               );\n"
+                   ~ "\n"
+                   ~ "    if ( error_ != nil )\n"
+                   ~ "    {\n"
+                   ~ "        HandleError( error_ );\n"
+                   ~ "\n"
+                   ~ "        return false;\n"
+                   ~ "    }\n"
+                   ~ "\n"
+                   ~ "    result, error_\n"
+                   ~ "        := statement.Exec(\n";
+
+            foreach ( ref column; ColumnArray )
+            {
+                if ( column.IsKey )
+                {
+                    generis_code ~= "               " ~ GoVariable ~ "." ~ column.GoName;
+
+                    if ( !column.IsLastKey )
+                    {
+                        generis_code ~= ", ";
+                    }
+
+                    generis_code ~= "\n";
+                }
+            }
+
+            generis_code
+                ~= "               );\n";
+        }
+        else
+        {
+            generis_code
+                ~= "    error_\n"
+                   ~ "        := DatabaseSession.Query(\n"
+                   ~ "               \"delete from " ~ Name ~ " where ";
+
+            foreach ( ref column; ColumnArray )
+            {
+                if ( column.IsKey )
+                {
+                    generis_code ~= column.StoredName ~ " = ?";
+
+                    if ( !column.IsLastKey )
+                    {
+                        generis_code ~= " and ";
+                    }
+                }
+            }
+
+            generis_code ~= "\",\n";
+
+            foreach ( ref column; ColumnArray )
+            {
+                if ( column.IsKey )
+                {
+                    generis_code ~= "               " ~ GoVariable ~ "." ~ column.GoName;
+
+                    if ( !column.IsLastKey )
+                    {
+                        generis_code ~= ", ";
+                    }
+
+                    generis_code ~= "\n";
+                }
+            }
+
+            generis_code
+                ~= "               ).Exec();\n";
+        }
+
+        generis_code
+            ~= "\n"
+               ~ "    if ( error_ != nil )\n"
+               ~ "    {\n"
+               ~ "        HandleError( error_ );\n"
+               ~ "\n"
+               ~ "        return false;\n"
+               ~ "    }\n"
+               ~ "\n"
+               ~ "    return true;\n"
+               ~ "}\n"
+               ~ "\n"
+               ~ "// ~~\n"
+               ~ "\n";
+
+        return generis_code;
+    }
+
+    // ~~
+
+    string GetGetDatabaseGenerisCode(
+        )
+    {
+        long
+            column_count;
+        string
+            generis_code;
+
+        generis_code
+            = "func GetDatabase" ~ GoFunction ~ "(\n"
+              ~ "    " ~ GoVariable ~ " * " ~ GoType ~ "\n"
+              ~ "    ) bool\n"
+              ~ "{\n";
+
+        if ( SqlOptionIsEnabled )
+        {
+            generis_code
+                ~= "    statement, error_\n"
+                   ~ "        := DatabaseSession.Prepare(\n"
+                   ~ "               \"select ";
+
+            column_count = 0;
+
+            foreach ( ref column; ColumnArray )
+            {
+                if ( !column.IsKey )
+                {
+                    if ( column_count > 0 )
+                    {
+                        generis_code ~= ", ";
+                    }
+
+                    generis_code ~= column.StoredName;
+
+                    ++column_count;
+                }
+            }
+
+            generis_code ~= " from " ~ Name ~ " where ";
+
+            foreach ( ref column; ColumnArray )
+            {
+                if ( column.IsKey )
+                {
+                    generis_code ~= column.StoredName ~ " = ?";
+
+                    if ( !column.IsLastKey )
+                    {
+                        generis_code ~= " and ";
+                    }
+                }
+            }
+
+            generis_code
+                ~= " )\"\n"
+                   ~ "               );\n"
+                   ~ "\n"
+                   ~ "    if ( error_ != nil )\n"
+                   ~ "    {\n"
+                   ~ "        HandleError( error_ );\n"
+                   ~ "\n"
+                   ~ "        return false;\n"
+                   ~ "    }\n"
+                   ~ "\n"
+                   ~ "    rows, error_\n"
+                   ~ "        := statement.Query(\n";
+
+            foreach ( ref column; ColumnArray )
+            {
+                if ( column.IsKey )
+                {
+                    generis_code ~= "               " ~ GoVariable ~ "." ~ column.GoName;
+
+                    if ( !column.IsLastKey )
+                    {
+                        generis_code ~= ",";
+                    }
+
+                    generis_code ~= "\n";
+                }
+            }
+
+            generis_code
+                ~= "               );\n"
+                   ~ "\n"
+                   ~ "    if ( error_ != nil )\n"
+                   ~ "    {\n"
+                   ~ "        HandleError( error_ );\n"
+                   ~ "\n"
+                   ~ "        return false;\n"
+                   ~ "    }\n"
+                   ~ "\n"
+                   ~ "    for rows.Next()\n"
+                   ~ "    {\n"
+                   ~ "        error_\n"
+                   ~ "            = rows.Scan(";
+
+            column_count = 0;
+
+            foreach ( ref column; ColumnArray )
+            {
+                if ( !column.IsKey )
+                {
+                    if ( column_count > 0 )
+                    {
+                        generis_code ~= ",\n";
+                    }
+                    else
+                    {
+                        generis_code ~= "\n";
+                    }
+
+                    generis_code ~= "                  &" ~ GoVariable ~ "." ~ column.GoName;
+
+                    ++column_count;
+                }
+            }
+
+            generis_code
+                ~= "\n"
+                   ~ "                  );\n"
+                   ~ "\n"
+                   ~ "        if ( error_ != nil )\n"
+                   ~ "        {\n"
+                   ~ "            HandleError( error_ );\n"
+                   ~ "\n"
+                   ~ "            return false;\n"
+                   ~ "        }\n"
+                   ~ "    }\n";
+        }
+        else
+        {
+            generis_code
+                ~= "    error_\n"
+                   ~ "        := DatabaseSession.Query(\n"
+                   ~ "               \"select ";
+
+            column_count = 0;
+
+            foreach ( ref column; ColumnArray )
+            {
+                if ( !column.IsKey )
+                {
+                    if ( column_count > 0 )
+                    {
+                        generis_code ~= ", ";
+                    }
+
+                    generis_code ~= column.StoredName;
+
+                    ++column_count;
+                }
+            }
+
+            generis_code ~= " from " ~ Name ~ " where ";
+
+            foreach ( ref column; ColumnArray )
+            {
+                if ( column.IsKey )
+                {
+                    generis_code ~= column.StoredName ~ " = ?";
+
+                    if ( !column.IsLastKey )
+                    {
+                        generis_code ~= " and ";
+                    }
+                }
+            }
+
+            generis_code ~= "\",\n";
+
+            foreach ( ref column; ColumnArray )
+            {
+                if ( column.IsKey )
+                {
+                    generis_code ~= "               " ~ GoVariable ~ "." ~ column.GoName;
+
+                    if ( !column.IsLastKey )
+                    {
+                        generis_code ~= ",";
+                    }
+
+                    generis_code ~= "\n";
+                }
+            }
+
+            generis_code
+                ~= "               )\n"
+                   ~ "               .Consistency( gocql.One )\n"
+                   ~ "               .Scan(";
+
+            column_count = 0;
+
+            foreach ( ref column; ColumnArray )
+            {
+                if ( !column.IsKey )
+                {
+                    if ( column_count > 0 )
+                    {
+                        generis_code ~= ",\n";
+                    }
+                    else
+                    {
+                        generis_code ~= "\n";
+                    }
+
+                    generis_code ~= "                    &" ~ GoVariable ~ "." ~ column.GoName;
+
+                    ++column_count;
+                }
+            }
+
+            generis_code
+                ~= "\n"
+                   ~ "                    );\n";
+        }
+
+        generis_code
+            ~= "\n"
+               ~ "    if ( error_ != nil )\n"
+               ~ "    {\n"
+               ~ "        HandleError( error_ );\n"
+               ~ "\n"
+               ~ "        return false;\n"
+               ~ "    }\n"
+               ~ "\n"
+               ~ "    return true;\n"
+               ~ "}\n"
+               ~ "\n"
+               ~ "// ~~\n"
+               ~ "\n";
+
+        return generis_code;
+    }
+
+    // ~~
+
+    string GetWriteJsonGenerisCode(
+        )
+    {
+        string
+            generis_code;
+
+        generis_code
+            = "func WriteJson" ~ GoFunction ~ "(\n"
+              ~ "    response_writer http.ResponseWriter,\n"
+              ~ "    " ~ GoVariable ~ " * " ~ GoType ~ "\n"
+              ~ "    )\n"
+              ~ "{\n"
+              ~ "    WriteJsonText( response_writer, \"{\");\n";
+
+        foreach ( ref column; ColumnArray )
+        {
+            if ( column.IsStored )
+            {
+                generis_code
+                    ~= "    WriteJsonText( response_writer, \"\\\"" ~ column.GoName ~ "\\\":\" );\n"
+                       ~ "    WriteJson" ~ column.GoFunction ~ "( response_writer, " ~ GoVariable ~ "." ~ column.GoName ~ " );\n";
+            }
+        }
+
+        generis_code
+            ~= "    WriteJsonText( response_writer, \"}\" );\n"
+               ~ "}\n"
+               ~ "\n"
+               ~ "// ~~\n"
+               ~ "\n";
+
+        return generis_code;
+    }
+
+    // ~~
+
+    string GetHandleAddRequestGenerisCode(
+        )
+    {
+        long
+            column_count;
+        string
+            generis_code;
+
+        generis_code
+            = "func HandleAdd" ~ GoFunction ~ "Request(\n"
+              ~ "    response_writer http.ResponseWriter,\n"
+              ~ "    request * http.Request\n"
+              ~ "    )\n"
+              ~ "{\n"
+              ~ "    var\n"
+              ~ "        " ~ GoVariable ~ " " ~ GoType ~ ";\n"
+              ~ "\n";
+
+        generis_code ~= "    if ( ";
+
+        column_count = 0;
+
+        foreach ( ref column; ColumnArray )
+        {
+            if ( column.IsStored
+                 && !( column.IsKey
+                       && column.IsUnique
+                       && ( column.StoredType == "uuid"
+                            || column.IsIncremented) ) )
+            {
+                if ( column_count > 0 )
+                {
+                    generis_code ~= "         && ";
+                }
+
+                generis_code
+                    ~= "GetRequest" ~ column.GoFunction ~ "( &" ~ GoVariable ~ "." ~ column.GoName ~ ", request, \"" ~ column.StoredName ~ "\" )\n";
+
+                ++column_count;
+            }
+        }
+
+        generis_code
+            ~= "         && AddDatabase" ~ GoFunction ~ "( &" ~ GoVariable ~ " ) )\n"
+               ~ "    {\n"
+               ~ "        WriteJsonSuccess( response_writer );\n"
+               ~ "    }\n"
+               ~ "    else\n"
+               ~ "    {\n"
+               ~ "        WriteJsonError( response_writer );\n"
+               ~ "    }\n"
+               ~ "}\n"
+               ~ "\n"
+               ~ "// ~~\n"
+               ~ "\n";
+
+        return generis_code;
+    }
+
+    // ~~
+
+    string GetHandleSetRequestGenerisCode(
+        )
+    {
+        string
+            generis_code;
+
+        generis_code
+            = "func HandleSet" ~ GoFunction ~ "Request(\n"
+              ~ "    response_writer http.ResponseWriter,\n"
+              ~ "    request * http.Request\n"
+              ~ "    )\n"
+              ~ "{\n"
+              ~ "    var\n"
+              ~ "        " ~ GoVariable ~ " " ~ GoType ~ ";\n"
+              ~ "\n"
+              ~ "    if ( ";
+
+        foreach ( ref column; ColumnArray )
+        {
+            if ( column.IsStored )
+            {
+                generis_code
+                    ~= "GetRequest" ~ column.GoFunction ~ "( &" ~ GoVariable ~ "." ~ column.GoName ~ ", request, \"" ~ column.StoredName ~ "\" )\n";
+
+                if ( !column.IsLastStored )
+                {
+                    generis_code ~= "         && ";
+                }
+            }
+        }
+
+        generis_code
+            ~= "         && SetDatabase" ~ GoFunction ~ "( &" ~ GoVariable ~ " ) )\n"
+               ~ "    {\n"
+               ~ "        WriteJsonSuccess( response_writer );\n"
+               ~ "    }\n"
+               ~ "    else\n"
+               ~ "    {\n"
+               ~ "        WriteJsonError( response_writer );\n"
+               ~ "    }\n"
+               ~ "}\n"
+               ~ "\n"
+               ~ "// ~~\n"
+               ~ "\n";
+
+        return generis_code;
+    }
+
+    // ~~
+
+    string GetHandleRemoveRequestGenerisCode(
+        )
+    {
+        string
+            generis_code;
+
+        generis_code
+            = "func HandleRemove" ~ GoFunction ~ "Request(\n"
+              ~ "    response_writer http.ResponseWriter,\n"
+              ~ "    request * http.Request\n"
+              ~ "    )\n"
+              ~ "{\n"
+              ~ "    var\n"
+              ~ "        " ~ GoVariable ~ " " ~ GoType ~ ";\n"
+              ~ "\n"
+              ~ "    if ( ";
+
+        foreach ( ref column; ColumnArray )
+        {
+            if ( column.IsKey )
+            {
+                generis_code
+                    ~= "GetRequest" ~ column.GoFunction ~ "( &" ~ GoVariable ~ "." ~ column.GoName ~ ", request, \"" ~ column.StoredName ~ "\" )\n";
+
+                if ( !column.IsKey )
+                {
+                    generis_code ~= "         && ";
+                }
+            }
+        }
+
+        generis_code
+            ~= "         && RemoveDatabase" ~ GoFunction ~ "( &" ~ GoVariable ~ " ) )\n"
+               ~ "    {\n"
+               ~ "        WriteJsonSuccess( response_writer );\n"
+               ~ "    }\n"
+               ~ "    else\n"
+               ~ "    {\n"
+               ~ "        WriteJsonError( response_writer );\n"
+               ~ "    }\n"
+               ~ "}\n"
+               ~ "\n"
+               ~ "// ~~\n"
+               ~ "\n";
+
+        return generis_code;
+    }
+
+    // ~~
+
+    string GetHandleGetRequestGenerisCode(
+        )
+    {
+        string
+            generis_code;
+
+        generis_code
+            ~= "func HandleGet" ~ GoFunction ~ "Request(\n"
+               ~ "    response_writer http.ResponseWriter,\n"
+               ~ "    request * http.Request\n"
+               ~ "    )\n"
+               ~ "{\n"
+               ~ "    var\n"
+               ~ "        " ~ GoVariable ~ " " ~ GoType ~ ";\n"
+               ~ "\n"
+               ~ "    if ( ";
+
+        foreach ( ref column; ColumnArray )
+        {
+            if ( column.IsKey )
+            {
+                generis_code
+                    ~= "GetRequest" ~ column.GoFunction ~ "( &" ~ GoVariable ~ "." ~ column.GoName ~ ", request, \"" ~ column.StoredName ~ "\" )\n";
+
+                if ( !column.IsKey )
+                {
+                    generis_code ~= "         && ";
+                }
+            }
+        }
+
+        generis_code
+            ~= "         && GetDatabase" ~ GoFunction ~ "( &" ~ GoVariable ~ " ) )\n"
+               ~ "    {\n"
+               ~ "        WriteJson" ~ GoFunction ~ "( response_writer, &" ~ GoVariable ~ " );\n"
+               ~ "    }\n"
+               ~ "    else\n"
+               ~ "    {\n"
+               ~ "        WriteJsonError( response_writer );\n"
+               ~ "    }\n"
+               ~ "}\n"
+               ~ "\n"
+               ~ "// ~~\n"
+               ~ "\n";
+
+        return generis_code;
     }
 
     // -- OPERATIONS
@@ -3708,908 +4698,135 @@ class SCHEMA
 
     // ~~
 
-    void WriteGoSchemaFile(
-        string go_schema_file_path
+    void WriteGoCodeFile(
+        string go_code_file_path
         )
     {
         string
-            go_schema_file_text;
+            go_code_file_text;
 
-        writeln( "Writing Go schema file : ", go_schema_file_path );
+        writeln( "Writing Go code file : ", go_code_file_path );
 
-        go_schema_file_text = "";
+        go_code_file_text = "";
 
         foreach ( ref table; TableArray )
         {
-            table.Type = table.Name.toUpper();
-
-            go_schema_file_text ~= "type " ~ table.Type ~ " struct {\n";
+            go_code_file_text ~= "type " ~ table.GoType ~ " struct {\n";
 
             foreach ( ref column; table.ColumnArray )
             {
-                go_schema_file_text ~= "    " ~ column.GoName ~ " " ~ column.GoType;
+                go_code_file_text ~= "    " ~ column.GoName ~ " " ~ column.GoType;
 
                 if ( column.IsStored )
                 {
                     if ( SqlOptionIsEnabled )
                     {
-                        go_schema_file_text ~= " `db:\"" ~ column.StoredName ~ "\"`";
+                        go_code_file_text ~= " `db:\"" ~ column.StoredName ~ "\"`";
                     }
                     else
                     {
-                        go_schema_file_text ~= " `db:\"-\"`";
+                        go_code_file_text ~= " `db:\"-\"`";
                     }
                 }
 
-                go_schema_file_text ~= ";\n";
+                go_code_file_text ~= ";\n";
             }
 
-            go_schema_file_text ~= "}\n\n// ~~\n\n";
+            go_code_file_text ~= "}\n\n// ~~\n\n";
         }
 
-        go_schema_file_path.write( go_schema_file_text );
+        go_code_file_path.write( go_code_file_text );
     }
 
     // ~~
 
-    void WriteGsSchemaFile(
-        string gs_schema_file_path
+    void WriteGenerisCodeFile(
+        string generis_code_file_path
         )
     {
         long
             column_count,
             column_index;
         string
-            gs_schema_file_text;
+            generis_code_file_text;
 
-        writeln( "Writing Gs schema file : ", gs_schema_file_path );
+        writeln( "Writing Generis code file : ", generis_code_file_path );
 
-        gs_schema_file_text = "";
+        generis_code_file_text = "";
 
         foreach ( ref table; TableArray )
         {
-            gs_schema_file_text ~= "type " ~ table.GoType ~ " struct {\n";
+            generis_code_file_text ~= "type " ~ table.GoType ~ " struct {\n";
 
             foreach ( ref column; table.ColumnArray )
             {
-                gs_schema_file_text ~= "    " ~ column.GoName ~ " " ~ column.GoType;
+                generis_code_file_text ~= "    " ~ column.GoName ~ " " ~ column.GoType;
 
                 if ( column.IsStored )
                 {
                     if ( SqlOptionIsEnabled )
                     {
-                        gs_schema_file_text ~= " `db:\"" ~ column.StoredName ~ "\"`";
+                        generis_code_file_text ~= " `db:\"" ~ column.StoredName ~ "\"`";
                     }
                     else
                     {
-                        gs_schema_file_text ~= " `db:\"-\"`";
+                        generis_code_file_text ~= " `db:\"-\"`";
                     }
                 }
 
-                gs_schema_file_text ~= ";\n";
+                generis_code_file_text ~= ";\n";
             }
 
-            gs_schema_file_text ~= "}\n\n// ~~\n\n";
+            generis_code_file_text ~= "}\n\n// ~~\n\n";
         }
 
         foreach ( ref table; TableArray )
         {
-            gs_schema_file_text
-                ~= "func AddDatabase" ~ table.GoFunction ~ "(\n"
-                   ~ "    " ~ table.GoVariable ~ " * " ~ table.GoType ~ "\n"
-                   ~ "    ) bool\n"
-                   ~ "{\n";
-
-            column_count = 0;
-
-            foreach ( ref column; table.ColumnArray )
-            {
-                if ( column.IsKey
-                     && column.IsUnique
-                     && column.StoredType == "uuid" )
-                {
-                    gs_schema_file_text
-                        ~= "    " ~ table.GoVariable ~ "." ~ column.GoName ~ " = gocql.TimeUUID();\n";
-
-                    ++column_count;
-                }
-            }
-
-            if ( column_count > 0 )
-            {
-                gs_schema_file_text ~="\n";
-            }
-
-            if ( SqlOptionIsEnabled )
-            {
-                gs_schema_file_text
-                    ~= "    error_\n"
-                       ~ "        := DatabaseSession.Query(\n"
-                       ~ "               \"insert into " ~ table.Name ~ "( ";
-
-                column_count = 0;
-
-                foreach ( ref column; table.ColumnArray )
-                {
-                    if ( column.IsStored
-                         && !column.IsIncremented )
-                    {
-                        if ( column_count > 0 )
-                        {
-                            gs_schema_file_text ~= ", ";
-                        }
-
-                        gs_schema_file_text ~= column.StoredName;
-
-                        ++column_count;
-                    }
-                }
-
-                gs_schema_file_text ~= " ) values( ";
-
-                column_count = 0;
-
-                foreach ( ref column; table.ColumnArray )
-                {
-                    if ( column.IsStored
-                         && !column.IsIncremented )
-                    {
-                        if ( column_count > 0 )
-                        {
-                            gs_schema_file_text ~= ", ";
-                        }
-
-                        gs_schema_file_text ~= "?";
-
-                        ++column_count;
-                    }
-                }
-
-                gs_schema_file_text ~= " )\",\n";
-
-                column_index = 0;
-
-                foreach ( ref column; table.ColumnArray )
-                {
-                    if ( column.IsStored
-                         && !column.IsIncremented )
-                    {
-                        gs_schema_file_text ~= "               " ~ table.GoVariable ~ "." ~ column.GoName;
-
-                        if ( column_index + 1 < column_count )
-                        {
-                            gs_schema_file_text ~= ",";
-                        }
-
-                        gs_schema_file_text ~= "\n";
-
-                        ++column_index;
-                    }
-                }
-
-                gs_schema_file_text
-                    ~= "               ).Exec();\n";
-            }
-            else
-            {
-                gs_schema_file_text
-                    ~= "    error_\n"
-                       ~ "        := DatabaseSession.Query(\n"
-                       ~ "               \"insert into " ~ table.Name ~ "( ";
-
-                column_count = 0;
-
-                foreach ( ref column; table.ColumnArray )
-                {
-                    if ( column.IsStored
-                         && !column.IsIncremented )
-                    {
-                        if ( column_count > 0 )
-                        {
-                            gs_schema_file_text ~= ", ";
-                        }
-
-                        gs_schema_file_text ~= column.StoredName;
-
-                        ++column_count;
-                    }
-                }
-
-                gs_schema_file_text ~= " ) values( ";
-
-                column_count = 0;
-
-                foreach ( ref column; table.ColumnArray )
-                {
-                    if ( column.IsStored
-                         && !column.IsIncremented )
-                    {
-                        if ( column_count > 0 )
-                        {
-                            gs_schema_file_text ~= ", ";
-                        }
-
-                        gs_schema_file_text ~= "?";
-
-                        ++column_count;
-                    }
-                }
-
-                gs_schema_file_text ~= " )\",\n";
-
-                column_index = 0;
-
-                foreach ( ref column; table.ColumnArray )
-                {
-                    if ( column.IsStored
-                         && !column.IsIncremented )
-                    {
-                        gs_schema_file_text ~= "               " ~ table.GoVariable ~ "." ~ column.GoName;
-
-                        if ( column_index + 1 < column_count )
-                        {
-                            gs_schema_file_text ~= ",";
-                        }
-
-                        gs_schema_file_text ~= "\n";
-
-                        ++column_index;
-                    }
-                }
-
-                gs_schema_file_text
-                    ~= "               ).Exec();\n";
-            }
-
-            gs_schema_file_text
-                ~= "\n"
-                   ~ "    if ( error_ == nil )\n"
-                   ~ "    {\n"
-                   ~ "        return true;\n"
-                   ~ "    }\n"
-                   ~ "\n"
-                   ~ "    LogError( error_ );\n"
-                   ~ "\n"
-                   ~ "    return false;\n"
-                   ~ "}\n"
-                   ~ "\n"
-                   ~ "// ~~\n"
-                   ~ "\n"
-                   ~ "func SetDatabase" ~ table.GoFunction ~ "(\n"
-                   ~ "    " ~ table.GoVariable ~ " * " ~ table.GoType ~ "\n"
-                   ~ "    ) bool\n"
-                   ~ "{\n";
-
-            if ( SqlOptionIsEnabled )
-            {
-                gs_schema_file_text
-                    ~= "    error_\n"
-                       ~ "        := DatabaseSession.Query(\n"
-                       ~ "               \"update " ~ table.Name ~ " set ";
-
-                column_count = 0;
-
-                foreach ( ref column; table.ColumnArray )
-                {
-                    if ( column.IsStored
-                         && !column.IsKey )
-                    {
-                        if ( column_count > 0 )
-                        {
-                            gs_schema_file_text ~= ", ";
-                        }
-
-                        gs_schema_file_text ~= column.StoredName ~ " = ?";
-
-                        ++column_count;
-                    }
-                }
-
-                gs_schema_file_text ~= " where ";
-
-                foreach ( ref column; table.ColumnArray )
-                {
-                    if ( column.IsKey )
-                    {
-                        gs_schema_file_text ~= column.StoredName ~ " = ?";
-
-                        if ( !column.IsLastKey )
-                        {
-                            gs_schema_file_text ~= ", ";
-                        }
-                    }
-                }
-
-                gs_schema_file_text ~= "\",\n";
-
-                foreach ( ref column; table.ColumnArray )
-                {
-                    if ( column.IsStored
-                         && !column.IsKey )
-                    {
-                        gs_schema_file_text ~= "               " ~ table.GoVariable ~ "." ~ column.GoName ~ ",\n";
-                    }
-                }
-
-                foreach ( ref column; table.ColumnArray )
-                {
-                    if ( column.IsKey )
-                    {
-                        gs_schema_file_text ~= "               " ~ table.GoVariable ~ "." ~ column.GoName;
-
-                        if ( !column.IsLastKey )
-                        {
-                            gs_schema_file_text ~= ",";
-                        }
-
-                        gs_schema_file_text ~= "\n";
-                    }
-                }
-
-                gs_schema_file_text
-                    ~= "               ).Exec();\n";
-            }
-            else
-            {
-                gs_schema_file_text
-                    ~= "    error_\n"
-                       ~ "        := DatabaseSession.Query(\n"
-                       ~ "               \"insert into " ~ table.Name ~ "( ";
-
-                foreach ( ref column; table.ColumnArray )
-                {
-                    if ( column.IsStored )
-                    {
-                        gs_schema_file_text ~= column.StoredName;
-
-                        if ( !column.IsLastStored )
-                        {
-                            gs_schema_file_text ~= ", ";
-                        }
-                    }
-                }
-
-                gs_schema_file_text ~= " ) values( ";
-
-                foreach ( ref column; table.ColumnArray )
-                {
-                    if ( column.IsStored )
-                    {
-                        gs_schema_file_text ~= "?";
-
-                        if ( !column.IsLastStored )
-                        {
-                            gs_schema_file_text ~= ", ";
-                        }
-                    }
-                }
-
-                gs_schema_file_text ~= " )\",\n";
-
-                foreach ( ref column; table.ColumnArray )
-                {
-                    if ( column.IsStored )
-                    {
-                        gs_schema_file_text ~= "               " ~ table.GoVariable ~ "." ~ column.GoName;
-
-                        if ( !column.IsLastStored )
-                        {
-                            gs_schema_file_text ~= ",";
-                        }
-
-                        gs_schema_file_text ~= "\n";
-                    }
-                }
-
-                gs_schema_file_text
-                    ~= "               ).Exec();\n";
-            }
-
-            gs_schema_file_text
-                ~= "\n"
-                   ~ "    if ( error_ == nil )\n"
-                   ~ "    {\n"
-                   ~ "        return true;\n"
-                   ~ "    }\n"
-                   ~ "\n"
-                   ~ "    LogError( error_ );\n"
-                   ~ "\n"
-                   ~ "    return false;\n"
-                   ~ "}\n"
-                   ~ "\n"
-                   ~ "// ~~\n"
-                   ~ "\n"
-                   ~ "func RemoveDatabase" ~ table.GoFunction ~ "(\n"
-                   ~ "    " ~ table.GoVariable ~ " * " ~ table.GoType ~ "\n"
-                   ~ "    ) bool\n"
-                   ~ "{\n"
-                   ~ "    error_\n"
-                   ~ "        := DatabaseSession.Query(\n";
-
-            if ( SqlOptionIsEnabled )
-            {
-                gs_schema_file_text
-                    ~= "               \"delete from " ~ table.Name ~ " where ";
-
-                foreach ( ref column; table.ColumnArray )
-                {
-                    if ( column.IsKey )
-                    {
-                        gs_schema_file_text ~= column.StoredName ~ " = ?";
-
-                        if ( !column.IsLastKey )
-                        {
-                            gs_schema_file_text ~= " and ";
-                        }
-                    }
-                }
-
-                gs_schema_file_text ~= "\",\n";
-
-                foreach ( ref column; table.ColumnArray )
-                {
-                    if ( column.IsKey )
-                    {
-                        gs_schema_file_text ~= "               " ~ table.GoVariable ~ "." ~ column.GoName;
-
-                        if ( !column.IsLastKey )
-                        {
-                            gs_schema_file_text ~= ", ";
-                        }
-
-                        gs_schema_file_text ~= "\n";
-                    }
-                }
-
-                gs_schema_file_text
-                    ~= "               ).Exec();\n";
-            }
-            else
-            {
-                gs_schema_file_text
-                    ~= "               \"delete from " ~ table.Name ~ " where ";
-
-                foreach ( ref column; table.ColumnArray )
-                {
-                    if ( column.IsKey )
-                    {
-                        gs_schema_file_text ~= column.StoredName ~ " = ?";
-
-                        if ( !column.IsLastKey )
-                        {
-                            gs_schema_file_text ~= " and ";
-                        }
-                    }
-                }
-
-                gs_schema_file_text ~= "\",\n";
-
-                foreach ( ref column; table.ColumnArray )
-                {
-                    if ( column.IsKey )
-                    {
-                        gs_schema_file_text ~= "               " ~ table.GoVariable ~ "." ~ column.GoName;
-
-                        if ( !column.IsLastKey )
-                        {
-                            gs_schema_file_text ~= ", ";
-                        }
-
-                        gs_schema_file_text ~= "\n";
-                    }
-                }
-
-                gs_schema_file_text
-                    ~= "               ).Exec();\n";
-            }
-
-            gs_schema_file_text
-                ~= "\n"
-                   ~ "    if ( error_ == nil )\n"
-                   ~ "    {\n"
-                   ~ "        return true;\n"
-                   ~ "    }\n"
-                   ~ "\n"
-                   ~ "    LogError( error_ );\n"
-                   ~ "\n"
-                   ~ "    return false;\n"
-                   ~ "}\n"
-                   ~ "\n"
-                   ~ "// ~~\n"
-                   ~ "\n"
-                   ~ "func GetDatabase" ~ table.GoFunction ~ "(\n"
-                   ~ "    " ~ table.GoVariable ~ " * " ~ table.GoType ~ "\n"
-                   ~ "    ) bool\n"
-                   ~ "{\n";
-
-            if ( SqlOptionIsEnabled )
-            {
-                gs_schema_file_text
-                    ~= "    error_\n"
-                       ~ "        := DatabaseSession.Query(\n"
-                       ~ "               \"select ";
-
-                column_count = 0;
-
-                foreach ( ref column; table.ColumnArray )
-                {
-                    if ( !column.IsKey )
-                    {
-                        if ( column_count > 0 )
-                        {
-                            gs_schema_file_text ~= ", ";
-                        }
-
-                        gs_schema_file_text ~= column.StoredName;
-
-                        ++column_count;
-                    }
-                }
-
-                gs_schema_file_text ~= " from " ~ table.Name ~ " where ";
-
-                foreach ( ref column; table.ColumnArray )
-                {
-                    if ( column.IsKey )
-                    {
-                        gs_schema_file_text ~= column.StoredName ~ " = ?";
-
-                        if ( !column.IsLastKey )
-                        {
-                            gs_schema_file_text ~= " and ";
-                        }
-                    }
-                }
-
-                gs_schema_file_text ~= "\",\n";
-
-                foreach ( ref column; table.ColumnArray )
-                {
-                    if ( column.IsKey )
-                    {
-                        gs_schema_file_text ~= "               " ~ table.GoVariable ~ "." ~ column.GoName;
-
-                        if ( !column.IsLastKey )
-                        {
-                            gs_schema_file_text ~= ",";
-                        }
-
-                        gs_schema_file_text ~= "\n";
-                    }
-                }
-
-                gs_schema_file_text ~= "               ).Consistency( gocql.One ).Scan( ";
-
-                column_count = 0;
-
-                foreach ( ref column; table.ColumnArray )
-                {
-                    if ( !column.IsKey )
-                    {
-                        if ( column_count > 0 )
-                        {
-                            gs_schema_file_text ~= ", ";
-                        }
-
-                        gs_schema_file_text ~= "&" ~ table.GoVariable ~ "." ~ column.GoName;
-
-                        ++column_count;
-                    }
-                }
-
-                gs_schema_file_text
-                    ~= " );\n";
-            }
-            else
-            {
-                gs_schema_file_text
-                    ~= "    error_\n"
-                       ~ "        := DatabaseSession.Query(\n"
-                       ~ "               \"select ";
-
-                column_count = 0;
-
-                foreach ( ref column; table.ColumnArray )
-                {
-                    if ( !column.IsKey )
-                    {
-                        if ( column_count > 0 )
-                        {
-                            gs_schema_file_text ~= ", ";
-                        }
-
-                        gs_schema_file_text ~= column.StoredName;
-
-                        ++column_count;
-                    }
-                }
-
-                gs_schema_file_text ~= " from " ~ table.Name ~ " where ";
-
-                foreach ( ref column; table.ColumnArray )
-                {
-                    if ( column.IsKey )
-                    {
-                        gs_schema_file_text ~= column.StoredName ~ " = ?";
-
-                        if ( !column.IsLastKey )
-                        {
-                            gs_schema_file_text ~= " and ";
-                        }
-                    }
-                }
-
-                gs_schema_file_text ~= "\",\n";
-
-                foreach ( ref column; table.ColumnArray )
-                {
-                    if ( column.IsKey )
-                    {
-                        gs_schema_file_text ~= "               " ~ table.GoVariable ~ "." ~ column.GoName;
-
-                        if ( !column.IsLastKey )
-                        {
-                            gs_schema_file_text ~= ",";
-                        }
-
-                        gs_schema_file_text ~= "\n";
-                    }
-                }
-
-                gs_schema_file_text ~= "               ).Consistency( gocql.One ).Scan( ";
-
-                column_count = 0;
-
-                foreach ( ref column; table.ColumnArray )
-                {
-                    if ( !column.IsKey )
-                    {
-                        if ( column_count > 0 )
-                        {
-                            gs_schema_file_text ~= ", ";
-                        }
-
-                        gs_schema_file_text ~= "&" ~ table.GoVariable ~ "." ~ column.GoName;
-
-                        ++column_count;
-                    }
-                }
-
-                gs_schema_file_text
-                    ~= " );\n";
-            }
-
-            gs_schema_file_text
-                ~= "\n"
-                   ~ "    if ( error_ == nil )\n"
-                   ~ "    {\n"
-                   ~ "        return true;\n"
-                   ~ "    }\n"
-                   ~ "\n"
-                   ~ "    LogError( error_ );\n"
-                   ~ "\n"
-                   ~ "    return false;\n"
-                   ~ "}\n"
-                   ~ "\n"
-                   ~ "// ~~\n"
-                   ~ "\n";
+            generis_code_file_text
+                ~= table.GetAddDatabaseGenerisCode()
+                   ~ table.GetSetDatabaseGenerisCode()
+                   ~ table.GetRemoveDatabaseGenerisCode()
+                   ~ table.GetGetDatabaseGenerisCode();
         }
 
         foreach ( ref table; TableArray )
         {
-            gs_schema_file_text
-                ~= "func WriteJson" ~ table.GoFunction ~ "(\n"
-                   ~ "    response_writer http.ResponseWriter,\n"
-                   ~ "    " ~ table.GoVariable ~ " * " ~ table.GoType ~ "\n"
-                   ~ "    )\n"
-                   ~ "{\n"
-                   ~ "    WriteJsonText( response_writer, \"{\");\n";
-
-            foreach ( ref column; table.ColumnArray )
-            {
-                if ( column.IsStored )
-                {
-                    gs_schema_file_text
-                        ~= "    WriteJsonText( response_writer, \"\\\"" ~ column.GoName ~ "\\\":\" );\n"
-                           ~ "    WriteJson" ~ column.GoFunction ~ "( response_writer, " ~ table.GoVariable ~ "." ~ column.GoName ~ " );\n";
-                }
-            }
-
-            gs_schema_file_text
-                ~= "    WriteJsonText( response_writer, \"}\" );\n"
-                   ~ "}\n"
-                   ~ "\n"
-                   ~ "// ~~\n"
-                   ~ "\n";
+            generis_code_file_text
+                ~= table.GetWriteJsonGenerisCode();
         }
 
         foreach ( ref table; TableArray )
         {
-            gs_schema_file_text
-                ~= "func HandleAdd" ~ table.GoFunction ~ "(\n"
-                   ~ "    response_writer http.ResponseWriter,\n"
-                   ~ "    request * http.Request\n"
-                   ~ "    )\n"
-                   ~ "{\n"
-                   ~ "    var\n"
-                   ~ "        " ~ table.GoVariable ~ " " ~ table.GoType ~ ";\n"
-                   ~ "\n";
-
-            gs_schema_file_text ~= "    if ( ";
-
-            column_count = 0;
-
-            foreach ( ref column; table.ColumnArray )
-            {
-                if ( column.IsStored
-                     && !( column.IsKey
-                           && column.IsUnique
-                           && ( column.StoredType == "uuid"
-                                || column.IsIncremented) ) )
-                {
-                    if ( column_count > 0 )
-                    {
-                        gs_schema_file_text ~= "         && ";
-                    }
-
-                    gs_schema_file_text
-                        ~= "GetRequest" ~ column.GoFunction ~ "( &" ~ table.GoVariable ~ "." ~ column.GoName ~ ", request, \"" ~ column.StoredName ~ "\" )\n";
-
-                    ++column_count;
-                }
-            }
-
-            gs_schema_file_text
-                ~= "         && AddDatabase" ~ table.GoFunction ~ "( &" ~ table.GoVariable ~ " ) )\n"
-                   ~ "    {\n"
-                   ~ "        WriteJsonSuccess( response_writer );\n"
-                   ~ "    }\n"
-                   ~ "    else\n"
-                   ~ "    {\n"
-                   ~ "        WriteJsonError( response_writer );\n"
-                   ~ "    }\n"
-                   ~ "}\n"
-                   ~ "\n"
-                   ~ "// ~~\n"
-                   ~ "\n"
-                   ~ "func HandleSet" ~ table.GoFunction ~ "(\n"
-                   ~ "    response_writer http.ResponseWriter,\n"
-                   ~ "    request * http.Request\n"
-                   ~ "    )\n"
-                   ~ "{\n"
-                   ~ "    var\n"
-                   ~ "        " ~ table.GoVariable ~ " " ~ table.GoType ~ ";\n"
-                   ~ "\n"
-                   ~ "    if ( ";
-
-            foreach ( ref column; table.ColumnArray )
-            {
-                if ( column.IsStored )
-                {
-                    gs_schema_file_text
-                        ~= "GetRequest" ~ column.GoFunction ~ "( &" ~ table.GoVariable ~ "." ~ column.GoName ~ ", request, \"" ~ column.StoredName ~ "\" )\n";
-
-                    if ( !column.IsLastStored )
-                    {
-                        gs_schema_file_text ~= "         && ";
-                    }
-                }
-            }
-
-            gs_schema_file_text
-                ~= "         && SetDatabase" ~ table.GoFunction ~ "( &" ~ table.GoVariable ~ " ) )\n"
-                   ~ "    {\n"
-                   ~ "        WriteJsonSuccess( response_writer );\n"
-                   ~ "    }\n"
-                   ~ "    else\n"
-                   ~ "    {\n"
-                   ~ "        WriteJsonError( response_writer );\n"
-                   ~ "    }\n"
-                   ~ "}\n"
-                   ~ "\n"
-                   ~ "// ~~\n"
-                   ~ "\n"
-                   ~ "func HandleRemove" ~ table.GoFunction ~ "(\n"
-                   ~ "    response_writer http.ResponseWriter,\n"
-                   ~ "    request * http.Request\n"
-                   ~ "    )\n"
-                   ~ "{\n"
-                   ~ "    var\n"
-                   ~ "        " ~ table.GoVariable ~ " " ~ table.GoType ~ ";\n"
-                   ~ "\n"
-                   ~ "    if ( ";
-
-            foreach ( ref column; table.ColumnArray )
-            {
-                if ( column.IsKey )
-                {
-                    gs_schema_file_text
-                        ~= "GetRequest" ~ column.GoFunction ~ "( &" ~ table.GoVariable ~ "." ~ column.GoName ~ ", request, \"" ~ column.StoredName ~ "\" )\n";
-
-                    if ( !column.IsKey )
-                    {
-                        gs_schema_file_text ~= "         && ";
-                    }
-                }
-            }
-
-            gs_schema_file_text
-                ~= "         && RemoveDatabase" ~ table.GoFunction ~ "( &" ~ table.GoVariable ~ " ) )\n"
-                   ~ "    {\n"
-                   ~ "        WriteJsonSuccess( response_writer );\n"
-                   ~ "    }\n"
-                   ~ "    else\n"
-                   ~ "    {\n"
-                   ~ "        WriteJsonError( response_writer );\n"
-                   ~ "    }\n"
-                   ~ "}\n"
-                   ~ "\n"
-                   ~ "// ~~\n"
-                   ~ "\n"
-                   ~ "func HandleGet" ~ table.GoFunction ~ "(\n"
-                   ~ "    response_writer http.ResponseWriter,\n"
-                   ~ "    request * http.Request\n"
-                   ~ "    )\n"
-                   ~ "{\n"
-                   ~ "    var\n"
-                   ~ "        " ~ table.GoVariable ~ " " ~ table.GoType ~ ";\n"
-                   ~ "\n"
-                   ~ "    if ( ";
-
-            foreach ( ref column; table.ColumnArray )
-            {
-                if ( column.IsKey )
-                {
-                    gs_schema_file_text
-                        ~= "GetRequest" ~ column.GoFunction ~ "( &" ~ table.GoVariable ~ "." ~ column.GoName ~ ", request, \"" ~ column.StoredName ~ "\" )\n";
-
-                    if ( !column.IsKey )
-                    {
-                        gs_schema_file_text ~= "         && ";
-                    }
-                }
-            }
-
-            gs_schema_file_text
-                ~= "         && GetDatabase" ~ table.GoFunction ~ "( &" ~ table.GoVariable ~ " ) )\n"
-                   ~ "    {\n"
-                   ~ "        WriteJson" ~ table.GoFunction ~ "( response_writer, &" ~ table.GoVariable ~ " );\n"
-                   ~ "    }\n"
-                   ~ "    else\n"
-                   ~ "    {\n"
-                   ~ "        WriteJsonError( response_writer );\n"
-                   ~ "    }\n"
-                   ~ "}\n"
-                   ~ "\n"
-                   ~ "// ~~\n"
-                   ~ "\n";
+            generis_code_file_text
+                ~= table.GetHandleAddRequestGenerisCode()
+                   ~ table.GetHandleSetRequestGenerisCode()
+                   ~ table.GetHandleRemoveRequestGenerisCode()
+                   ~ table.GetHandleGetRequestGenerisCode();
         }
 
-        gs_schema_file_path.write( gs_schema_file_text );
+        generis_code_file_path.write( generis_code_file_text );
     }
 
     // ~~
 
-    void WriteRustSchemaFile(
-        string rust_schema_file_path
+    void WriteRustCodeFile(
+        string rust_code_file_path
         )
     {
         string
-            rust_schema_file_text;
+            rust_code_file_text;
 
-        writeln( "Writing Rust schema file : ", rust_schema_file_path );
+        writeln( "Writing Rust code file : ", rust_code_file_path );
 
-        rust_schema_file_text = "";
+        rust_code_file_text = "";
 
         foreach ( ref table; TableArray )
         {
-            table.Type = table.Name;
-
-            rust_schema_file_text ~= "struct " ~ table.Type ~ "\n{\n";
+            rust_code_file_text ~= "struct " ~ table.RustType ~ "\n{\n";
 
             foreach ( column_index, ref column; table.ColumnArray )
             {
-                rust_schema_file_text
+                rust_code_file_text
                     ~= "    "
                        ~ column.RustName
                        ~ " : "
@@ -4617,46 +4834,44 @@ class SCHEMA
 
                 if ( column_index + 1 < table.ColumnArray.length )
                 {
-                    rust_schema_file_text ~= ",";
+                    rust_code_file_text ~= ",";
                 }
 
-                rust_schema_file_text ~= "\n";
+                rust_code_file_text ~= "\n";
             }
 
-            rust_schema_file_text ~= "}\n\n";
+            rust_code_file_text ~= "}\n\n";
         }
 
-        rust_schema_file_path.write( rust_schema_file_text );
+        rust_code_file_path.write( rust_code_file_text );
     }
 
     // ~~
 
-    void WriteCrystalSchemaFile(
-        string crystal_schema_file_path
+    void WriteCrystalCodeFile(
+        string crystal_code_file_path
         )
     {
         string
-            crystal_schema_file_text;
+            crystal_code_file_text;
 
-        writeln( "Writing Crystal schema file : ", crystal_schema_file_path );
+        writeln( "Writing Crystal code file : ", crystal_code_file_path );
 
-        crystal_schema_file_text = "";
+        crystal_code_file_text = "";
 
         foreach ( ref table; TableArray )
         {
-            table.Type = table.Name;
-
-            crystal_schema_file_text ~= "class " ~ table.Type ~ "\n";
+            crystal_code_file_text ~= "class " ~ table.CrystalType ~ "\n";
 
             foreach ( ref column; table.ColumnArray )
             {
-                crystal_schema_file_text ~= "    @" ~ column.CrystalName ~ " : " ~ column.CrystalType ~ "\n";
+                crystal_code_file_text ~= "    @" ~ column.CrystalName ~ " : " ~ column.CrystalType ~ "\n";
             }
 
-            crystal_schema_file_text ~= "end\n\n";
+            crystal_code_file_text ~= "end\n\n";
         }
 
-        crystal_schema_file_path.write( crystal_schema_file_text );
+        crystal_code_file_path.write( crystal_code_file_text );
     }
 }
 
@@ -4666,7 +4881,7 @@ bool
     CqlOptionIsEnabled,
     SqlOptionIsEnabled;
 string
-    StoredFormat;
+    DatabaseFormat;
 string[]
     OutputFormatArray;
 RANDOM
@@ -4885,16 +5100,19 @@ void ProcessFile(
         }
         else if ( output_format == "go" )
         {
-            Schema.WriteGoSchemaFile( base_file_path ~ "_" ~ StoredFormat ~ ".go" );
-            Schema.WriteGsSchemaFile( base_file_path ~ "_" ~ StoredFormat ~ ".gs" );
+            Schema.WriteGoCodeFile( base_file_path ~ "_" ~ DatabaseFormat ~ ".go" );
+        }
+        else if ( output_format == "generis" )
+        {
+            Schema.WriteGenerisCodeFile( base_file_path ~ "_" ~ DatabaseFormat ~ ".gs" );
         }
         else if ( output_format == "rust" )
         {
-            Schema.WriteRustSchemaFile( base_file_path ~ "_" ~ StoredFormat ~ ".rs" );
+            Schema.WriteRustCodeFile( base_file_path ~ "_" ~ DatabaseFormat ~ ".rs" );
         }
         else if ( output_format == "crystal" )
         {
-            Schema.WriteCrystalSchemaFile( base_file_path ~ "_" ~ StoredFormat ~ ".cr" );
+            Schema.WriteCrystalCodeFile( base_file_path ~ "_" ~ DatabaseFormat ~ ".cr" );
         }
     }
 }
@@ -4913,7 +5131,7 @@ void main(
     SqlOptionIsEnabled = false;
     CqlOptionIsEnabled = false;
     OutputFormatArray = null;
-    StoredFormat = "";
+    DatabaseFormat = "";
 
     while ( argument_array.length >= 1
             && argument_array[ 0 ].startsWith( "--" ) )
@@ -4927,33 +5145,38 @@ void main(
             OutputFormatArray ~= "uml";
         }
         else if ( option == "--sql"
-                  && StoredFormat == "" )
+                  && DatabaseFormat == "" )
         {
             SqlOptionIsEnabled = true;
 
             OutputFormatArray ~= "sql";
-            StoredFormat = "sql";
+            DatabaseFormat = "sql";
         }
         else if ( option == "--cql"
-                  && StoredFormat == "" )
+                  && DatabaseFormat == "" )
         {
             CqlOptionIsEnabled = true;
 
             OutputFormatArray ~= "cql";
-            StoredFormat = "cql";
+            DatabaseFormat = "cql";
         }
         else if ( option == "--go"
-                  && StoredFormat != "" )
+                  && DatabaseFormat != "" )
         {
             OutputFormatArray ~= "go";
         }
+        else if ( option == "--generis"
+                  && DatabaseFormat != "" )
+        {
+            OutputFormatArray ~= "generis";
+        }
         else if ( option == "--rust"
-                  && StoredFormat != "" )
+                  && DatabaseFormat != "" )
         {
             OutputFormatArray ~= "rust";
         }
         else if ( option == "--crystal"
-                  && StoredFormat != "" )
+                  && DatabaseFormat != "" )
         {
             OutputFormatArray ~= "crystal";
         }
@@ -4975,11 +5198,10 @@ void main(
         writeln( "    --uml : generate the UML schema file" );
         writeln( "    --sql : generate the SQL schema and data files" );
         writeln( "    --cql : generate the CQL schema and data files" );
-        writeln( "    --gosql : generate the Go SQL schema file" );
-        writeln( "    --gocql : generate the Go CQL schema file" );
-        writeln( "    --gscql : generate the Go CQL file" );
-        writeln( "    --rust : generate the Rust schema file" );
-        writeln( "    --crystal : generate the Crystal schema file" );
+        writeln( "    --go : generate the Go code file" );
+        writeln( "    --generis : generate the Generis code file" );
+        writeln( "    --rust : generate the Rust code file" );
+        writeln( "    --crystal : generate the Crystal code file" );
         writeln( "Examples :" );
         writeln( "    basil --uml script_file.basil" );
         writeln( "    basil --uml --sql --go script_file.basil" );
