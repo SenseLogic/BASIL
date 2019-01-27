@@ -1512,3 +1512,28 @@ func HandleGetSubscriberRequest(
 
 // ~~
 
+router.Post( "/add_section", HandleAddSection );
+router.Post( "/set_section", HandleAddSection );
+router.Post( "/remove_section", HandleAddSection );
+router.Post( "/get_section", HandleAddSection );
+
+router.Post( "/add_user", HandleAddUser );
+router.Post( "/set_user", HandleAddUser );
+router.Post( "/remove_user", HandleAddUser );
+router.Post( "/get_user", HandleAddUser );
+
+router.Post( "/add_article", HandleAddArticle );
+router.Post( "/set_article", HandleAddArticle );
+router.Post( "/remove_article", HandleAddArticle );
+router.Post( "/get_article", HandleAddArticle );
+
+router.Post( "/add_comment", HandleAddComment );
+router.Post( "/set_comment", HandleAddComment );
+router.Post( "/remove_comment", HandleAddComment );
+router.Post( "/get_comment", HandleAddComment );
+
+router.Post( "/add_subscriber", HandleAddSubscriber );
+router.Post( "/set_subscriber", HandleAddSubscriber );
+router.Post( "/remove_subscriber", HandleAddSubscriber );
+router.Post( "/get_subscriber", HandleAddSubscriber );
+

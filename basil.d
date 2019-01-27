@@ -3941,15 +3941,15 @@ class TABLE
             generis_code;
 
         generis_code
-            ~= "func HandleGet" ~ GoFunction ~ "Request(\n"
-               ~ "    response_writer http.ResponseWriter,\n"
-               ~ "    request * http.Request\n"
-               ~ "    )\n"
-               ~ "{\n"
-               ~ "    var\n"
-               ~ "        " ~ GoVariable ~ " " ~ GoType ~ ";\n"
-               ~ "\n"
-               ~ "    if ( ";
+            = "func HandleGet" ~ GoFunction ~ "Request(\n"
+              ~ "    response_writer http.ResponseWriter,\n"
+              ~ "    request * http.Request\n"
+              ~ "    )\n"
+              ~ "{\n"
+              ~ "    var\n"
+              ~ "        " ~ GoVariable ~ " " ~ GoType ~ ";\n"
+              ~ "\n"
+              ~ "    if ( ";
 
         foreach ( ref column; ColumnArray )
         {
@@ -3980,6 +3980,19 @@ class TABLE
                ~ "\n";
 
         return generis_code;
+    }
+
+    // ~~
+
+    string GetRouteRequestGenerisCode(
+        )
+    {
+        return
+            "router.Post( \"/add_" ~ GoVariable ~ "\", HandleAdd" ~ GoFunction ~ " );\n"
+            ~ "router.Post( \"/set_" ~ GoVariable ~ "\", HandleAdd" ~ GoFunction ~ " );\n"
+            ~ "router.Post( \"/remove_" ~ GoVariable ~ "\", HandleAdd" ~ GoFunction ~ " );\n"
+            ~ "router.Post( \"/get_" ~ GoVariable ~ "\", HandleAdd" ~ GoFunction ~ " );\n"
+            ~ "\n";
     }
 
     // -- OPERATIONS
@@ -4802,6 +4815,12 @@ class SCHEMA
                    ~ table.GetHandleSetRequestGenerisCode()
                    ~ table.GetHandleRemoveRequestGenerisCode()
                    ~ table.GetHandleGetRequestGenerisCode();
+        }
+
+        foreach ( ref table; TableArray )
+        {
+            generis_code_file_text
+                ~= table.GetRouteRequestGenerisCode();
         }
 
         generis_code_file_path.write( generis_code_file_text );

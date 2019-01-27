@@ -273,7 +273,7 @@ basil [options] script_file.basil
 --sql : generate the SQL schema and data files
 --cql : generate the CQL schema and data files
 --go : generate the Go code file
---generis : generate the generis code file
+--generis : generate the Generis code file
 --rust : generate the Rust code file
 --crystal : generate the Crystal code file
 ```

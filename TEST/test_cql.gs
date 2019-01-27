@@ -595,3 +595,13 @@ func HandleGetCompoundRequest(
 
 // ~~
 
+router.Post( "/add_simple", HandleAddSimple );
+router.Post( "/set_simple", HandleAddSimple );
+router.Post( "/remove_simple", HandleAddSimple );
+router.Post( "/get_simple", HandleAddSimple );
+
+router.Post( "/add_compound", HandleAddCompound );
+router.Post( "/set_compound", HandleAddCompound );
+router.Post( "/remove_compound", HandleAddCompound );
+router.Post( "/get_compound", HandleAddCompound );
+
