@@ -3908,7 +3908,7 @@ class TABLE
                 generis_code
                     ~= "GetRequest" ~ column.GoFunction ~ "( &" ~ GoVariable ~ "." ~ column.GoName ~ ", request, \"" ~ column.StoredName ~ "\" )\n";
 
-                if ( !column.IsKey )
+                if ( !column.IsLastKey )
                 {
                     generis_code ~= "         && ";
                 }
@@ -3958,7 +3958,7 @@ class TABLE
                 generis_code
                     ~= "GetRequest" ~ column.GoFunction ~ "( &" ~ GoVariable ~ "." ~ column.GoName ~ ", request, \"" ~ column.StoredName ~ "\" )\n";
 
-                if ( !column.IsKey )
+                if ( !column.IsLastKey )
                 {
                     generis_code ~= "         && ";
                 }
