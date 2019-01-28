@@ -1047,7 +1047,8 @@ func HandleAddSectionRequest(
     var
         section SECTION;
 
-    if ( GetRequestUint64( &section.Number, request, "Number" )
+    if ( IsAuthorizedRequest( request )
+         && GetRequestUint64( &section.Number, request, "Number" )
          && GetRequestString( &section.Name, request, "Name" )
          && GetRequestString( &section.Text, request, "Text" )
          && GetRequestString( &section.Image, request, "Image" )
@@ -1071,7 +1072,8 @@ func HandleSetSectionRequest(
     var
         section SECTION;
 
-    if ( GetRequestUint64( &section.Id, request, "Id" )
+    if ( IsAuthorizedRequest( request )
+         && GetRequestUint64( &section.Id, request, "Id" )
          && GetRequestUint64( &section.Number, request, "Number" )
          && GetRequestString( &section.Name, request, "Name" )
          && GetRequestString( &section.Text, request, "Text" )
@@ -1096,7 +1098,8 @@ func HandleRemoveSectionRequest(
     var
         section SECTION;
 
-    if ( GetRequestUint64( &section.Id, request, "Id" )
+    if ( IsAuthorizedRequest( request )
+         && GetRequestUint64( &section.Id, request, "Id" )
          && RemoveDatabaseSection( &section ) )
     {
         WriteJsonSuccess( response_writer );
@@ -1117,7 +1120,8 @@ func HandleGetSectionRequest(
     var
         section SECTION;
 
-    if ( GetRequestUint64( &section.Id, request, "Id" )
+    if ( IsAuthorizedRequest( request )
+         && GetRequestUint64( &section.Id, request, "Id" )
          && GetDatabaseSection( &section ) )
     {
         WriteJsonSection( response_writer, &section );
@@ -1138,7 +1142,8 @@ func HandleAddUserRequest(
     var
         user USER;
 
-    if ( GetRequestString( &user.FirstName, request, "FirstName" )
+    if ( IsAuthorizedRequest( request )
+         && GetRequestString( &user.FirstName, request, "FirstName" )
          && GetRequestString( &user.LastName, request, "LastName" )
          && GetRequestString( &user.Email, request, "Email" )
          && GetRequestString( &user.Pseudonym, request, "Pseudonym" )
@@ -1171,7 +1176,8 @@ func HandleSetUserRequest(
     var
         user USER;
 
-    if ( GetRequestUint64( &user.Id, request, "Id" )
+    if ( IsAuthorizedRequest( request )
+         && GetRequestUint64( &user.Id, request, "Id" )
          && GetRequestString( &user.FirstName, request, "FirstName" )
          && GetRequestString( &user.LastName, request, "LastName" )
          && GetRequestString( &user.Email, request, "Email" )
@@ -1205,7 +1211,8 @@ func HandleRemoveUserRequest(
     var
         user USER;
 
-    if ( GetRequestUint64( &user.Id, request, "Id" )
+    if ( IsAuthorizedRequest( request )
+         && GetRequestUint64( &user.Id, request, "Id" )
          && RemoveDatabaseUser( &user ) )
     {
         WriteJsonSuccess( response_writer );
@@ -1226,7 +1233,8 @@ func HandleGetUserRequest(
     var
         user USER;
 
-    if ( GetRequestUint64( &user.Id, request, "Id" )
+    if ( IsAuthorizedRequest( request )
+         && GetRequestUint64( &user.Id, request, "Id" )
          && GetDatabaseUser( &user ) )
     {
         WriteJsonUser( response_writer, &user );
@@ -1247,7 +1255,8 @@ func HandleAddArticleRequest(
     var
         article ARTICLE;
 
-    if ( GetRequestUint64( &article.SectionId, request, "SectionId" )
+    if ( IsAuthorizedRequest( request )
+         && GetRequestUint64( &article.SectionId, request, "SectionId" )
          && GetRequestUint64( &article.UserId, request, "UserId" )
          && GetRequestString( &article.Title, request, "Title" )
          && GetRequestString( &article.Text, request, "Text" )
@@ -1273,7 +1282,8 @@ func HandleSetArticleRequest(
     var
         article ARTICLE;
 
-    if ( GetRequestUint64( &article.Id, request, "Id" )
+    if ( IsAuthorizedRequest( request )
+         && GetRequestUint64( &article.Id, request, "Id" )
          && GetRequestUint64( &article.SectionId, request, "SectionId" )
          && GetRequestUint64( &article.UserId, request, "UserId" )
          && GetRequestString( &article.Title, request, "Title" )
@@ -1300,7 +1310,8 @@ func HandleRemoveArticleRequest(
     var
         article ARTICLE;
 
-    if ( GetRequestUint64( &article.Id, request, "Id" )
+    if ( IsAuthorizedRequest( request )
+         && GetRequestUint64( &article.Id, request, "Id" )
          && RemoveDatabaseArticle( &article ) )
     {
         WriteJsonSuccess( response_writer );
@@ -1321,7 +1332,8 @@ func HandleGetArticleRequest(
     var
         article ARTICLE;
 
-    if ( GetRequestUint64( &article.Id, request, "Id" )
+    if ( IsAuthorizedRequest( request )
+         && GetRequestUint64( &article.Id, request, "Id" )
          && GetDatabaseArticle( &article ) )
     {
         WriteJsonArticle( response_writer, &article );
@@ -1342,7 +1354,8 @@ func HandleAddCommentRequest(
     var
         comment COMMENT;
 
-    if ( GetRequestUint64( &comment.ArticleId, request, "ArticleId" )
+    if ( IsAuthorizedRequest( request )
+         && GetRequestUint64( &comment.ArticleId, request, "ArticleId" )
          && GetRequestUint64( &comment.UserId, request, "UserId" )
          && GetRequestString( &comment.Text, request, "Text" )
          && GetRequestString( &comment.DateTime, request, "DateTime" )
@@ -1366,7 +1379,8 @@ func HandleSetCommentRequest(
     var
         comment COMMENT;
 
-    if ( GetRequestUint64( &comment.Id, request, "Id" )
+    if ( IsAuthorizedRequest( request )
+         && GetRequestUint64( &comment.Id, request, "Id" )
          && GetRequestUint64( &comment.ArticleId, request, "ArticleId" )
          && GetRequestUint64( &comment.UserId, request, "UserId" )
          && GetRequestString( &comment.Text, request, "Text" )
@@ -1391,7 +1405,8 @@ func HandleRemoveCommentRequest(
     var
         comment COMMENT;
 
-    if ( GetRequestUint64( &comment.Id, request, "Id" )
+    if ( IsAuthorizedRequest( request )
+         && GetRequestUint64( &comment.Id, request, "Id" )
          && RemoveDatabaseComment( &comment ) )
     {
         WriteJsonSuccess( response_writer );
@@ -1412,7 +1427,8 @@ func HandleGetCommentRequest(
     var
         comment COMMENT;
 
-    if ( GetRequestUint64( &comment.Id, request, "Id" )
+    if ( IsAuthorizedRequest( request )
+         && GetRequestUint64( &comment.Id, request, "Id" )
          && GetDatabaseComment( &comment ) )
     {
         WriteJsonComment( response_writer, &comment );
@@ -1433,7 +1449,8 @@ func HandleAddSubscriberRequest(
     var
         subscriber SUBSCRIBER;
 
-    if ( GetRequestString( &subscriber.Name, request, "Name" )
+    if ( IsAuthorizedRequest( request )
+         && GetRequestString( &subscriber.Name, request, "Name" )
          && GetRequestString( &subscriber.Email, request, "Email" )
          && AddDatabaseSubscriber( &subscriber ) )
     {
@@ -1455,7 +1472,8 @@ func HandleSetSubscriberRequest(
     var
         subscriber SUBSCRIBER;
 
-    if ( GetRequestUint64( &subscriber.Id, request, "Id" )
+    if ( IsAuthorizedRequest( request )
+         && GetRequestUint64( &subscriber.Id, request, "Id" )
          && GetRequestString( &subscriber.Name, request, "Name" )
          && GetRequestString( &subscriber.Email, request, "Email" )
          && SetDatabaseSubscriber( &subscriber ) )
@@ -1478,7 +1496,8 @@ func HandleRemoveSubscriberRequest(
     var
         subscriber SUBSCRIBER;
 
-    if ( GetRequestUint64( &subscriber.Id, request, "Id" )
+    if ( IsAuthorizedRequest( request )
+         && GetRequestUint64( &subscriber.Id, request, "Id" )
          && RemoveDatabaseSubscriber( &subscriber ) )
     {
         WriteJsonSuccess( response_writer );
@@ -1499,7 +1518,8 @@ func HandleGetSubscriberRequest(
     var
         subscriber SUBSCRIBER;
 
-    if ( GetRequestUint64( &subscriber.Id, request, "Id" )
+    if ( IsAuthorizedRequest( request )
+         && GetRequestUint64( &subscriber.Id, request, "Id" )
          && GetDatabaseSubscriber( &subscriber ) )
     {
         WriteJsonSubscriber( response_writer, &subscriber );

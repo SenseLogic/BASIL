@@ -3776,8 +3776,6 @@ class TABLE
     string GetHandleAddRequestGenerisCode(
         )
     {
-        long
-            column_count;
         string
             generis_code;
 
@@ -3791,9 +3789,7 @@ class TABLE
               ~ "        " ~ GoVariable ~ " " ~ GoType ~ ";\n"
               ~ "\n";
 
-        generis_code ~= "    if ( ";
-
-        column_count = 0;
+        generis_code ~= "    if ( IsAuthorizedRequest( request )\n";
 
         foreach ( ref column; ColumnArray )
         {
@@ -3803,15 +3799,8 @@ class TABLE
                        && ( column.StoredType == "uuid"
                             || column.IsIncremented) ) )
             {
-                if ( column_count > 0 )
-                {
-                    generis_code ~= "         && ";
-                }
-
                 generis_code
-                    ~= "GetRequest" ~ column.GoFunction ~ "( &" ~ GoVariable ~ "." ~ column.GoName ~ ", request, \"" ~ column.StoredName ~ "\" )\n";
-
-                ++column_count;
+                    ~= "         && GetRequest" ~ column.GoFunction ~ "( &" ~ GoVariable ~ "." ~ column.GoName ~ ", request, \"" ~ column.StoredName ~ "\" )\n";
             }
         }
 
@@ -3849,19 +3838,14 @@ class TABLE
               ~ "    var\n"
               ~ "        " ~ GoVariable ~ " " ~ GoType ~ ";\n"
               ~ "\n"
-              ~ "    if ( ";
+              ~ "    if ( IsAuthorizedRequest( request )\n";
 
         foreach ( ref column; ColumnArray )
         {
             if ( column.IsStored )
             {
                 generis_code
-                    ~= "GetRequest" ~ column.GoFunction ~ "( &" ~ GoVariable ~ "." ~ column.GoName ~ ", request, \"" ~ column.StoredName ~ "\" )\n";
-
-                if ( !column.IsLastStored )
-                {
-                    generis_code ~= "         && ";
-                }
+                    ~= "         && GetRequest" ~ column.GoFunction ~ "( &" ~ GoVariable ~ "." ~ column.GoName ~ ", request, \"" ~ column.StoredName ~ "\" )\n";
             }
         }
 
@@ -3899,19 +3883,14 @@ class TABLE
               ~ "    var\n"
               ~ "        " ~ GoVariable ~ " " ~ GoType ~ ";\n"
               ~ "\n"
-              ~ "    if ( ";
+              ~ "    if ( IsAuthorizedRequest( request )\n";
 
         foreach ( ref column; ColumnArray )
         {
             if ( column.IsKey )
             {
                 generis_code
-                    ~= "GetRequest" ~ column.GoFunction ~ "( &" ~ GoVariable ~ "." ~ column.GoName ~ ", request, \"" ~ column.StoredName ~ "\" )\n";
-
-                if ( !column.IsLastKey )
-                {
-                    generis_code ~= "         && ";
-                }
+                    ~= "         && GetRequest" ~ column.GoFunction ~ "( &" ~ GoVariable ~ "." ~ column.GoName ~ ", request, \"" ~ column.StoredName ~ "\" )\n";
             }
         }
 
@@ -3949,19 +3928,14 @@ class TABLE
               ~ "    var\n"
               ~ "        " ~ GoVariable ~ " " ~ GoType ~ ";\n"
               ~ "\n"
-              ~ "    if ( ";
+              ~ "    if ( IsAuthorizedRequest( request )\n";
 
         foreach ( ref column; ColumnArray )
         {
             if ( column.IsKey )
             {
                 generis_code
-                    ~= "GetRequest" ~ column.GoFunction ~ "( &" ~ GoVariable ~ "." ~ column.GoName ~ ", request, \"" ~ column.StoredName ~ "\" )\n";
-
-                if ( !column.IsLastKey )
-                {
-                    generis_code ~= "         && ";
-                }
+                    ~= "         && GetRequest" ~ column.GoFunction ~ "( &" ~ GoVariable ~ "." ~ column.GoName ~ ", request, \"" ~ column.StoredName ~ "\" )\n";
             }
         }
 

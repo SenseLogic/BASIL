@@ -385,7 +385,8 @@ func HandleAddSimpleRequest(
     var
         simple SIMPLE;
 
-    if ( GetRequestBool( &simple.Bool, request, "Bool" )
+    if ( IsAuthorizedRequest( request )
+         && GetRequestBool( &simple.Bool, request, "Bool" )
          && GetRequestInt8( &simple.Int8, request, "Int8" )
          && GetRequestUint8( &simple.Uint8, request, "Uint8" )
          && GetRequestInt16( &simple.Int16, request, "Int16" )
@@ -420,7 +421,8 @@ func HandleSetSimpleRequest(
     var
         simple SIMPLE;
 
-    if ( GetRequestUuid( &simple.Uuid, request, "Uuid" )
+    if ( IsAuthorizedRequest( request )
+         && GetRequestUuid( &simple.Uuid, request, "Uuid" )
          && GetRequestBool( &simple.Bool, request, "Bool" )
          && GetRequestInt8( &simple.Int8, request, "Int8" )
          && GetRequestUint8( &simple.Uint8, request, "Uint8" )
@@ -456,7 +458,8 @@ func HandleRemoveSimpleRequest(
     var
         simple SIMPLE;
 
-    if ( GetRequestUuid( &simple.Uuid, request, "Uuid" )
+    if ( IsAuthorizedRequest( request )
+         && GetRequestUuid( &simple.Uuid, request, "Uuid" )
          && RemoveDatabaseSimple( &simple ) )
     {
         WriteJsonSuccess( response_writer );
@@ -477,7 +480,8 @@ func HandleGetSimpleRequest(
     var
         simple SIMPLE;
 
-    if ( GetRequestUuid( &simple.Uuid, request, "Uuid" )
+    if ( IsAuthorizedRequest( request )
+         && GetRequestUuid( &simple.Uuid, request, "Uuid" )
          && GetDatabaseSimple( &simple ) )
     {
         WriteJsonSimple( response_writer, &simple );
@@ -498,7 +502,8 @@ func HandleAddCompoundRequest(
     var
         compound COMPOUND;
 
-    if ( GetRequestString( &compound.Location, request, "Location" )
+    if ( IsAuthorizedRequest( request )
+         && GetRequestString( &compound.Location, request, "Location" )
          && GetRequestStringStringTuple( &compound.Name, request, "Name" )
          && GetRequestStringStringTupleSet( &compound.NameSet, request, "NameSet" )
          && GetRequestStringList( &compound.PhoneList, request, "PhoneList" )
@@ -529,7 +534,8 @@ func HandleSetCompoundRequest(
     var
         compound COMPOUND;
 
-    if ( GetRequestInt32( &compound.Id, request, "Id" )
+    if ( IsAuthorizedRequest( request )
+         && GetRequestInt32( &compound.Id, request, "Id" )
          && GetRequestString( &compound.Location, request, "Location" )
          && GetRequestStringStringTuple( &compound.Name, request, "Name" )
          && GetRequestStringStringTupleSet( &compound.NameSet, request, "NameSet" )
@@ -561,7 +567,8 @@ func HandleRemoveCompoundRequest(
     var
         compound COMPOUND;
 
-    if ( GetRequestInt32( &compound.Id, request, "Id" )
+    if ( IsAuthorizedRequest( request )
+         && GetRequestInt32( &compound.Id, request, "Id" )
          && RemoveDatabaseCompound( &compound ) )
     {
         WriteJsonSuccess( response_writer );
@@ -582,7 +589,8 @@ func HandleGetCompoundRequest(
     var
         compound COMPOUND;
 
-    if ( GetRequestInt32( &compound.Id, request, "Id" )
+    if ( IsAuthorizedRequest( request )
+         && GetRequestInt32( &compound.Id, request, "Id" )
          && GetDatabaseCompound( &compound ) )
     {
         WriteJsonCompound( response_writer, &compound );
