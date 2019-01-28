@@ -1,41 +1,44 @@
-type SECTION struct {
-    Id uint64 `db:"Id"`;
-    Number uint64 `db:"Number"`;
-    Name string `db:"Name"`;
-    Text string `db:"Text"`;
-    Image string `db:"Image"`;
+type SECTION struct
+{
+    Id uint64    `db:"Id"`;
+    Number uint64    `db:"Number"`;
+    Name string    `db:"Name"`;
+    Text string    `db:"Text"`;
+    Image string    `db:"Image"`;
     ImageIndex uint64;
 }
 
 // ~~
 
-type USER struct {
-    Id uint64 `db:"Id"`;
-    FirstName string `db:"FirstName"`;
-    LastName string `db:"LastName"`;
-    Email string `db:"Email"`;
-    Pseudonym string `db:"Pseudonym"`;
-    Password string `db:"Password"`;
-    Phone string `db:"Phone"`;
-    Street string `db:"Street"`;
-    City string `db:"City"`;
-    Code string `db:"Code"`;
-    Region string `db:"Region"`;
-    Country string `db:"Country"`;
-    Company string `db:"Company"`;
-    ItIsAdministrator bool `db:"ItIsAdministrator"`;
+type USER struct
+{
+    Id uint64    `db:"Id"`;
+    FirstName string    `db:"FirstName"`;
+    LastName string    `db:"LastName"`;
+    Email string    `db:"Email"`;
+    Pseudonym string    `db:"Pseudonym"`;
+    Password string    `db:"Password"`;
+    Phone string    `db:"Phone"`;
+    Street string    `db:"Street"`;
+    City string    `db:"City"`;
+    Code string    `db:"Code"`;
+    Region string    `db:"Region"`;
+    Country string    `db:"Country"`;
+    Company string    `db:"Company"`;
+    ItIsAdministrator bool    `db:"ItIsAdministrator"`;
 }
 
 // ~~
 
-type ARTICLE struct {
-    Id uint64 `db:"Id"`;
-    SectionId uint64 `db:"SectionId"`;
-    UserId uint64 `db:"UserId"`;
-    Title string `db:"Title"`;
-    Text string `db:"Text"`;
-    Image string `db:"Image"`;
-    Date string `db:"Date"`;
+type ARTICLE struct
+{
+    Id uint64    `db:"Id"`;
+    SectionId uint64    `db:"SectionId"`;
+    UserId uint64    `db:"UserId"`;
+    Title string    `db:"Title"`;
+    Text string    `db:"Text"`;
+    Image string    `db:"Image"`;
+    Date string    `db:"Date"`;
     Section * SECTION;
     User * USER;
     ImageIndex uint64;
@@ -43,22 +46,24 @@ type ARTICLE struct {
 
 // ~~
 
-type COMMENT struct {
-    Id uint64 `db:"Id"`;
-    ArticleId uint64 `db:"ArticleId"`;
-    UserId uint64 `db:"UserId"`;
-    Text string `db:"Text"`;
-    DateTime string `db:"DateTime"`;
+type COMMENT struct
+{
+    Id uint64    `db:"Id"`;
+    ArticleId uint64    `db:"ArticleId"`;
+    UserId uint64    `db:"UserId"`;
+    Text string    `db:"Text"`;
+    DateTime string    `db:"DateTime"`;
     Article * ARTICLE;
     User * USER;
 }
 
 // ~~
 
-type SUBSCRIBER struct {
-    Id uint64 `db:"Id"`;
-    Name string `db:"Name"`;
-    Email string `db:"Email"`;
+type SUBSCRIBER struct
+{
+    Id uint64    `db:"Id"`;
+    Name string    `db:"Name"`;
+    Email string    `db:"Email"`;
 }
 
 // ~~
@@ -1058,7 +1063,7 @@ func HandleAddSectionRequest(
     }
     else
     {
-        WriteJsonError( response_writer );
+        WriteJsonError( response_writer, "", http.StatusBadRequest );
     }
 }
 
@@ -1084,7 +1089,7 @@ func HandleSetSectionRequest(
     }
     else
     {
-        WriteJsonError( response_writer );
+        WriteJsonError( response_writer, "", http.StatusBadRequest );
     }
 }
 
@@ -1106,7 +1111,7 @@ func HandleRemoveSectionRequest(
     }
     else
     {
-        WriteJsonError( response_writer );
+        WriteJsonError( response_writer, "", http.StatusBadRequest );
     }
 }
 
@@ -1128,7 +1133,7 @@ func HandleGetSectionRequest(
     }
     else
     {
-        WriteJsonError( response_writer );
+        WriteJsonError( response_writer, "", http.StatusBadRequest );
     }
 }
 
@@ -1162,7 +1167,7 @@ func HandleAddUserRequest(
     }
     else
     {
-        WriteJsonError( response_writer );
+        WriteJsonError( response_writer, "", http.StatusBadRequest );
     }
 }
 
@@ -1197,7 +1202,7 @@ func HandleSetUserRequest(
     }
     else
     {
-        WriteJsonError( response_writer );
+        WriteJsonError( response_writer, "", http.StatusBadRequest );
     }
 }
 
@@ -1219,7 +1224,7 @@ func HandleRemoveUserRequest(
     }
     else
     {
-        WriteJsonError( response_writer );
+        WriteJsonError( response_writer, "", http.StatusBadRequest );
     }
 }
 
@@ -1241,7 +1246,7 @@ func HandleGetUserRequest(
     }
     else
     {
-        WriteJsonError( response_writer );
+        WriteJsonError( response_writer, "", http.StatusBadRequest );
     }
 }
 
@@ -1268,7 +1273,7 @@ func HandleAddArticleRequest(
     }
     else
     {
-        WriteJsonError( response_writer );
+        WriteJsonError( response_writer, "", http.StatusBadRequest );
     }
 }
 
@@ -1296,7 +1301,7 @@ func HandleSetArticleRequest(
     }
     else
     {
-        WriteJsonError( response_writer );
+        WriteJsonError( response_writer, "", http.StatusBadRequest );
     }
 }
 
@@ -1318,7 +1323,7 @@ func HandleRemoveArticleRequest(
     }
     else
     {
-        WriteJsonError( response_writer );
+        WriteJsonError( response_writer, "", http.StatusBadRequest );
     }
 }
 
@@ -1340,7 +1345,7 @@ func HandleGetArticleRequest(
     }
     else
     {
-        WriteJsonError( response_writer );
+        WriteJsonError( response_writer, "", http.StatusBadRequest );
     }
 }
 
@@ -1365,7 +1370,7 @@ func HandleAddCommentRequest(
     }
     else
     {
-        WriteJsonError( response_writer );
+        WriteJsonError( response_writer, "", http.StatusBadRequest );
     }
 }
 
@@ -1391,7 +1396,7 @@ func HandleSetCommentRequest(
     }
     else
     {
-        WriteJsonError( response_writer );
+        WriteJsonError( response_writer, "", http.StatusBadRequest );
     }
 }
 
@@ -1413,7 +1418,7 @@ func HandleRemoveCommentRequest(
     }
     else
     {
-        WriteJsonError( response_writer );
+        WriteJsonError( response_writer, "", http.StatusBadRequest );
     }
 }
 
@@ -1435,7 +1440,7 @@ func HandleGetCommentRequest(
     }
     else
     {
-        WriteJsonError( response_writer );
+        WriteJsonError( response_writer, "", http.StatusBadRequest );
     }
 }
 
@@ -1458,7 +1463,7 @@ func HandleAddSubscriberRequest(
     }
     else
     {
-        WriteJsonError( response_writer );
+        WriteJsonError( response_writer, "", http.StatusBadRequest );
     }
 }
 
@@ -1482,7 +1487,7 @@ func HandleSetSubscriberRequest(
     }
     else
     {
-        WriteJsonError( response_writer );
+        WriteJsonError( response_writer, "", http.StatusBadRequest );
     }
 }
 
@@ -1504,7 +1509,7 @@ func HandleRemoveSubscriberRequest(
     }
     else
     {
-        WriteJsonError( response_writer );
+        WriteJsonError( response_writer, "", http.StatusBadRequest );
     }
 }
 
@@ -1526,7 +1531,7 @@ func HandleGetSubscriberRequest(
     }
     else
     {
-        WriteJsonError( response_writer );
+        WriteJsonError( response_writer, "", http.StatusBadRequest );
     }
 }
 

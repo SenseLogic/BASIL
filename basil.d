@@ -3811,7 +3811,7 @@ class TABLE
                ~ "    }\n"
                ~ "    else\n"
                ~ "    {\n"
-               ~ "        WriteJsonError( response_writer );\n"
+               ~ "        WriteJsonError( response_writer, \"\", http.StatusBadRequest );\n"
                ~ "    }\n"
                ~ "}\n"
                ~ "\n"
@@ -3856,7 +3856,7 @@ class TABLE
                ~ "    }\n"
                ~ "    else\n"
                ~ "    {\n"
-               ~ "        WriteJsonError( response_writer );\n"
+               ~ "        WriteJsonError( response_writer, \"\", http.StatusBadRequest );\n"
                ~ "    }\n"
                ~ "}\n"
                ~ "\n"
@@ -3901,7 +3901,7 @@ class TABLE
                ~ "    }\n"
                ~ "    else\n"
                ~ "    {\n"
-               ~ "        WriteJsonError( response_writer );\n"
+               ~ "        WriteJsonError( response_writer, \"\", http.StatusBadRequest );\n"
                ~ "    }\n"
                ~ "}\n"
                ~ "\n"
@@ -3946,7 +3946,7 @@ class TABLE
                ~ "    }\n"
                ~ "    else\n"
                ~ "    {\n"
-               ~ "        WriteJsonError( response_writer );\n"
+               ~ "        WriteJsonError( response_writer, \"\", http.StatusBadRequest );\n"
                ~ "    }\n"
                ~ "}\n"
                ~ "\n"
@@ -4708,11 +4708,11 @@ class SCHEMA
                 {
                     if ( SqlOptionIsEnabled )
                     {
-                        go_code_file_text ~= " `db:\"" ~ column.StoredName ~ "\"`";
+                        go_code_file_text ~= "    `db:\"" ~ column.StoredName ~ "\"`";
                     }
                     else
                     {
-                        go_code_file_text ~= " `db:\"-\"`";
+                        go_code_file_text ~= "    `db:\"-\"`";
                     }
                 }
 
@@ -4743,7 +4743,9 @@ class SCHEMA
 
         foreach ( ref table; TableArray )
         {
-            generis_code_file_text ~= "type " ~ table.GoType ~ " struct {\n";
+            generis_code_file_text
+                ~= "type " ~ table.GoType ~ " struct\n"
+                   ~ "{\n";
 
             foreach ( ref column; table.ColumnArray )
             {
@@ -4753,11 +4755,11 @@ class SCHEMA
                 {
                     if ( SqlOptionIsEnabled )
                     {
-                        generis_code_file_text ~= " `db:\"" ~ column.StoredName ~ "\"`";
+                        generis_code_file_text ~= "    `db:\"" ~ column.StoredName ~ "\"`";
                     }
                     else
                     {
-                        generis_code_file_text ~= " `db:\"-\"`";
+                        generis_code_file_text ~= "    `db:\"-\"`";
                     }
                 }
 
