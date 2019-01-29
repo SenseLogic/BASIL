@@ -7,6 +7,8 @@ class SECTION
     @image_index : Uint64
 end
 
+# ~~
+
 class USER
     @id : Uint64
     @first_name : String
@@ -24,6 +26,8 @@ class USER
     @it_is_administrator : bool
 end
 
+# ~~
+
 class ARTICLE
     @id : Uint64
     @section_id : Uint64
@@ -37,6 +41,8 @@ class ARTICLE
     @image_index : Uint64
 end
 
+# ~~
+
 class COMMENT
     @id : Uint64
     @article_id : Uint64
@@ -47,9 +53,10 @@ class COMMENT
     @user : USER
 end
 
+# ~~
+
 class SUBSCRIBER
     @id : Uint64
     @name : String
     @email : String
 end
-

@@ -8,6 +8,8 @@ struct SECTION
     image_index : u64
 }
 
+// ~~
+
 struct USER
 {
     id : u64,
@@ -26,6 +28,8 @@ struct USER
     it_is_administrator : bool
 }
 
+// ~~
+
 struct ARTICLE
 {
     id : u64,
@@ -40,6 +44,8 @@ struct ARTICLE
     image_index : u64
 }
 
+// ~~
+
 struct COMMENT
 {
     id : u64,
@@ -51,10 +57,11 @@ struct COMMENT
     user : Weak<USER>
 }
 
+// ~~
+
 struct SUBSCRIBER
 {
     id : u64,
     name : String,
     email : String
 }
-

@@ -1,4 +1,5 @@
-type SECTION struct {
+type SECTION struct
+{
     Id uint64    `db:"Id"`;
     Number uint64    `db:"Number"`;
     Name string    `db:"Name"`;
@@ -9,7 +10,8 @@ type SECTION struct {
 
 // ~~
 
-type USER struct {
+type USER struct
+{
     Id uint64    `db:"Id"`;
     FirstName string    `db:"FirstName"`;
     LastName string    `db:"LastName"`;
@@ -28,7 +30,8 @@ type USER struct {
 
 // ~~
 
-type ARTICLE struct {
+type ARTICLE struct
+{
     Id uint64    `db:"Id"`;
     SectionId uint64    `db:"SectionId"`;
     UserId uint64    `db:"UserId"`;
@@ -43,7 +46,8 @@ type ARTICLE struct {
 
 // ~~
 
-type COMMENT struct {
+type COMMENT struct
+{
     Id uint64    `db:"Id"`;
     ArticleId uint64    `db:"ArticleId"`;
     UserId uint64    `db:"UserId"`;
@@ -55,11 +59,9 @@ type COMMENT struct {
 
 // ~~
 
-type SUBSCRIBER struct {
+type SUBSCRIBER struct
+{
     Id uint64    `db:"Id"`;
     Name string    `db:"Name"`;
     Email string    `db:"Email"`;
 }
-
-// ~~
-

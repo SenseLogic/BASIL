@@ -12,10 +12,10 @@ Versatile database generator.
     *   UML schema file.
     *   SQL schema and data files.
     *   CQL schema and data files.
-    *   Go code file.
-    *   Generis code file.
-    *   Rust code file.
-    *   Crystal code file.
+    *   Go type file.
+    *   Generis type, query, response, request and route files.
+    *   Rust type file.
+    *   Crystal type file.
 
 ## Sample
 
@@ -272,10 +272,10 @@ basil [options] script_file.basil
 --uml : generate the UML schema file
 --sql : generate the SQL schema and data files
 --cql : generate the CQL schema and data files
---go : generate the Go code file
---generis : generate the Generis code file
---rust : generate the Rust code file
---crystal : generate the Crystal code file
+--go : generate the Go type file
+--generis : generate the Generis type, query, response, request and route files
+--rust : generate the Rust type file
+--crystal : generate the Crystal type file
 ```
 
 The `--sql` and `--cql` options are mutually exclusive.
@@ -294,7 +294,7 @@ Generates "blog.uml" from "blog.basil".
 basil --uml --sql --go blog.basil
 ```
 
-Generates "blog.uml", "blog.sql", "blog_data.sql", "blog_sql.go" and "blog_sql.gs" from "blog.basil".
+Generates "blog.uml", "blog.sql", "blog_data.sql", "blog_sql_type.go" from "blog.basil".
 
 ## Version
 

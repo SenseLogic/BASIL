@@ -3007,7 +3007,8 @@ class TABLE
 
         generis_code
             = "func AddDatabase" ~ GoFunction ~ "(\n"
-              ~ "    " ~ GoVariable ~ " * " ~ GoType ~ "\n"
+              ~ "    " ~ GoVariable ~ " * " ~ GoType ~ ",\n"
+              ~ "    error_code * ERROR_CODE\n"
               ~ "    ) bool\n"
               ~ "{\n";
 
@@ -3082,7 +3083,7 @@ class TABLE
                    ~ "\n"
                    ~ "    if ( error_ != nil )\n"
                    ~ "    {\n"
-                   ~ "        HandleError( error_ );\n"
+                   ~ "        error_code.Set( error_ , http.StatusBadRequest );\n"
                    ~ "\n"
                    ~ "        return false;\n"
                    ~ "    }\n"
@@ -3188,16 +3189,13 @@ class TABLE
             ~= "\n"
                ~ "    if ( error_ != nil )\n"
                ~ "    {\n"
-               ~ "        HandleError( error_ );\n"
+               ~ "        error_code.Set( error_ , http.StatusBadRequest );\n"
                ~ "\n"
                ~ "        return false;\n"
                ~ "    }\n"
                ~ "\n"
                ~ "    return true;\n"
-               ~ "}\n"
-               ~ "\n"
-               ~ "// ~~\n"
-               ~ "\n";
+               ~ "}\n";
 
         return generis_code;
     }
@@ -3214,7 +3212,8 @@ class TABLE
 
         generis_code
             = "func SetDatabase" ~ GoFunction ~ "(\n"
-              ~ "    " ~ GoVariable ~ " * " ~ GoType ~ "\n"
+              ~ "    " ~ GoVariable ~ " * " ~ GoType ~ ",\n"
+              ~ "    error_code * ERROR_CODE\n"
               ~ "    ) bool\n"
               ~ "{\n";
 
@@ -3264,7 +3263,7 @@ class TABLE
                    ~ "\n"
                    ~ "    if ( error_ != nil )\n"
                    ~ "    {\n"
-                   ~ "        HandleError( error_ );\n"
+                   ~ "        error_code.Set( error_ , http.StatusBadRequest );\n"
                    ~ "\n"
                    ~ "        return false;\n"
                    ~ "    }\n"
@@ -3359,16 +3358,13 @@ class TABLE
             ~= "\n"
                ~ "    if ( error_ != nil )\n"
                ~ "    {\n"
-               ~ "        HandleError( error_ );\n"
+               ~ "        error_code.Set( error_ , http.StatusBadRequest );\n"
                ~ "\n"
                ~ "        return false;\n"
                ~ "    }\n"
                ~ "\n"
                ~ "    return true;\n"
-               ~ "}\n"
-               ~ "\n"
-               ~ "// ~~\n"
-               ~ "\n";
+               ~ "}\n";
 
         return generis_code;
     }
@@ -3383,7 +3379,8 @@ class TABLE
 
         generis_code
             = "func RemoveDatabase" ~ GoFunction ~ "(\n"
-              ~ "    " ~ GoVariable ~ " * " ~ GoType ~ "\n"
+              ~ "    " ~ GoVariable ~ " * " ~ GoType ~ ",\n"
+              ~ "    error_code * ERROR_CODE\n"
               ~ "    ) bool\n"
               ~ "{\n";
 
@@ -3413,7 +3410,7 @@ class TABLE
                    ~ "\n"
                    ~ "    if ( error_ != nil )\n"
                    ~ "    {\n"
-                   ~ "        HandleError( error_ );\n"
+                   ~ "        error_code.Set( error_ , http.StatusBadRequest );\n"
                    ~ "\n"
                    ~ "        return false;\n"
                    ~ "    }\n"
@@ -3484,16 +3481,13 @@ class TABLE
             ~= "\n"
                ~ "    if ( error_ != nil )\n"
                ~ "    {\n"
-               ~ "        HandleError( error_ );\n"
+               ~ "        error_code.Set( error_ , http.StatusBadRequest );\n"
                ~ "\n"
                ~ "        return false;\n"
                ~ "    }\n"
                ~ "\n"
                ~ "    return true;\n"
-               ~ "}\n"
-               ~ "\n"
-               ~ "// ~~\n"
-               ~ "\n";
+               ~ "}\n";
 
         return generis_code;
     }
@@ -3510,7 +3504,8 @@ class TABLE
 
         generis_code
             = "func GetDatabase" ~ GoFunction ~ "(\n"
-              ~ "    " ~ GoVariable ~ " * " ~ GoType ~ "\n"
+              ~ "    " ~ GoVariable ~ " * " ~ GoType ~ ",\n"
+              ~ "    error_code * ERROR_CODE\n"
               ~ "    ) bool\n"
               ~ "{\n";
 
@@ -3559,7 +3554,7 @@ class TABLE
                    ~ "\n"
                    ~ "    if ( error_ != nil )\n"
                    ~ "    {\n"
-                   ~ "        HandleError( error_ );\n"
+                   ~ "        error_code.Set( error_ , http.StatusBadRequest );\n"
                    ~ "\n"
                    ~ "        return false;\n"
                    ~ "    }\n"
@@ -3587,7 +3582,7 @@ class TABLE
                    ~ "\n"
                    ~ "    if ( error_ != nil )\n"
                    ~ "    {\n"
-                   ~ "        HandleError( error_ );\n"
+                   ~ "        error_code.Set( error_ , http.StatusBadRequest );\n"
                    ~ "\n"
                    ~ "        return false;\n"
                    ~ "    }\n"
@@ -3624,7 +3619,7 @@ class TABLE
                    ~ "\n"
                    ~ "        if ( error_ != nil )\n"
                    ~ "        {\n"
-                   ~ "            HandleError( error_ );\n"
+                   ~ "            error_code.Set( error_ , http.StatusBadRequest );\n"
                    ~ "\n"
                    ~ "            return false;\n"
                    ~ "        }\n"
@@ -3721,16 +3716,13 @@ class TABLE
             ~= "\n"
                ~ "    if ( error_ != nil )\n"
                ~ "    {\n"
-               ~ "        HandleError( error_ );\n"
+               ~ "        error_code.Set( error_ , http.StatusBadRequest );\n"
                ~ "\n"
                ~ "        return false;\n"
                ~ "    }\n"
                ~ "\n"
                ~ "    return true;\n"
-               ~ "}\n"
-               ~ "\n"
-               ~ "// ~~\n"
-               ~ "\n";
+               ~ "}\n";
 
         return generis_code;
     }
@@ -3749,7 +3741,7 @@ class TABLE
               ~ "    " ~ GoVariable ~ " * " ~ GoType ~ "\n"
               ~ "    )\n"
               ~ "{\n"
-              ~ "    WriteJsonText( response_writer, \"{\");\n";
+              ~ "    WriteJsonText( response_writer, \"{\" );\n";
 
         foreach ( ref column; ColumnArray )
         {
@@ -3763,10 +3755,7 @@ class TABLE
 
         generis_code
             ~= "    WriteJsonText( response_writer, \"}\" );\n"
-               ~ "}\n"
-               ~ "\n"
-               ~ "// ~~\n"
-               ~ "\n";
+               ~ "}\n";
 
         return generis_code;
     }
@@ -3786,10 +3775,12 @@ class TABLE
               ~ "    )\n"
               ~ "{\n"
               ~ "    var\n"
+              ~ "        error_code ERROR_CODE;\n"
+              ~ "    var\n"
               ~ "        " ~ GoVariable ~ " " ~ GoType ~ ";\n"
               ~ "\n";
 
-        generis_code ~= "    if ( IsAuthorizedRequest( request )\n";
+        generis_code ~= "    if ( IsAuthorizedRequest( request, &error_code )\n";
 
         foreach ( ref column; ColumnArray )
         {
@@ -3800,23 +3791,20 @@ class TABLE
                             || column.IsIncremented) ) )
             {
                 generis_code
-                    ~= "         && GetRequest" ~ column.GoFunction ~ "( &" ~ GoVariable ~ "." ~ column.GoName ~ ", request, \"" ~ column.StoredName ~ "\" )\n";
+                    ~= "         && GetRequest" ~ column.GoFunction ~ "( &" ~ GoVariable ~ "." ~ column.GoName ~ ", request, \"" ~ column.StoredName ~ "\", &error_code )\n";
             }
         }
 
         generis_code
-            ~= "         && AddDatabase" ~ GoFunction ~ "( &" ~ GoVariable ~ " ) )\n"
+            ~= "         && AddDatabase" ~ GoFunction ~ "( &" ~ GoVariable ~ ", &error_code ) )\n"
                ~ "    {\n"
                ~ "        WriteJsonSuccess( response_writer );\n"
                ~ "    }\n"
                ~ "    else\n"
                ~ "    {\n"
-               ~ "        WriteJsonError( response_writer, \"\", http.StatusBadRequest );\n"
+               ~ "        WriteJsonError( response_writer, &error_code );\n"
                ~ "    }\n"
-               ~ "}\n"
-               ~ "\n"
-               ~ "// ~~\n"
-               ~ "\n";
+               ~ "}\n";
 
         return generis_code;
     }
@@ -3836,32 +3824,31 @@ class TABLE
               ~ "    )\n"
               ~ "{\n"
               ~ "    var\n"
+              ~ "        error_code ERROR_CODE;\n"
+              ~ "    var\n"
               ~ "        " ~ GoVariable ~ " " ~ GoType ~ ";\n"
               ~ "\n"
-              ~ "    if ( IsAuthorizedRequest( request )\n";
+              ~ "    if ( IsAuthorizedRequest( request, &error_code )\n";
 
         foreach ( ref column; ColumnArray )
         {
             if ( column.IsStored )
             {
                 generis_code
-                    ~= "         && GetRequest" ~ column.GoFunction ~ "( &" ~ GoVariable ~ "." ~ column.GoName ~ ", request, \"" ~ column.StoredName ~ "\" )\n";
+                    ~= "         && GetRequest" ~ column.GoFunction ~ "( &" ~ GoVariable ~ "." ~ column.GoName ~ ", request, \"" ~ column.StoredName ~ "\", &error_code )\n";
             }
         }
 
         generis_code
-            ~= "         && SetDatabase" ~ GoFunction ~ "( &" ~ GoVariable ~ " ) )\n"
+            ~= "         && SetDatabase" ~ GoFunction ~ "( &" ~ GoVariable ~ ", &error_code ) )\n"
                ~ "    {\n"
                ~ "        WriteJsonSuccess( response_writer );\n"
                ~ "    }\n"
                ~ "    else\n"
                ~ "    {\n"
-               ~ "        WriteJsonError( response_writer, \"\", http.StatusBadRequest );\n"
+               ~ "        WriteJsonError( response_writer, &error_code );\n"
                ~ "    }\n"
-               ~ "}\n"
-               ~ "\n"
-               ~ "// ~~\n"
-               ~ "\n";
+               ~ "}\n";
 
         return generis_code;
     }
@@ -3881,32 +3868,31 @@ class TABLE
               ~ "    )\n"
               ~ "{\n"
               ~ "    var\n"
+              ~ "        error_code ERROR_CODE;\n"
+              ~ "    var\n"
               ~ "        " ~ GoVariable ~ " " ~ GoType ~ ";\n"
               ~ "\n"
-              ~ "    if ( IsAuthorizedRequest( request )\n";
+              ~ "    if ( IsAuthorizedRequest( request, &error_code )\n";
 
         foreach ( ref column; ColumnArray )
         {
             if ( column.IsKey )
             {
                 generis_code
-                    ~= "         && GetRequest" ~ column.GoFunction ~ "( &" ~ GoVariable ~ "." ~ column.GoName ~ ", request, \"" ~ column.StoredName ~ "\" )\n";
+                    ~= "         && GetRequest" ~ column.GoFunction ~ "( &" ~ GoVariable ~ "." ~ column.GoName ~ ", request, \"" ~ column.StoredName ~ "\", &error_code )\n";
             }
         }
 
         generis_code
-            ~= "         && RemoveDatabase" ~ GoFunction ~ "( &" ~ GoVariable ~ " ) )\n"
+            ~= "         && RemoveDatabase" ~ GoFunction ~ "( &" ~ GoVariable ~ ", &error_code ) )\n"
                ~ "    {\n"
                ~ "        WriteJsonSuccess( response_writer );\n"
                ~ "    }\n"
                ~ "    else\n"
                ~ "    {\n"
-               ~ "        WriteJsonError( response_writer, \"\", http.StatusBadRequest );\n"
+               ~ "        WriteJsonError( response_writer, &error_code );\n"
                ~ "    }\n"
-               ~ "}\n"
-               ~ "\n"
-               ~ "// ~~\n"
-               ~ "\n";
+               ~ "}\n";
 
         return generis_code;
     }
@@ -3926,32 +3912,31 @@ class TABLE
               ~ "    )\n"
               ~ "{\n"
               ~ "    var\n"
+              ~ "        error_code ERROR_CODE;\n"
+              ~ "    var\n"
               ~ "        " ~ GoVariable ~ " " ~ GoType ~ ";\n"
               ~ "\n"
-              ~ "    if ( IsAuthorizedRequest( request )\n";
+              ~ "    if ( IsAuthorizedRequest( request, &error_code )\n";
 
         foreach ( ref column; ColumnArray )
         {
             if ( column.IsKey )
             {
                 generis_code
-                    ~= "         && GetRequest" ~ column.GoFunction ~ "( &" ~ GoVariable ~ "." ~ column.GoName ~ ", request, \"" ~ column.StoredName ~ "\" )\n";
+                    ~= "         && GetRequest" ~ column.GoFunction ~ "( &" ~ GoVariable ~ "." ~ column.GoName ~ ", request, \"" ~ column.StoredName ~ "\", &error_code )\n";
             }
         }
 
         generis_code
-            ~= "         && GetDatabase" ~ GoFunction ~ "( &" ~ GoVariable ~ " ) )\n"
+            ~= "         && GetDatabase" ~ GoFunction ~ "( &" ~ GoVariable ~ ", &error_code ) )\n"
                ~ "    {\n"
                ~ "        WriteJson" ~ GoFunction ~ "( response_writer, &" ~ GoVariable ~ " );\n"
                ~ "    }\n"
                ~ "    else\n"
                ~ "    {\n"
-               ~ "        WriteJsonError( response_writer, \"\", http.StatusBadRequest );\n"
+               ~ "        WriteJsonError( response_writer, &error_code );\n"
                ~ "    }\n"
-               ~ "}\n"
-               ~ "\n"
-               ~ "// ~~\n"
-               ~ "\n";
+               ~ "}\n";
 
         return generis_code;
     }
@@ -3962,11 +3947,10 @@ class TABLE
         )
     {
         return
-            "router.Post( \"/add_" ~ GoVariable ~ "\", HandleAdd" ~ GoFunction ~ " );\n"
-            ~ "router.Post( \"/set_" ~ GoVariable ~ "\", HandleAdd" ~ GoFunction ~ " );\n"
-            ~ "router.Post( \"/remove_" ~ GoVariable ~ "\", HandleAdd" ~ GoFunction ~ " );\n"
-            ~ "router.Post( \"/get_" ~ GoVariable ~ "\", HandleAdd" ~ GoFunction ~ " );\n"
-            ~ "\n";
+            "    router.Post( \"/add_" ~ GoVariable ~ "\", HandleAdd" ~ GoFunction ~ "Request );\n"
+            ~ "    router.Post( \"/set_" ~ GoVariable ~ "\", HandleSet" ~ GoFunction ~ "Request );\n"
+            ~ "    router.Post( \"/remove_" ~ GoVariable ~ "\", HandleRemove" ~ GoFunction ~ "Request );\n"
+            ~ "    router.Post( \"/get_" ~ GoVariable ~ "\", HandleGet" ~ GoFunction ~ "Request );\n";
     }
 
     // -- OPERATIONS
@@ -4685,143 +4669,249 @@ class SCHEMA
 
     // ~~
 
-    void WriteGoCodeFile(
-        string go_code_file_path
+    void WriteGoTypeFile(
+        string go_type_file_path
         )
     {
         string
-            go_code_file_text;
+            go_type_file_text;
 
-        writeln( "Writing Go code file : ", go_code_file_path );
+        writeln( "Writing Go type file : ", go_type_file_path );
 
-        go_code_file_text = "";
+        go_type_file_text = "";
 
-        foreach ( ref table; TableArray )
+        foreach ( table_index, ref table; TableArray )
         {
-            go_code_file_text ~= "type " ~ table.GoType ~ " struct {\n";
+            go_type_file_text ~= "type " ~ table.GoType ~ " struct {\n";
 
             foreach ( ref column; table.ColumnArray )
             {
-                go_code_file_text ~= "    " ~ column.GoName ~ " " ~ column.GoType;
+                go_type_file_text ~= "    " ~ column.GoName ~ " " ~ column.GoType;
 
                 if ( column.IsStored )
                 {
                     if ( SqlOptionIsEnabled )
                     {
-                        go_code_file_text ~= "    `db:\"" ~ column.StoredName ~ "\"`";
+                        go_type_file_text ~= "    `db:\"" ~ column.StoredName ~ "\"`";
                     }
                     else
                     {
-                        go_code_file_text ~= "    `db:\"-\"`";
+                        go_type_file_text ~= "    `db:\"-\"`";
                     }
                 }
 
-                go_code_file_text ~= ";\n";
+                go_type_file_text ~= ";\n";
             }
 
-            go_code_file_text ~= "}\n\n// ~~\n\n";
+            go_type_file_text ~= "}\n";
+
+            if ( table_index + 1 < TableArray.length )
+            {
+                go_type_file_text ~= "\n// ~~\n\n";
+            }
         }
 
-        go_code_file_path.write( go_code_file_text );
+        go_type_file_path.write( go_type_file_text );
     }
 
     // ~~
 
-    void WriteGenerisCodeFile(
-        string generis_code_file_path
+    void WriteGenerisTypeFile(
+        string generis_type_file_path
         )
     {
         long
             column_count,
             column_index;
         string
-            generis_code_file_text;
+            generis_type_file_text;
 
-        writeln( "Writing Generis code file : ", generis_code_file_path );
+        writeln( "Writing Generis type file : ", generis_type_file_path );
 
-        generis_code_file_text = "";
+        generis_type_file_text = "";
 
-        foreach ( ref table; TableArray )
+        foreach ( table_index, ref table; TableArray )
         {
-            generis_code_file_text
+            generis_type_file_text
                 ~= "type " ~ table.GoType ~ " struct\n"
                    ~ "{\n";
 
             foreach ( ref column; table.ColumnArray )
             {
-                generis_code_file_text ~= "    " ~ column.GoName ~ " " ~ column.GoType;
+                generis_type_file_text ~= "    " ~ column.GoName ~ " " ~ column.GoType;
 
                 if ( column.IsStored )
                 {
                     if ( SqlOptionIsEnabled )
                     {
-                        generis_code_file_text ~= "    `db:\"" ~ column.StoredName ~ "\"`";
+                        generis_type_file_text ~= "    `db:\"" ~ column.StoredName ~ "\"`";
                     }
                     else
                     {
-                        generis_code_file_text ~= "    `db:\"-\"`";
+                        generis_type_file_text ~= "    `db:\"-\"`";
                     }
                 }
 
-                generis_code_file_text ~= ";\n";
+                generis_type_file_text ~= ";\n";
             }
 
-            generis_code_file_text ~= "}\n\n// ~~\n\n";
+            generis_type_file_text ~= "}\n";
+
+            if ( table_index + 1 < TableArray.length )
+            {
+                generis_type_file_text ~= "\n// ~~\n\n";
+            }
         }
 
-        foreach ( ref table; TableArray )
-        {
-            generis_code_file_text
-                ~= table.GetAddDatabaseGenerisCode()
-                   ~ table.GetSetDatabaseGenerisCode()
-                   ~ table.GetRemoveDatabaseGenerisCode()
-                   ~ table.GetGetDatabaseGenerisCode();
-        }
-
-        foreach ( ref table; TableArray )
-        {
-            generis_code_file_text
-                ~= table.GetWriteJsonGenerisCode();
-        }
-
-        foreach ( ref table; TableArray )
-        {
-            generis_code_file_text
-                ~= table.GetHandleAddRequestGenerisCode()
-                   ~ table.GetHandleSetRequestGenerisCode()
-                   ~ table.GetHandleRemoveRequestGenerisCode()
-                   ~ table.GetHandleGetRequestGenerisCode();
-        }
-
-        foreach ( ref table; TableArray )
-        {
-            generis_code_file_text
-                ~= table.GetRouteRequestGenerisCode();
-        }
-
-        generis_code_file_path.write( generis_code_file_text );
+        generis_type_file_path.write( generis_type_file_text );
     }
 
     // ~~
 
-    void WriteRustCodeFile(
-        string rust_code_file_path
+    void WriteGenerisQueryFile(
+        string generis_query_file_path
         )
     {
         string
-            rust_code_file_text;
+            generis_query_file_text;
 
-        writeln( "Writing Rust code file : ", rust_code_file_path );
+        writeln( "Writing Generis query file : ", generis_query_file_path );
 
-        rust_code_file_text = "";
+        generis_query_file_text = "";
 
-        foreach ( ref table; TableArray )
+        foreach ( table_index, ref table; TableArray )
         {
-            rust_code_file_text ~= "struct " ~ table.RustType ~ "\n{\n";
+            generis_query_file_text
+                ~= table.GetAddDatabaseGenerisCode()
+                   ~ "\n// ~~\n\n"
+                   ~ table.GetSetDatabaseGenerisCode()
+                   ~ "\n// ~~\n\n"
+                   ~ table.GetRemoveDatabaseGenerisCode()
+                   ~ "\n// ~~\n\n"
+                   ~ table.GetGetDatabaseGenerisCode();
+
+            if ( table_index + 1 < TableArray.length )
+            {
+                generis_query_file_text ~= "\n// ~~\n\n";
+            }
+        }
+
+        generis_query_file_path.write( generis_query_file_text );
+    }
+
+    // ~~
+
+    void WriteGenerisResponseFile(
+        string generis_response_file_path
+        )
+    {
+        string
+            generis_response_file_text;
+
+        writeln( "Writing Generis response file : ", generis_response_file_path );
+
+        generis_response_file_text = "";
+
+        foreach ( table_index, ref table; TableArray )
+        {
+            generis_response_file_text
+                ~= table.GetWriteJsonGenerisCode();
+
+            if ( table_index + 1 < TableArray.length )
+            {
+                generis_response_file_text ~= "\n// ~~\n\n";
+            }
+        }
+
+        generis_response_file_path.write( generis_response_file_text );
+    }
+
+    // ~~
+
+    void WriteGenerisRequestFile(
+        string generis_request_file_path
+        )
+    {
+        string
+            generis_request_file_text;
+
+        writeln( "Writing Generis request file : ", generis_request_file_path );
+
+        generis_request_file_text = "";
+
+        foreach ( table_index, ref table; TableArray )
+        {
+            generis_request_file_text
+                ~= table.GetHandleAddRequestGenerisCode()
+                   ~ "\n// ~~\n\n"
+                   ~ table.GetHandleSetRequestGenerisCode()
+                   ~ "\n// ~~\n\n"
+                   ~ table.GetHandleRemoveRequestGenerisCode()
+                   ~ "\n// ~~\n\n"
+                   ~ table.GetHandleGetRequestGenerisCode();
+
+            if ( table_index + 1 < TableArray.length )
+            {
+                generis_request_file_text ~= "\n// ~~\n\n";
+            }
+        }
+
+        generis_request_file_path.write( generis_request_file_text );
+    }
+
+    // ~~
+
+    void WriteGenerisRouteFile(
+        string generis_route_file_path
+        )
+    {
+        string
+            generis_route_file_text;
+
+        writeln( "Writing Generis route file : ", generis_route_file_path );
+
+        generis_route_file_text
+            = "func RouteRequest(\n"
+              ~ "    router ROUTER\n"
+              ~ "    )\n"
+              ~ "{\n";
+
+        foreach ( table_index, ref table; TableArray )
+        {
+            generis_route_file_text
+                ~= table.GetRouteRequestGenerisCode();
+
+            if ( table_index + 1 < TableArray.length )
+            {
+                generis_route_file_text ~= "\n";
+            }
+        }
+
+        generis_route_file_text ~= "}\n";
+
+        generis_route_file_path.write( generis_route_file_text );
+    }
+
+    // ~~
+
+    void WriteRustTypeFile(
+        string rust_type_file_path
+        )
+    {
+        string
+            rust_type_file_text;
+
+        writeln( "Writing Rust type file : ", rust_type_file_path );
+
+        rust_type_file_text = "";
+
+        foreach ( table_index, ref table; TableArray )
+        {
+            rust_type_file_text ~= "struct " ~ table.RustType ~ "\n{\n";
 
             foreach ( column_index, ref column; table.ColumnArray )
             {
-                rust_code_file_text
+                rust_type_file_text
                     ~= "    "
                        ~ column.RustName
                        ~ " : "
@@ -4829,44 +4919,54 @@ class SCHEMA
 
                 if ( column_index + 1 < table.ColumnArray.length )
                 {
-                    rust_code_file_text ~= ",";
+                    rust_type_file_text ~= ",";
                 }
 
-                rust_code_file_text ~= "\n";
+                rust_type_file_text ~= "\n";
             }
 
-            rust_code_file_text ~= "}\n\n";
+            rust_type_file_text ~= "}\n";
+
+            if ( table_index + 1 < TableArray.length )
+            {
+                rust_type_file_text ~= "\n// ~~\n\n";
+            }
         }
 
-        rust_code_file_path.write( rust_code_file_text );
+        rust_type_file_path.write( rust_type_file_text );
     }
 
     // ~~
 
-    void WriteCrystalCodeFile(
-        string crystal_code_file_path
+    void WriteCrystalTypeFile(
+        string crystal_type_file_path
         )
     {
         string
-            crystal_code_file_text;
+            crystal_type_file_text;
 
-        writeln( "Writing Crystal code file : ", crystal_code_file_path );
+        writeln( "Writing Crystal type file : ", crystal_type_file_path );
 
-        crystal_code_file_text = "";
+        crystal_type_file_text = "";
 
-        foreach ( ref table; TableArray )
+        foreach ( table_index, ref table; TableArray )
         {
-            crystal_code_file_text ~= "class " ~ table.CrystalType ~ "\n";
+            crystal_type_file_text ~= "class " ~ table.CrystalType ~ "\n";
 
             foreach ( ref column; table.ColumnArray )
             {
-                crystal_code_file_text ~= "    @" ~ column.CrystalName ~ " : " ~ column.CrystalType ~ "\n";
+                crystal_type_file_text ~= "    @" ~ column.CrystalName ~ " : " ~ column.CrystalType ~ "\n";
             }
 
-            crystal_code_file_text ~= "end\n\n";
+            crystal_type_file_text ~= "end\n";
+
+            if ( table_index + 1 < TableArray.length )
+            {
+                crystal_type_file_text ~= "\n# ~~\n\n";
+            }
         }
 
-        crystal_code_file_path.write( crystal_code_file_text );
+        crystal_type_file_path.write( crystal_type_file_text );
     }
 }
 
@@ -5095,19 +5195,23 @@ void ProcessFile(
         }
         else if ( output_format == "go" )
         {
-            Schema.WriteGoCodeFile( base_file_path ~ "_" ~ DatabaseFormat ~ ".go" );
+            Schema.WriteGoTypeFile( base_file_path ~ "_" ~ DatabaseFormat ~ "_type.go" );
         }
         else if ( output_format == "generis" )
         {
-            Schema.WriteGenerisCodeFile( base_file_path ~ "_" ~ DatabaseFormat ~ ".gs" );
+            Schema.WriteGenerisTypeFile( base_file_path ~ "_" ~ DatabaseFormat ~ "_type.gs" );
+            Schema.WriteGenerisQueryFile( base_file_path ~ "_" ~ DatabaseFormat ~ "_query.gs" );
+            Schema.WriteGenerisResponseFile( base_file_path ~ "_" ~ DatabaseFormat ~ "_response.gs" );
+            Schema.WriteGenerisRequestFile( base_file_path ~ "_" ~ DatabaseFormat ~ "_request.gs" );
+            Schema.WriteGenerisRouteFile( base_file_path ~ "_" ~ DatabaseFormat ~ "_route.gs" );
         }
         else if ( output_format == "rust" )
         {
-            Schema.WriteRustCodeFile( base_file_path ~ "_" ~ DatabaseFormat ~ ".rs" );
+            Schema.WriteRustTypeFile( base_file_path ~ "_" ~ DatabaseFormat ~ "_type.rs" );
         }
         else if ( output_format == "crystal" )
         {
-            Schema.WriteCrystalCodeFile( base_file_path ~ "_" ~ DatabaseFormat ~ ".cr" );
+            Schema.WriteCrystalTypeFile( base_file_path ~ "_" ~ DatabaseFormat ~ "_type.cr" );
         }
     }
 }
@@ -5193,10 +5297,10 @@ void main(
         writeln( "    --uml : generate the UML schema file" );
         writeln( "    --sql : generate the SQL schema and data files" );
         writeln( "    --cql : generate the CQL schema and data files" );
-        writeln( "    --go : generate the Go code file" );
-        writeln( "    --generis : generate the Generis code file" );
-        writeln( "    --rust : generate the Rust code file" );
-        writeln( "    --crystal : generate the Crystal code file" );
+        writeln( "    --go : generate the Go type file" );
+        writeln( "    --generis : generate the Generis type, query, response, request and route files" );
+        writeln( "    --rust : generate the Rust type file" );
+        writeln( "    --crystal : generate the Crystal type file" );
         writeln( "Examples :" );
         writeln( "    basil --uml script_file.basil" );
         writeln( "    basil --uml --sql --go script_file.basil" );

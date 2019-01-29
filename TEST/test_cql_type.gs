@@ -1,4 +1,5 @@
-type SIMPLE struct {
+type SIMPLE struct
+{
     Uuid gocql.UUID    `db:"-"`;
     Bool bool    `db:"-"`;
     Int8 int8    `db:"-"`;
@@ -19,7 +20,8 @@ type SIMPLE struct {
 
 // ~~
 
-type COMPOUND struct {
+type COMPOUND struct
+{
     Id int32    `db:"-"`;
     Location string    `db:"-"`;
     Name STRING_STRING_TUPLE    `db:"-"`;
@@ -34,6 +36,3 @@ type COMPOUND struct {
     NameSetMap STRING_STRING_STRING_TUPLE_SET_MAP    `db:"-"`;
     SimplePointerArray [] * SIMPLE;
 }
-
-// ~~
-

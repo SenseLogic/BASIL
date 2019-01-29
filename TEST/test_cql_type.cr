@@ -17,6 +17,8 @@ class SIMPLE
     @blob : String
 end
 
+# ~~
+
 class COMPOUND
     @id : Int32
     @location : String
@@ -32,4 +34,3 @@ class COMPOUND
     @name_set_map : Hash(String,Set(Tuple(String,String)))
     @simple_pointer_array : Array(SIMPLE)
 end
-

@@ -18,6 +18,8 @@ struct SIMPLE
     blob : String
 }
 
+// ~~
+
 struct COMPOUND
 {
     id : i32,
@@ -34,4 +36,3 @@ struct COMPOUND
     name_set_map : Map<String,List<(String,String)>>,
     simple_pointer_array : Vec<Weak<SIMPLE>>
 }
-
