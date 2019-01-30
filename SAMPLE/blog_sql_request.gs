@@ -8,7 +8,7 @@ func HandleAddSectionRequest(
     var
         section SECTION;
 
-    if ( IsAuthorizedRequest( request, &error_code )
+    if ( IsAdministratorSession( request, &error_code )
          && GetRequestUint64( &section.Number, request, "Number", &error_code )
          && GetRequestString( &section.Name, request, "Name", &error_code )
          && GetRequestString( &section.Text, request, "Text", &error_code )
@@ -35,7 +35,7 @@ func HandleSetSectionRequest(
     var
         section SECTION;
 
-    if ( IsAuthorizedRequest( request, &error_code )
+    if ( IsAdministratorSession( request, &error_code )
          && GetRequestUint64( &section.Id, request, "Id", &error_code )
          && GetRequestUint64( &section.Number, request, "Number", &error_code )
          && GetRequestString( &section.Name, request, "Name", &error_code )
@@ -63,7 +63,7 @@ func HandleRemoveSectionRequest(
     var
         section SECTION;
 
-    if ( IsAuthorizedRequest( request, &error_code )
+    if ( IsAdministratorSession( request, &error_code )
          && GetRequestUint64( &section.Id, request, "Id", &error_code )
          && RemoveDatabaseSection( &section, &error_code ) )
     {
@@ -87,7 +87,7 @@ func HandleGetSectionRequest(
     var
         section SECTION;
 
-    if ( IsAuthorizedRequest( request, &error_code )
+    if ( IsAdministratorSession( request, &error_code )
          && GetRequestUint64( &section.Id, request, "Id", &error_code )
          && GetDatabaseSection( &section, &error_code ) )
     {
@@ -111,7 +111,7 @@ func HandleAddUserRequest(
     var
         user USER;
 
-    if ( IsAuthorizedRequest( request, &error_code )
+    if ( IsAdministratorSession( request, &error_code )
          && GetRequestString( &user.FirstName, request, "FirstName", &error_code )
          && GetRequestString( &user.LastName, request, "LastName", &error_code )
          && GetRequestString( &user.Email, request, "Email", &error_code )
@@ -147,7 +147,7 @@ func HandleSetUserRequest(
     var
         user USER;
 
-    if ( IsAuthorizedRequest( request, &error_code )
+    if ( IsAdministratorSession( request, &error_code )
          && GetRequestUint64( &user.Id, request, "Id", &error_code )
          && GetRequestString( &user.FirstName, request, "FirstName", &error_code )
          && GetRequestString( &user.LastName, request, "LastName", &error_code )
@@ -184,7 +184,7 @@ func HandleRemoveUserRequest(
     var
         user USER;
 
-    if ( IsAuthorizedRequest( request, &error_code )
+    if ( IsAdministratorSession( request, &error_code )
          && GetRequestUint64( &user.Id, request, "Id", &error_code )
          && RemoveDatabaseUser( &user, &error_code ) )
     {
@@ -208,7 +208,7 @@ func HandleGetUserRequest(
     var
         user USER;
 
-    if ( IsAuthorizedRequest( request, &error_code )
+    if ( IsAdministratorSession( request, &error_code )
          && GetRequestUint64( &user.Id, request, "Id", &error_code )
          && GetDatabaseUser( &user, &error_code ) )
     {
@@ -232,7 +232,7 @@ func HandleAddArticleRequest(
     var
         article ARTICLE;
 
-    if ( IsAuthorizedRequest( request, &error_code )
+    if ( IsAdministratorSession( request, &error_code )
          && GetRequestUint64( &article.SectionId, request, "SectionId", &error_code )
          && GetRequestUint64( &article.UserId, request, "UserId", &error_code )
          && GetRequestString( &article.Title, request, "Title", &error_code )
@@ -261,7 +261,7 @@ func HandleSetArticleRequest(
     var
         article ARTICLE;
 
-    if ( IsAuthorizedRequest( request, &error_code )
+    if ( IsAdministratorSession( request, &error_code )
          && GetRequestUint64( &article.Id, request, "Id", &error_code )
          && GetRequestUint64( &article.SectionId, request, "SectionId", &error_code )
          && GetRequestUint64( &article.UserId, request, "UserId", &error_code )
@@ -291,7 +291,7 @@ func HandleRemoveArticleRequest(
     var
         article ARTICLE;
 
-    if ( IsAuthorizedRequest( request, &error_code )
+    if ( IsAdministratorSession( request, &error_code )
          && GetRequestUint64( &article.Id, request, "Id", &error_code )
          && RemoveDatabaseArticle( &article, &error_code ) )
     {
@@ -315,7 +315,7 @@ func HandleGetArticleRequest(
     var
         article ARTICLE;
 
-    if ( IsAuthorizedRequest( request, &error_code )
+    if ( IsAdministratorSession( request, &error_code )
          && GetRequestUint64( &article.Id, request, "Id", &error_code )
          && GetDatabaseArticle( &article, &error_code ) )
     {
@@ -339,7 +339,7 @@ func HandleAddCommentRequest(
     var
         comment COMMENT;
 
-    if ( IsAuthorizedRequest( request, &error_code )
+    if ( IsAdministratorSession( request, &error_code )
          && GetRequestUint64( &comment.ArticleId, request, "ArticleId", &error_code )
          && GetRequestUint64( &comment.UserId, request, "UserId", &error_code )
          && GetRequestString( &comment.Text, request, "Text", &error_code )
@@ -366,7 +366,7 @@ func HandleSetCommentRequest(
     var
         comment COMMENT;
 
-    if ( IsAuthorizedRequest( request, &error_code )
+    if ( IsAdministratorSession( request, &error_code )
          && GetRequestUint64( &comment.Id, request, "Id", &error_code )
          && GetRequestUint64( &comment.ArticleId, request, "ArticleId", &error_code )
          && GetRequestUint64( &comment.UserId, request, "UserId", &error_code )
@@ -394,7 +394,7 @@ func HandleRemoveCommentRequest(
     var
         comment COMMENT;
 
-    if ( IsAuthorizedRequest( request, &error_code )
+    if ( IsAdministratorSession( request, &error_code )
          && GetRequestUint64( &comment.Id, request, "Id", &error_code )
          && RemoveDatabaseComment( &comment, &error_code ) )
     {
@@ -418,7 +418,7 @@ func HandleGetCommentRequest(
     var
         comment COMMENT;
 
-    if ( IsAuthorizedRequest( request, &error_code )
+    if ( IsAdministratorSession( request, &error_code )
          && GetRequestUint64( &comment.Id, request, "Id", &error_code )
          && GetDatabaseComment( &comment, &error_code ) )
     {
@@ -442,7 +442,7 @@ func HandleAddSubscriberRequest(
     var
         subscriber SUBSCRIBER;
 
-    if ( IsAuthorizedRequest( request, &error_code )
+    if ( IsAdministratorSession( request, &error_code )
          && GetRequestString( &subscriber.Name, request, "Name", &error_code )
          && GetRequestString( &subscriber.Email, request, "Email", &error_code )
          && AddDatabaseSubscriber( &subscriber, &error_code ) )
@@ -467,7 +467,7 @@ func HandleSetSubscriberRequest(
     var
         subscriber SUBSCRIBER;
 
-    if ( IsAuthorizedRequest( request, &error_code )
+    if ( IsAdministratorSession( request, &error_code )
          && GetRequestUint64( &subscriber.Id, request, "Id", &error_code )
          && GetRequestString( &subscriber.Name, request, "Name", &error_code )
          && GetRequestString( &subscriber.Email, request, "Email", &error_code )
@@ -493,7 +493,7 @@ func HandleRemoveSubscriberRequest(
     var
         subscriber SUBSCRIBER;
 
-    if ( IsAuthorizedRequest( request, &error_code )
+    if ( IsAdministratorSession( request, &error_code )
          && GetRequestUint64( &subscriber.Id, request, "Id", &error_code )
          && RemoveDatabaseSubscriber( &subscriber, &error_code ) )
     {
@@ -517,7 +517,7 @@ func HandleGetSubscriberRequest(
     var
         subscriber SUBSCRIBER;
 
-    if ( IsAuthorizedRequest( request, &error_code )
+    if ( IsAdministratorSession( request, &error_code )
          && GetRequestUint64( &subscriber.Id, request, "Id", &error_code )
          && GetDatabaseSubscriber( &subscriber, &error_code ) )
     {

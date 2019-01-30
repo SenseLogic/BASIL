@@ -1,5 +1,5 @@
 func RouteRequest(
-    router ROUTER
+    router * Router
     )
 {
     router.Post( "/add_simple", HandleAddSimpleRequest );

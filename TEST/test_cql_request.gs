@@ -8,7 +8,7 @@ func HandleAddSimpleRequest(
     var
         simple SIMPLE;
 
-    if ( IsAuthorizedRequest( request, &error_code )
+    if ( IsAdministratorSession( request, &error_code )
          && GetRequestBool( &simple.Bool, request, "Bool", &error_code )
          && GetRequestInt8( &simple.Int8, request, "Int8", &error_code )
          && GetRequestUint8( &simple.Uint8, request, "Uint8", &error_code )
@@ -46,7 +46,7 @@ func HandleSetSimpleRequest(
     var
         simple SIMPLE;
 
-    if ( IsAuthorizedRequest( request, &error_code )
+    if ( IsAdministratorSession( request, &error_code )
          && GetRequestUuid( &simple.Uuid, request, "Uuid", &error_code )
          && GetRequestBool( &simple.Bool, request, "Bool", &error_code )
          && GetRequestInt8( &simple.Int8, request, "Int8", &error_code )
@@ -85,7 +85,7 @@ func HandleRemoveSimpleRequest(
     var
         simple SIMPLE;
 
-    if ( IsAuthorizedRequest( request, &error_code )
+    if ( IsAdministratorSession( request, &error_code )
          && GetRequestUuid( &simple.Uuid, request, "Uuid", &error_code )
          && RemoveDatabaseSimple( &simple, &error_code ) )
     {
@@ -109,7 +109,7 @@ func HandleGetSimpleRequest(
     var
         simple SIMPLE;
 
-    if ( IsAuthorizedRequest( request, &error_code )
+    if ( IsAdministratorSession( request, &error_code )
          && GetRequestUuid( &simple.Uuid, request, "Uuid", &error_code )
          && GetDatabaseSimple( &simple, &error_code ) )
     {
@@ -133,7 +133,7 @@ func HandleAddCompoundRequest(
     var
         compound COMPOUND;
 
-    if ( IsAuthorizedRequest( request, &error_code )
+    if ( IsAdministratorSession( request, &error_code )
          && GetRequestString( &compound.Location, request, "Location", &error_code )
          && GetRequestStringStringTuple( &compound.Name, request, "Name", &error_code )
          && GetRequestStringStringTupleSet( &compound.NameSet, request, "NameSet", &error_code )
@@ -167,7 +167,7 @@ func HandleSetCompoundRequest(
     var
         compound COMPOUND;
 
-    if ( IsAuthorizedRequest( request, &error_code )
+    if ( IsAdministratorSession( request, &error_code )
          && GetRequestInt32( &compound.Id, request, "Id", &error_code )
          && GetRequestString( &compound.Location, request, "Location", &error_code )
          && GetRequestStringStringTuple( &compound.Name, request, "Name", &error_code )
@@ -202,7 +202,7 @@ func HandleRemoveCompoundRequest(
     var
         compound COMPOUND;
 
-    if ( IsAuthorizedRequest( request, &error_code )
+    if ( IsAdministratorSession( request, &error_code )
          && GetRequestInt32( &compound.Id, request, "Id", &error_code )
          && RemoveDatabaseCompound( &compound, &error_code ) )
     {
@@ -226,7 +226,7 @@ func HandleGetCompoundRequest(
     var
         compound COMPOUND;
 
-    if ( IsAuthorizedRequest( request, &error_code )
+    if ( IsAdministratorSession( request, &error_code )
          && GetRequestInt32( &compound.Id, request, "Id", &error_code )
          && GetDatabaseCompound( &compound, &error_code ) )
     {

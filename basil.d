@@ -3780,7 +3780,7 @@ class TABLE
               ~ "        " ~ GoVariable ~ " " ~ GoType ~ ";\n"
               ~ "\n";
 
-        generis_code ~= "    if ( IsAuthorizedRequest( request, &error_code )\n";
+        generis_code ~= "    if ( IsAdministratorSession( request, &error_code )\n";
 
         foreach ( ref column; ColumnArray )
         {
@@ -3828,7 +3828,7 @@ class TABLE
               ~ "    var\n"
               ~ "        " ~ GoVariable ~ " " ~ GoType ~ ";\n"
               ~ "\n"
-              ~ "    if ( IsAuthorizedRequest( request, &error_code )\n";
+              ~ "    if ( IsAdministratorSession( request, &error_code )\n";
 
         foreach ( ref column; ColumnArray )
         {
@@ -3872,7 +3872,7 @@ class TABLE
               ~ "    var\n"
               ~ "        " ~ GoVariable ~ " " ~ GoType ~ ";\n"
               ~ "\n"
-              ~ "    if ( IsAuthorizedRequest( request, &error_code )\n";
+              ~ "    if ( IsAdministratorSession( request, &error_code )\n";
 
         foreach ( ref column; ColumnArray )
         {
@@ -3916,7 +3916,7 @@ class TABLE
               ~ "    var\n"
               ~ "        " ~ GoVariable ~ " " ~ GoType ~ ";\n"
               ~ "\n"
-              ~ "    if ( IsAuthorizedRequest( request, &error_code )\n";
+              ~ "    if ( IsAdministratorSession( request, &error_code )\n";
 
         foreach ( ref column; ColumnArray )
         {
@@ -4872,7 +4872,7 @@ class SCHEMA
 
         generis_route_file_text
             = "func RouteRequest(\n"
-              ~ "    router ROUTER\n"
+              ~ "    router Router\n"
               ~ "    )\n"
               ~ "{\n";
 
