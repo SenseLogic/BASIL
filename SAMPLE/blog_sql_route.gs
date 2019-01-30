@@ -1,5 +1,5 @@
-func RouteRequest(
-    router * Router
+func RouteDatabaseRequests(
+    router Router
     )
 {
     router.Post( "/add_section", HandleAddSectionRequest );

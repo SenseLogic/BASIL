@@ -4871,7 +4871,7 @@ class SCHEMA
         writeln( "Writing Generis route file : ", generis_route_file_path );
 
         generis_route_file_text
-            = "func RouteRequest(\n"
+            = "func RouteDatabaseRequests(\n"
               ~ "    router Router\n"
               ~ "    )\n"
               ~ "{\n";
