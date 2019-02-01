@@ -3258,7 +3258,7 @@ class TABLE
             }
 
             generis_code
-                ~= " )\"\n"
+                ~= "\"\n"
                    ~ "               );\n"
                    ~ "\n"
                    ~ "    if ( error_ != nil )\n"
@@ -3405,7 +3405,7 @@ class TABLE
             }
 
             generis_code
-                ~= " )\"\n"
+                ~= "\"\n"
                    ~ "               );\n"
                    ~ "\n"
                    ~ "    if ( error_ != nil )\n"
@@ -3549,7 +3549,7 @@ class TABLE
             }
 
             generis_code
-                ~= " )\"\n"
+                ~= "\"\n"
                    ~ "               );\n"
                    ~ "\n"
                    ~ "    if ( error_ != nil )\n"
@@ -3721,6 +3721,172 @@ class TABLE
                ~ "        return false;\n"
                ~ "    }\n"
                ~ "\n"
+               ~ "    return true;\n"
+               ~ "}\n";
+
+        return generis_code;
+    }
+
+    // ~~
+
+    string GetGetDatabaseArrayGenerisCode(
+        )
+    {
+        string
+            generis_code;
+
+        generis_code
+            = "func GetDatabase" ~ GoFunction ~ "Array(\n"
+              ~ "    " ~ GoVariable ~ "_array * [] " ~ GoType ~ ",\n"
+              ~ "    error_code * ERROR_CODE\n"
+              ~ "    ) bool\n"
+              ~ "{\n"
+              ~ "    var\n"
+              ~ "        " ~ GoVariable ~ " " ~ GoType ~ ";\n"
+              ~ "\n";
+
+        if ( SqlOptionIsEnabled )
+        {
+            generis_code
+                ~= "    statement, error_\n"
+                   ~ "        := DatabaseSession.Prepare(\n"
+                   ~ "               \"select ";
+
+            foreach ( ref column; ColumnArray )
+            {
+                if ( column.IsStored )
+                {
+                    generis_code ~= column.StoredName;
+
+                    if ( !column.IsLastStored )
+                    {
+                        generis_code ~= ", ";
+                    }
+                }
+            }
+
+            generis_code
+                ~= " from " ~ Name ~ "\"\n"
+                   ~ "               );\n"
+                   ~ "\n"
+                   ~ "    if ( error_ != nil )\n"
+                   ~ "    {\n"
+                   ~ "        error_code.Set( error_ , http.StatusBadRequest );\n"
+                   ~ "\n"
+                   ~ "        return false;\n"
+                   ~ "    }\n"
+                   ~ "\n"
+                   ~ "    rows, error_ := statement.Query();\n"
+                   ~ "\n"
+                   ~ "    if ( error_ != nil )\n"
+                   ~ "    {\n"
+                   ~ "        error_code.Set( error_ , http.StatusBadRequest );\n"
+                   ~ "\n"
+                   ~ "        return false;\n"
+                   ~ "    }\n"
+                   ~ "\n"
+                   ~ "    *" ~ GoVariable ~ "_array = make( [] " ~ GoType ~ ", 0, 128 );\n"
+                   ~ "\n"
+                   ~ "    for rows.Next()\n"
+                   ~ "    {\n"
+                   ~ "        error_\n"
+                   ~ "            = rows.Scan(\n";
+
+            foreach ( ref column; ColumnArray )
+            {
+                if ( column.IsStored )
+                {
+                    generis_code ~= "                  &" ~ GoVariable ~ "." ~ column.GoName;
+
+                    if ( !column.IsLastStored )
+                    {
+                        generis_code ~= ",\n";
+                    }
+                    else
+                    {
+                        generis_code ~= "\n";
+                    }
+                }
+            }
+
+            generis_code
+                ~= "                  );\n"
+                   ~ "\n"
+                   ~ "        if ( error_ != nil )\n"
+                   ~ "        {\n"
+                   ~ "            error_code.Set( error_ , http.StatusBadRequest );\n"
+                   ~ "\n"
+                   ~ "            return false;\n"
+                   ~ "        }\n"
+                   ~ "\n"
+                   ~ "        " ~ GoVariable ~ "_array.append( " ~ GoVariable ~ " );\n"
+                   ~ "    }\n";
+        }
+        else
+        {
+            generis_code
+                ~= "    iterator\n"
+                   ~ "        := DatabaseSession.Query(\n"
+                   ~ "               \"select ";
+
+            foreach ( ref column; ColumnArray )
+            {
+                if ( column.IsStored )
+                {
+                    generis_code ~= column.StoredName;
+
+                    if ( !column.IsLastStored )
+                    {
+                        generis_code ~= ", ";
+                    }
+                }
+            }
+
+            generis_code
+                ~= " from " ~ Name ~ "\"\n"
+                   ~ "               )\n"
+                   ~ "               .Consistency( gocql.One )\n"
+                   ~ "               .Iter();\n"
+                   ~ "\n"
+                   ~ "    *" ~ GoVariable ~ "_array = make( [] " ~ GoType ~ ", 0, 128 );\n"
+                   ~ "\n"
+                   ~ "    for iterator.Scan(\n";
+
+            foreach ( ref column; ColumnArray )
+            {
+                if ( column.IsStored )
+                {
+                    generis_code ~= "            &" ~ GoVariable ~ "." ~ column.GoName;
+
+                    if ( !column.IsLastStored )
+                    {
+                        generis_code ~= ",\n";
+                    }
+                    else
+                    {
+                        generis_code ~= "\n";
+                    }
+                }
+            }
+
+            generis_code
+                ~= "            )\n"
+                   ~ "    {\n"
+                   ~ "        " ~ GoVariable ~ "_array.append( " ~ GoVariable ~ " );\n"
+                   ~ "    }\n"
+                   ~ "\n"
+                   ~ "    error_ := iterator.Close();\n"
+                   ~ "\n"
+                   ~ "    if ( error_ != nil )\n"
+                   ~ "    {\n"
+                   ~ "        error_code.Set( error_ , http.StatusBadRequest );\n"
+                   ~ "\n"
+                   ~ "        return false;\n"
+                   ~ "    }\n";
+        }
+
+        generis_code
+            ~= "\n"
                ~ "    return true;\n"
                ~ "}\n";
 
@@ -4788,7 +4954,9 @@ class SCHEMA
                    ~ "\n// ~~\n\n"
                    ~ table.GetRemoveDatabaseGenerisCode()
                    ~ "\n// ~~\n\n"
-                   ~ table.GetGetDatabaseGenerisCode();
+                   ~ table.GetGetDatabaseGenerisCode()
+                   ~ "\n// ~~\n\n"
+                   ~ table.GetGetDatabaseArrayGenerisCode();
 
             if ( table_index + 1 < TableArray.length )
             {

@@ -140,6 +140,59 @@ func GetDatabaseSimple(
 
 // ~~
 
+func GetDatabaseSimpleArray(
+    simple_array * [] SIMPLE,
+    error_code * ERROR_CODE
+    ) bool
+{
+    var
+        simple SIMPLE;
+
+    iterator
+        := DatabaseSession.Query(
+               "select Uuid, Bool, Int8, Uint8, Int16, Uint16, Int32, Uint32, Int64, Uint64, Float32, Float64, String, Date, DateTime, Blob from SIMPLE"
+               )
+               .Consistency( gocql.One )
+               .Iter();
+
+    *simple_array = make( [] SIMPLE, 0, 128 );
+
+    for iterator.Scan(
+            &simple.Uuid,
+            &simple.Bool,
+            &simple.Int8,
+            &simple.Uint8,
+            &simple.Int16,
+            &simple.Uint16,
+            &simple.Int32,
+            &simple.Uint32,
+            &simple.Int64,
+            &simple.Uint64,
+            &simple.Float32,
+            &simple.Float64,
+            &simple.String,
+            &simple.Date,
+            &simple.DateTime,
+            &simple.Blob
+            )
+    {
+        simple_array.append( simple );
+    }
+
+    error_ := iterator.Close();
+
+    if ( error_ != nil )
+    {
+        error_code.Set( error_ , http.StatusBadRequest );
+
+        return false;
+    }
+
+    return true;
+}
+
+// ~~
+
 func AddDatabaseCompound(
     compound * COMPOUND,
     error_code * ERROR_CODE
@@ -255,6 +308,55 @@ func GetDatabaseCompound(
                     &compound.NameSetMap,
                     &compound.SimplePointerArray
                     );
+
+    if ( error_ != nil )
+    {
+        error_code.Set( error_ , http.StatusBadRequest );
+
+        return false;
+    }
+
+    return true;
+}
+
+// ~~
+
+func GetDatabaseCompoundArray(
+    compound_array * [] COMPOUND,
+    error_code * ERROR_CODE
+    ) bool
+{
+    var
+        compound COMPOUND;
+
+    iterator
+        := DatabaseSession.Query(
+               "select Id, Location, Name, NameSet, PhoneList, EmailSet, CompanyMap, SimpleDate, SimpleDateMap, SimpleDateSet, SimpleDateList, NameSetMap from COMPOUND"
+               )
+               .Consistency( gocql.One )
+               .Iter();
+
+    *compound_array = make( [] COMPOUND, 0, 128 );
+
+    for iterator.Scan(
+            &compound.Id,
+            &compound.Location,
+            &compound.Name,
+            &compound.NameSet,
+            &compound.PhoneList,
+            &compound.EmailSet,
+            &compound.CompanyMap,
+            &compound.SimpleDate,
+            &compound.SimpleDateMap,
+            &compound.SimpleDateSet,
+            &compound.SimpleDateList,
+            &compound.NameSetMap
+            )
+    {
+        compound_array.append( compound );
+    }
+
+    error_ := iterator.Close();
 
     if ( error_ != nil )
     {

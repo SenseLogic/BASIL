@@ -42,7 +42,7 @@ func SetDatabaseSection(
 {
     statement, error_
         := DatabaseSession.Prepare(
-               "update SECTION set Number = ?, Name = ?, Text = ?, Image = ? where Id = ? )"
+               "update SECTION set Number = ?, Name = ?, Text = ?, Image = ? where Id = ?"
                );
 
     if ( error_ != nil )
@@ -80,7 +80,7 @@ func RemoveDatabaseSection(
 {
     statement, error_
         := DatabaseSession.Prepare(
-               "delete from SECTION where Id = ? )"
+               "delete from SECTION where Id = ?"
                );
 
     if ( error_ != nil )
@@ -114,7 +114,7 @@ func GetDatabaseSection(
 {
     statement, error_
         := DatabaseSession.Prepare(
-               "select Number, Name, Text, Image, ImageIndex from SECTION where Id = ? )"
+               "select Number, Name, Text, Image, ImageIndex from SECTION where Id = ?"
                );
 
     if ( error_ != nil )
@@ -160,6 +160,63 @@ func GetDatabaseSection(
         error_code.Set( error_ , http.StatusBadRequest );
 
         return false;
+    }
+
+    return true;
+}
+
+// ~~
+
+func GetDatabaseSectionArray(
+    section_array * [] SECTION,
+    error_code * ERROR_CODE
+    ) bool
+{
+    var
+        section SECTION;
+
+    statement, error_
+        := DatabaseSession.Prepare(
+               "select Id, Number, Name, Text, Image from SECTION"
+               );
+
+    if ( error_ != nil )
+    {
+        error_code.Set( error_ , http.StatusBadRequest );
+
+        return false;
+    }
+
+    rows, error_ := statement.Query();
+
+    if ( error_ != nil )
+    {
+        error_code.Set( error_ , http.StatusBadRequest );
+
+        return false;
+    }
+
+    *section_array = make( [] SECTION, 0, 128 );
+
+    for rows.Next()
+    {
+        error_
+            = rows.Scan(
+                  &section.Id,
+                  &section.Number,
+                  &section.Name,
+                  &section.Text,
+                  &section.Image
+                  );
+
+        if ( error_ != nil )
+        {
+            error_code.Set( error_ , http.StatusBadRequest );
+
+            return false;
+        }
+
+        section_array.append( section );
     }
 
     return true;
@@ -220,7 +277,7 @@ func SetDatabaseUser(
 {
     statement, error_
         := DatabaseSession.Prepare(
-               "update USER set FirstName = ?, LastName = ?, Email = ?, Pseudonym = ?, Password = ?, Phone = ?, Street = ?, City = ?, Code = ?, Region = ?, Country = ?, Company = ?, ItIsAdministrator = ? where Id = ? )"
+               "update USER set FirstName = ?, LastName = ?, Email = ?, Pseudonym = ?, Password = ?, Phone = ?, Street = ?, City = ?, Code = ?, Region = ?, Country = ?, Company = ?, ItIsAdministrator = ? where Id = ?"
                );
 
     if ( error_ != nil )
@@ -267,7 +324,7 @@ func RemoveDatabaseUser(
 {
     statement, error_
         := DatabaseSession.Prepare(
-               "delete from USER where Id = ? )"
+               "delete from USER where Id = ?"
                );
 
     if ( error_ != nil )
@@ -301,7 +358,7 @@ func GetDatabaseUser(
 {
     statement, error_
         := DatabaseSession.Prepare(
-               "select FirstName, LastName, Email, Pseudonym, Password, Phone, Street, City, Code, Region, Country, Company, ItIsAdministrator from USER where Id = ? )"
+               "select FirstName, LastName, Email, Pseudonym, Password, Phone, Street, City, Code, Region, Country, Company, ItIsAdministrator from USER where Id = ?"
                );
 
     if ( error_ != nil )
@@ -362,6 +419,72 @@ func GetDatabaseUser(
 
 // ~~
 
+func GetDatabaseUserArray(
+    user_array * [] USER,
+    error_code * ERROR_CODE
+    ) bool
+{
+    var
+        user USER;
+
+    statement, error_
+        := DatabaseSession.Prepare(
+               "select Id, FirstName, LastName, Email, Pseudonym, Password, Phone, Street, City, Code, Region, Country, Company, ItIsAdministrator from USER"
+               );
+
+    if ( error_ != nil )
+    {
+        error_code.Set( error_ , http.StatusBadRequest );
+
+        return false;
+    }
+
+    rows, error_ := statement.Query();
+
+    if ( error_ != nil )
+    {
+        error_code.Set( error_ , http.StatusBadRequest );
+
+        return false;
+    }
+
+    *user_array = make( [] USER, 0, 128 );
+
+    for rows.Next()
+    {
+        error_
+            = rows.Scan(
+                  &user.Id,
+                  &user.FirstName,
+                  &user.LastName,
+                  &user.Email,
+                  &user.Pseudonym,
+                  &user.Password,
+                  &user.Phone,
+                  &user.Street,
+                  &user.City,
+                  &user.Code,
+                  &user.Region,
+                  &user.Country,
+                  &user.Company,
+                  &user.ItIsAdministrator
+                  );
+
+        if ( error_ != nil )
+        {
+            error_code.Set( error_ , http.StatusBadRequest );
+
+            return false;
+        }
+
+        user_array.append( user );
+    }
+
+    return true;
+}
+
+// ~~
+
 func AddDatabaseArticle(
     article * ARTICLE,
     error_code * ERROR_CODE
@@ -408,7 +531,7 @@ func SetDatabaseArticle(
 {
     statement, error_
         := DatabaseSession.Prepare(
-               "update ARTICLE set SectionId = ?, UserId = ?, Title = ?, Text = ?, Image = ?, Date = ? where Id = ? )"
+               "update ARTICLE set SectionId = ?, UserId = ?, Title = ?, Text = ?, Image = ?, Date = ? where Id = ?"
                );
 
     if ( error_ != nil )
@@ -448,7 +571,7 @@ func RemoveDatabaseArticle(
 {
     statement, error_
         := DatabaseSession.Prepare(
-               "delete from ARTICLE where Id = ? )"
+               "delete from ARTICLE where Id = ?"
                );
 
     if ( error_ != nil )
@@ -482,7 +605,7 @@ func GetDatabaseArticle(
 {
     statement, error_
         := DatabaseSession.Prepare(
-               "select SectionId, UserId, Title, Text, Image, Date, Section, User, ImageIndex from ARTICLE where Id = ? )"
+               "select SectionId, UserId, Title, Text, Image, Date, Section, User, ImageIndex from ARTICLE where Id = ?"
                );
 
     if ( error_ != nil )
@@ -539,6 +662,65 @@ func GetDatabaseArticle(
 
 // ~~
 
+func GetDatabaseArticleArray(
+    article_array * [] ARTICLE,
+    error_code * ERROR_CODE
+    ) bool
+{
+    var
+        article ARTICLE;
+
+    statement, error_
+        := DatabaseSession.Prepare(
+               "select Id, SectionId, UserId, Title, Text, Image, Date from ARTICLE"
+               );
+
+    if ( error_ != nil )
+    {
+        error_code.Set( error_ , http.StatusBadRequest );
+
+        return false;
+    }
+
+    rows, error_ := statement.Query();
+
+    if ( error_ != nil )
+    {
+        error_code.Set( error_ , http.StatusBadRequest );
+
+        return false;
+    }
+
+    *article_array = make( [] ARTICLE, 0, 128 );
+
+    for rows.Next()
+    {
+        error_
+            = rows.Scan(
+                  &article.Id,
+                  &article.SectionId,
+                  &article.UserId,
+                  &article.Title,
+                  &article.Text,
+                  &article.Image,
+                  &article.Date
+                  );
+
+        if ( error_ != nil )
+        {
+            error_code.Set( error_ , http.StatusBadRequest );
+
+            return false;
+        }
+
+        article_array.append( article );
+    }
+
+    return true;
+}
+
+// ~~
+
 func AddDatabaseComment(
     comment * COMMENT,
     error_code * ERROR_CODE
@@ -583,7 +765,7 @@ func SetDatabaseComment(
 {
     statement, error_
         := DatabaseSession.Prepare(
-               "update COMMENT set ArticleId = ?, UserId = ?, Text = ?, DateTime = ? where Id = ? )"
+               "update COMMENT set ArticleId = ?, UserId = ?, Text = ?, DateTime = ? where Id = ?"
                );
 
     if ( error_ != nil )
@@ -621,7 +803,7 @@ func RemoveDatabaseComment(
 {
     statement, error_
         := DatabaseSession.Prepare(
-               "delete from COMMENT where Id = ? )"
+               "delete from COMMENT where Id = ?"
                );
 
     if ( error_ != nil )
@@ -655,7 +837,7 @@ func GetDatabaseComment(
 {
     statement, error_
         := DatabaseSession.Prepare(
-               "select ArticleId, UserId, Text, DateTime, Article, User from COMMENT where Id = ? )"
+               "select ArticleId, UserId, Text, DateTime, Article, User from COMMENT where Id = ?"
                );
 
     if ( error_ != nil )
@@ -709,6 +891,63 @@ func GetDatabaseComment(
 
 // ~~
 
+func GetDatabaseCommentArray(
+    comment_array * [] COMMENT,
+    error_code * ERROR_CODE
+    ) bool
+{
+    var
+        comment COMMENT;
+
+    statement, error_
+        := DatabaseSession.Prepare(
+               "select Id, ArticleId, UserId, Text, DateTime from COMMENT"
+               );
+
+    if ( error_ != nil )
+    {
+        error_code.Set( error_ , http.StatusBadRequest );
+
+        return false;
+    }
+
+    rows, error_ := statement.Query();
+
+    if ( error_ != nil )
+    {
+        error_code.Set( error_ , http.StatusBadRequest );
+
+        return false;
+    }
+
+    *comment_array = make( [] COMMENT, 0, 128 );
+
+    for rows.Next()
+    {
+        error_
+            = rows.Scan(
+                  &comment.Id,
+                  &comment.ArticleId,
+                  &comment.UserId,
+                  &comment.Text,
+                  &comment.DateTime
+                  );
+
+        if ( error_ != nil )
+        {
+            error_code.Set( error_ , http.StatusBadRequest );
+
+            return false;
+        }
+
+        comment_array.append( comment );
+    }
+
+    return true;
+}
+
+// ~~
+
 func AddDatabaseSubscriber(
     subscriber * SUBSCRIBER,
     error_code * ERROR_CODE
@@ -751,7 +990,7 @@ func SetDatabaseSubscriber(
 {
     statement, error_
         := DatabaseSession.Prepare(
-               "update SUBSCRIBER set Name = ?, Email = ? where Id = ? )"
+               "update SUBSCRIBER set Name = ?, Email = ? where Id = ?"
                );
 
     if ( error_ != nil )
@@ -787,7 +1026,7 @@ func RemoveDatabaseSubscriber(
 {
     statement, error_
         := DatabaseSession.Prepare(
-               "delete from SUBSCRIBER where Id = ? )"
+               "delete from SUBSCRIBER where Id = ?"
                );
 
     if ( error_ != nil )
@@ -821,7 +1060,7 @@ func GetDatabaseSubscriber(
 {
     statement, error_
         := DatabaseSession.Prepare(
-               "select Name, Email from SUBSCRIBER where Id = ? )"
+               "select Name, Email from SUBSCRIBER where Id = ?"
                );
 
     if ( error_ != nil )
@@ -864,6 +1103,61 @@ func GetDatabaseSubscriber(
         error_code.Set( error_ , http.StatusBadRequest );
 
         return false;
+    }
+
+    return true;
+}
+
+// ~~
+
+func GetDatabaseSubscriberArray(
+    subscriber_array * [] SUBSCRIBER,
+    error_code * ERROR_CODE
+    ) bool
+{
+    var
+        subscriber SUBSCRIBER;
+
+    statement, error_
+        := DatabaseSession.Prepare(
+               "select Id, Name, Email from SUBSCRIBER"
+               );
+
+    if ( error_ != nil )
+    {
+        error_code.Set( error_ , http.StatusBadRequest );
+
+        return false;
+    }
+
+    rows, error_ := statement.Query();
+
+    if ( error_ != nil )
+    {
+        error_code.Set( error_ , http.StatusBadRequest );
+
+        return false;
+    }
+
+    *subscriber_array = make( [] SUBSCRIBER, 0, 128 );
+
+    for rows.Next()
+    {
+        error_
+            = rows.Scan(
+                  &subscriber.Id,
+                  &subscriber.Name,
+                  &subscriber.Email
+                  );
+
+        if ( error_ != nil )
+        {
+            error_code.Set( error_ , http.StatusBadRequest );
+
+            return false;
+        }
+
+        subscriber_array.append( subscriber );
     }
 
     return true;
