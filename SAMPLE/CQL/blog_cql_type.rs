@@ -33,8 +33,8 @@ struct USER
 struct ARTICLE
 {
     uuid : String,
-    section_id : String,
-    user_id : String,
+    section_uuid : String,
+    user_uuid : String,
     title : String,
     text : String,
     image : String,
@@ -49,8 +49,8 @@ struct ARTICLE
 struct COMMENT
 {
     uuid : String,
-    article_id : String,
-    user_id : String,
+    article_uuid : String,
+    user_uuid : String,
     text : String,
     date_time : String,
     article : Weak<ARTICLE>,

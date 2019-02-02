@@ -239,8 +239,8 @@ func HandleAddArticleRequest(
         article ARTICLE;
 
     if ( IsAdministratorSession( request, &error_code )
-         && GetRequestUuid( &article.SectionId, request, "SectionId", &error_code )
-         && GetRequestUuid( &article.UserId, request, "UserId", &error_code )
+         && GetRequestUuid( &article.SectionUuid, request, "SectionUuid", &error_code )
+         && GetRequestUuid( &article.UserUuid, request, "UserUuid", &error_code )
          && GetRequestString( &article.Title, request, "Title", &error_code )
          && GetRequestString( &article.Text, request, "Text", &error_code )
          && GetRequestString( &article.Image, request, "Image", &error_code )
@@ -272,8 +272,8 @@ func HandleSetArticleRequest(
 
     if ( IsAdministratorSession( request, &error_code )
          && GetRequestUuid( &article.Uuid, request, "Uuid", &error_code )
-         && GetRequestUuid( &article.SectionId, request, "SectionId", &error_code )
-         && GetRequestUuid( &article.UserId, request, "UserId", &error_code )
+         && GetRequestUuid( &article.SectionUuid, request, "SectionUuid", &error_code )
+         && GetRequestUuid( &article.UserUuid, request, "UserUuid", &error_code )
          && GetRequestString( &article.Title, request, "Title", &error_code )
          && GetRequestString( &article.Text, request, "Text", &error_code )
          && GetRequestString( &article.Image, request, "Image", &error_code )
@@ -349,8 +349,8 @@ func HandleAddCommentRequest(
         comment COMMENT;
 
     if ( IsAdministratorSession( request, &error_code )
-         && GetRequestUuid( &comment.ArticleId, request, "ArticleId", &error_code )
-         && GetRequestUuid( &comment.UserId, request, "UserId", &error_code )
+         && GetRequestUuid( &comment.ArticleUuid, request, "ArticleUuid", &error_code )
+         && GetRequestUuid( &comment.UserUuid, request, "UserUuid", &error_code )
          && GetRequestString( &comment.Text, request, "Text", &error_code )
          && GetRequestString( &comment.DateTime, request, "DateTime", &error_code )
          && AddDatabaseComment( &comment, &error_code ) )
@@ -380,8 +380,8 @@ func HandleSetCommentRequest(
 
     if ( IsAdministratorSession( request, &error_code )
          && GetRequestUuid( &comment.Uuid, request, "Uuid", &error_code )
-         && GetRequestUuid( &comment.ArticleId, request, "ArticleId", &error_code )
-         && GetRequestUuid( &comment.UserId, request, "UserId", &error_code )
+         && GetRequestUuid( &comment.ArticleUuid, request, "ArticleUuid", &error_code )
+         && GetRequestUuid( &comment.UserUuid, request, "UserUuid", &error_code )
          && GetRequestString( &comment.Text, request, "Text", &error_code )
          && GetRequestString( &comment.DateTime, request, "DateTime", &error_code )
          && SetDatabaseComment( &comment, &error_code ) )

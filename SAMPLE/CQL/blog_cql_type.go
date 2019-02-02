@@ -30,8 +30,8 @@ type USER struct {
 
 type ARTICLE struct {
     Uuid gocql.UUID    `db:"-"`;
-    SectionId gocql.UUID    `db:"-"`;
-    UserId gocql.UUID    `db:"-"`;
+    SectionUuid gocql.UUID    `db:"-"`;
+    UserUuid gocql.UUID    `db:"-"`;
     Title string    `db:"-"`;
     Text string    `db:"-"`;
     Image string    `db:"-"`;
@@ -45,8 +45,8 @@ type ARTICLE struct {
 
 type COMMENT struct {
     Uuid gocql.UUID    `db:"-"`;
-    ArticleId gocql.UUID    `db:"-"`;
-    UserId gocql.UUID    `db:"-"`;
+    ArticleUuid gocql.UUID    `db:"-"`;
+    UserUuid gocql.UUID    `db:"-"`;
     Text string    `db:"-"`;
     DateTime string    `db:"-"`;
     Article * ARTICLE;

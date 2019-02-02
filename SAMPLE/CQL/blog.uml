@@ -39,8 +39,8 @@ class USER {
 
 class ARTICLE {
     Uuid : UUID
-    SectionId : SECTION.Uuid
-    UserId : USER.Uuid
+    SectionUuid : SECTION.Uuid
+    UserUuid : USER.Uuid
     Title : STRING
     Text : STRING
     Image : STRING
@@ -52,8 +52,8 @@ class ARTICLE {
 
 class COMMENT {
     Uuid : UUID
-    ArticleId : ARTICLE.Uuid
-    UserId : USER.Uuid
+    ArticleUuid : ARTICLE.Uuid
+    UserUuid : USER.Uuid
     Text : STRING
     DateTime : DATETIME
     Article : POINTER[ARTICLE]
@@ -66,12 +66,12 @@ class SUBSCRIBER {
     Email : STRING
 }
 
-SECTION <-- ARTICLE : SectionId
+SECTION <-- ARTICLE : SectionUuid
 
-USER <-- ARTICLE : UserId
+USER <-- ARTICLE : UserUuid
 
-ARTICLE <-- COMMENT : ArticleId
+ARTICLE <-- COMMENT : ArticleUuid
 
-USER <-- COMMENT : UserId
+USER <-- COMMENT : UserUuid
 
 @enduml

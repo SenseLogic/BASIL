@@ -5,12 +5,12 @@ create table if not exists BLOG.SECTION( Uuid uuid, Number bigint, Name text, Te
 drop table if exists BLOG.USER;
 create table if not exists BLOG.USER( Uuid uuid, FirstName text, LastName text, Email text, Pseudonym text, Password text, Phone text, Street text, City text, Code text, Region text, Country text, Company text, ItIsAdministrator boolean, primary key( Uuid ) );
 drop table if exists BLOG.ARTICLE;
-create table if not exists BLOG.ARTICLE( Uuid uuid, SectionId uuid, UserId uuid, Title text, Text text, Image text, Date timestamp, primary key( Uuid ) );
-create index on BLOG.ARTICLE ( SectionId );
-create index on BLOG.ARTICLE ( UserId );
+create table if not exists BLOG.ARTICLE( Uuid uuid, SectionUuid uuid, UserUuid uuid, Title text, Text text, Image text, Date timestamp, primary key( Uuid ) );
+create index on BLOG.ARTICLE ( SectionUuid );
+create index on BLOG.ARTICLE ( UserUuid );
 drop table if exists BLOG.COMMENT;
-create table if not exists BLOG.COMMENT( Uuid uuid, ArticleId uuid, UserId uuid, Text text, DateTime timestamp, primary key( Uuid ) );
-create index on BLOG.COMMENT ( ArticleId );
-create index on BLOG.COMMENT ( UserId );
+create table if not exists BLOG.COMMENT( Uuid uuid, ArticleUuid uuid, UserUuid uuid, Text text, DateTime timestamp, primary key( Uuid ) );
+create index on BLOG.COMMENT ( ArticleUuid );
+create index on BLOG.COMMENT ( UserUuid );
 drop table if exists BLOG.SUBSCRIBER;
 create table if not exists BLOG.SUBSCRIBER( Uuid uuid, Name text, Email text, primary key( Uuid ) );

@@ -118,8 +118,8 @@ BLOG | count 5
     ARTICLE | count 15
 
         Uuid : UUID | key, unique
-        SectionId : SECTION.Uuid | indexed
-        UserId : USER.Uuid | indexed
+        SectionUuid : SECTION.Uuid | indexed
+        UserUuid : USER.Uuid | indexed
         Title : STRING
         Text : STRING
         Image : STRING
@@ -132,8 +132,8 @@ BLOG | count 5
     COMMENT | count 30
 
         Uuid : UUID | key, unique
-        ArticleId : ARTICLE.Uuid | indexed
-        UserId : USER.Uuid | indexed
+        ArticleUuid : ARTICLE.Uuid | indexed
+        UserUuid : USER.Uuid | indexed
         Text : STRING | english 2 4 5 7
         DateTime : DATETIME
 

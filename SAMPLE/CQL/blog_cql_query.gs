@@ -346,10 +346,10 @@ func AddDatabaseArticle(
 
     error_
         := DatabaseSession.Query(
-               "insert into ARTICLE( Uuid, SectionId, UserId, Title, Text, Image, Date ) values( ?, ?, ?, ?, ?, ?, ? )",
+               "insert into ARTICLE( Uuid, SectionUuid, UserUuid, Title, Text, Image, Date ) values( ?, ?, ?, ?, ?, ?, ? )",
                article.Uuid,
-               article.SectionId,
-               article.UserId,
+               article.SectionUuid,
+               article.UserUuid,
                article.Title,
                article.Text,
                article.Image,
@@ -375,10 +375,10 @@ func SetDatabaseArticle(
 {
     error_
         := DatabaseSession.Query(
-               "insert into ARTICLE( Uuid, SectionId, UserId, Title, Text, Image, Date ) values( ?, ?, ?, ?, ?, ?, ? )",
+               "insert into ARTICLE( Uuid, SectionUuid, UserUuid, Title, Text, Image, Date ) values( ?, ?, ?, ?, ?, ?, ? )",
                article.Uuid,
-               article.SectionId,
-               article.UserId,
+               article.SectionUuid,
+               article.UserUuid,
                article.Title,
                article.Text,
                article.Image,
@@ -427,13 +427,13 @@ func GetDatabaseArticle(
 {
     error_
         := DatabaseSession.Query(
-               "select SectionId, UserId, Title, Text, Image, Date, Section, User, ImageIndex from ARTICLE where Uuid = ?",
+               "select SectionUuid, UserUuid, Title, Text, Image, Date, Section, User, ImageIndex from ARTICLE where Uuid = ?",
                article.Uuid
                )
                .Consistency( gocql.One )
                .Scan(
-                    &article.SectionId,
-                    &article.UserId,
+                    &article.SectionUuid,
+                    &article.UserUuid,
                     &article.Title,
                     &article.Text,
                     &article.Image,
@@ -465,7 +465,7 @@ func GetDatabaseArticleArray(
 
     iterator
         := DatabaseSession.Query(
-               "select Uuid, SectionId, UserId, Title, Text, Image, Date from ARTICLE"
+               "select Uuid, SectionUuid, UserUuid, Title, Text, Image, Date from ARTICLE"
                )
                .Consistency( gocql.One )
                .Iter();
@@ -474,8 +474,8 @@ func GetDatabaseArticleArray(
 
     for iterator.Scan(
             &article.Uuid,
-            &article.SectionId,
-            &article.UserId,
+            &article.SectionUuid,
+            &article.UserUuid,
             &article.Title,
             &article.Text,
             &article.Image,
@@ -508,10 +508,10 @@ func AddDatabaseComment(
 
     error_
         := DatabaseSession.Query(
-               "insert into COMMENT( Uuid, ArticleId, UserId, Text, DateTime ) values( ?, ?, ?, ?, ? )",
+               "insert into COMMENT( Uuid, ArticleUuid, UserUuid, Text, DateTime ) values( ?, ?, ?, ?, ? )",
                comment.Uuid,
-               comment.ArticleId,
-               comment.UserId,
+               comment.ArticleUuid,
+               comment.UserUuid,
                comment.Text,
                comment.DateTime
                ).Exec();
@@ -535,10 +535,10 @@ func SetDatabaseComment(
 {
     error_
         := DatabaseSession.Query(
-               "insert into COMMENT( Uuid, ArticleId, UserId, Text, DateTime ) values( ?, ?, ?, ?, ? )",
+               "insert into COMMENT( Uuid, ArticleUuid, UserUuid, Text, DateTime ) values( ?, ?, ?, ?, ? )",
                comment.Uuid,
-               comment.ArticleId,
-               comment.UserId,
+               comment.ArticleUuid,
+               comment.UserUuid,
                comment.Text,
                comment.DateTime
                ).Exec();
@@ -585,13 +585,13 @@ func GetDatabaseComment(
 {
     error_
         := DatabaseSession.Query(
-               "select ArticleId, UserId, Text, DateTime, Article, User from COMMENT where Uuid = ?",
+               "select ArticleUuid, UserUuid, Text, DateTime, Article, User from COMMENT where Uuid = ?",
                comment.Uuid
                )
                .Consistency( gocql.One )
                .Scan(
-                    &comment.ArticleId,
-                    &comment.UserId,
+                    &comment.ArticleUuid,
+                    &comment.UserUuid,
                     &comment.Text,
                     &comment.DateTime,
                     &comment.Article,
@@ -620,7 +620,7 @@ func GetDatabaseCommentArray(
 
     iterator
         := DatabaseSession.Query(
-               "select Uuid, ArticleId, UserId, Text, DateTime from COMMENT"
+               "select Uuid, ArticleUuid, UserUuid, Text, DateTime from COMMENT"
                )
                .Consistency( gocql.One )
                .Iter();
@@ -629,8 +629,8 @@ func GetDatabaseCommentArray(
 
     for iterator.Scan(
             &comment.Uuid,
-            &comment.ArticleId,
-            &comment.UserId,
+            &comment.ArticleUuid,
+            &comment.UserUuid,
             &comment.Text,
             &comment.DateTime
             )
