@@ -4531,7 +4531,8 @@ class SCHEMA
             {
                 if ( column.IsForeign )
                 {
-                    uml_schema_file_text ~= "\n" ~ column.ForeignColumn.Table.Name ~ " <-- " ~ table.Name ~ "\n";
+                    uml_schema_file_text
+                        ~= "\n" ~ column.ForeignColumn.Table.Name ~ " <-- " ~ table.Name ~ " : " ~ column.Name ~ "\n";
                 }
             }
         }

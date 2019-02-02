@@ -66,12 +66,12 @@ class SUBSCRIBER {
     Email : STRING
 }
 
-SECTION <-- ARTICLE
+SECTION <-- ARTICLE : SectionId
 
-USER <-- ARTICLE
+USER <-- ARTICLE : UserId
 
-ARTICLE <-- COMMENT
+ARTICLE <-- COMMENT : ArticleId
 
-USER <-- COMMENT
+USER <-- COMMENT : UserId
 
 @enduml
