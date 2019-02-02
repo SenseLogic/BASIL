@@ -3083,7 +3083,7 @@ class TABLE
                    ~ "\n"
                    ~ "    if ( error_ != nil )\n"
                    ~ "    {\n"
-                   ~ "        error_code.Set( error_ , http.StatusBadRequest );\n"
+                   ~ "        error_code.Set( error_, http.StatusBadRequest );\n"
                    ~ "\n"
                    ~ "        return false;\n"
                    ~ "    }\n"
@@ -3112,7 +3112,37 @@ class TABLE
             }
 
             generis_code
-                ~= "               );\n";
+                ~= "               );\n"
+                   ~ "\n"
+                   ~ "    if ( error_ != nil )\n"
+                   ~ "    {\n"
+                   ~ "        error_code.Set( error_, http.StatusBadRequest );\n"
+                   ~ "\n"
+                   ~ "        return false;\n"
+                   ~ "    }\n"
+                   ~ "\n";
+
+            foreach ( ref column; ColumnArray )
+            {
+                if ( column.IsKey
+                     && column.IsIncremented )
+                {
+                    generis_code
+                        ~= "    " ~ GoVariable ~ "." ~ column.GoName ~ ", error_ = result.LastInsertId();\n"
+                           ~ "\n"
+                           ~ "    if ( error_ != nil )\n"
+                           ~ "    {\n"
+                           ~ "        error_code.Set( error_, http.StatusBadRequest );\n"
+                           ~ "\n"
+                           ~ "        return false;\n"
+                           ~ "    }\n"
+                           ~ "\n";
+                }
+            }
+
+            generis_code
+                ~= "    return true;\n"
+                   ~ "}\n";
         }
         else
         {
@@ -3182,20 +3212,18 @@ class TABLE
             }
 
             generis_code
-                ~= "               ).Exec();\n";
+                ~= "               ).Exec();\n"
+                   ~ "\n"
+                   ~ "    if ( error_ != nil )\n"
+                   ~ "    {\n"
+                   ~ "        error_code.Set( error_, http.StatusBadRequest );\n"
+                   ~ "\n"
+                   ~ "        return false;\n"
+                   ~ "    }\n"
+                   ~ "\n"
+                   ~ "    return true;\n"
+                   ~ "}\n";
         }
-
-        generis_code
-            ~= "\n"
-               ~ "    if ( error_ != nil )\n"
-               ~ "    {\n"
-               ~ "        error_code.Set( error_ , http.StatusBadRequest );\n"
-               ~ "\n"
-               ~ "        return false;\n"
-               ~ "    }\n"
-               ~ "\n"
-               ~ "    return true;\n"
-               ~ "}\n";
 
         return generis_code;
     }
@@ -3263,7 +3291,7 @@ class TABLE
                    ~ "\n"
                    ~ "    if ( error_ != nil )\n"
                    ~ "    {\n"
-                   ~ "        error_code.Set( error_ , http.StatusBadRequest );\n"
+                   ~ "        error_code.Set( error_, http.StatusBadRequest );\n"
                    ~ "\n"
                    ~ "        return false;\n"
                    ~ "    }\n"
@@ -3358,7 +3386,7 @@ class TABLE
             ~= "\n"
                ~ "    if ( error_ != nil )\n"
                ~ "    {\n"
-               ~ "        error_code.Set( error_ , http.StatusBadRequest );\n"
+               ~ "        error_code.Set( error_, http.StatusBadRequest );\n"
                ~ "\n"
                ~ "        return false;\n"
                ~ "    }\n"
@@ -3410,7 +3438,7 @@ class TABLE
                    ~ "\n"
                    ~ "    if ( error_ != nil )\n"
                    ~ "    {\n"
-                   ~ "        error_code.Set( error_ , http.StatusBadRequest );\n"
+                   ~ "        error_code.Set( error_, http.StatusBadRequest );\n"
                    ~ "\n"
                    ~ "        return false;\n"
                    ~ "    }\n"
@@ -3481,7 +3509,7 @@ class TABLE
             ~= "\n"
                ~ "    if ( error_ != nil )\n"
                ~ "    {\n"
-               ~ "        error_code.Set( error_ , http.StatusBadRequest );\n"
+               ~ "        error_code.Set( error_, http.StatusBadRequest );\n"
                ~ "\n"
                ~ "        return false;\n"
                ~ "    }\n"
@@ -3554,7 +3582,7 @@ class TABLE
                    ~ "\n"
                    ~ "    if ( error_ != nil )\n"
                    ~ "    {\n"
-                   ~ "        error_code.Set( error_ , http.StatusBadRequest );\n"
+                   ~ "        error_code.Set( error_, http.StatusBadRequest );\n"
                    ~ "\n"
                    ~ "        return false;\n"
                    ~ "    }\n"
@@ -3582,7 +3610,7 @@ class TABLE
                    ~ "\n"
                    ~ "    if ( error_ != nil )\n"
                    ~ "    {\n"
-                   ~ "        error_code.Set( error_ , http.StatusBadRequest );\n"
+                   ~ "        error_code.Set( error_, http.StatusBadRequest );\n"
                    ~ "\n"
                    ~ "        return false;\n"
                    ~ "    }\n"
@@ -3619,7 +3647,7 @@ class TABLE
                    ~ "\n"
                    ~ "        if ( error_ != nil )\n"
                    ~ "        {\n"
-                   ~ "            error_code.Set( error_ , http.StatusBadRequest );\n"
+                   ~ "            error_code.Set( error_, http.StatusBadRequest );\n"
                    ~ "\n"
                    ~ "            return false;\n"
                    ~ "        }\n"
@@ -3716,7 +3744,7 @@ class TABLE
             ~= "\n"
                ~ "    if ( error_ != nil )\n"
                ~ "    {\n"
-               ~ "        error_code.Set( error_ , http.StatusBadRequest );\n"
+               ~ "        error_code.Set( error_, http.StatusBadRequest );\n"
                ~ "\n"
                ~ "        return false;\n"
                ~ "    }\n"
@@ -3771,7 +3799,7 @@ class TABLE
                    ~ "\n"
                    ~ "    if ( error_ != nil )\n"
                    ~ "    {\n"
-                   ~ "        error_code.Set( error_ , http.StatusBadRequest );\n"
+                   ~ "        error_code.Set( error_, http.StatusBadRequest );\n"
                    ~ "\n"
                    ~ "        return false;\n"
                    ~ "    }\n"
@@ -3780,7 +3808,7 @@ class TABLE
                    ~ "\n"
                    ~ "    if ( error_ != nil )\n"
                    ~ "    {\n"
-                   ~ "        error_code.Set( error_ , http.StatusBadRequest );\n"
+                   ~ "        error_code.Set( error_, http.StatusBadRequest );\n"
                    ~ "\n"
                    ~ "        return false;\n"
                    ~ "    }\n"
@@ -3814,7 +3842,7 @@ class TABLE
                    ~ "\n"
                    ~ "        if ( error_ != nil )\n"
                    ~ "        {\n"
-                   ~ "            error_code.Set( error_ , http.StatusBadRequest );\n"
+                   ~ "            error_code.Set( error_, http.StatusBadRequest );\n"
                    ~ "\n"
                    ~ "            return false;\n"
                    ~ "        }\n"
@@ -3879,7 +3907,7 @@ class TABLE
                    ~ "\n"
                    ~ "    if ( error_ != nil )\n"
                    ~ "    {\n"
-                   ~ "        error_code.Set( error_ , http.StatusBadRequest );\n"
+                   ~ "        error_code.Set( error_, http.StatusBadRequest );\n"
                    ~ "\n"
                    ~ "        return false;\n"
                    ~ "    }\n";
@@ -3964,7 +3992,21 @@ class TABLE
         generis_code
             ~= "         && AddDatabase" ~ GoFunction ~ "( &" ~ GoVariable ~ ", &error_code ) )\n"
                ~ "    {\n"
-               ~ "        WriteJsonSuccess( response_writer );\n"
+               ~ "        WriteJsonText( response_writer, \"{\" );\n";
+
+        foreach ( ref column; ColumnArray )
+        {
+            if ( column.IsStored
+                 && column.IsKey )
+            {
+                generis_code
+                    ~= "        WriteJsonText( response_writer, \"\\\"" ~ column.GoName ~ "\\\":\" );\n"
+                       ~ "        WriteJson" ~ column.GoFunction ~ "( response_writer, " ~ GoVariable ~ "." ~ column.GoName ~ " );\n";
+            }
+        }
+
+        generis_code
+            ~= "        WriteJsonText( response_writer, \"}\" );\n"
                ~ "    }\n"
                ~ "    else\n"
                ~ "    {\n"

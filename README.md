@@ -2,7 +2,7 @@
 
 # Basil
 
-Versatile database generator.
+Database generator.
 
 ## Features
 
@@ -17,7 +17,7 @@ Versatile database generator.
     *   Rust type file.
     *   Crystal type file.
 
-## Sample
+## SQL sample
 
 ```cpp
 BLOG | count 5
@@ -52,8 +52,8 @@ BLOG | count 5
     ARTICLE | count 15
 
         Id : UINT64 | key, unique, incremented
-        SectionId : SECTION.Id | partitioned
-        UserId : USER.Id | clustered
+        SectionId : SECTION.Id | indexed
+        UserId : USER.Id | indexed
         Title : STRING
         Text : STRING
         Image : STRING | capacity 45
@@ -81,48 +81,73 @@ BLOG | count 5
         Email : STRING | capacity 45
 ```
 
-![](https://github.com/senselogic/BASIL/blob/master/SAMPLE/blog.png)
+![](https://github.com/senselogic/BASIL/blob/master/SAMPLE/SQL/blog.png)
 
-```
-TEST | count 10
+## CQL sample
 
-    SIMPLE
+```cpp
+BLOG | count 5
+
+    SECTION
 
         Uuid : UUID | key, unique
-        Bool : BOOL | partitioned
-        Int8 : INT8 | clustered
-        Uint8 : UINT8 | indexed
-        Int16 : INT16
-        Uint16 : UINT16
-        Int32 : INT32
-        Uint32 : UINT32
-        Int64 : INT64
-        Uint64 : UINT64
-        Float32 : FLOAT32
-        Float64 : FLOAT64
-        String : STRING
-        Date : DATE | unique
+        Number : UINT64
+        Name : STRING
+        Text : STRING
+        Image : STRING
+
+        ImageIndex : UINT64 | !stored
+
+    USER
+
+        Uuid : UUID | key, unique
+        FirstName : STRING
+        LastName : STRING
+        Email : STRING
+        Pseudonym : STRING
+        Password : STRING
+        Phone : STRING
+        Street : STRING
+        City : STRING
+        Code : STRING
+        Region : STRING
+        Country : STRING
+        Company : STRING
+        ItIsAdministrator : BOOL
+
+    ARTICLE | count 15
+
+        Uuid : UUID | key, unique
+        SectionId : SECTION.Uuid | indexed
+        UserId : USER.Uuid | indexed
+        Title : STRING
+        Text : STRING
+        Image : STRING
+        Date : DATE
+
+        Section : POINTER[ SECTION ] | !stored
+        User : POINTER[ USER ] | !stored
+        ImageIndex : UINT64 | !stored
+
+    COMMENT | count 30
+
+        Uuid : UUID | key, unique
+        ArticleId : ARTICLE.Uuid | indexed
+        UserId : USER.Uuid | indexed
+        Text : STRING | english 2 4 5 7
         DateTime : DATETIME
-        Blob : BLOB
 
-    COMPOUND
+        Article : POINTER[ ARTICLE ] | !stored
+        User : POINTER[ USER ] | !stored
 
-        Id : INT32 | key, unique, incremented
-        Location : Country : STRING | uppercase
-        Name : TUPLE[ FirstName : STRING, LastName : STRING ] | unique
-        NameSet : SET[ TUPLE[ FirstName : STRING, LastName : STRING ] ] | count 2
-        PhoneList : LIST[ Phone : STRING ] | count 2
-        EmailSet : SET[ Email : STRING ] | count 2
-        CompanyMap : MAP[ Phone : STRING, Company : STRING ] | count 2
-        SimpleDate : SIMPLE.Date
-        SimpleDateMap : MAP[ COMPOUND.Name, SIMPLE.Date ] | count 2
-        SimpleDateSet : SET[ SIMPLE.Date ] | count 2
-        SimpleDateList : LIST[ SIMPLE.Date ] | count 1 3
-        NameSetMap : MAP[ SIMPLE.Date, COMPOUND.NameSet ] | count 2
-        SimplePointerArray : ARRAY[ POINTER[ SIMPLE ] ] | !stored
+    SUBSCRIBER
+
+        Uuid : UUID | key, unique
+        Name : STRING
+        Email : STRING
 ```
 
-![](https://github.com/senselogic/BASIL/blob/master/TEST/test.png)
+![](https://github.com/senselogic/BASIL/blob/master/SAMPLE/CQL/blog.png)
 
 ## Syntax
 

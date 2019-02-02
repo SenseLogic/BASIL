@@ -1,0 +1,77 @@
+@startuml
+skinparam shadowing false
+skinparam classAttributeIconSize 0
+skinparam classAttributeFontColor tomato
+skinparam classFontStyle bold
+skinparam classFontColor blue
+skinparam classBackgroundColor lightyellow
+skinparam classBorderColor cornflowerblue
+skinparam arrowColor cornflowerblue
+hide circle
+hide methods
+left to right direction
+
+class SECTION {
+    Uuid : UUID
+    Number : UINT64
+    Name : STRING
+    Text : STRING
+    Image : STRING
+    ImageIndex : UINT64
+}
+
+class USER {
+    Uuid : UUID
+    FirstName : STRING
+    LastName : STRING
+    Email : STRING
+    Pseudonym : STRING
+    Password : STRING
+    Phone : STRING
+    Street : STRING
+    City : STRING
+    Code : STRING
+    Region : STRING
+    Country : STRING
+    Company : STRING
+    ItIsAdministrator : BOOL
+}
+
+class ARTICLE {
+    Uuid : UUID
+    SectionId : SECTION.Uuid
+    UserId : USER.Uuid
+    Title : STRING
+    Text : STRING
+    Image : STRING
+    Date : DATE
+    Section : POINTER[SECTION]
+    User : POINTER[USER]
+    ImageIndex : UINT64
+}
+
+class COMMENT {
+    Uuid : UUID
+    ArticleId : ARTICLE.Uuid
+    UserId : USER.Uuid
+    Text : STRING
+    DateTime : DATETIME
+    Article : POINTER[ARTICLE]
+    User : POINTER[USER]
+}
+
+class SUBSCRIBER {
+    Uuid : UUID
+    Name : STRING
+    Email : STRING
+}
+
+SECTION <-- ARTICLE
+
+USER <-- ARTICLE
+
+ARTICLE <-- COMMENT
+
+USER <-- COMMENT
+
+@enduml

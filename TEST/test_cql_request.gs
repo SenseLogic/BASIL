@@ -26,7 +26,10 @@ func HandleAddSimpleRequest(
          && GetRequestBlob( &simple.Blob, request, "Blob", &error_code )
          && AddDatabaseSimple( &simple, &error_code ) )
     {
-        WriteJsonSuccess( response_writer );
+        WriteJsonText( response_writer, "{" );
+        WriteJsonText( response_writer, "\"Uuid\":" );
+        WriteJsonUuid( response_writer, simple.Uuid );
+        WriteJsonText( response_writer, "}" );
     }
     else
     {
@@ -147,7 +150,10 @@ func HandleAddCompoundRequest(
          && GetRequestStringStringStringTupleSetMap( &compound.NameSetMap, request, "NameSetMap", &error_code )
          && AddDatabaseCompound( &compound, &error_code ) )
     {
-        WriteJsonSuccess( response_writer );
+        WriteJsonText( response_writer, "{" );
+        WriteJsonText( response_writer, "\"Id\":" );
+        WriteJsonInt32( response_writer, compound.Id );
+        WriteJsonText( response_writer, "}" );
     }
     else
     {

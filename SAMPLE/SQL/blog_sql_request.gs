@@ -15,7 +15,10 @@ func HandleAddSectionRequest(
          && GetRequestString( &section.Image, request, "Image", &error_code )
          && AddDatabaseSection( &section, &error_code ) )
     {
-        WriteJsonSuccess( response_writer );
+        WriteJsonText( response_writer, "{" );
+        WriteJsonText( response_writer, "\"Id\":" );
+        WriteJsonUint64( response_writer, section.Id );
+        WriteJsonText( response_writer, "}" );
     }
     else
     {
@@ -127,7 +130,10 @@ func HandleAddUserRequest(
          && GetRequestBool( &user.ItIsAdministrator, request, "ItIsAdministrator", &error_code )
          && AddDatabaseUser( &user, &error_code ) )
     {
-        WriteJsonSuccess( response_writer );
+        WriteJsonText( response_writer, "{" );
+        WriteJsonText( response_writer, "\"Id\":" );
+        WriteJsonUint64( response_writer, user.Id );
+        WriteJsonText( response_writer, "}" );
     }
     else
     {
@@ -241,7 +247,10 @@ func HandleAddArticleRequest(
          && GetRequestString( &article.Date, request, "Date", &error_code )
          && AddDatabaseArticle( &article, &error_code ) )
     {
-        WriteJsonSuccess( response_writer );
+        WriteJsonText( response_writer, "{" );
+        WriteJsonText( response_writer, "\"Id\":" );
+        WriteJsonUint64( response_writer, article.Id );
+        WriteJsonText( response_writer, "}" );
     }
     else
     {
@@ -346,7 +355,10 @@ func HandleAddCommentRequest(
          && GetRequestString( &comment.DateTime, request, "DateTime", &error_code )
          && AddDatabaseComment( &comment, &error_code ) )
     {
-        WriteJsonSuccess( response_writer );
+        WriteJsonText( response_writer, "{" );
+        WriteJsonText( response_writer, "\"Id\":" );
+        WriteJsonUint64( response_writer, comment.Id );
+        WriteJsonText( response_writer, "}" );
     }
     else
     {
@@ -447,7 +459,10 @@ func HandleAddSubscriberRequest(
          && GetRequestString( &subscriber.Email, request, "Email", &error_code )
          && AddDatabaseSubscriber( &subscriber, &error_code ) )
     {
-        WriteJsonSuccess( response_writer );
+        WriteJsonText( response_writer, "{" );
+        WriteJsonText( response_writer, "\"Id\":" );
+        WriteJsonUint64( response_writer, subscriber.Id );
+        WriteJsonText( response_writer, "}" );
     }
     else
     {

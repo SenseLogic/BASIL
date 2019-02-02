@@ -30,8 +30,8 @@ BLOG | count 5
     ARTICLE | count 15
 
         Id : UINT64 | key, unique, incremented
-        SectionId : SECTION.Id | partitioned
-        UserId : USER.Id | clustered
+        SectionId : SECTION.Id | indexed
+        UserId : USER.Id | indexed
         Title : STRING
         Text : STRING
         Image : STRING | capacity 45
