@@ -14,8 +14,9 @@ Database generator.
     *   CQL schema and data files.
     *   Go type file.
     *   Generis type, query, response, request and route files.
-    *   Rust type file.
     *   Crystal type file.
+    *   C# type file.
+    *   Rust type file.
 
 ## SQL sample
 
@@ -188,8 +189,9 @@ capacity {maximum character count}
 sqlname {SQL column name}
 cqlname {CQL column name}
 goname {Go field name}
-rustname {Rust field name}
 crystalname {Crystal field name}
+csharpname {C# field name}
+rustname {Rust field name}
 firstname
 lastname
 fullname
@@ -299,13 +301,14 @@ basil [options] script_file.basil
 --cql : generate the CQL schema and data files
 --go : generate the Go type file
 --generis : generate the Generis type, query, response, request and route files
---rust : generate the Rust type file
 --crystal : generate the Crystal type file
+--csharp : generate the C# type file
+--rust : generate the Rust type file
 ```
 
 The `--sql` and `--cql` options are mutually exclusive.
 
-The `--go`, `--generis`, `--rust` and `--crystal` options require the `--sql` or `--cql` option.
+The `--go`, `--generis`, `--crystal`, `--csharp` and `--rust` options require the `--sql` or the `--cql` option.
 
 ### Examples
 

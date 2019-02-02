@@ -46,6 +46,6 @@ class COMPOUND {
     SimplePointerArray : ARRAY[POINTER[SIMPLE]]
 }
 
-SIMPLE <-- COMPOUND
+SIMPLE <-- COMPOUND : SimpleDate
 
 @enduml

@@ -123,7 +123,7 @@ func GetDatabaseSectionArray(
                .Consistency( gocql.One )
                .Iter();
 
-    *section_array = make( [] SECTION, 0, 128 );
+    *section_array = make( [] SECTION, 0 );
 
     for iterator.Scan(
             &section.Uuid,
@@ -301,7 +301,7 @@ func GetDatabaseUserArray(
                .Consistency( gocql.One )
                .Iter();
 
-    *user_array = make( [] USER, 0, 128 );
+    *user_array = make( [] USER, 0 );
 
     for iterator.Scan(
             &user.Uuid,
@@ -470,7 +470,7 @@ func GetDatabaseArticleArray(
                .Consistency( gocql.One )
                .Iter();
 
-    *article_array = make( [] ARTICLE, 0, 128 );
+    *article_array = make( [] ARTICLE, 0 );
 
     for iterator.Scan(
             &article.Uuid,
@@ -625,7 +625,7 @@ func GetDatabaseCommentArray(
                .Consistency( gocql.One )
                .Iter();
 
-    *comment_array = make( [] COMMENT, 0, 128 );
+    *comment_array = make( [] COMMENT, 0 );
 
     for iterator.Scan(
             &comment.Uuid,
@@ -770,7 +770,7 @@ func GetDatabaseSubscriberArray(
                .Consistency( gocql.One )
                .Iter();
 
-    *subscriber_array = make( [] SUBSCRIBER, 0, 128 );
+    *subscriber_array = make( [] SUBSCRIBER, 0 );
 
     for iterator.Scan(
             &subscriber.Uuid,

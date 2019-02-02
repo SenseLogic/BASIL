@@ -1388,131 +1388,6 @@ class TYPE
 
     // ~~
 
-    string GetSubTypeRustText(
-        )
-    {
-        string
-            sub_types_rust_text;
-
-        foreach ( ref sub_type; ActualType.SubTypeArray )
-        {
-            if ( sub_types_rust_text != "" )
-            {
-                sub_types_rust_text ~= ",";
-            }
-
-            sub_types_rust_text ~= sub_type.GetRustText();
-        }
-
-        return sub_types_rust_text;
-    }
-
-    // ~~
-
-    string GetRustText(
-        )
-    {
-        string
-            type_name;
-
-        type_name = ActualType.BaseName;
-
-        if ( type_name == "BOOL" )
-        {
-            return "bool";
-        }
-        else if ( type_name == "INT8" )
-        {
-            return "i8";
-        }
-        else if ( type_name == "UINT8" )
-        {
-            return "u8";
-        }
-        else if ( type_name == "INT16" )
-        {
-            return "i16";
-        }
-        else if ( type_name == "UINT16" )
-        {
-            return "u16";
-        }
-        else if ( type_name == "INT32" )
-        {
-            return "i32";
-        }
-        else if ( type_name == "UINT32" )
-        {
-            return "u32";
-        }
-        else if ( type_name == "INT64" )
-        {
-            return "i64";
-        }
-        else if ( type_name == "UINT64" )
-        {
-            return "u64";
-        }
-        else if ( type_name == "FLOAT32" )
-        {
-            return "f32";
-        }
-        else if ( type_name == "FLOAT64" )
-        {
-            return "f64";
-        }
-        else if ( type_name == "STRING" )
-        {
-            return "String";
-        }
-        else if ( type_name == "DATE" )
-        {
-            return "String";
-        }
-        else if ( type_name == "DATETIME" )
-        {
-            return "String";
-        }
-        else if ( type_name == "UUID" )
-        {
-            return "String";
-        }
-        else if ( type_name == "BLOB" )
-        {
-            return "String";
-        }
-        else if ( type_name == "POINTER" )
-        {
-            return "Weak<" ~ GetSubTypeRustText() ~ ">";
-        }
-        else if ( type_name == "ARRAY" )
-        {
-            return "Vec<" ~ GetSubTypeRustText() ~ ">";
-        }
-        else if ( type_name == "TUPLE" )
-        {
-            return "(" ~ GetSubTypeRustText() ~ ")";
-        }
-        else if ( type_name == "LIST" )
-        {
-            return "List<" ~ GetSubTypeRustText() ~ ">";
-        }
-        else if ( type_name == "SET" )
-        {
-            return "List<" ~ GetSubTypeRustText() ~ ">";
-        }
-        else if ( type_name == "MAP" )
-        {
-            return "Map<" ~ GetSubTypeRustText() ~ ">";
-        }
-        else
-        {
-            return Name;
-        }
-    }
-
-    // ~~
-
     string GetSubTypeCrystalText(
         )
     {
@@ -1629,6 +1504,256 @@ class TYPE
         else if ( type_name == "MAP" )
         {
             return "Hash(" ~ GetSubTypeCrystalText() ~ ")";
+        }
+        else
+        {
+            return Name;
+        }
+    }
+
+    // ~~
+
+    string GetSubTypeCsharpText(
+        )
+    {
+        string
+            sub_types_csharp_text;
+
+        foreach ( ref sub_type; ActualType.SubTypeArray )
+        {
+            if ( sub_types_csharp_text != "" )
+            {
+                sub_types_csharp_text ~= ",";
+            }
+
+            sub_types_csharp_text ~= sub_type.GetCsharpText();
+        }
+
+        return sub_types_csharp_text;
+    }
+
+    // ~~
+
+    string GetCsharpText(
+        )
+    {
+        string
+            type_name;
+
+        type_name = ActualType.BaseName;
+
+        if ( type_name == "BOOL" )
+        {
+            return "bool";
+        }
+        else if ( type_name == "INT8" )
+        {
+            return "sbyte";
+        }
+        else if ( type_name == "UINT8" )
+        {
+            return "byte";
+        }
+        else if ( type_name == "INT16" )
+        {
+            return "int";
+        }
+        else if ( type_name == "UINT16" )
+        {
+            return "uint";
+        }
+        else if ( type_name == "INT32" )
+        {
+            return "int";
+        }
+        else if ( type_name == "UINT32" )
+        {
+            return "uint";
+        }
+        else if ( type_name == "INT64" )
+        {
+            return "long";
+        }
+        else if ( type_name == "UINT64" )
+        {
+            return "ulong";
+        }
+        else if ( type_name == "FLOAT32" )
+        {
+            return "float";
+        }
+        else if ( type_name == "FLOAT64" )
+        {
+            return "double";
+        }
+        else if ( type_name == "STRING" )
+        {
+            return "String";
+        }
+        else if ( type_name == "DATE" )
+        {
+            return "DateTime";
+        }
+        else if ( type_name == "DATETIME" )
+        {
+            return "DateTime";
+        }
+        else if ( type_name == "UUID" )
+        {
+            return "Guid";
+        }
+        else if ( type_name == "BLOB" )
+        {
+            return "String";
+        }
+        else if ( type_name == "POINTER" )
+        {
+            return GetSubTypeCsharpText();
+        }
+        else if ( type_name == "ARRAY" )
+        {
+            return "List<" ~ GetSubTypeCsharpText() ~ ">";
+        }
+        else if ( type_name == "TUPLE" )
+        {
+            return "Tuple<" ~ GetSubTypeCsharpText() ~ ">";
+        }
+        else if ( type_name == "LIST" )
+        {
+            return "LinkedList<" ~ GetSubTypeCsharpText() ~ ">";
+        }
+        else if ( type_name == "SET" )
+        {
+            return "LinkedList<" ~ GetSubTypeCsharpText() ~ ">";
+        }
+        else if ( type_name == "MAP" )
+        {
+            return "Dictionary<" ~ GetSubTypeCsharpText() ~ ">";
+        }
+        else
+        {
+            return Name;
+        }
+    }
+
+    // ~~
+
+    string GetSubTypeRustText(
+        )
+    {
+        string
+            sub_types_rust_text;
+
+        foreach ( ref sub_type; ActualType.SubTypeArray )
+        {
+            if ( sub_types_rust_text != "" )
+            {
+                sub_types_rust_text ~= ",";
+            }
+
+            sub_types_rust_text ~= sub_type.GetRustText();
+        }
+
+        return sub_types_rust_text;
+    }
+
+    // ~~
+
+    string GetRustText(
+        )
+    {
+        string
+            type_name;
+
+        type_name = ActualType.BaseName;
+
+        if ( type_name == "BOOL" )
+        {
+            return "bool";
+        }
+        else if ( type_name == "INT8" )
+        {
+            return "i8";
+        }
+        else if ( type_name == "UINT8" )
+        {
+            return "u8";
+        }
+        else if ( type_name == "INT16" )
+        {
+            return "i16";
+        }
+        else if ( type_name == "UINT16" )
+        {
+            return "u16";
+        }
+        else if ( type_name == "INT32" )
+        {
+            return "i32";
+        }
+        else if ( type_name == "UINT32" )
+        {
+            return "u32";
+        }
+        else if ( type_name == "INT64" )
+        {
+            return "i64";
+        }
+        else if ( type_name == "UINT64" )
+        {
+            return "u64";
+        }
+        else if ( type_name == "FLOAT32" )
+        {
+            return "f32";
+        }
+        else if ( type_name == "FLOAT64" )
+        {
+            return "f64";
+        }
+        else if ( type_name == "STRING" )
+        {
+            return "String";
+        }
+        else if ( type_name == "DATE" )
+        {
+            return "String";
+        }
+        else if ( type_name == "DATETIME" )
+        {
+            return "String";
+        }
+        else if ( type_name == "UUID" )
+        {
+            return "String";
+        }
+        else if ( type_name == "BLOB" )
+        {
+            return "String";
+        }
+        else if ( type_name == "POINTER" )
+        {
+            return "Weak<" ~ GetSubTypeRustText() ~ ">";
+        }
+        else if ( type_name == "ARRAY" )
+        {
+            return "Vec<" ~ GetSubTypeRustText() ~ ">";
+        }
+        else if ( type_name == "TUPLE" )
+        {
+            return "(" ~ GetSubTypeRustText() ~ ")";
+        }
+        else if ( type_name == "LIST" )
+        {
+            return "List<" ~ GetSubTypeRustText() ~ ">";
+        }
+        else if ( type_name == "SET" )
+        {
+            return "List<" ~ GetSubTypeRustText() ~ ">";
+        }
+        else if ( type_name == "MAP" )
+        {
+            return "Map<" ~ GetSubTypeRustText() ~ ">";
         }
         else
         {
@@ -2563,10 +2688,12 @@ class COLUMN
         GoType,
         GoFunction,
         GoVariable,
-        RustName,
-        RustType,
         CrystalName,
-        CrystalType;
+        CrystalType,
+        CsharpName,
+        CsharpType,
+        RustName,
+        RustType;
 
     // -- CONSTRUCTORS
 
@@ -2711,13 +2838,17 @@ class COLUMN
                 {
                     GoName = value_text_array[ 1 ];
                 }
-                else if ( property_name == "rustname" )
-                {
-                    RustName = value_text_array[ 1 ];
-                }
                 else if ( property_name == "crystalname" )
                 {
                     CrystalName = value_text_array[ 1 ];
+                }
+                else if ( property_name == "csharpname" )
+                {
+                    CsharpName = value_text_array[ 1 ];
+                }
+                else if ( property_name == "rustname" )
+                {
+                    RustName = value_text_array[ 1 ];
                 }
                 else if ( property_name == "firstname" )
                 {
@@ -2854,14 +2985,19 @@ class COLUMN
             GoName = Name;
         }
 
-        if ( RustName == "" )
-        {
-            RustName = GetSnakeCaseText( Name );
-        }
-
         if ( CrystalName == "" )
         {
             CrystalName = GetSnakeCaseText( Name );
+        }
+
+        if ( CsharpName == "" )
+        {
+            CsharpName = Name;
+        }
+
+        if ( RustName == "" )
+        {
+            RustName = GetSnakeCaseText( Name );
         }
 
         SqlType = Type.GetSqlText();
@@ -2882,8 +3018,9 @@ class COLUMN
         GoType = Type.GetGoText();
         GoFunction = Type.GetGoFunctionText();
         GoVariable = GoName.GetSnakeCaseText();
-        RustType = Type.GetRustText();
         CrystalType = Type.GetCrystalText();
+        CsharpType = Type.GetCsharpText();
+        RustType = Type.GetRustText();
 
         if ( IsKey || IsRequired )
         {
@@ -2949,8 +3086,9 @@ class TABLE
         GoType,
         GoFunction,
         GoVariable,
-        RustType,
-        CrystalType;
+        CrystalType,
+        CsharpType,
+        RustType;
     string[]
         KeyNameArray;
     COLUMN[]
@@ -2970,8 +3108,9 @@ class TABLE
         GoType = name;
         GoFunction = name.GetPascalCaseText();
         GoVariable = name.GetSnakeCaseText();
-        RustType = name;
         CrystalType = name;
+        CsharpType = name;
+        RustType = name;
         KeyNameArray = null;
         ColumnArray = null;
         RowCount = schema.RowCount;
@@ -3813,7 +3952,7 @@ class TABLE
                    ~ "        return false;\n"
                    ~ "    }\n"
                    ~ "\n"
-                   ~ "    *" ~ GoVariable ~ "_array = make( [] " ~ GoType ~ ", 0, 128 );\n"
+                   ~ "    *" ~ GoVariable ~ "_array = make( [] " ~ GoType ~ ", 0 );\n"
                    ~ "\n"
                    ~ "    for rows.Next()\n"
                    ~ "    {\n"
@@ -3876,7 +4015,7 @@ class TABLE
                    ~ "               .Consistency( gocql.One )\n"
                    ~ "               .Iter();\n"
                    ~ "\n"
-                   ~ "    *" ~ GoVariable ~ "_array = make( [] " ~ GoType ~ ", 0, 128 );\n"
+                   ~ "    *" ~ GoVariable ~ "_array = make( [] " ~ GoType ~ ", 0 );\n"
                    ~ "\n"
                    ~ "    for iterator.Scan(\n";
 
@@ -4151,6 +4290,46 @@ class TABLE
 
     // ~~
 
+    string GetHandleGetArrayRequestGenerisCode(
+        )
+    {
+        return
+            "func HandleGet" ~ GoFunction ~ "ArrayRequest(\n"
+            ~ "    response_writer http.ResponseWriter,\n"
+            ~ "    request * http.Request\n"
+            ~ "    )\n"
+            ~ "{\n"
+            ~ "    var\n"
+            ~ "        error_code ERROR_CODE;\n"
+            ~ "    var\n"
+            ~ "        " ~ GoVariable ~ "_array [] " ~ GoType ~ ";\n"
+            ~ "\n"
+            ~ "    if ( IsAdministratorSession( request, &error_code )\n"
+            ~ "         && GetDatabase" ~ GoFunction ~ "Array( &" ~ GoVariable ~ "_array, &error_code ) )\n"
+            ~ "    {\n"
+            ~ "        WriteJsonText( response_writer, \"[\" );\n"
+            ~ "\n"
+            ~ "        for " ~ GoVariable ~ "_index, _ := range " ~ GoVariable ~ "_array\n"
+            ~ "        {\n"
+            ~ "            if ( " ~ GoVariable ~ "_index > 0 )\n"
+            ~ "            {\n"
+            ~ "                 WriteJsonText( response_writer, \",\" );\n"
+            ~ "            }\n"
+            ~ "\n"
+            ~ "            WriteJson" ~ GoFunction ~ "( response_writer, &" ~ GoVariable ~ "_array[ " ~ GoVariable ~ "_index ] );\n"
+            ~ "        }\n"
+            ~ "\n"
+            ~ "        WriteJsonText( response_writer, \"]\" );\n"
+            ~ "    }\n"
+            ~ "    else\n"
+            ~ "    {\n"
+            ~ "        WriteJsonError( response_writer, &error_code );\n"
+            ~ "    }\n"
+            ~ "}\n";
+    }
+
+    // ~~
+
     string GetRouteRequestGenerisCode(
         )
     {
@@ -4158,7 +4337,8 @@ class TABLE
             "    router.Post( \"/add_" ~ GoVariable ~ "\", HandleAdd" ~ GoFunction ~ "Request );\n"
             ~ "    router.Post( \"/set_" ~ GoVariable ~ "\", HandleSet" ~ GoFunction ~ "Request );\n"
             ~ "    router.Post( \"/remove_" ~ GoVariable ~ "\", HandleRemove" ~ GoFunction ~ "Request );\n"
-            ~ "    router.Post( \"/get_" ~ GoVariable ~ "\", HandleGet" ~ GoFunction ~ "Request );\n";
+            ~ "    router.Post( \"/get_" ~ GoVariable ~ "\", HandleGet" ~ GoFunction ~ "Request );\n"
+            ~ "    router.Post( \"/get_" ~ GoVariable ~ "_array\", HandleGet" ~ GoFunction ~ "ArrayRequest );\n";
     }
 
     // -- OPERATIONS
@@ -5059,7 +5239,9 @@ class SCHEMA
                    ~ "\n// ~~\n\n"
                    ~ table.GetHandleRemoveRequestGenerisCode()
                    ~ "\n// ~~\n\n"
-                   ~ table.GetHandleGetRequestGenerisCode();
+                   ~ table.GetHandleGetRequestGenerisCode()
+                   ~ "\n// ~~\n\n"
+                   ~ table.GetHandleGetArrayRequestGenerisCode();
 
             if ( table_index + 1 < TableArray.length )
             {
@@ -5105,6 +5287,77 @@ class SCHEMA
 
     // ~~
 
+    void WriteCrystalTypeFile(
+        string crystal_type_file_path
+        )
+    {
+        string
+            crystal_type_file_text;
+
+        writeln( "Writing Crystal type file : ", crystal_type_file_path );
+
+        crystal_type_file_text = "";
+
+        foreach ( table_index, ref table; TableArray )
+        {
+            crystal_type_file_text ~= "class " ~ table.CrystalType ~ "\n";
+
+            foreach ( ref column; table.ColumnArray )
+            {
+                crystal_type_file_text ~= "    @" ~ column.CrystalName ~ " : " ~ column.CrystalType ~ "\n";
+            }
+
+            crystal_type_file_text ~= "end\n";
+
+            if ( table_index + 1 < TableArray.length )
+            {
+                crystal_type_file_text ~= "\n# ~~\n\n";
+            }
+        }
+
+        crystal_type_file_path.write( crystal_type_file_text );
+    }
+
+    // ~~
+
+    void WriteCsharpTypeFile(
+        string csharp_type_file_path
+        )
+    {
+        string
+            csharp_type_file_text;
+
+        writeln( "Writing C# type file : ", csharp_type_file_path );
+
+        csharp_type_file_text = "";
+
+        foreach ( table_index, ref table; TableArray )
+        {
+            csharp_type_file_text ~= "public class " ~ table.CsharpType ~ "\n{\n";
+
+            foreach ( column_index, ref column; table.ColumnArray )
+            {
+                csharp_type_file_text
+                    ~= "    public "
+                       ~ column.CsharpType
+                       ~ "\n        "
+                       ~ column.CsharpName
+                       ~ ";\n";
+            }
+
+            csharp_type_file_text ~= "}\n";
+
+            if ( table_index + 1 < TableArray.length )
+            {
+                csharp_type_file_text ~= "\n// ~~\n\n";
+            }
+        }
+
+        csharp_type_file_path.write( csharp_type_file_text );
+    }
+
+    // ~~
+
     void WriteRustTypeFile(
         string rust_type_file_path
         )
@@ -5145,39 +5398,6 @@ class SCHEMA
         }
 
         rust_type_file_path.write( rust_type_file_text );
-    }
-
-    // ~~
-
-    void WriteCrystalTypeFile(
-        string crystal_type_file_path
-        )
-    {
-        string
-            crystal_type_file_text;
-
-        writeln( "Writing Crystal type file : ", crystal_type_file_path );
-
-        crystal_type_file_text = "";
-
-        foreach ( table_index, ref table; TableArray )
-        {
-            crystal_type_file_text ~= "class " ~ table.CrystalType ~ "\n";
-
-            foreach ( ref column; table.ColumnArray )
-            {
-                crystal_type_file_text ~= "    @" ~ column.CrystalName ~ " : " ~ column.CrystalType ~ "\n";
-            }
-
-            crystal_type_file_text ~= "end\n";
-
-            if ( table_index + 1 < TableArray.length )
-            {
-                crystal_type_file_text ~= "\n# ~~\n\n";
-            }
-        }
-
-        crystal_type_file_path.write( crystal_type_file_text );
     }
 }
 
@@ -5416,13 +5636,17 @@ void ProcessFile(
             Schema.WriteGenerisRequestFile( base_file_path ~ "_" ~ DatabaseFormat ~ "_request.gs" );
             Schema.WriteGenerisRouteFile( base_file_path ~ "_" ~ DatabaseFormat ~ "_route.gs" );
         }
-        else if ( output_format == "rust" )
-        {
-            Schema.WriteRustTypeFile( base_file_path ~ "_" ~ DatabaseFormat ~ "_type.rs" );
-        }
         else if ( output_format == "crystal" )
         {
             Schema.WriteCrystalTypeFile( base_file_path ~ "_" ~ DatabaseFormat ~ "_type.cr" );
+        }
+        else if ( output_format == "csharp" )
+        {
+            Schema.WriteCsharpTypeFile( base_file_path ~ "_" ~ DatabaseFormat ~ "_type.cs" );
+        }
+        else if ( output_format == "rust" )
+        {
+            Schema.WriteRustTypeFile( base_file_path ~ "_" ~ DatabaseFormat ~ "_type.rs" );
         }
     }
 }
@@ -5480,15 +5704,20 @@ void main(
         {
             OutputFormatArray ~= "generis";
         }
-        else if ( option == "--rust"
-                  && DatabaseFormat != "" )
-        {
-            OutputFormatArray ~= "rust";
-        }
         else if ( option == "--crystal"
                   && DatabaseFormat != "" )
         {
             OutputFormatArray ~= "crystal";
+        }
+        else if ( option == "--csharp"
+                  && DatabaseFormat != "" )
+        {
+            OutputFormatArray ~= "csharp";
+        }
+        else if ( option == "--rust"
+                  && DatabaseFormat != "" )
+        {
+            OutputFormatArray ~= "rust";
         }
         else
         {
@@ -5505,13 +5734,14 @@ void main(
         writeln( "Usage :" );
         writeln( "    basil [options] script_file.basil" );
         writeln( "Options :" );
-        writeln( "    --uml : generate the UML schema file" );
-        writeln( "    --sql : generate the SQL schema and data files" );
-        writeln( "    --cql : generate the CQL schema and data files" );
-        writeln( "    --go : generate the Go type file" );
-        writeln( "    --generis : generate the Generis type, query, response, request and route files" );
-        writeln( "    --rust : generate the Rust type file" );
-        writeln( "    --crystal : generate the Crystal type file" );
+        writeln( "    --uml" );
+        writeln( "    --sql" );
+        writeln( "    --cql" );
+        writeln( "    --go" );
+        writeln( "    --generis" );
+        writeln( "    --crystal" );
+        writeln( "    --csharp" );
+        writeln( "    --rust" );
         writeln( "Examples :" );
         writeln( "    basil --uml script_file.basil" );
         writeln( "    basil --uml --sql --go script_file.basil" );

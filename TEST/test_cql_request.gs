@@ -126,6 +126,41 @@ func HandleGetSimpleRequest(
 
 // ~~
 
+func HandleGetSimpleArrayRequest(
+    response_writer http.ResponseWriter,
+    request * http.Request
+    )
+{
+    var
+        error_code ERROR_CODE;
+    var
+        simple_array [] SIMPLE;
+
+    if ( IsAdministratorSession( request, &error_code )
+         && GetDatabaseSimpleArray( &simple_array, &error_code ) )
+    {
+        WriteJsonText( response_writer, "[" );
+
+        for simple_index, _ := range simple_array
+        {
+            if ( simple_index > 0 )
+            {
+                 WriteJsonText( response_writer, "," );
+            }
+
+            WriteJsonSimple( response_writer, &simple_array[ simple_index ] );
+        }
+
+        WriteJsonText( response_writer, "]" );
+    }
+    else
+    {
+        WriteJsonError( response_writer, &error_code );
+    }
+}
+
+// ~~
+
 func HandleAddCompoundRequest(
     response_writer http.ResponseWriter,
     request * http.Request
@@ -237,6 +272,41 @@ func HandleGetCompoundRequest(
          && GetDatabaseCompound( &compound, &error_code ) )
     {
         WriteJsonCompound( response_writer, &compound );
+    }
+    else
+    {
+        WriteJsonError( response_writer, &error_code );
+    }
+}
+
+// ~~
+
+func HandleGetCompoundArrayRequest(
+    response_writer http.ResponseWriter,
+    request * http.Request
+    )
+{
+    var
+        error_code ERROR_CODE;
+    var
+        compound_array [] COMPOUND;
+
+    if ( IsAdministratorSession( request, &error_code )
+         && GetDatabaseCompoundArray( &compound_array, &error_code ) )
+    {
+        WriteJsonText( response_writer, "[" );
+
+        for compound_index, _ := range compound_array
+        {
+            if ( compound_index > 0 )
+            {
+                 WriteJsonText( response_writer, "," );
+            }
+
+            WriteJsonCompound( response_writer, &compound_array[ compound_index ] );
+        }
+
+        WriteJsonText( response_writer, "]" );
     }
     else
     {

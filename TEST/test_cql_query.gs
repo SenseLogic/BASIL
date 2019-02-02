@@ -155,7 +155,7 @@ func GetDatabaseSimpleArray(
                .Consistency( gocql.One )
                .Iter();
 
-    *simple_array = make( [] SIMPLE, 0, 128 );
+    *simple_array = make( [] SIMPLE, 0 );
 
     for iterator.Scan(
             &simple.Uuid,
@@ -336,7 +336,7 @@ func GetDatabaseCompoundArray(
                .Consistency( gocql.One )
                .Iter();
 
-    *compound_array = make( [] COMPOUND, 0, 128 );
+    *compound_array = make( [] COMPOUND, 0 );
 
     for iterator.Scan(
             &compound.Id,

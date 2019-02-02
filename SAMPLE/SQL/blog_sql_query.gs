@@ -205,7 +205,7 @@ func GetDatabaseSectionArray(
         return false;
     }
 
-    *section_array = make( [] SECTION, 0, 128 );
+    *section_array = make( [] SECTION, 0 );
 
     for rows.Next()
     {
@@ -466,7 +466,7 @@ func GetDatabaseUserArray(
         return false;
     }
 
-    *user_array = make( [] USER, 0, 128 );
+    *user_array = make( [] USER, 0 );
 
     for rows.Next()
     {
@@ -718,7 +718,7 @@ func GetDatabaseArticleArray(
         return false;
     }
 
-    *article_array = make( [] ARTICLE, 0, 128 );
+    *article_array = make( [] ARTICLE, 0 );
 
     for rows.Next()
     {
@@ -956,7 +956,7 @@ func GetDatabaseCommentArray(
         return false;
     }
 
-    *comment_array = make( [] COMMENT, 0, 128 );
+    *comment_array = make( [] COMMENT, 0 );
 
     for rows.Next()
     {
@@ -1184,7 +1184,7 @@ func GetDatabaseSubscriberArray(
         return false;
     }
 
-    *subscriber_array = make( [] SUBSCRIBER, 0, 128 );
+    *subscriber_array = make( [] SUBSCRIBER, 0 );
 
     for rows.Next()
     {
