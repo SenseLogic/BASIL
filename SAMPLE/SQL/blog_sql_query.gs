@@ -225,7 +225,7 @@ func GetDatabaseSectionArray(
             return false;
         }
 
-        section_array.append( section );
+        *section_array = append( *section_array, section );
     }
 
     return true;
@@ -495,7 +495,7 @@ func GetDatabaseUserArray(
             return false;
         }
 
-        user_array.append( user );
+        *user_array = append( *user_array, user );
     }
 
     return true;
@@ -740,7 +740,7 @@ func GetDatabaseArticleArray(
             return false;
         }
 
-        article_array.append( article );
+        *article_array = append( *article_array, article );
     }
 
     return true;
@@ -976,7 +976,7 @@ func GetDatabaseCommentArray(
             return false;
         }
 
-        comment_array.append( comment );
+        *comment_array = append( *comment_array, comment );
     }
 
     return true;
@@ -1202,7 +1202,7 @@ func GetDatabaseSubscriberArray(
             return false;
         }
 
-        subscriber_array.append( subscriber );
+        *subscriber_array = append( *subscriber_array, subscriber );
     }
 
     return true;

@@ -3986,7 +3986,7 @@ class TABLE
                    ~ "            return false;\n"
                    ~ "        }\n"
                    ~ "\n"
-                   ~ "        " ~ GoVariable ~ "_array.append( " ~ GoVariable ~ " );\n"
+                   ~ "        *" ~ GoVariable ~ "_array = append( *" ~ GoVariable ~ "_array, " ~ GoVariable ~ " );\n"
                    ~ "    }\n";
         }
         else
@@ -4039,7 +4039,7 @@ class TABLE
             generis_code
                 ~= "            )\n"
                    ~ "    {\n"
-                   ~ "        " ~ GoVariable ~ "_array.append( " ~ GoVariable ~ " );\n"
+                   ~ "        *" ~ GoVariable ~ "_array = append( *" ~ GoVariable ~ "_array, " ~ GoVariable ~ " );\n"
                    ~ "    }\n"
                    ~ "\n"
                    ~ "    error_ := iterator.Close();\n"

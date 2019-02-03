@@ -133,7 +133,7 @@ func GetDatabaseSectionArray(
             &section.Image
             )
     {
-        section_array.append( section );
+        *section_array = append( *section_array, section );
     }
 
     error_ := iterator.Close();
@@ -320,7 +320,7 @@ func GetDatabaseUserArray(
             &user.ItIsAdministrator
             )
     {
-        user_array.append( user );
+        *user_array = append( *user_array, user );
     }
 
     error_ := iterator.Close();
@@ -482,7 +482,7 @@ func GetDatabaseArticleArray(
             &article.Date
             )
     {
-        article_array.append( article );
+        *article_array = append( *article_array, article );
     }
 
     error_ := iterator.Close();
@@ -635,7 +635,7 @@ func GetDatabaseCommentArray(
             &comment.DateTime
             )
     {
-        comment_array.append( comment );
+        *comment_array = append( *comment_array, comment );
     }
 
     error_ := iterator.Close();
@@ -778,7 +778,7 @@ func GetDatabaseSubscriberArray(
             &subscriber.Email
             )
     {
-        subscriber_array.append( subscriber );
+        *subscriber_array = append( *subscriber_array, subscriber );
     }
 
     error_ := iterator.Close();

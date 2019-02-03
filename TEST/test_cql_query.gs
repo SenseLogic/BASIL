@@ -176,7 +176,7 @@ func GetDatabaseSimpleArray(
             &simple.Blob
             )
     {
-        simple_array.append( simple );
+        *simple_array = append( *simple_array, simple );
     }
 
     error_ := iterator.Close();
@@ -353,7 +353,7 @@ func GetDatabaseCompoundArray(
             &compound.NameSetMap
             )
     {
-        compound_array.append( compound );
+        *compound_array = append( *compound_array, compound );
     }
 
     error_ := iterator.Close();
