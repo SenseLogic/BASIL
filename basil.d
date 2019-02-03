@@ -1268,7 +1268,7 @@ class TYPE
 
     // ~~
 
-    string GetSubTypeGoFunctionText(
+    string GetSubTypeGoAttributeText(
         )
     {
         string
@@ -1276,7 +1276,7 @@ class TYPE
 
         foreach ( ref sub_type; ActualType.SubTypeArray )
         {
-            sub_types_go_text ~= sub_type.GetGoFunctionText();
+            sub_types_go_text ~= sub_type.GetGoAttributeText();
         }
 
         return sub_types_go_text;
@@ -1284,7 +1284,7 @@ class TYPE
 
     // ~~
 
-    string GetGoFunctionText(
+    string GetGoAttributeText(
         )
     {
         string
@@ -1358,27 +1358,27 @@ class TYPE
         }
         else if ( type_name == "POINTER" )
         {
-            return GetSubTypeGoFunctionText() ~ "Pointer";
+            return GetSubTypeGoAttributeText() ~ "Pointer";
         }
         else if ( type_name == "ARRAY" )
         {
-            return GetSubTypeGoFunctionText() ~ "Array";
+            return GetSubTypeGoAttributeText() ~ "Array";
         }
         else if ( type_name == "TUPLE" )
         {
-            return GetSubTypeGoFunctionText() ~ "Tuple";
+            return GetSubTypeGoAttributeText() ~ "Tuple";
         }
         else if ( type_name == "LIST" )
         {
-            return GetSubTypeGoFunctionText() ~ "List";
+            return GetSubTypeGoAttributeText() ~ "List";
         }
         else if ( type_name == "SET" )
         {
-            return GetSubTypeGoFunctionText() ~ "Set";
+            return GetSubTypeGoAttributeText() ~ "Set";
         }
         else if ( type_name == "MAP" )
         {
-            return GetSubTypeGoFunctionText() ~ "Map";
+            return GetSubTypeGoAttributeText() ~ "Map";
         }
         else
         {
@@ -2686,7 +2686,7 @@ class COLUMN
         StoredType,
         GoName,
         GoType,
-        GoFunction,
+        GoAttribute,
         GoVariable,
         CrystalName,
         CrystalType,
@@ -3016,7 +3016,7 @@ class COLUMN
         }
 
         GoType = Type.GetGoText();
-        GoFunction = Type.GetGoFunctionText();
+        GoAttribute = Type.GetGoAttributeText();
         GoVariable = GoName.GetSnakeCaseText();
         CrystalType = Type.GetCrystalText();
         CsharpType = Type.GetCsharpText();
@@ -3084,7 +3084,7 @@ class TABLE
         SchemaName,
         Name,
         GoType,
-        GoFunction,
+        GoAttribute,
         GoVariable,
         CrystalType,
         CsharpType,
@@ -3106,7 +3106,7 @@ class TABLE
         SchemaName = schema.Name;
         Name = name;
         GoType = name;
-        GoFunction = name.GetPascalCaseText();
+        GoAttribute = name.GetPascalCaseText();
         GoVariable = name.GetSnakeCaseText();
         CrystalType = name;
         CsharpType = name;
@@ -3145,7 +3145,7 @@ class TABLE
             generis_code;
 
         generis_code
-            = "func AddDatabase" ~ GoFunction ~ "(\n"
+            = "func AddDatabase" ~ GoAttribute ~ "(\n"
               ~ "    " ~ GoVariable ~ " * " ~ GoType ~ ",\n"
               ~ "    error_code * ERROR_CODE\n"
               ~ "    ) bool\n"
@@ -3378,7 +3378,7 @@ class TABLE
             generis_code;
 
         generis_code
-            = "func SetDatabase" ~ GoFunction ~ "(\n"
+            = "func SetDatabase" ~ GoAttribute ~ "(\n"
               ~ "    " ~ GoVariable ~ " * " ~ GoType ~ ",\n"
               ~ "    error_code * ERROR_CODE\n"
               ~ "    ) bool\n"
@@ -3545,7 +3545,7 @@ class TABLE
             generis_code;
 
         generis_code
-            = "func RemoveDatabase" ~ GoFunction ~ "(\n"
+            = "func RemoveDatabase" ~ GoAttribute ~ "(\n"
               ~ "    " ~ GoVariable ~ " * " ~ GoType ~ ",\n"
               ~ "    error_code * ERROR_CODE\n"
               ~ "    ) bool\n"
@@ -3670,7 +3670,7 @@ class TABLE
             generis_code;
 
         generis_code
-            = "func GetDatabase" ~ GoFunction ~ "(\n"
+            = "func GetDatabase" ~ GoAttribute ~ "(\n"
               ~ "    " ~ GoVariable ~ " * " ~ GoType ~ ",\n"
               ~ "    error_code * ERROR_CODE\n"
               ~ "    ) bool\n"
@@ -3903,7 +3903,7 @@ class TABLE
             generis_code;
 
         generis_code
-            = "func GetDatabase" ~ GoFunction ~ "Array(\n"
+            = "func GetDatabase" ~ GoAttribute ~ "Array(\n"
               ~ "    " ~ GoVariable ~ "_array * [] " ~ GoType ~ ",\n"
               ~ "    error_code * ERROR_CODE\n"
               ~ "    ) bool\n"
@@ -4069,7 +4069,7 @@ class TABLE
             generis_code;
 
         generis_code
-            = "func WriteJson" ~ GoFunction ~ "(\n"
+            = "func WriteJson" ~ GoAttribute ~ "(\n"
               ~ "    response_writer http.ResponseWriter,\n"
               ~ "    " ~ GoVariable ~ " * " ~ GoType ~ "\n"
               ~ "    )\n"
@@ -4082,7 +4082,7 @@ class TABLE
             {
                 generis_code
                     ~= "    WriteJsonText( response_writer, \"\\\"" ~ column.GoName ~ "\\\":\" );\n"
-                       ~ "    WriteJson" ~ column.GoFunction ~ "( response_writer, " ~ GoVariable ~ "." ~ column.GoName ~ " );\n";
+                       ~ "    WriteJson" ~ column.GoAttribute ~ "( response_writer, " ~ GoVariable ~ "." ~ column.GoName ~ " );\n";
             }
         }
 
@@ -4102,7 +4102,7 @@ class TABLE
             generis_code;
 
         generis_code
-            = "func HandleAdd" ~ GoFunction ~ "Request(\n"
+            = "func HandleAdd" ~ GoAttribute ~ "Request(\n"
               ~ "    response_writer http.ResponseWriter,\n"
               ~ "    request * http.Request\n"
               ~ "    )\n"
@@ -4124,12 +4124,12 @@ class TABLE
                             || column.IsIncremented) ) )
             {
                 generis_code
-                    ~= "         && GetRequest" ~ column.GoFunction ~ "( &" ~ GoVariable ~ "." ~ column.GoName ~ ", request, \"" ~ column.StoredName ~ "\", &error_code )\n";
+                    ~= "         && GetRequest" ~ column.GoAttribute ~ "( &" ~ GoVariable ~ "." ~ column.GoName ~ ", request, \"" ~ column.StoredName ~ "\", &error_code )\n";
             }
         }
 
         generis_code
-            ~= "         && AddDatabase" ~ GoFunction ~ "( &" ~ GoVariable ~ ", &error_code ) )\n"
+            ~= "         && AddDatabase" ~ GoAttribute ~ "( &" ~ GoVariable ~ ", &error_code ) )\n"
                ~ "    {\n"
                ~ "        WriteJsonText( response_writer, \"{\" );\n";
 
@@ -4140,7 +4140,7 @@ class TABLE
             {
                 generis_code
                     ~= "        WriteJsonText( response_writer, \"\\\"" ~ column.GoName ~ "\\\":\" );\n"
-                       ~ "        WriteJson" ~ column.GoFunction ~ "( response_writer, " ~ GoVariable ~ "." ~ column.GoName ~ " );\n";
+                       ~ "        WriteJson" ~ column.GoAttribute ~ "( response_writer, " ~ GoVariable ~ "." ~ column.GoName ~ " );\n";
             }
         }
 
@@ -4165,7 +4165,7 @@ class TABLE
             generis_code;
 
         generis_code
-            = "func HandleSet" ~ GoFunction ~ "Request(\n"
+            = "func HandleSet" ~ GoAttribute ~ "Request(\n"
               ~ "    response_writer http.ResponseWriter,\n"
               ~ "    request * http.Request\n"
               ~ "    )\n"
@@ -4182,12 +4182,12 @@ class TABLE
             if ( column.IsStored )
             {
                 generis_code
-                    ~= "         && GetRequest" ~ column.GoFunction ~ "( &" ~ GoVariable ~ "." ~ column.GoName ~ ", request, \"" ~ column.StoredName ~ "\", &error_code )\n";
+                    ~= "         && GetRequest" ~ column.GoAttribute ~ "( &" ~ GoVariable ~ "." ~ column.GoName ~ ", request, \"" ~ column.StoredName ~ "\", &error_code )\n";
             }
         }
 
         generis_code
-            ~= "         && SetDatabase" ~ GoFunction ~ "( &" ~ GoVariable ~ ", &error_code ) )\n"
+            ~= "         && SetDatabase" ~ GoAttribute ~ "( &" ~ GoVariable ~ ", &error_code ) )\n"
                ~ "    {\n"
                ~ "        WriteJsonSuccess( response_writer );\n"
                ~ "    }\n"
@@ -4209,7 +4209,7 @@ class TABLE
             generis_code;
 
         generis_code
-            = "func HandleRemove" ~ GoFunction ~ "Request(\n"
+            = "func HandleRemove" ~ GoAttribute ~ "Request(\n"
               ~ "    response_writer http.ResponseWriter,\n"
               ~ "    request * http.Request\n"
               ~ "    )\n"
@@ -4226,12 +4226,12 @@ class TABLE
             if ( column.IsKey )
             {
                 generis_code
-                    ~= "         && GetRequest" ~ column.GoFunction ~ "( &" ~ GoVariable ~ "." ~ column.GoName ~ ", request, \"" ~ column.StoredName ~ "\", &error_code )\n";
+                    ~= "         && GetRequest" ~ column.GoAttribute ~ "( &" ~ GoVariable ~ "." ~ column.GoName ~ ", request, \"" ~ column.StoredName ~ "\", &error_code )\n";
             }
         }
 
         generis_code
-            ~= "         && RemoveDatabase" ~ GoFunction ~ "( &" ~ GoVariable ~ ", &error_code ) )\n"
+            ~= "         && RemoveDatabase" ~ GoAttribute ~ "( &" ~ GoVariable ~ ", &error_code ) )\n"
                ~ "    {\n"
                ~ "        WriteJsonSuccess( response_writer );\n"
                ~ "    }\n"
@@ -4253,7 +4253,7 @@ class TABLE
             generis_code;
 
         generis_code
-            = "func HandleGet" ~ GoFunction ~ "Request(\n"
+            = "func HandleGet" ~ GoAttribute ~ "Request(\n"
               ~ "    response_writer http.ResponseWriter,\n"
               ~ "    request * http.Request\n"
               ~ "    )\n"
@@ -4270,14 +4270,16 @@ class TABLE
             if ( column.IsKey )
             {
                 generis_code
-                    ~= "         && GetRequest" ~ column.GoFunction ~ "( &" ~ GoVariable ~ "." ~ column.GoName ~ ", request, \"" ~ column.StoredName ~ "\", &error_code )\n";
+                    ~= "         && GetRequest" ~ column.GoAttribute ~ "( &" ~ GoVariable ~ "." ~ column.GoName ~ ", request, \"" ~ column.StoredName ~ "\", &error_code )\n";
             }
         }
 
         generis_code
-            ~= "         && GetDatabase" ~ GoFunction ~ "( &" ~ GoVariable ~ ", &error_code ) )\n"
+            ~= "         && GetDatabase" ~ GoAttribute ~ "( &" ~ GoVariable ~ ", &error_code ) )\n"
                ~ "    {\n"
-               ~ "        WriteJson" ~ GoFunction ~ "( response_writer, &" ~ GoVariable ~ " );\n"
+               ~ "        WriteJsonText( response_writer, \"{\\\"" ~ GoAttribute ~ "\\\":\" );\n"
+               ~ "        WriteJson" ~ GoAttribute ~ "( response_writer, &" ~ GoVariable ~ " );\n"
+               ~ "        WriteJsonText( response_writer, \"}\" );\n"
                ~ "    }\n"
                ~ "    else\n"
                ~ "    {\n"
@@ -4294,7 +4296,7 @@ class TABLE
         )
     {
         return
-            "func HandleGet" ~ GoFunction ~ "ArrayRequest(\n"
+            "func HandleGet" ~ GoAttribute ~ "ArrayRequest(\n"
             ~ "    response_writer http.ResponseWriter,\n"
             ~ "    request * http.Request\n"
             ~ "    )\n"
@@ -4305,9 +4307,9 @@ class TABLE
             ~ "        " ~ GoVariable ~ "_array [] " ~ GoType ~ ";\n"
             ~ "\n"
             ~ "    if ( IsAdministratorSession( request, &error_code )\n"
-            ~ "         && GetDatabase" ~ GoFunction ~ "Array( &" ~ GoVariable ~ "_array, &error_code ) )\n"
+            ~ "         && GetDatabase" ~ GoAttribute ~ "Array( &" ~ GoVariable ~ "_array, &error_code ) )\n"
             ~ "    {\n"
-            ~ "        WriteJsonText( response_writer, \"[\" );\n"
+            ~ "        WriteJsonText( response_writer, \"{\\\"" ~ GoAttribute ~ "Array\\\":[\" );\n"
             ~ "\n"
             ~ "        for " ~ GoVariable ~ "_index, _ := range " ~ GoVariable ~ "_array\n"
             ~ "        {\n"
@@ -4316,10 +4318,10 @@ class TABLE
             ~ "                 WriteJsonText( response_writer, \",\" );\n"
             ~ "            }\n"
             ~ "\n"
-            ~ "            WriteJson" ~ GoFunction ~ "( response_writer, &" ~ GoVariable ~ "_array[ " ~ GoVariable ~ "_index ] );\n"
+            ~ "            WriteJson" ~ GoAttribute ~ "( response_writer, &" ~ GoVariable ~ "_array[ " ~ GoVariable ~ "_index ] );\n"
             ~ "        }\n"
             ~ "\n"
-            ~ "        WriteJsonText( response_writer, \"]\" );\n"
+            ~ "        WriteJsonText( response_writer, \"]}\" );\n"
             ~ "    }\n"
             ~ "    else\n"
             ~ "    {\n"
@@ -4334,11 +4336,11 @@ class TABLE
         )
     {
         return
-            "    router.Post( \"/add_" ~ GoVariable ~ "\", HandleAdd" ~ GoFunction ~ "Request );\n"
-            ~ "    router.Post( \"/set_" ~ GoVariable ~ "\", HandleSet" ~ GoFunction ~ "Request );\n"
-            ~ "    router.Post( \"/remove_" ~ GoVariable ~ "\", HandleRemove" ~ GoFunction ~ "Request );\n"
-            ~ "    router.Post( \"/get_" ~ GoVariable ~ "\", HandleGet" ~ GoFunction ~ "Request );\n"
-            ~ "    router.Post( \"/get_" ~ GoVariable ~ "_array\", HandleGet" ~ GoFunction ~ "ArrayRequest );\n";
+            "    router.Post( \"/add_" ~ GoVariable ~ "\", HandleAdd" ~ GoAttribute ~ "Request );\n"
+            ~ "    router.Post( \"/set_" ~ GoVariable ~ "\", HandleSet" ~ GoAttribute ~ "Request );\n"
+            ~ "    router.Post( \"/remove_" ~ GoVariable ~ "\", HandleRemove" ~ GoAttribute ~ "Request );\n"
+            ~ "    router.Post( \"/get_" ~ GoVariable ~ "\", HandleGet" ~ GoAttribute ~ "Request );\n"
+            ~ "    router.Post( \"/get_" ~ GoVariable ~ "_array\", HandleGet" ~ GoAttribute ~ "ArrayRequest );\n";
     }
 
     // -- OPERATIONS

@@ -116,7 +116,9 @@ func HandleGetSimpleRequest(
          && GetRequestUuid( &simple.Uuid, request, "Uuid", &error_code )
          && GetDatabaseSimple( &simple, &error_code ) )
     {
+        WriteJsonText( response_writer, "{\"Simple\":" );
         WriteJsonSimple( response_writer, &simple );
+        WriteJsonText( response_writer, "}" );
     }
     else
     {
@@ -139,7 +141,7 @@ func HandleGetSimpleArrayRequest(
     if ( IsAdministratorSession( request, &error_code )
          && GetDatabaseSimpleArray( &simple_array, &error_code ) )
     {
-        WriteJsonText( response_writer, "[" );
+        WriteJsonText( response_writer, "{\"SimpleArray\":[" );
 
         for simple_index, _ := range simple_array
         {
@@ -151,7 +153,7 @@ func HandleGetSimpleArrayRequest(
             WriteJsonSimple( response_writer, &simple_array[ simple_index ] );
         }
 
-        WriteJsonText( response_writer, "]" );
+        WriteJsonText( response_writer, "]}" );
     }
     else
     {
@@ -271,7 +273,9 @@ func HandleGetCompoundRequest(
          && GetRequestInt32( &compound.Id, request, "Id", &error_code )
          && GetDatabaseCompound( &compound, &error_code ) )
     {
+        WriteJsonText( response_writer, "{\"Compound\":" );
         WriteJsonCompound( response_writer, &compound );
+        WriteJsonText( response_writer, "}" );
     }
     else
     {
@@ -294,7 +298,7 @@ func HandleGetCompoundArrayRequest(
     if ( IsAdministratorSession( request, &error_code )
          && GetDatabaseCompoundArray( &compound_array, &error_code ) )
     {
-        WriteJsonText( response_writer, "[" );
+        WriteJsonText( response_writer, "{\"CompoundArray\":[" );
 
         for compound_index, _ := range compound_array
         {
@@ -306,7 +310,7 @@ func HandleGetCompoundArrayRequest(
             WriteJsonCompound( response_writer, &compound_array[ compound_index ] );
         }
 
-        WriteJsonText( response_writer, "]" );
+        WriteJsonText( response_writer, "]}" );
     }
     else
     {

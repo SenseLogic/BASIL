@@ -94,7 +94,9 @@ func HandleGetSectionRequest(
          && GetRequestUint64( &section.Id, request, "Id", &error_code )
          && GetDatabaseSection( &section, &error_code ) )
     {
+        WriteJsonText( response_writer, "{\"Section\":" );
         WriteJsonSection( response_writer, &section );
+        WriteJsonText( response_writer, "}" );
     }
     else
     {
@@ -117,7 +119,7 @@ func HandleGetSectionArrayRequest(
     if ( IsAdministratorSession( request, &error_code )
          && GetDatabaseSectionArray( &section_array, &error_code ) )
     {
-        WriteJsonText( response_writer, "[" );
+        WriteJsonText( response_writer, "{\"SectionArray\":[" );
 
         for section_index, _ := range section_array
         {
@@ -129,7 +131,7 @@ func HandleGetSectionArrayRequest(
             WriteJsonSection( response_writer, &section_array[ section_index ] );
         }
 
-        WriteJsonText( response_writer, "]" );
+        WriteJsonText( response_writer, "]}" );
     }
     else
     {
@@ -253,7 +255,9 @@ func HandleGetUserRequest(
          && GetRequestUint64( &user.Id, request, "Id", &error_code )
          && GetDatabaseUser( &user, &error_code ) )
     {
+        WriteJsonText( response_writer, "{\"User\":" );
         WriteJsonUser( response_writer, &user );
+        WriteJsonText( response_writer, "}" );
     }
     else
     {
@@ -276,7 +280,7 @@ func HandleGetUserArrayRequest(
     if ( IsAdministratorSession( request, &error_code )
          && GetDatabaseUserArray( &user_array, &error_code ) )
     {
-        WriteJsonText( response_writer, "[" );
+        WriteJsonText( response_writer, "{\"UserArray\":[" );
 
         for user_index, _ := range user_array
         {
@@ -288,7 +292,7 @@ func HandleGetUserArrayRequest(
             WriteJsonUser( response_writer, &user_array[ user_index ] );
         }
 
-        WriteJsonText( response_writer, "]" );
+        WriteJsonText( response_writer, "]}" );
     }
     else
     {
@@ -398,7 +402,9 @@ func HandleGetArticleRequest(
          && GetRequestUint64( &article.Id, request, "Id", &error_code )
          && GetDatabaseArticle( &article, &error_code ) )
     {
+        WriteJsonText( response_writer, "{\"Article\":" );
         WriteJsonArticle( response_writer, &article );
+        WriteJsonText( response_writer, "}" );
     }
     else
     {
@@ -421,7 +427,7 @@ func HandleGetArticleArrayRequest(
     if ( IsAdministratorSession( request, &error_code )
          && GetDatabaseArticleArray( &article_array, &error_code ) )
     {
-        WriteJsonText( response_writer, "[" );
+        WriteJsonText( response_writer, "{\"ArticleArray\":[" );
 
         for article_index, _ := range article_array
         {
@@ -433,7 +439,7 @@ func HandleGetArticleArrayRequest(
             WriteJsonArticle( response_writer, &article_array[ article_index ] );
         }
 
-        WriteJsonText( response_writer, "]" );
+        WriteJsonText( response_writer, "]}" );
     }
     else
     {
@@ -539,7 +545,9 @@ func HandleGetCommentRequest(
          && GetRequestUint64( &comment.Id, request, "Id", &error_code )
          && GetDatabaseComment( &comment, &error_code ) )
     {
+        WriteJsonText( response_writer, "{\"Comment\":" );
         WriteJsonComment( response_writer, &comment );
+        WriteJsonText( response_writer, "}" );
     }
     else
     {
@@ -562,7 +570,7 @@ func HandleGetCommentArrayRequest(
     if ( IsAdministratorSession( request, &error_code )
          && GetDatabaseCommentArray( &comment_array, &error_code ) )
     {
-        WriteJsonText( response_writer, "[" );
+        WriteJsonText( response_writer, "{\"CommentArray\":[" );
 
         for comment_index, _ := range comment_array
         {
@@ -574,7 +582,7 @@ func HandleGetCommentArrayRequest(
             WriteJsonComment( response_writer, &comment_array[ comment_index ] );
         }
 
-        WriteJsonText( response_writer, "]" );
+        WriteJsonText( response_writer, "]}" );
     }
     else
     {
@@ -676,7 +684,9 @@ func HandleGetSubscriberRequest(
          && GetRequestUint64( &subscriber.Id, request, "Id", &error_code )
          && GetDatabaseSubscriber( &subscriber, &error_code ) )
     {
+        WriteJsonText( response_writer, "{\"Subscriber\":" );
         WriteJsonSubscriber( response_writer, &subscriber );
+        WriteJsonText( response_writer, "}" );
     }
     else
     {
@@ -699,7 +709,7 @@ func HandleGetSubscriberArrayRequest(
     if ( IsAdministratorSession( request, &error_code )
          && GetDatabaseSubscriberArray( &subscriber_array, &error_code ) )
     {
-        WriteJsonText( response_writer, "[" );
+        WriteJsonText( response_writer, "{\"SubscriberArray\":[" );
 
         for subscriber_index, _ := range subscriber_array
         {
@@ -711,7 +721,7 @@ func HandleGetSubscriberArrayRequest(
             WriteJsonSubscriber( response_writer, &subscriber_array[ subscriber_index ] );
         }
 
-        WriteJsonText( response_writer, "]" );
+        WriteJsonText( response_writer, "]}" );
     }
     else
     {
