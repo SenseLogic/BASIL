@@ -4083,6 +4083,12 @@ class TABLE
                 generis_code
                     ~= "    WriteJsonText( response_writer, \"\\\"" ~ column.GoName ~ "\\\":\" );\n"
                        ~ "    WriteJson" ~ column.GoAttribute ~ "( response_writer, " ~ GoVariable ~ "." ~ column.GoName ~ " );\n";
+
+                if ( !column.IsLastStored )
+                {
+                    generis_code
+                        ~= "    WriteJsonText( response_writer, \",\" );\n";
+                }
             }
         }
 
@@ -4090,7 +4096,7 @@ class TABLE
             ~= "    WriteJsonText( response_writer, \"}\" );\n"
                ~ "}\n";
 
-        return generis_code;
+        return generis_code.replace( "\" );\n    WriteJsonText( response_writer, \"", "" );
     }
 
     // ~~
