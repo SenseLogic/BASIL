@@ -34,3 +34,31 @@ TEST | count 10
         SimpleDateList : LIST[ SIMPLE.Date ] | count 1 3
         NameSetMap : MAP[ SIMPLE.Date, COMPOUND.NameSet ] | count 2
         SimplePointerArray : ARRAY[ POINTER[ SIMPLE ] ] | !stored
+
+    VALUE | !stored, count 3
+
+        Uuid : UUID | key
+        Name : STRING
+        Integer : INT32
+        Text : STRING
+
+    DATA | !stored, count 3
+
+        Uuid : UUID | key
+        ValueUuid : UUID
+
+    %VALUE
+
+        Uuid Name Integer Text
+
+            @first, first, 1, This is the first text\,\ with a space
+            @second, second, 2, This is the second text\, with a comma
+            @third, third, 3, This is the third text\,\nwith a new line
+
+    %DATA
+
+        ValueUuid
+
+            @first
+            @second
+            @third

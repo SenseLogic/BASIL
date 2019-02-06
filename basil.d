@@ -3093,6 +3093,9 @@ class TABLE
         KeyNameArray;
     COLUMN[]
         ColumnArray;
+    bool
+        IsStored,
+        IsLastStored;
     long
         RowCount;
 
@@ -3113,6 +3116,8 @@ class TABLE
         RustType = name;
         KeyNameArray = null;
         ColumnArray = null;
+        IsStored = true;
+        IsLastStored = false;
         RowCount = schema.RowCount;
     }
 
@@ -4355,21 +4360,45 @@ class TABLE
         string property_text
         )
     {
+        string
+            property_name;
         string[]
             value_text_array;
 
         value_text_array = property_text.split( ' ' );
 
-        if ( value_text_array.length == 2 )
+        if ( value_text_array.length > 0 )
         {
-            if ( value_text_array[ 0 ] == "count" )
+            if ( value_text_array.length == 1 )
             {
-                RowCount = value_text_array[ 1 ].to!long();
+                if ( value_text_array[ 0 ].startsWith( '!' ) )
+                {
+                    value_text_array[ 0 ] = value_text_array[ 0 ][ 1 .. $ ];
+                    value_text_array ~= "0";
+                }
+                else
+                {
+                    value_text_array ~= "1";
+                }
             }
-        }
-        else
-        {
-            Abort( "Invalid table property : " ~ property_text );
+
+            property_name = value_text_array[ 0 ];
+
+            if ( value_text_array.length == 2 )
+            {
+                if ( property_name == "stored" )
+                {
+                    IsStored = ( value_text_array[ 1 ] != "0" );
+                }
+                else if ( value_text_array[ 0 ] == "count" )
+                {
+                    RowCount = value_text_array[ 1 ].to!long();
+                }
+            }
+            else
+            {
+                Abort( "Invalid table property : " ~ property_text );
+            }
         }
     }
 
@@ -4536,6 +4565,34 @@ class SCHEMA
 
     // ~~
 
+    void SetValues(
+        string[] line_array
+        )
+    {
+        string
+            stripped_line;
+
+        foreach ( line; line_array )
+        {
+            stripped_line = line.strip();
+
+            if ( stripped_line.length > 0
+                 && stripped_line[ 0 ] != '#' )
+            {
+                writeln( line );
+
+                if ( line.startsWith( "    %" ) )
+                {
+                }
+                else if ( line.startsWith( "        " ) )
+                {
+                }
+            }
+        }
+    }
+
+    // ~~
+
     void MakeValues(
         )
     {
@@ -4557,17 +4614,21 @@ class SCHEMA
         string basil_schema_file_path
         )
     {
+        long
+            line_index;
         string
+            basil_schema_file_text,
             column_name,
             column_text,
             column_type,
-            basil_schema_file_text,
+            line,
             stripped_line,
             table_name;
         string[]
-            column_text_array,
-            line_text_array,
-            property_text_array;
+            column_part_array,
+            line_array,
+            line_part_array,
+            property_part_array;
         COLUMN
             column;
         TABLE
@@ -4576,102 +4637,117 @@ class SCHEMA
         writeln( "Reading schema file : ", basil_schema_file_path );
 
         basil_schema_file_text = basil_schema_file_path.readText();
+
         TableArray = null;
         table = null;
 
-        foreach ( ref line; basil_schema_file_text.lineSplitter() )
+        line_array = basil_schema_file_text.replace( "\r", "" ).replace( "\t", "    " ).split( '\n' );
+
+        for ( line_index = 0;
+              line_index < line_array.length;
+              ++line_index )
         {
-            stripped_line = line.strip();
+            line = line_array[ line_index ];
 
-            if ( stripped_line.length > 0
-                 && stripped_line[ 0 ] != '#' )
+            if ( line.startsWith( "    %" ) )
             {
-                writeln( line );
+                break;
+            }
+            else
+            {
+                stripped_line = line.strip();
 
-                if ( line.startsWith( "        " ) )
+                if ( stripped_line.length > 0
+                     && stripped_line[ 0 ] != '#' )
                 {
-                    line_text_array = stripped_line.split( '|' );
-                    column_text_array = line_text_array[ 0 ].split( ':' );
+                    writeln( line );
 
-                    if ( column_text_array.length >= 2 )
+                    if ( line.startsWith( "        " ) )
                     {
-                        column_name = column_text_array[ 0 ].strip();
-                        column_type = column_text_array[ 1 .. $ ].join( ':' ).strip();
+                        line_part_array = stripped_line.split( '|' );
+                        column_part_array = line_part_array[ 0 ].split( ':' );
 
-                        column = new COLUMN( table, column_name, column_type );
-                        table.ColumnArray ~= column;
-
-                        if ( line_text_array.length == 2 )
+                        if ( column_part_array.length >= 2 )
                         {
-                            property_text_array = line_text_array[ 1 ].split( ',' );
+                            column_name = column_part_array[ 0 ].strip();
+                            column_type = column_part_array[ 1 .. $ ].join( ':' ).strip();
 
-                            foreach ( ref property_text; property_text_array )
+                            column = new COLUMN( table, column_name, column_type );
+                            table.ColumnArray ~= column;
+
+                            if ( line_part_array.length == 2 )
                             {
-                                column.SetPropertyValue( property_text.strip() );
+                                property_part_array = line_part_array[ 1 ].split( ',' );
+
+                                foreach ( ref property_text; property_part_array )
+                                {
+                                    column.SetPropertyValue( property_text.strip() );
+                                }
+
+                                if ( column.IsKey )
+                                {
+                                    table.KeyNameArray ~= column.Name;
+                                }
                             }
-
-                            if ( column.IsKey )
+                            else if ( line_part_array.length != 1 )
                             {
-                                table.KeyNameArray ~= column.Name;
+                                Abort( "Invalid column : " ~ stripped_line );
                             }
                         }
-                        else if ( line_text_array.length != 1 )
+                        else
                         {
                             Abort( "Invalid column : " ~ stripped_line );
                         }
                     }
+                    else if ( line.startsWith( "    " ) )
+                    {
+                        line_part_array = stripped_line.split( '|' );
+
+                        table_name = line_part_array[ 0 ].strip();
+
+                        table = new TABLE( this, table_name );
+                        TableArray ~= table;
+
+                        if ( line_part_array.length == 2 )
+                        {
+                            property_part_array = line_part_array[ 1 ].split( ',' );
+
+                            foreach ( ref property_text; property_part_array )
+                            {
+                                table.SetPropertyValue( property_text.strip() );
+                            }
+                        }
+                        else if ( line_part_array.length != 1 )
+                        {
+                            Abort( "Invalid table : " ~ stripped_line );
+                        }
+                    }
                     else
                     {
-                        Abort( "Invalid column : " ~ stripped_line );
-                    }
-                }
-                else if ( line.startsWith( "    " ) )
-                {
-                    line_text_array = stripped_line.split( '|' );
+                        line_part_array = stripped_line.split( '|' );
 
-                    table_name = line_text_array[ 0 ].strip();
+                        Name = line_part_array[ 0 ].strip();
 
-                    table = new TABLE( this, table_name );
-                    TableArray ~= table;
-
-                    if ( line_text_array.length == 2 )
-                    {
-                        property_text_array = line_text_array[ 1 ].split( ',' );
-
-                        foreach ( ref property_text; property_text_array )
+                        if ( line_part_array.length == 2 )
                         {
-                            table.SetPropertyValue( property_text.strip() );
+                            property_part_array = line_part_array[ 1 ].split( ',' );
+
+                            foreach ( ref property_text; property_part_array )
+                            {
+                                SetPropertyValue( property_text.strip() );
+                            }
                         }
-                    }
-                    else if ( line_text_array.length != 1 )
-                    {
-                        Abort( "Invalid table : " ~ stripped_line );
-                    }
-                }
-                else
-                {
-                    line_text_array = stripped_line.split( '|' );
-
-                    Name = line_text_array[ 0 ].strip();
-
-                    if ( line_text_array.length == 2 )
-                    {
-                        property_text_array = line_text_array[ 1 ].split( ',' );
-
-                        foreach ( ref property_text; property_text_array )
+                        else if ( line_part_array.length != 1 )
                         {
-                            SetPropertyValue( property_text.strip() );
+                            Abort( "Invalid schema : " ~ stripped_line );
                         }
-                    }
-                    else if ( line_text_array.length != 1 )
-                    {
-                        Abort( "Invalid schema : " ~ stripped_line );
                     }
                 }
             }
         }
 
         MakeTypes();
+        SetValues( line_array[ line_index .. $ ] );
         MakeValues();
     }
 
@@ -4753,93 +4829,96 @@ class SCHEMA
 
         foreach ( ref table; TableArray )
         {
-            sql_schema_file_text
-                ~= "drop table if exists `" ~ Name ~ "`.`" ~ table.Name ~ "`;\n\n"
-                   ~ "create table if not exists `" ~ Name ~ "`.`" ~ table.Name ~ "`(\n";
-
-            foreach ( ref column; table.ColumnArray )
+            if ( table.IsStored )
             {
-                if ( column.IsStored )
+                sql_schema_file_text
+                    ~= "drop table if exists `" ~ Name ~ "`.`" ~ table.Name ~ "`;\n\n"
+                       ~ "create table if not exists `" ~ Name ~ "`.`" ~ table.Name ~ "`(\n";
+
+                foreach ( ref column; table.ColumnArray )
                 {
-                    sql_schema_file_text
-                        ~= "    `"
-                           ~ column.SqlName
-                           ~ "` "
-                           ~ column.SqlType
-                           ~ " "
-                           ~ column.SqlPropertyArray.join( ' ' )
-                           ~ ",\n";
+                    if ( column.IsStored )
+                    {
+                        sql_schema_file_text
+                            ~= "    `"
+                               ~ column.SqlName
+                               ~ "` "
+                               ~ column.SqlType
+                               ~ " "
+                               ~ column.SqlPropertyArray.join( ' ' )
+                               ~ ",\n";
+                    }
                 }
-            }
 
-            foreach ( ref column; table.ColumnArray )
-            {
-                if ( column.IsStored
-                     && column.IsKey )
+                foreach ( ref column; table.ColumnArray )
                 {
-                    sql_schema_file_text ~= "    primary key( `" ~ column.SqlName ~ "` ),\n";
+                    if ( column.IsStored
+                         && column.IsKey )
+                    {
+                        sql_schema_file_text ~= "    primary key( `" ~ column.SqlName ~ "` ),\n";
+                    }
                 }
-            }
 
-            foreign_key_index = 0;
+                foreign_key_index = 0;
 
-            foreach ( ref column; table.ColumnArray )
-            {
-                if ( column.IsStored
-                     && column.IsForeign
-                     && column.ForeignColumn.IsKey )
+                foreach ( ref column; table.ColumnArray )
                 {
-                    ++foreign_key_index;
+                    if ( column.IsStored
+                         && column.IsForeign
+                         && column.ForeignColumn.IsKey )
+                    {
+                        ++foreign_key_index;
 
-                    sql_schema_file_text
-                        ~= "    index `fk_"
-                           ~ table.Name.toLower()
-                           ~ "_"
-                           ~ column.ForeignColumn.Table.Name.toLower()
-                           ~ "_"
-                           ~ foreign_key_index.to!string()
-                           ~ "_idx`( `"
-                           ~ column.SqlName
-                           ~ "` ASC ),\n";
+                        sql_schema_file_text
+                            ~= "    index `fk_"
+                               ~ table.Name.toLower()
+                               ~ "_"
+                               ~ column.ForeignColumn.Table.Name.toLower()
+                               ~ "_"
+                               ~ foreign_key_index.to!string()
+                               ~ "_idx`( `"
+                               ~ column.SqlName
+                               ~ "` ASC ),\n";
+                    }
                 }
-            }
 
-            foreign_key_index = 0;
+                foreign_key_index = 0;
 
-            foreach ( ref column; table.ColumnArray )
-            {
-                if ( column.IsStored
-                     && column.IsForeign
-                     && column.ForeignColumn.IsKey )
+                foreach ( ref column; table.ColumnArray )
                 {
-                    ++foreign_key_index;
+                    if ( column.IsStored
+                         && column.IsForeign
+                         && column.ForeignColumn.IsKey )
+                    {
+                        ++foreign_key_index;
 
-                    sql_schema_file_text
-                        ~= "    constraint `fk_"
-                           ~ table.Name.toLower()
-                           ~ "_"
-                           ~ column.ForeignColumn.Table.Name.toLower()
-                           ~ "_"
-                           ~ foreign_key_index.to!string()
-                           ~ "`\n"
-                           ~ "    foreign key( `"
-                           ~ column.SqlName
-                           ~ "` )\n"
-                           ~ "    references `"
-                           ~ Name
-                           ~ "`.`"
-                           ~ column.ForeignColumn.Table.Name
-                           ~ "`( `"
-                           ~ column.ForeignColumn.SqlName
-                           ~ "` )\n"
-                           ~ "        on delete set null\n"
-                           ~ "        on update no action,\n";
+                        sql_schema_file_text
+                            ~= "    constraint `fk_"
+                               ~ table.Name.toLower()
+                               ~ "_"
+                               ~ column.ForeignColumn.Table.Name.toLower()
+                               ~ "_"
+                               ~ foreign_key_index.to!string()
+                               ~ "`\n"
+                               ~ "    foreign key( `"
+                               ~ column.SqlName
+                               ~ "` )\n"
+                               ~ "    references `"
+                               ~ Name
+                               ~ "`.`"
+                               ~ column.ForeignColumn.Table.Name
+                               ~ "`( `"
+                               ~ column.ForeignColumn.SqlName
+                               ~ "` )\n"
+                               ~ "        on delete set null\n"
+                               ~ "        on update no action,\n";
+                    }
                 }
-            }
 
-            sql_schema_file_text
-                = sql_schema_file_text[ 0 .. $ - 2 ]
-                  ~ "\n    ) engine = InnoDB;\n\n";
+                sql_schema_file_text
+                    = sql_schema_file_text[ 0 .. $ - 2 ]
+                      ~ "\n    ) engine = InnoDB;\n\n";
+            }
         }
 
         sql_schema_file_text
@@ -4865,43 +4944,46 @@ class SCHEMA
 
         foreach ( ref table; TableArray )
         {
-            column_count = table.ColumnArray.length;
-
-            foreach ( row_index; 0 .. table.RowCount )
+            if ( table.IsStored )
             {
-                sql_data_file_text ~= "replace into `" ~ table.SchemaName ~ "`.`" ~ table.Name ~ "`\n    (\n        " ;
+                column_count = table.ColumnArray.length;
 
-                foreach ( ref column; table.ColumnArray )
+                foreach ( row_index; 0 .. table.RowCount )
                 {
-                    if ( column.IsStored )
-                    {
-                        sql_data_file_text ~= "`" ~ column.SqlName ~ "`";
+                    sql_data_file_text ~= "replace into `" ~ table.SchemaName ~ "`.`" ~ table.Name ~ "`\n    (\n        " ;
 
-                        if ( !column.IsLastStored )
+                    foreach ( ref column; table.ColumnArray )
+                    {
+                        if ( column.IsStored )
                         {
-                            sql_data_file_text ~= ", ";
+                            sql_data_file_text ~= "`" ~ column.SqlName ~ "`";
+
+                            if ( !column.IsLastStored )
+                            {
+                                sql_data_file_text ~= ", ";
+                            }
                         }
                     }
-                }
 
-                sql_data_file_text ~= "\n    )\n    values\n    (\n";
+                    sql_data_file_text ~= "\n    )\n    values\n    (\n";
 
-                foreach ( ref column; table.ColumnArray )
-                {
-                    if ( column.IsStored )
+                    foreach ( ref column; table.ColumnArray )
                     {
-                        sql_data_file_text ~= "        " ~ column.ValueArray[ row_index ].GetSqlText();
-
-                        if ( !column.IsLastStored )
+                        if ( column.IsStored )
                         {
-                            sql_data_file_text ~= ",";
+                            sql_data_file_text ~= "        " ~ column.ValueArray[ row_index ].GetSqlText();
+
+                            if ( !column.IsLastStored )
+                            {
+                                sql_data_file_text ~= ",";
+                            }
+
+                            sql_data_file_text ~= "\n";
                         }
-
-                        sql_data_file_text ~= "\n";
                     }
-                }
 
-                sql_data_file_text ~= "    );\n\n";
+                    sql_data_file_text ~= "    );\n\n";
+                }
             }
         }
 
@@ -4927,80 +5009,83 @@ class SCHEMA
 
         foreach ( ref table; TableArray )
         {
-            cql_schema_file_text
-                ~= "drop table if exists " ~ Name ~ "." ~ table.Name ~ ";\n"
-                   ~ "create table if not exists " ~ Name ~ "." ~ table.Name ~ "(";
-
-            foreach ( ref column; table.ColumnArray )
+            if ( table.IsStored )
             {
-                if ( column.IsStored )
+                cql_schema_file_text
+                    ~= "drop table if exists " ~ Name ~ "." ~ table.Name ~ ";\n"
+                       ~ "create table if not exists " ~ Name ~ "." ~ table.Name ~ "(";
+
+                foreach ( ref column; table.ColumnArray )
                 {
-                    cql_schema_file_text ~= " " ~ column.CqlName ~ " " ~ column.CqlType;
-
-                    if ( column.IsStatic )
+                    if ( column.IsStored )
                     {
-                        cql_schema_file_text ~= " static";
-                    }
+                        cql_schema_file_text ~= " " ~ column.CqlName ~ " " ~ column.CqlType;
 
-                    cql_schema_file_text ~= ",";
-                }
-            }
+                        if ( column.IsStatic )
+                        {
+                            cql_schema_file_text ~= " static";
+                        }
 
-            partition_key = "";
-            cluster_key = "";
-
-            foreach ( ref column; table.ColumnArray )
-            {
-                if ( column.IsStored )
-                {
-                    if ( column.IsKey
-                         || column.IsPartitioned )
-                    {
-                        if ( partition_key == "" )
-                        {
-                            partition_key = column.CqlName;
-                        }
-                        else
-                        {
-                            partition_key ~= ", " ~ column.CqlName;
-                        }
-                    }
-                    else if ( column.IsClustered )
-                    {
-                        if ( cluster_key == "" )
-                        {
-                            cluster_key = column.CqlName;
-                        }
-                        else
-                        {
-                            cluster_key ~= ", " ~ column.CqlName;
-                        }
+                        cql_schema_file_text ~= ",";
                     }
                 }
-            }
 
-            if ( partition_key.indexOf( ',' ) >= 0 )
-            {
-                partition_key = "( " ~ partition_key ~ " )";
-            }
+                partition_key = "";
+                cluster_key = "";
 
-            if ( cluster_key == "" )
-            {
-                cql_schema_file_text ~= " primary key( " ~ partition_key ~ " )";
-            }
-            else
-            {
-                cql_schema_file_text ~= " primary key( " ~ partition_key ~ ", " ~ cluster_key ~ " )";
-            }
-
-            cql_schema_file_text ~= " );\n";
-
-            foreach ( ref column; table.ColumnArray )
-            {
-                if ( column.IsStored
-                     && column.IsIndexed )
+                foreach ( ref column; table.ColumnArray )
                 {
-                    cql_schema_file_text ~= "create index on " ~ Name ~ "." ~ table.Name ~ " ( " ~ column.Name ~ " );\n";
+                    if ( column.IsStored )
+                    {
+                        if ( column.IsKey
+                             || column.IsPartitioned )
+                        {
+                            if ( partition_key == "" )
+                            {
+                                partition_key = column.CqlName;
+                            }
+                            else
+                            {
+                                partition_key ~= ", " ~ column.CqlName;
+                            }
+                        }
+                        else if ( column.IsClustered )
+                        {
+                            if ( cluster_key == "" )
+                            {
+                                cluster_key = column.CqlName;
+                            }
+                            else
+                            {
+                                cluster_key ~= ", " ~ column.CqlName;
+                            }
+                        }
+                    }
+                }
+
+                if ( partition_key.indexOf( ',' ) >= 0 )
+                {
+                    partition_key = "( " ~ partition_key ~ " )";
+                }
+
+                if ( cluster_key == "" )
+                {
+                    cql_schema_file_text ~= " primary key( " ~ partition_key ~ " )";
+                }
+                else
+                {
+                    cql_schema_file_text ~= " primary key( " ~ partition_key ~ ", " ~ cluster_key ~ " )";
+                }
+
+                cql_schema_file_text ~= " );\n";
+
+                foreach ( ref column; table.ColumnArray )
+                {
+                    if ( column.IsStored
+                         && column.IsIndexed )
+                    {
+                        cql_schema_file_text ~= "create index on " ~ Name ~ "." ~ table.Name ~ " ( " ~ column.Name ~ " );\n";
+                    }
                 }
             }
         }
@@ -5023,41 +5108,44 @@ class SCHEMA
 
         foreach ( ref table; TableArray )
         {
-            column_count = table.ColumnArray.length;
-
-            foreach ( row_index; 0 .. table.RowCount )
+            if ( table.IsStored )
             {
-                cql_data_file_text ~= "insert into " ~ table.SchemaName ~ "." ~ table.Name ~ " ( " ;
+                column_count = table.ColumnArray.length;
 
-                foreach ( ref column; table.ColumnArray )
+                foreach ( row_index; 0 .. table.RowCount )
                 {
-                    if ( column.IsStored )
-                    {
-                        cql_data_file_text ~= "" ~ column.CqlName ~ "";
+                    cql_data_file_text ~= "insert into " ~ table.SchemaName ~ "." ~ table.Name ~ " ( " ;
 
-                        if ( !column.IsLastStored )
+                    foreach ( ref column; table.ColumnArray )
+                    {
+                        if ( column.IsStored )
                         {
-                            cql_data_file_text ~= ", ";
+                            cql_data_file_text ~= "" ~ column.CqlName ~ "";
+
+                            if ( !column.IsLastStored )
+                            {
+                                cql_data_file_text ~= ", ";
+                            }
                         }
                     }
-                }
 
-                cql_data_file_text ~= " ) values (";
+                    cql_data_file_text ~= " ) values (";
 
-                foreach ( ref column; table.ColumnArray )
-                {
-                    if ( column.IsStored )
+                    foreach ( ref column; table.ColumnArray )
                     {
-                        cql_data_file_text ~= " " ~ column.ValueArray[ row_index ].GetCqlText();
-
-                        if ( !column.IsLastStored )
+                        if ( column.IsStored )
                         {
-                            cql_data_file_text ~= ",";
+                            cql_data_file_text ~= " " ~ column.ValueArray[ row_index ].GetCqlText();
+
+                            if ( !column.IsLastStored )
+                            {
+                                cql_data_file_text ~= ",";
+                            }
                         }
                     }
-                }
 
-                cql_data_file_text ~= " );\n";
+                    cql_data_file_text ~= " );\n";
+                }
             }
         }
 
@@ -5178,20 +5266,23 @@ class SCHEMA
 
         foreach ( table_index, ref table; TableArray )
         {
-            generis_query_file_text
-                ~= table.GetAddDatabaseGenerisCode()
-                   ~ "\n// ~~\n\n"
-                   ~ table.GetSetDatabaseGenerisCode()
-                   ~ "\n// ~~\n\n"
-                   ~ table.GetRemoveDatabaseGenerisCode()
-                   ~ "\n// ~~\n\n"
-                   ~ table.GetGetDatabaseGenerisCode()
-                   ~ "\n// ~~\n\n"
-                   ~ table.GetGetDatabaseArrayGenerisCode();
-
-            if ( table_index + 1 < TableArray.length )
+            if ( table.IsStored )
             {
-                generis_query_file_text ~= "\n// ~~\n\n";
+                generis_query_file_text
+                    ~= table.GetAddDatabaseGenerisCode()
+                       ~ "\n// ~~\n\n"
+                       ~ table.GetSetDatabaseGenerisCode()
+                       ~ "\n// ~~\n\n"
+                       ~ table.GetRemoveDatabaseGenerisCode()
+                       ~ "\n// ~~\n\n"
+                       ~ table.GetGetDatabaseGenerisCode()
+                       ~ "\n// ~~\n\n"
+                       ~ table.GetGetDatabaseArrayGenerisCode();
+
+                if ( table_index + 1 < TableArray.length )
+                {
+                    generis_query_file_text ~= "\n// ~~\n\n";
+                }
             }
         }
 
@@ -5213,12 +5304,15 @@ class SCHEMA
 
         foreach ( table_index, ref table; TableArray )
         {
-            generis_response_file_text
-                ~= table.GetWriteJsonGenerisCode();
-
-            if ( table_index + 1 < TableArray.length )
+            if ( table.IsStored )
             {
-                generis_response_file_text ~= "\n// ~~\n\n";
+                generis_response_file_text
+                    ~= table.GetWriteJsonGenerisCode();
+
+                if ( table_index + 1 < TableArray.length )
+                {
+                    generis_response_file_text ~= "\n// ~~\n\n";
+                }
             }
         }
 
@@ -5240,20 +5334,23 @@ class SCHEMA
 
         foreach ( table_index, ref table; TableArray )
         {
-            generis_request_file_text
-                ~= table.GetHandleAddRequestGenerisCode()
-                   ~ "\n// ~~\n\n"
-                   ~ table.GetHandleSetRequestGenerisCode()
-                   ~ "\n// ~~\n\n"
-                   ~ table.GetHandleRemoveRequestGenerisCode()
-                   ~ "\n// ~~\n\n"
-                   ~ table.GetHandleGetRequestGenerisCode()
-                   ~ "\n// ~~\n\n"
-                   ~ table.GetHandleGetArrayRequestGenerisCode();
-
-            if ( table_index + 1 < TableArray.length )
+            if ( table.IsStored )
             {
-                generis_request_file_text ~= "\n// ~~\n\n";
+                generis_request_file_text
+                    ~= table.GetHandleAddRequestGenerisCode()
+                       ~ "\n// ~~\n\n"
+                       ~ table.GetHandleSetRequestGenerisCode()
+                       ~ "\n// ~~\n\n"
+                       ~ table.GetHandleRemoveRequestGenerisCode()
+                       ~ "\n// ~~\n\n"
+                       ~ table.GetHandleGetRequestGenerisCode()
+                       ~ "\n// ~~\n\n"
+                       ~ table.GetHandleGetArrayRequestGenerisCode();
+
+                if ( table_index + 1 < TableArray.length )
+                {
+                    generis_request_file_text ~= "\n// ~~\n\n";
+                }
             }
         }
 
@@ -5279,12 +5376,15 @@ class SCHEMA
 
         foreach ( table_index, ref table; TableArray )
         {
-            generis_route_file_text
-                ~= table.GetRouteRequestGenerisCode();
-
-            if ( table_index + 1 < TableArray.length )
+            if ( table.IsStored )
             {
-                generis_route_file_text ~= "\n";
+                generis_route_file_text
+                    ~= table.GetRouteRequestGenerisCode();
+
+                if ( table_index + 1 < TableArray.length )
+                {
+                    generis_route_file_text ~= "\n";
+                }
             }
         }
 
