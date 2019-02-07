@@ -36,3 +36,21 @@ type COMPOUND struct
     NameSetMap STRING_STRING_STRING_TUPLE_SET_MAP    `db:"-"`;
     SimplePointerArray [] * SIMPLE;
 }
+
+// ~~
+
+type VALUE struct
+{
+    Uuid gocql.UUID    `db:"-"`;
+    Name string    `db:"-"`;
+    Integer int32    `db:"-"`;
+    Text string    `db:"-"`;
+}
+
+// ~~
+
+type DATA struct
+{
+    Uuid gocql.UUID    `db:"-"`;
+    ValueUuid gocql.UUID    `db:"-"`;
+}

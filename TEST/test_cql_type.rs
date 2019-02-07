@@ -36,3 +36,21 @@ struct COMPOUND
     name_set_map : Map<String,List<(String,String)>>,
     simple_pointer_array : Vec<Weak<SIMPLE>>
 }
+
+// ~~
+
+struct VALUE
+{
+    uuid : String,
+    name : String,
+    integer : i32,
+    text : String
+}
+
+// ~~
+
+struct DATA
+{
+    uuid : String,
+    value_uuid : String
+}

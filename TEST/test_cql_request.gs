@@ -317,3 +317,283 @@ func HandleGetCompoundArrayRequest(
         WriteJsonError( response_writer, &error_code );
     }
 }
+
+// ~~
+
+func HandleAddValueRequest(
+    response_writer http.ResponseWriter,
+    request * http.Request
+    )
+{
+    var
+        error_code ERROR_CODE;
+    var
+        value VALUE;
+
+    if ( IsAdministratorSession( request, &error_code )
+         && GetRequestUuid( &value.Uuid, request, "Uuid", &error_code )
+         && GetRequestString( &value.Name, request, "Name", &error_code )
+         && GetRequestInt32( &value.Integer, request, "Integer", &error_code )
+         && GetRequestString( &value.Text, request, "Text", &error_code )
+         && AddDatabaseValue( &value, &error_code ) )
+    {
+        WriteJsonText( response_writer, "{" );
+        WriteJsonText( response_writer, "\"Uuid\":" );
+        WriteJsonUuid( response_writer, value.Uuid );
+        WriteJsonText( response_writer, "}" );
+    }
+    else
+    {
+        WriteJsonError( response_writer, &error_code );
+    }
+}
+
+// ~~
+
+func HandleSetValueRequest(
+    response_writer http.ResponseWriter,
+    request * http.Request
+    )
+{
+    var
+        error_code ERROR_CODE;
+    var
+        value VALUE;
+
+    if ( IsAdministratorSession( request, &error_code )
+         && GetRequestUuid( &value.Uuid, request, "Uuid", &error_code )
+         && GetRequestString( &value.Name, request, "Name", &error_code )
+         && GetRequestInt32( &value.Integer, request, "Integer", &error_code )
+         && GetRequestString( &value.Text, request, "Text", &error_code )
+         && SetDatabaseValue( &value, &error_code ) )
+    {
+        WriteJsonSuccess( response_writer );
+    }
+    else
+    {
+        WriteJsonError( response_writer, &error_code );
+    }
+}
+
+// ~~
+
+func HandleRemoveValueRequest(
+    response_writer http.ResponseWriter,
+    request * http.Request
+    )
+{
+    var
+        error_code ERROR_CODE;
+    var
+        value VALUE;
+
+    if ( IsAdministratorSession( request, &error_code )
+         && GetRequestUuid( &value.Uuid, request, "Uuid", &error_code )
+         && RemoveDatabaseValue( &value, &error_code ) )
+    {
+        WriteJsonSuccess( response_writer );
+    }
+    else
+    {
+        WriteJsonError( response_writer, &error_code );
+    }
+}
+
+// ~~
+
+func HandleGetValueRequest(
+    response_writer http.ResponseWriter,
+    request * http.Request
+    )
+{
+    var
+        error_code ERROR_CODE;
+    var
+        value VALUE;
+
+    if ( IsAdministratorSession( request, &error_code )
+         && GetRequestUuid( &value.Uuid, request, "Uuid", &error_code )
+         && GetDatabaseValue( &value, &error_code ) )
+    {
+        WriteJsonText( response_writer, "{\"Value\":" );
+        WriteJsonValue( response_writer, &value );
+        WriteJsonText( response_writer, "}" );
+    }
+    else
+    {
+        WriteJsonError( response_writer, &error_code );
+    }
+}
+
+// ~~
+
+func HandleGetValueArrayRequest(
+    response_writer http.ResponseWriter,
+    request * http.Request
+    )
+{
+    var
+        error_code ERROR_CODE;
+    var
+        value_array [] VALUE;
+
+    if ( IsAdministratorSession( request, &error_code )
+         && GetDatabaseValueArray( &value_array, &error_code ) )
+    {
+        WriteJsonText( response_writer, "{\"ValueArray\":[" );
+
+        for value_index, _ := range value_array
+        {
+            if ( value_index > 0 )
+            {
+                 WriteJsonText( response_writer, "," );
+            }
+
+            WriteJsonValue( response_writer, &value_array[ value_index ] );
+        }
+
+        WriteJsonText( response_writer, "]}" );
+    }
+    else
+    {
+        WriteJsonError( response_writer, &error_code );
+    }
+}
+
+// ~~
+
+func HandleAddDataRequest(
+    response_writer http.ResponseWriter,
+    request * http.Request
+    )
+{
+    var
+        error_code ERROR_CODE;
+    var
+        data DATA;
+
+    if ( IsAdministratorSession( request, &error_code )
+         && GetRequestUuid( &data.Uuid, request, "Uuid", &error_code )
+         && GetRequestUuid( &data.ValueUuid, request, "ValueUuid", &error_code )
+         && AddDatabaseData( &data, &error_code ) )
+    {
+        WriteJsonText( response_writer, "{" );
+        WriteJsonText( response_writer, "\"Uuid\":" );
+        WriteJsonUuid( response_writer, data.Uuid );
+        WriteJsonText( response_writer, "}" );
+    }
+    else
+    {
+        WriteJsonError( response_writer, &error_code );
+    }
+}
+
+// ~~
+
+func HandleSetDataRequest(
+    response_writer http.ResponseWriter,
+    request * http.Request
+    )
+{
+    var
+        error_code ERROR_CODE;
+    var
+        data DATA;
+
+    if ( IsAdministratorSession( request, &error_code )
+         && GetRequestUuid( &data.Uuid, request, "Uuid", &error_code )
+         && GetRequestUuid( &data.ValueUuid, request, "ValueUuid", &error_code )
+         && SetDatabaseData( &data, &error_code ) )
+    {
+        WriteJsonSuccess( response_writer );
+    }
+    else
+    {
+        WriteJsonError( response_writer, &error_code );
+    }
+}
+
+// ~~
+
+func HandleRemoveDataRequest(
+    response_writer http.ResponseWriter,
+    request * http.Request
+    )
+{
+    var
+        error_code ERROR_CODE;
+    var
+        data DATA;
+
+    if ( IsAdministratorSession( request, &error_code )
+         && GetRequestUuid( &data.Uuid, request, "Uuid", &error_code )
+         && RemoveDatabaseData( &data, &error_code ) )
+    {
+        WriteJsonSuccess( response_writer );
+    }
+    else
+    {
+        WriteJsonError( response_writer, &error_code );
+    }
+}
+
+// ~~
+
+func HandleGetDataRequest(
+    response_writer http.ResponseWriter,
+    request * http.Request
+    )
+{
+    var
+        error_code ERROR_CODE;
+    var
+        data DATA;
+
+    if ( IsAdministratorSession( request, &error_code )
+         && GetRequestUuid( &data.Uuid, request, "Uuid", &error_code )
+         && GetDatabaseData( &data, &error_code ) )
+    {
+        WriteJsonText( response_writer, "{\"Data\":" );
+        WriteJsonData( response_writer, &data );
+        WriteJsonText( response_writer, "}" );
+    }
+    else
+    {
+        WriteJsonError( response_writer, &error_code );
+    }
+}
+
+// ~~
+
+func HandleGetDataArrayRequest(
+    response_writer http.ResponseWriter,
+    request * http.Request
+    )
+{
+    var
+        error_code ERROR_CODE;
+    var
+        data_array [] DATA;
+
+    if ( IsAdministratorSession( request, &error_code )
+         && GetDatabaseDataArray( &data_array, &error_code ) )
+    {
+        WriteJsonText( response_writer, "{\"DataArray\":[" );
+
+        for data_index, _ := range data_array
+        {
+            if ( data_index > 0 )
+            {
+                 WriteJsonText( response_writer, "," );
+            }
+
+            WriteJsonData( response_writer, &data_array[ data_index ] );
+        }
+
+        WriteJsonText( response_writer, "]}" );
+    }
+    else
+    {
+        WriteJsonError( response_writer, &error_code );
+    }
+}

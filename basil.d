@@ -29,7 +29,8 @@ import std.random : uniform;
 import std.path : dirName;
 import std.regex : regex, replaceAll, Regex;
 import std.stdio : writeln;
-import std.string : endsWith, format, indexOf, join, lineSplitter, replace, startsWith, split, strip, toLower, toUpper;
+import std.string : endsWith, format, indexOf, join, lineSplitter, replace, startsWith, split, strip, stripRight, toLower, toUpper;
+import std.uuid : sha1UUID;
 
 // -- TYPES
 
@@ -470,7 +471,7 @@ class RANDOM
 
     char MakeHexadecimalDigit()
     {
-        return "0123456789ABCDEF"[ MakeIndex( 10 ) ];
+        return "0123456789abcdef"[ MakeIndex( 10 ) ];
     }
 
     // ~~
@@ -919,6 +920,34 @@ class TYPE
     }
 
     // -- INQUIRIES
+
+    bool IsUuid(
+        )
+    {
+        return ActualType.Name == "UUID";
+    }
+
+    // ~~
+
+    long GetElementValueCount(
+        )
+    {
+        long
+            element_value_count;
+
+        element_value_count = Random.MakeInteger( Column.MinimumRandomCount, Column.MaximumRandomCount );
+
+        if ( SubTypeArray[ 0 ].ForeignColumn !is null
+             && element_value_count > SubTypeArray[ 0 ].ForeignColumn.Table.RowCount )
+        {
+            element_value_count = SubTypeArray[ 0 ].ForeignColumn.Table.RowCount;
+        }
+
+        return element_value_count;
+    }
+
+
+    // ~~
 
     string GetSqlText(
         )
@@ -2349,7 +2378,7 @@ class VALUE
             }
             else if ( Type.BaseName == "LIST" )
             {
-                element_value_count = Random.MakeInteger( Type.Column.MinimumRandomCount, Type.Column.MaximumRandomCount );
+                element_value_count = Type.GetElementValueCount();
 
                 ElementValueArray = new VALUE[ element_value_count ];
 
@@ -2363,7 +2392,7 @@ class VALUE
             }
             else if ( Type.BaseName == "SET" )
             {
-                element_value_count = Random.MakeInteger( Type.Column.MinimumRandomCount, Type.Column.MaximumRandomCount );
+                element_value_count = Type.GetElementValueCount();
 
                 ElementValueArray = new VALUE[ element_value_count ];
 
@@ -2382,7 +2411,7 @@ class VALUE
             }
             else if ( Type.BaseName == "MAP" )
             {
-                element_value_count = Random.MakeInteger( Type.Column.MinimumRandomCount, Type.Column.MaximumRandomCount );
+                element_value_count = Type.GetElementValueCount();
 
                 KeyValueArray = new VALUE[ element_value_count ];
                 ElementValueArray = new VALUE[ element_value_count ];
@@ -2394,12 +2423,14 @@ class VALUE
                     KeyValueArray[ element_value_index ] = new VALUE( Type.SubTypeArray[ 0 ] );
                     KeyValueArray[ element_value_index ].Make( row_index, row_count, true );
 
-                    ElementValueArray[ element_value_index ] = new VALUE( Type.SubTypeArray[ 1 ] );
-                    ElementValueArray[ element_value_index ].Make( row_index, row_count, true );
-
                     if ( IsPriorValue( KeyValueArray, element_value_index ) )
                     {
                         --element_value_index;
+                    }
+                    else
+                    {
+                        ElementValueArray[ element_value_index ] = new VALUE( Type.SubTypeArray[ 1 ] );
+                        ElementValueArray[ element_value_index ].Make( row_index, row_count, true );
                     }
                 }
             }
@@ -2707,8 +2738,8 @@ class COLUMN
         Name = name.replace( " ", "" );
         Type = new TYPE( table, this, Name, type );
         IsStored = true;
-        MinimumRandomCount = 5;
-        MaximumRandomCount = 10;
+        MinimumRandomCount = table.RowCount;
+        MaximumRandomCount = table.RowCount;
     }
 
     // -- INQUIRIES
@@ -3039,17 +3070,33 @@ class COLUMN
 
     // ~~
 
+    void AddValue(
+        string text
+        )
+    {
+        VALUE
+            value;
+
+        value = new VALUE( Type );
+
+        if ( Type.IsUuid()
+             && text.startsWith( '@' ) )
+        {
+            text = sha1UUID( text ).toString();
+        }
+
+        value.Text = text;
+        ValueArray ~= value;
+    }
+
+    // ~~
+
     void MakeValues(
         )
     {
         if ( IsProcessed )
         {
             Abort( "Mutual column dependency : " ~ Table.Name ~ "." ~ Name );
-        }
-
-        if ( !IsStored )
-        {
-            Abort( "Unstored column dependency : " ~ Table.Name ~ "." ~ Name );
         }
 
         if ( !IsFilled )
@@ -4554,6 +4601,116 @@ class SCHEMA
 
     // ~~
 
+    void AddTables(
+        string[] line_array
+        )
+    {
+        string
+            column_name,
+            column_text,
+            column_type,
+            stripped_line,
+            table_name;
+        string[]
+            column_part_array,
+            line_part_array,
+            property_part_array;
+        COLUMN
+            column;
+        TABLE
+            table;
+
+        foreach ( line; line_array )
+        {
+            writeln( line );
+
+            stripped_line = line.strip();
+
+            if ( line.startsWith( "        " ) )
+            {
+                line_part_array = stripped_line.split( '|' );
+                column_part_array = line_part_array[ 0 ].split( ':' );
+
+                if ( column_part_array.length >= 2 )
+                {
+                    column_name = column_part_array[ 0 ].strip();
+                    column_type = column_part_array[ 1 .. $ ].join( ':' ).strip();
+
+                    column = new COLUMN( table, column_name, column_type );
+                    table.ColumnArray ~= column;
+
+                    if ( line_part_array.length == 2 )
+                    {
+                        property_part_array = line_part_array[ 1 ].split( ',' );
+
+                        foreach ( ref property_text; property_part_array )
+                        {
+                            column.SetPropertyValue( property_text.strip() );
+                        }
+
+                        if ( column.IsKey )
+                        {
+                            table.KeyNameArray ~= column.Name;
+                        }
+                    }
+                    else if ( line_part_array.length != 1 )
+                    {
+                        Abort( "Invalid column : " ~ stripped_line );
+                    }
+                }
+                else
+                {
+                    Abort( "Invalid column : " ~ stripped_line );
+                }
+            }
+            else if ( line.startsWith( "    " ) )
+            {
+                line_part_array = stripped_line.split( '|' );
+
+                table_name = line_part_array[ 0 ].strip();
+
+                table = new TABLE( this, table_name );
+                TableArray ~= table;
+
+                if ( line_part_array.length == 2 )
+                {
+                    property_part_array = line_part_array[ 1 ].split( ',' );
+
+                    foreach ( ref property_text; property_part_array )
+                    {
+                        table.SetPropertyValue( property_text.strip() );
+                    }
+                }
+                else if ( line_part_array.length != 1 )
+                {
+                    Abort( "Invalid table : " ~ stripped_line );
+                }
+            }
+            else
+            {
+                line_part_array = stripped_line.split( '|' );
+
+                Name = line_part_array[ 0 ].strip();
+
+                if ( line_part_array.length == 2 )
+                {
+                    property_part_array = line_part_array[ 1 ].split( ',' );
+
+                    foreach ( ref property_text; property_part_array )
+                    {
+                        SetPropertyValue( property_text.strip() );
+                    }
+                }
+                else if ( line_part_array.length != 1 )
+                {
+                    Abort( "Invalid schema : " ~ stripped_line );
+                }
+            }
+        }
+    }
+
+    // ~~
+
     void MakeTypes(
         )
     {
@@ -4565,28 +4722,138 @@ class SCHEMA
 
     // ~~
 
-    void SetValues(
+    void AddValues(
         string[] line_array
         )
     {
+        char
+            character;
+        long
+            character_index,
+            value_index;
         string
-            stripped_line;
+            stripped_line,
+            table_name,
+            value_line,
+            value;
+        string[]
+            column_name_array,
+            value_array;
+        COLUMN
+            column;
+        COLUMN[]
+            column_array;
+        TABLE
+            table;
+
+        table = null;
+        column_array = null;
 
         foreach ( line; line_array )
         {
+            writeln( line );
+
             stripped_line = line.strip();
 
-            if ( stripped_line.length > 0
-                 && stripped_line[ 0 ] != '#' )
+            if ( line.startsWith( "            " ) )
             {
-                writeln( line );
+                if ( table is null
+                     || column_array is null )
+                {
+                    Abort( "Invalid line : " ~ stripped_line );
+                }
 
-                if ( line.startsWith( "    %" ) )
+                value_array = null;
+                value = "";
+
+                value_line = stripped_line;
+
+                for ( character_index = 0;
+                      character_index < value_line.length;
+                      ++character_index )
                 {
+                    character = value_line[ character_index ];
+
+                    if ( character == '~' )
+                    {
+                        value_array ~= value.GetStrippedText().replace( '\t', ' ' );
+                        value = "";
+                    }
+                    else if ( character == '^' )
+                    {
+                        value ~= '\t';
+                    }
+                    else if ( character == '\\'
+                              && character_index + 1 < value_line.length )
+                    {
+                        value ~= value_line[ character_index + 1 ];
+
+                        ++character_index;
+                    }
+                    else
+                    {
+                        value ~= character;
+                    }
                 }
-                else if ( line.startsWith( "        " ) )
+
+                value_array ~= value.GetStrippedText().replace( '\t', ' ' );
+
+                if ( value_array.length != column_array.length )
                 {
+                    Abort( "Invalid value count : " ~ stripped_line );
                 }
+
+                for ( value_index = 0;
+                      value_index < value_array.length;
+                      ++value_index )
+                {
+                    column_array[ value_index ].AddValue( value_array[ value_index ] );
+                }
+
+                ++table.RowCount;
+            }
+            else if ( line.startsWith( "        " ) )
+            {
+                if ( table is null )
+                {
+                    Abort( "Invalid line : " ~ stripped_line );
+                }
+
+                column_name_array = stripped_line.split( ' ' );
+                column_array = null;
+
+                foreach ( column_name; column_name_array )
+                {
+                    column = table.FindColumn( column_name );
+
+                    if ( column is null )
+                    {
+                        Abort( "Invalid table name : " ~ column_name );
+                    }
+
+                    if ( column.IsFilled )
+                    {
+                        Abort( "Column is already filled : " ~ column_name );
+                    }
+
+                    column.IsFilled = true;
+                    column_array ~= column;
+                }
+            }
+            else if ( line.startsWith( "    %" ) )
+            {
+                table_name = stripped_line[ 1 .. $ ];
+                table = FindTable( table_name );
+                table.RowCount = 0;
+
+                if ( table is null )
+                {
+                    Abort( "Invalid table name : " ~ table_name );
+                }
+            }
+            else
+            {
+                Abort( "Invalid line : " ~ stripped_line );
             }
         }
     }
@@ -4610,144 +4877,66 @@ class SCHEMA
 
     // ~~
 
-    void ReadBasilSchemaFile(
-        string basil_schema_file_path
+    void ReadBasilFile(
+        string basil_file_path
         )
     {
-        long
-            line_index;
+        bool
+            line_contains_data;
         string
-            basil_schema_file_text,
-            column_name,
-            column_text,
-            column_type,
-            line,
-            stripped_line,
-            table_name;
+            basil_file_text,
+            stripped_line;
         string[]
-            column_part_array,
+            data_line_array,
             line_array,
-            line_part_array,
-            property_part_array;
-        COLUMN
-            column;
-        TABLE
-            table;
+            schema_line_array;
 
-        writeln( "Reading schema file : ", basil_schema_file_path );
+        writeln( "Reading schema file : ", basil_file_path );
 
-        basil_schema_file_text = basil_schema_file_path.readText();
+        basil_file_text = basil_file_path.readText();
 
         TableArray = null;
-        table = null;
 
-        line_array = basil_schema_file_text.replace( "\r", "" ).replace( "\t", "    " ).split( '\n' );
+        line_array = basil_file_text.replace( "\r", "" ).replace( "\t", "    " ).split( '\n' );
+        line_contains_data = false;
+        schema_line_array = null;
+        data_line_array = null;
 
-        for ( line_index = 0;
-              line_index < line_array.length;
-              ++line_index )
+        foreach ( line; line_array )
         {
-            line = line_array[ line_index ];
+            line = line.stripRight();
+            stripped_line = line.strip();
 
-            if ( line.startsWith( "    %" ) )
+            if ( stripped_line != ""
+                 && stripped_line[ 0 ] != '#' )
             {
-                break;
-            }
-            else
-            {
-                stripped_line = line.strip();
-
-                if ( stripped_line.length > 0
-                     && stripped_line[ 0 ] != '#' )
+                if ( line.startsWith( "    " )
+                     && !line.startsWith( "        " ) )
                 {
-                    writeln( line );
-
-                    if ( line.startsWith( "        " ) )
+                    if ( line.startsWith( "    %" ) )
                     {
-                        line_part_array = stripped_line.split( '|' );
-                        column_part_array = line_part_array[ 0 ].split( ':' );
-
-                        if ( column_part_array.length >= 2 )
-                        {
-                            column_name = column_part_array[ 0 ].strip();
-                            column_type = column_part_array[ 1 .. $ ].join( ':' ).strip();
-
-                            column = new COLUMN( table, column_name, column_type );
-                            table.ColumnArray ~= column;
-
-                            if ( line_part_array.length == 2 )
-                            {
-                                property_part_array = line_part_array[ 1 ].split( ',' );
-
-                                foreach ( ref property_text; property_part_array )
-                                {
-                                    column.SetPropertyValue( property_text.strip() );
-                                }
-
-                                if ( column.IsKey )
-                                {
-                                    table.KeyNameArray ~= column.Name;
-                                }
-                            }
-                            else if ( line_part_array.length != 1 )
-                            {
-                                Abort( "Invalid column : " ~ stripped_line );
-                            }
-                        }
-                        else
-                        {
-                            Abort( "Invalid column : " ~ stripped_line );
-                        }
-                    }
-                    else if ( line.startsWith( "    " ) )
-                    {
-                        line_part_array = stripped_line.split( '|' );
-
-                        table_name = line_part_array[ 0 ].strip();
-
-                        table = new TABLE( this, table_name );
-                        TableArray ~= table;
-
-                        if ( line_part_array.length == 2 )
-                        {
-                            property_part_array = line_part_array[ 1 ].split( ',' );
-
-                            foreach ( ref property_text; property_part_array )
-                            {
-                                table.SetPropertyValue( property_text.strip() );
-                            }
-                        }
-                        else if ( line_part_array.length != 1 )
-                        {
-                            Abort( "Invalid table : " ~ stripped_line );
-                        }
+                        line_contains_data = true;
                     }
                     else
                     {
-                        line_part_array = stripped_line.split( '|' );
-
-                        Name = line_part_array[ 0 ].strip();
-
-                        if ( line_part_array.length == 2 )
-                        {
-                            property_part_array = line_part_array[ 1 ].split( ',' );
-
-                            foreach ( ref property_text; property_part_array )
-                            {
-                                SetPropertyValue( property_text.strip() );
-                            }
-                        }
-                        else if ( line_part_array.length != 1 )
-                        {
-                            Abort( "Invalid schema : " ~ stripped_line );
-                        }
+                        line_contains_data = false;
                     }
+                }
+
+                if ( line_contains_data )
+                {
+                    data_line_array ~= line;
+                }
+                else
+                {
+                    schema_line_array ~= line;
                 }
             }
         }
 
+        AddTables( schema_line_array );
         MakeTypes();
-        SetValues( line_array[ line_index .. $ ] );
+        AddValues( data_line_array );
         MakeValues();
     }
 
@@ -4865,7 +5054,9 @@ class SCHEMA
                 {
                     if ( column.IsStored
                          && column.IsForeign
-                         && column.ForeignColumn.IsKey )
+                         && column.ForeignColumn.IsKey
+                         && column.ForeignColumn.IsStored
+                         && column.ForeignColumn.Table.IsStored )
                     {
                         ++foreign_key_index;
 
@@ -4888,7 +5079,9 @@ class SCHEMA
                 {
                     if ( column.IsStored
                          && column.IsForeign
-                         && column.ForeignColumn.IsKey )
+                         && column.ForeignColumn.IsKey
+                         && column.ForeignColumn.IsStored
+                         && column.ForeignColumn.Table.IsStored )
                     {
                         ++foreign_key_index;
 
@@ -5433,6 +5626,7 @@ class SCHEMA
         )
     {
         string
+            csharp_type,
             csharp_type_file_text;
 
         writeln( "Writing C# type file : ", csharp_type_file_path );
@@ -5442,15 +5636,21 @@ class SCHEMA
         foreach ( table_index, ref table; TableArray )
         {
             csharp_type_file_text ~= "public class " ~ table.CsharpType ~ "\n{\n";
+            csharp_type = "";
 
             foreach ( column_index, ref column; table.ColumnArray )
             {
-                csharp_type_file_text
-                    ~= "    public "
-                       ~ column.CsharpType
-                       ~ "\n        "
-                       ~ column.CsharpName
-                       ~ ";\n";
+                if ( column.CsharpType == csharp_type )
+                {
+                    csharp_type_file_text = csharp_type_file_text[ 0 .. $ - 2 ] ~ ",\n";
+                }
+                else
+                {
+                    csharp_type = column.CsharpType;
+                    csharp_type_file_text ~= "    public " ~ column.CsharpType ~ "\n";
+                }
+
+                csharp_type_file_text ~= "        " ~ column.CsharpName ~ ";\n";
             }
 
             csharp_type_file_text ~= "}\n";
@@ -5607,6 +5807,27 @@ bool EndsByConsonant(
 
 // ~~
 
+string GetStrippedText(
+    string text
+    )
+{
+    while ( text.length > 0
+            && text[ 0 ] == ' ' )
+    {
+        text = text[ 1 .. $ ];
+    }
+
+    while ( text.length > 0
+            && text[ $ - 1 ] == ' ' )
+    {
+        text = text[ 0 .. $ - 1 ];
+    }
+
+    return text;
+}
+
+// ~~
+
 string GetCapitalizedText(
     string text
     )
@@ -5703,18 +5924,18 @@ string InsertCharacter(
 // ~~
 
 void ProcessFile(
-    string basil_schema_file_path
+    string basil_file_path
     )
 {
     string
         base_file_path;
 
-    base_file_path = basil_schema_file_path[ 0 .. $ - 6 ];
+    base_file_path = basil_file_path[ 0 .. $ - 6 ];
 
     Random = new RANDOM();
 
     Schema = new SCHEMA();
-    Schema.ReadBasilSchemaFile( basil_schema_file_path );
+    Schema.ReadBasilFile( basil_file_path );
 
     foreach ( output_format; OutputFormatArray )
     {

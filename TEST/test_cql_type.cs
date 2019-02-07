@@ -27,8 +27,7 @@ public class SIMPLE
     public String
         String;
     public DateTime
-        Date;
-    public DateTime
+        Date,
         DateTime;
     public String
         Blob;
@@ -47,8 +46,7 @@ public class COMPOUND
     public LinkedList<Tuple<String,String>>
         NameSet;
     public LinkedList<String>
-        PhoneList;
-    public LinkedList<String>
+        PhoneList,
         EmailSet;
     public Dictionary<String,String>
         CompanyMap;
@@ -57,11 +55,33 @@ public class COMPOUND
     public Dictionary<Tuple<String,String>,DateTime>
         SimpleDateMap;
     public LinkedList<DateTime>
-        SimpleDateSet;
-    public LinkedList<DateTime>
+        SimpleDateSet,
         SimpleDateList;
     public Dictionary<DateTime,LinkedList<Tuple<String,String>>>
         NameSetMap;
     public List<SIMPLE>
         SimplePointerArray;
+}
+
+// ~~
+
+public class VALUE
+{
+    public Guid
+        Uuid;
+    public String
+        Name;
+    public int
+        Integer;
+    public String
+        Text;
+}
+
+// ~~
+
+public class DATA
+{
+    public Guid
+        Uuid,
+        ValueUuid;
 }

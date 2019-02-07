@@ -367,3 +367,285 @@ func GetDatabaseCompoundArray(
 
     return true;
 }
+
+// ~~
+
+func AddDatabaseValue(
+    value * VALUE,
+    error_code * ERROR_CODE
+    ) bool
+{
+    error_
+        := DatabaseSession.Query(
+               "insert into VALUE( Uuid, Name, Integer, Text ) values( ?, ?, ?, ? )",
+               value.Uuid,
+               value.Name,
+               value.Integer,
+               value.Text
+               ).Exec();
+
+    if ( error_ != nil )
+    {
+        error_code.Set( error_, http.StatusBadRequest );
+
+        return false;
+    }
+
+    return true;
+}
+
+// ~~
+
+func SetDatabaseValue(
+    value * VALUE,
+    error_code * ERROR_CODE
+    ) bool
+{
+    error_
+        := DatabaseSession.Query(
+               "insert into VALUE( Uuid, Name, Integer, Text ) values( ?, ?, ?, ? )",
+               value.Uuid,
+               value.Name,
+               value.Integer,
+               value.Text
+               ).Exec();
+
+    if ( error_ != nil )
+    {
+        error_code.Set( error_, http.StatusBadRequest );
+
+        return false;
+    }
+
+    return true;
+}
+
+// ~~
+
+func RemoveDatabaseValue(
+    value * VALUE,
+    error_code * ERROR_CODE
+    ) bool
+{
+    error_
+        := DatabaseSession.Query(
+               "delete from VALUE where Uuid = ?",
+               value.Uuid
+               ).Exec();
+
+    if ( error_ != nil )
+    {
+        error_code.Set( error_, http.StatusBadRequest );
+
+        return false;
+    }
+
+    return true;
+}
+
+// ~~
+
+func GetDatabaseValue(
+    value * VALUE,
+    error_code * ERROR_CODE
+    ) bool
+{
+    error_
+        := DatabaseSession.Query(
+               "select Name, Integer, Text from VALUE where Uuid = ?",
+               value.Uuid
+               )
+               .Consistency( gocql.One )
+               .Scan(
+                    &value.Name,
+                    &value.Integer,
+                    &value.Text
+                    );
+
+    if ( error_ != nil )
+    {
+        error_code.Set( error_, http.StatusBadRequest );
+
+        return false;
+    }
+
+    return true;
+}
+
+// ~~
+
+func GetDatabaseValueArray(
+    value_array * [] VALUE,
+    error_code * ERROR_CODE
+    ) bool
+{
+    var
+        value VALUE;
+
+    iterator
+        := DatabaseSession.Query(
+               "select Uuid, Name, Integer, Text from VALUE"
+               )
+               .Consistency( gocql.One )
+               .Iter();
+
+    *value_array = make( [] VALUE, 0 );
+
+    for iterator.Scan(
+            &value.Uuid,
+            &value.Name,
+            &value.Integer,
+            &value.Text
+            )
+    {
+        *value_array = append( *value_array, value );
+    }
+
+    error_ := iterator.Close();
+
+    if ( error_ != nil )
+    {
+        error_code.Set( error_, http.StatusBadRequest );
+
+        return false;
+    }
+
+    return true;
+}
+
+// ~~
+
+func AddDatabaseData(
+    data * DATA,
+    error_code * ERROR_CODE
+    ) bool
+{
+    error_
+        := DatabaseSession.Query(
+               "insert into DATA( Uuid, ValueUuid ) values( ?, ? )",
+               data.Uuid,
+               data.ValueUuid
+               ).Exec();
+
+    if ( error_ != nil )
+    {
+        error_code.Set( error_, http.StatusBadRequest );
+
+        return false;
+    }
+
+    return true;
+}
+
+// ~~
+
+func SetDatabaseData(
+    data * DATA,
+    error_code * ERROR_CODE
+    ) bool
+{
+    error_
+        := DatabaseSession.Query(
+               "insert into DATA( Uuid, ValueUuid ) values( ?, ? )",
+               data.Uuid,
+               data.ValueUuid
+               ).Exec();
+
+    if ( error_ != nil )
+    {
+        error_code.Set( error_, http.StatusBadRequest );
+
+        return false;
+    }
+
+    return true;
+}
+
+// ~~
+
+func RemoveDatabaseData(
+    data * DATA,
+    error_code * ERROR_CODE
+    ) bool
+{
+    error_
+        := DatabaseSession.Query(
+               "delete from DATA where Uuid = ?",
+               data.Uuid
+               ).Exec();
+
+    if ( error_ != nil )
+    {
+        error_code.Set( error_, http.StatusBadRequest );
+
+        return false;
+    }
+
+    return true;
+}
+
+// ~~
+
+func GetDatabaseData(
+    data * DATA,
+    error_code * ERROR_CODE
+    ) bool
+{
+    error_
+        := DatabaseSession.Query(
+               "select ValueUuid from DATA where Uuid = ?",
+               data.Uuid
+               )
+               .Consistency( gocql.One )
+               .Scan(
+                    &data.ValueUuid
+                    );
+
+    if ( error_ != nil )
+    {
+        error_code.Set( error_, http.StatusBadRequest );
+
+        return false;
+    }
+
+    return true;
+}
+
+// ~~
+
+func GetDatabaseDataArray(
+    data_array * [] DATA,
+    error_code * ERROR_CODE
+    ) bool
+{
+    var
+        data DATA;
+
+    iterator
+        := DatabaseSession.Query(
+               "select Uuid, ValueUuid from DATA"
+               )
+               .Consistency( gocql.One )
+               .Iter();
+
+    *data_array = make( [] DATA, 0 );
+
+    for iterator.Scan(
+            &data.Uuid,
+            &data.ValueUuid
+            )
+    {
+        *data_array = append( *data_array, data );
+    }
+
+    error_ := iterator.Close();
+
+    if ( error_ != nil )
+    {
+        error_code.Set( error_, http.StatusBadRequest );
+
+        return false;
+    }
+
+    return true;
+}

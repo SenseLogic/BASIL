@@ -71,3 +71,35 @@ func WriteJsonCompound(
     WriteJsonStringStringStringTupleSetMap( response_writer, compound.NameSetMap );
     WriteJsonText( response_writer, "}" );
 }
+
+// ~~
+
+func WriteJsonValue(
+    response_writer http.ResponseWriter,
+    value * VALUE
+    )
+{
+    WriteJsonText( response_writer, "{\"Uuid\":" );
+    WriteJsonUuid( response_writer, value.Uuid );
+    WriteJsonText( response_writer, ",\"Name\":" );
+    WriteJsonString( response_writer, value.Name );
+    WriteJsonText( response_writer, ",\"Integer\":" );
+    WriteJsonInt32( response_writer, value.Integer );
+    WriteJsonText( response_writer, ",\"Text\":" );
+    WriteJsonString( response_writer, value.Text );
+    WriteJsonText( response_writer, "}" );
+}
+
+// ~~
+
+func WriteJsonData(
+    response_writer http.ResponseWriter,
+    data * DATA
+    )
+{
+    WriteJsonText( response_writer, "{\"Uuid\":" );
+    WriteJsonUuid( response_writer, data.Uuid );
+    WriteJsonText( response_writer, ",\"ValueUuid\":" );
+    WriteJsonUuid( response_writer, data.ValueUuid );
+    WriteJsonText( response_writer, "}" );
+}

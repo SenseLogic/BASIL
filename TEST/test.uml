@@ -46,6 +46,20 @@ class COMPOUND {
     SimplePointerArray : ARRAY[POINTER[SIMPLE]]
 }
 
+class VALUE {
+    Uuid : UUID
+    Name : STRING
+    Integer : INT32
+    Text : STRING
+}
+
+class DATA {
+    Uuid : UUID
+    ValueUuid : VALUE.Uuid
+}
+
 SIMPLE <-- COMPOUND : SimpleDate
+
+VALUE <-- DATA : ValueUuid
 
 @enduml

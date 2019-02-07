@@ -34,3 +34,19 @@ class COMPOUND
     @name_set_map : Hash(String,Set(Tuple(String,String)))
     @simple_pointer_array : Array(SIMPLE)
 end
+
+# ~~
+
+class VALUE
+    @uuid : String
+    @name : String
+    @integer : Int32
+    @text : String
+end
+
+# ~~
+
+class DATA
+    @uuid : String
+    @value_uuid : String
+end

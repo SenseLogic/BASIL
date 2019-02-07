@@ -5,3 +5,7 @@ create table if not exists TEST.SIMPLE( Uuid uuid, Bool boolean, Int8 tinyint, U
 create index on TEST.SIMPLE ( Uint8 );
 drop table if exists TEST.COMPOUND;
 create table if not exists TEST.COMPOUND( Id int, Location text, Name tuple<text,text>, NameSet set<frozen<tuple<text,text>>>, PhoneList list<text>, EmailSet set<text>, CompanyMap map<text,text>, SimpleDate timestamp, SimpleDateMap map<frozen<tuple<text,text>>,timestamp>, SimpleDateSet set<timestamp>, SimpleDateList list<timestamp>, NameSetMap map<timestamp,frozen<set<tuple<text,text>>>>, primary key( Id ) );
+drop table if exists TEST.VALUE;
+create table if not exists TEST.VALUE( Uuid uuid, Name text, Integer int, Text text, primary key( Uuid ) );
+drop table if exists TEST.DATA;
+create table if not exists TEST.DATA( Uuid uuid, ValueUuid uuid, primary key( Uuid ) );
