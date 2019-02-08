@@ -2,7 +2,7 @@
 
 # Basil
 
-Database designer and generator.
+Database designer and filler.
 
 ## Features
 
@@ -153,7 +153,7 @@ BLOG | count 5
 ## Syntax
 
 ```
-# comment
+-- comment
 
 {database name} [| {database property}, {database property}, ...]
 
@@ -326,7 +326,7 @@ Generates "blog.uml", "blog.sql", "blog_data.sql", "blog_sql_type.go" from "blog
 
 ## Version
 
-3.0
+4.0
 
 ## Author
 

@@ -1813,7 +1813,14 @@ class TYPE
 
         if ( BaseName.indexOf( '.' ) >= 0 )
         {
-            return GetForeignColumn().Type.GetActualType();
+            foreign_column = GetForeignColumn();
+
+            if ( foreign_column is null )
+            {
+                Abort( "Invalid foreign column : " ~ BaseName );
+            }
+
+            return foreign_column.Type.GetActualType();
         }
         else
         {
@@ -2999,6 +3006,8 @@ class COLUMN
     void MakeType(
         )
     {
+        writeln( "Processing column : ", Table.Name, ".", Name );
+
         SetForeignColumn();
 
         if ( SqlName == "" )
@@ -3080,7 +3089,7 @@ class COLUMN
         value = new VALUE( Type );
 
         if ( Type.IsUuid()
-             && text.startsWith( '@' ) )
+             && text.startsWith( '#' ) )
         {
             text = sha1UUID( text ).toString();
         }
@@ -4908,7 +4917,7 @@ class SCHEMA
             stripped_line = line.strip();
 
             if ( stripped_line != ""
-                 && stripped_line[ 0 ] != '#' )
+                 && !stripped_line.startsWith( "--" ) )
             {
                 if ( line.startsWith( "    " )
                      && !line.startsWith( "        " ) )
