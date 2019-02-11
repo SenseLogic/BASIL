@@ -1,4 +1,15 @@
-##test_instance.gs
+##test_instance_types.gs
+package main;
+
+[*type {{table_go_type}} struct {
+<*    {{column_go_type}} {{column_go_name}};
+*>}
+
+// ~~
+
+*]
+
+##test_instance_tables.gs
 package main;
 
 import "    fmt";

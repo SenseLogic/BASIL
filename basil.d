@@ -1795,9 +1795,9 @@ class TYPE
     string GetJavascriptText(
         )
     {
-		return GetGoText();
-	}
-	
+        return GetGoText();
+    }
+
     // -- OPERATIONS
 
     COLUMN GetForeignColumn(
@@ -2801,35 +2801,35 @@ class COLUMN
 
         return "";
     }
-    
+
     // ~~
-    
+
     string ReplaceTags(
-		string template_text
-		)
-	{
-		return
-			template_text
-			    .replace( "{{column_name}}", Name )
-			    .replace( "{{column_stored_name}}", StoredName )
-			    .replace( "{{column_stored_type}}", StoredType )
-			    .replace( "{{column_cql_name}}", CqlName )
-			    .replace( "{{column_cql_type}}", CqlType )
-			    .replace( "{{column_sql_name}}", SqlName )
-			    .replace( "{{column_sql_type}}", SqlType )
-			    .replace( "{{column_go_name}}", GoName )
-			    .replace( "{{column_go_type}}", GoType )
-			    .replace( "{{column_go_attribute}}", GoAttribute )
-			    .replace( "{{column_go_variable}}", GoVariable )
-			    .replace( "{{column_crystal_name}}", CrystalName )
-			    .replace( "{{column_crystal_type}}", CrystalType )
-			    .replace( "{{column_csharp_name}}", CsharpName )
-			    .replace( "{{column_csharp_type}}", CsharpType )
-			    .replace( "{{column_rust_name}}", RustName )
-			    .replace( "{{column_rust_type}}", RustType )
-			    .replace( "{{column_javascript_name}}", JavascriptName )
-			    .replace( "{{column_javascript_type}}", JavascriptType );
-	}
+        string template_text
+        )
+    {
+        return
+            template_text
+                .replace( "{{column_name}}", Name )
+                .replace( "{{column_stored_name}}", StoredName )
+                .replace( "{{column_stored_type}}", StoredType )
+                .replace( "{{column_cql_name}}", CqlName )
+                .replace( "{{column_cql_type}}", CqlType )
+                .replace( "{{column_sql_name}}", SqlName )
+                .replace( "{{column_sql_type}}", SqlType )
+                .replace( "{{column_go_name}}", GoName )
+                .replace( "{{column_go_type}}", GoType )
+                .replace( "{{column_go_attribute}}", GoAttribute )
+                .replace( "{{column_go_variable}}", GoVariable )
+                .replace( "{{column_crystal_name}}", CrystalName )
+                .replace( "{{column_crystal_type}}", CrystalType )
+                .replace( "{{column_csharp_name}}", CsharpName )
+                .replace( "{{column_csharp_type}}", CsharpType )
+                .replace( "{{column_rust_name}}", RustName )
+                .replace( "{{column_rust_type}}", RustType )
+                .replace( "{{column_javascript_name}}", JavascriptName )
+                .replace( "{{column_javascript_type}}", JavascriptType );
+    }
 
     // -- OPERATIONS
 
@@ -4460,25 +4460,25 @@ class TABLE
             ~ "    router.Post( \"/get_" ~ GoVariable ~ "\", HandleGet" ~ GoAttribute ~ "Request );\n"
             ~ "    router.Post( \"/get_" ~ GoVariable ~ "_array\", HandleGet" ~ GoAttribute ~ "ArrayRequest );\n";
     }
-    
+
     // ~~
-    
+
     string ReplaceTags(
-		string template_text
-		)
-	{
-		return
+        string template_text
+        )
+    {
+        return
             template_text
-				.replace( "{{table_name}}", Name )
-				.replace( "{{table_go_type}}", GoType )
-				.replace( "{{table_go_attribute}}", GoAttribute )
-				.replace( "{{table_go_variable}}", GoVariable )
-				.replace( "{{table_crystal_type}}", CrystalType )
-				.replace( "{{table_csharp_type}}", CsharpType )
-				.replace( "{{table_rust_type}}", RustType )
-				.replace( "{{table_javascript_type}}", JavascriptType );
-	}
-	
+                .replace( "{{table_name}}", Name )
+                .replace( "{{table_go_type}}", GoType )
+                .replace( "{{table_go_attribute}}", GoAttribute )
+                .replace( "{{table_go_variable}}", GoVariable )
+                .replace( "{{table_crystal_type}}", CrystalType )
+                .replace( "{{table_csharp_type}}", CsharpType )
+                .replace( "{{table_rust_type}}", RustType )
+                .replace( "{{table_javascript_type}}", JavascriptType );
+    }
+
     // -- OPERATIONS
 
     void SetPropertyValue(
@@ -5463,7 +5463,7 @@ class SCHEMA
 
                 go_attribute_declaration ~= ";\n";
             }
-            
+
             GoTypeDeclarationMap[ table.Name ] = go_type_declaration;
             GoAttributeDeclarationMap[ table.Name ] = go_attribute_declaration;
 
@@ -5806,7 +5806,7 @@ class SCHEMA
 
                 rust_attribute_declaration ~= "\n";
             }
-            
+
             RustTypeDeclarationMap[ table.Name ] = rust_type_declaration;
             RustAttributeDeclarationMap[ table.Name ] = rust_attribute_declaration;
 
@@ -5841,21 +5841,21 @@ class SCHEMA
         foreach ( table_index, ref table; TableArray )
         {
             javascript_type_declaration = "class " ~ table.JavascriptType;
-            
-            javascript_attribute_declaration 
-				= "    constructor(\n"
-				  ~ "        )\n"
-				  ~ "    {\n";
+
+            javascript_attribute_declaration
+                = "    constructor(\n"
+                  ~ "        )\n"
+                  ~ "    {\n";
 
             foreach ( ref column; table.ColumnArray )
             {
                 javascript_attribute_declaration
                     ~= "        this." ~ column.JavascriptName ~ " = null;\n";
             }
-            
+
             javascript_attribute_declaration
                     ~= "    }\n";
-            
+
             JavascriptTypeDeclarationMap[ table.Name ] = javascript_type_declaration;
             JavascriptAttributeDeclarationMap[ table.Name ] = javascript_attribute_declaration;
 
@@ -5882,20 +5882,20 @@ string[]
     OutputFormatArray,
     TemplateFilePathArray;
 string[ string ]
-	CrystalAttributeDeclarationMap,
-	CrystalTypeDeclarationMap,
-	CsharpAttributeDeclarationMap,
-	CsharpTypeDeclarationMap,
-	CybilAttributeDeclarationMap,
-	CybilTypeDeclarationMap,
-	GenerisAttributeDeclarationMap,
-	GenerisTypeDeclarationMap,
-	GoAttributeDeclarationMap,
-	GoTypeDeclarationMap,
-	JavascriptAttributeDeclarationMap,
-	JavascriptTypeDeclarationMap,
-	RustAttributeDeclarationMap,
-	RustTypeDeclarationMap;
+    CrystalAttributeDeclarationMap,
+    CrystalTypeDeclarationMap,
+    CsharpAttributeDeclarationMap,
+    CsharpTypeDeclarationMap,
+    CybilAttributeDeclarationMap,
+    CybilTypeDeclarationMap,
+    GenerisAttributeDeclarationMap,
+    GenerisTypeDeclarationMap,
+    GoAttributeDeclarationMap,
+    GoTypeDeclarationMap,
+    JavascriptAttributeDeclarationMap,
+    JavascriptTypeDeclarationMap,
+    RustAttributeDeclarationMap,
+    RustTypeDeclarationMap;
 RANDOM
     Random;
 SCHEMA
@@ -6006,43 +6006,6 @@ string GetStrippedText(
 
 // ~~
 
-string[] GetSplitText(
-	string text,
-	string first_separator,
-	string second_separator
-	)
-{
-	string[]
-		first_part_array,
-		part_array,
-		second_part_array;
-		
-	first_part_array = text.split( first_separator );
-	
-	foreach ( first_part_index, first_part; first_part_array )
-	{
-		if ( ( first_part_index & 1 ) == 1 )
-		{
-			second_part_array = first_part.split( second_separator );
-			
-			if ( second_part_array.length != 2 )
-			{
-				Abort( "Invalid block : " ~ text );
-			}
-			
-			part_array ~= second_part_array;
-		}
-		else
-		{
-			part_array ~= first_part;
-		}
-	}
-	
-	return part_array;
-}
-
-// ~~
-
 string GetCapitalizedText(
     string text
     )
@@ -6138,188 +6101,231 @@ string InsertCharacter(
 
 // ~~
 
-string ReplaceColumnTags(
-	string template_text,
-	string opening_tag,
-	string closing_tag,
-	TABLE table
-	)
+string[] GetSplitText(
+    string text,
+    string opening_tag,
+    string closing_tag
+    )
 {
-	string
-		instance_part;
-	string[]
-		template_part_array;
-	COLUMN[]
-		column_array;
-		
-	template_part_array = template_text.GetSplitText( opening_tag, closing_tag );
-	
-	foreach ( template_part_index, ref template_part; template_part_array )
-	{
-		if ( ( template_part_index & 1 ) == 1 )
-		{
-			instance_part = "";
-			
-			column_array = null;
-			
-			foreach ( column; table.ColumnArray )
-			{
-				if ( opening_tag.startsWith( "<*" )
-				     || ( opening_tag.startsWith( "<#" )
-				          && column.IsKey )
-				     || ( opening_tag.startsWith( "<~" )
-				          && !column.IsKey )
-				     || ( opening_tag.startsWith( "<." )
-				          && column.IsStored )
-				     || ( opening_tag.startsWith( "<!" )
-				          && !column.IsStored ) )
-				{
-					column_array ~= column;
-				}
-			}
-			
-			if ( column_array.length > 0
-			     && opening_tag.endsWith( '^' ) )
-			{
-				column_array = column_array[ 0 .. $ - 1 ];
-			}
-			
-			if ( column_array.length > 0
-			     && opening_tag.endsWith( '$' ) )
-			{
-				column_array = column_array[ $ - 1 .. $ ];
-			}
-			
-			foreach ( column; column_array )
-			{
-				instance_part ~= column.ReplaceTags( template_part );
-			}
-			
-			template_part = instance_part;
-		}
-	}
+    string[]
+        opening_part_array,
+        part_array,
+        closing_part_array;
 
-	return template_part_array.join( "" );
+    opening_part_array = text.split( opening_tag );
+
+    foreach ( opening_part_index, opening_part; opening_part_array )
+    {
+        if ( opening_part_index == 0 )
+        {
+            part_array ~= opening_part;
+        }
+        else
+        {
+            closing_part_array = opening_part.split( closing_tag );
+
+            if ( closing_part_array.length != 2 )
+            {
+                Abort( "Invalid " ~ opening_tag ~ " " ~ closing_tag ~ " block : " ~ opening_part );
+            }
+
+            part_array ~= closing_part_array[ 0 ];
+            part_array ~= closing_part_array[ 1 ];
+        }
+    }
+
+    return part_array;
+}
+
+// ~~
+
+string ReplaceColumnTags(
+    string template_text,
+    string opening_tag,
+    string closing_tag,
+    TABLE table
+    )
+{
+    string
+        instance_part;
+    string[]
+        template_part_array;
+    COLUMN[]
+        column_array;
+
+    template_part_array = template_text.GetSplitText( opening_tag, closing_tag );
+
+    foreach ( template_part_index, ref template_part; template_part_array )
+    {
+        if ( ( template_part_index & 1 ) == 1 )
+        {
+            instance_part = "";
+
+            column_array = null;
+
+            foreach ( column; table.ColumnArray )
+            {
+                if ( opening_tag.startsWith( "<*" )
+                     || ( opening_tag.startsWith( "<#" )
+                          && column.IsKey )
+                     || ( opening_tag.startsWith( "<~" )
+                          && !column.IsKey )
+                     || ( opening_tag.startsWith( "<." )
+                          && column.IsStored )
+                     || ( opening_tag.startsWith( "<!" )
+                          && !column.IsStored ) )
+                {
+                    column_array ~= column;
+                }
+            }
+
+            if ( column_array.length > 0
+                 && opening_tag.endsWith( '^' ) )
+            {
+                column_array = column_array[ 0 .. $ - 1 ];
+            }
+
+            if ( column_array.length > 0
+                 && opening_tag.endsWith( '$' ) )
+            {
+                column_array = column_array[ $ - 1 .. $ ];
+            }
+
+            foreach ( column; column_array )
+            {
+                instance_part ~= column.ReplaceTags( template_part );
+            }
+
+            template_part = instance_part;
+        }
+    }
+
+    return template_part_array.join( "" );
 }
 
 // ~~
 
 string ReplaceTableTags(
-	string template_text,
-	string opening_tag,
-	string closing_tag,
-	TABLE[] table_array
-	)
-{
-	string
-		instance_part;
-	string[]
-		template_part_array;
-		
-	template_part_array = template_text.GetSplitText( opening_tag, closing_tag );
-	
-	foreach ( template_part_index, ref template_part; template_part_array )
-	{
-		if ( ( template_part_index & 1 ) == 1 )
-		{
-			instance_part = "";
-			
-			foreach ( table; table_array )
-			{
-				if ( opening_tag == "[*"
-				     || ( opening_tag == "[." 
-				          && table.IsStored )
-				     || ( opening_tag == "[!" 
-				          && !table.IsStored ) )
-				{
-					instance_part 
-						~= table.ReplaceTags( template_part )
-						       .ReplaceColumnTags( "<*^", "^*>", table )
-						       .ReplaceColumnTags( "<*$", "$*>", table )
-						       .ReplaceColumnTags( "<*", "*>", table )
-						       .ReplaceColumnTags( "<#^", "^#>", table )
-						       .ReplaceColumnTags( "<#$", "$#>", table )
-						       .ReplaceColumnTags( "<#", "#>", table )
-						       .ReplaceColumnTags( "<~^", "^~>", table )
-						       .ReplaceColumnTags( "<~$", "$~>", table )
-						       .ReplaceColumnTags( "<~", "~>", table )
-						       .ReplaceColumnTags( "<.^", "^.>", table )
-						       .ReplaceColumnTags( "<.$", "$.>", table )
-						       .ReplaceColumnTags( "<.", ".>", table )
-						       .ReplaceColumnTags( "<!^", "^!>", table )
-						       .ReplaceColumnTags( "<!$", "$!>", table )
-						       .ReplaceColumnTags( "<!", "!>", table );
-				}
-			}
-			
-			template_part = instance_part;
-		}
-	}
-
-	return template_part_array.join( "" );
-}
-
-// ~~
-
-void WriteInstanceFiles(
-	string instance_text
-	)
-{
-	string
-		instance_file_path;
-	string[]
-		instance_file_line_array,
-		instance_file_text_array;
-		
-	if ( !instance_text.startsWith( "##" ) )
-	{
-		Abort( "Missing instance file path : " ~ instance_text );
-	}
-	
-	instance_file_text_array = instance_text.split( "##" )[ 1 .. $ ];
-	
-	foreach ( instance_file_text; instance_file_text_array )
-	{
-		instance_file_line_array = instance_file_text.split( '\n' );
-		
-		if ( instance_file_line_array.length == 0 )
-		{
-			Abort( "Missing instance file path : " ~ instance_file_text );
-		}
-		
-		instance_file_path = instance_file_line_array[ 0 ];
-		instance_file_text = instance_file_line_array[ 1 .. $ ].join( '\n' );
-		
-		writeln( "Writing instance file : " ~ instance_file_path );
-		
-		instance_file_path.write( instance_file_text );
-	}
-}
-
-// ~~
-
-void WriteInstanceFiles(
-	SCHEMA schema
+    string template_text,
+    string opening_tag,
+    string closing_tag,
+    TABLE[] table_array
     )
 {
-	string
-		instance_file_text,
-		template_file_text;
-		
-	foreach ( template_file_path; TemplateFilePathArray )
-	{
+    string
+        instance_part;
+    string[]
+        template_part_array;
+
+    template_part_array = template_text.GetSplitText( opening_tag, closing_tag );
+
+    foreach ( template_part_index, ref template_part; template_part_array )
+    {
+        if ( ( template_part_index & 1 ) == 1 )
+        {
+            instance_part = "";
+
+            foreach ( table; table_array )
+            {
+                if ( opening_tag == "[*"
+                     || ( opening_tag == "[."
+                          && table.IsStored )
+                     || ( opening_tag == "[!"
+                          && !table.IsStored ) )
+                {
+                    instance_part
+                        ~= table.ReplaceTags( template_part )
+                               .ReplaceColumnTags( "<*^", "^*>", table )
+                               .ReplaceColumnTags( "<*$", "$*>", table )
+                               .ReplaceColumnTags( "<*", "*>", table )
+                               .ReplaceColumnTags( "<#^", "^#>", table )
+                               .ReplaceColumnTags( "<#$", "$#>", table )
+                               .ReplaceColumnTags( "<#", "#>", table )
+                               .ReplaceColumnTags( "<~^", "^~>", table )
+                               .ReplaceColumnTags( "<~$", "$~>", table )
+                               .ReplaceColumnTags( "<~", "~>", table )
+                               .ReplaceColumnTags( "<.^", "^.>", table )
+                               .ReplaceColumnTags( "<.$", "$.>", table )
+                               .ReplaceColumnTags( "<.", ".>", table )
+                               .ReplaceColumnTags( "<!^", "^!>", table )
+                               .ReplaceColumnTags( "<!$", "$!>", table )
+                               .ReplaceColumnTags( "<!", "!>", table );
+                }
+            }
+
+            template_part = instance_part;
+        }
+    }
+
+    return template_part_array.join( "" );
+}
+
+// ~~
+
+void WriteInstanceFiles(
+    string instance_text
+    )
+{
+    string
+        instance_file_path;
+    string[]
+        instance_file_line_array,
+        instance_file_text_array;
+
+    if ( !instance_text.startsWith( "##" ) )
+    {
+        Abort( "Missing instance file path : " ~ instance_text );
+    }
+
+    instance_file_text_array = instance_text[ 2 .. $ ].split( "\n##" );
+
+    foreach ( instance_file_text_index, instance_file_text; instance_file_text_array )
+    {
+        if ( instance_file_text_index + 1 < instance_file_text_array.length )
+        {
+            instance_file_text ~= '\n';
+        }
+
+        instance_file_line_array = instance_file_text.split( '\n' );
+
+        if ( instance_file_line_array.length == 0 )
+        {
+            Abort( "Missing instance file path : " ~ instance_file_text );
+        }
+
+        instance_file_path = instance_file_line_array[ 0 ];
+        instance_file_text = instance_file_line_array[ 1 .. $ ].join( '\n' );
+
+        writeln( "Writing instance file : " ~ instance_file_path );
+
+        instance_file_path.write( instance_file_text );
+    }
+}
+
+// ~~
+
+void WriteInstanceFiles(
+    SCHEMA schema
+    )
+{
+    string
+        instance_file_text,
+        template_file_text;
+
+    foreach ( template_file_path; TemplateFilePathArray )
+    {
         writeln( "Reading template file : ", template_file_path );
 
         template_file_text = template_file_path.readText().replace( "\r", "" );
-        
-        instance_file_text 
-			= template_file_text
-			      .ReplaceTableTags( "[*", "*]", schema.TableArray )
-			      .ReplaceTableTags( "[.", ".]", schema.TableArray )
-			      .ReplaceTableTags( "[!", "!]", schema.TableArray );
-			      
-		WriteInstanceFiles( instance_file_text );
-	}
+
+        instance_file_text
+            = template_file_text
+                  .ReplaceTableTags( "[*", "*]", schema.TableArray )
+                  .ReplaceTableTags( "[.", ".]", schema.TableArray )
+                  .ReplaceTableTags( "[!", "!]", schema.TableArray );
+
+        WriteInstanceFiles( instance_file_text );
+    }
 }
 
 // ~~
@@ -6383,7 +6389,7 @@ void ProcessFile(
             Schema.WriteJavascriptTypeFile( base_file_path ~ "_" ~ DatabaseFormat ~ "_type.js" );
         }
     }
-    
+
     Schema.WriteInstanceFiles();
 }
 

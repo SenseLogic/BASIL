@@ -160,6 +160,20 @@ BLOG | count 5
     {table name} [| {table property}, {table property}, ...]
 
         {column name} : {column type} [| {column property}, {column property}, ...]
+        ...
+
+    ...
+
+    %{table name}
+
+        {column name} {column name} ...
+
+            {column value} ~ {column value} ~ ...
+            ...
+
+        ...
+
+    ...
 ```
 
 ### Database properties
@@ -273,6 +287,66 @@ MAP[ KEY_TYPE, ELEMENT_TYPE ]
 MAP[ KeyName : KEY_TYPE, ElementName : ELEMENT_TYPE ]
 ARRAY[ ELEMENT_TYPE ] | !stored
 POINTER[ ELEMENT_TYPE ] | !stored
+```
+
+### Data
+
+```
+^ : unremovable space
+§ : new line symbol
+~ : value separator
+\ : escape character
+```
+
+### Template tags
+
+```
+[*tables*]
+[.stored tables.]
+[!not stored tables!]
+<*columns*>
+<*^first columns^*>
+<*$last column$*>
+<#key columns#>
+<#^first key columns^#>
+<#$last key column$#>
+<~not key columns~>
+<~^first not key columns^~>
+<~$last not key column$~>
+<.stored columns.>
+<.^first stored columns^.>
+<.$last stored column$.>
+<!not stored columns!>
+<!^first not stored columns^!>
+<!$last not stored column$!>
+{{table_name}}
+{{table_go_type}}
+{{table_go_attribute}}
+{{table_go_variable}}
+{{table_crystal_type}}
+{{table_csharp_type}}
+{{table_rust_type}}
+{{table_javascript_type}}
+{{column_name}}
+{{column_stored_name}}
+{{column_stored_type}}
+{{column_cql_name}}
+{{column_cql_type}}
+{{column_sql_name}}
+{{column_sql_type}}
+{{column_go_name}}
+{{column_go_type}}
+{{column_go_attribute}}
+{{column_go_variable}}
+{{column_crystal_name}}
+{{column_crystal_type}}
+{{column_csharp_name}}
+{{column_csharp_type}}
+{{column_rust_name}}
+{{column_rust_type}}
+{{column_javascript_name}}
+{{column_javascript_type}}
+##output file path
 ```
 
 ## Installation
