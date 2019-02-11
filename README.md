@@ -14,11 +14,10 @@ Database designer and filler.
     *   SQL
     *   CQL
 *   Instantiates template code for the following languages :
-    *   Go
-    *   Generis.
-    *   Crystal.
-    *   C# type file.
-    *   Rust type file.
+    *   Go / Generis
+    *   C#
+    *   Crystal / Cibyl
+    *   Rust
 
 ## SQL sample
 
