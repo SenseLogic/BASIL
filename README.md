@@ -7,14 +7,16 @@ Database designer and filler.
 ## Features
 
 *   Describes database schemas through a concise textual specification.
-*   Generates fake data based on the column name, type and properties.
-*   Exports the database schema and data in several formats :
-    *   UML schema file.
-    *   SQL schema and data files.
-    *   CQL schema and data files.
-    *   Go type file.
-    *   Generis type, query, response, request and route files.
-    *   Crystal type file.
+*   Fills the database with user provided data.
+*   Generates the remaining data based on the column names, types and properties.
+*   Exports the database schema and data in the following formats :
+    *   UML
+    *   SQL
+    *   CQL
+*   Instantiates template code for the following languages :
+    *   Go
+    *   Generis.
+    *   Crystal.
     *   C# type file.
     *   Rust type file.
 
@@ -80,6 +82,18 @@ BLOG | count 5
         Id : UINT64 | key, unique, incremented
         Name : STRING | capacity 45
         Email : STRING | capacity 45
+
+    %SECTION
+
+        Number Name
+
+            1 ~ Sports
+            2 ~ Gaming
+            3 ~ Entertainment
+            4 ~ Science
+            5 ~ History
+            6 ~ Travel
+            7 ~ Finance
 ```
 
 ![](https://github.com/senselogic/BASIL/blob/master/SAMPLE/SQL/blog.png)
@@ -146,9 +160,36 @@ BLOG | count 5
         Uuid : UUID | key, unique
         Name : STRING
         Email : STRING
+
+    %SECTION
+
+        Number Name
+
+            1 ~ Sports
+            2 ~ Gaming
+            3 ~ Entertainment
+            4 ~ Science
+            5 ~ History
+            6 ~ Travel
+            7 ~ Finance
 ```
 
 ![](https://github.com/senselogic/BASIL/blob/master/SAMPLE/CQL/blog.png)
+
+## Sample Go template
+
+```go
+##types.go
+package main;
+
+[*type {{table_go_type}} struct {
+<*    {{column_go_type}} {{column_go_name}};
+*>}
+
+// ~~
+
+*]
+```
 
 ## Syntax
 
