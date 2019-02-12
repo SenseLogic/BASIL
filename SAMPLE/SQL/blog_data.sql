@@ -7,8 +7,8 @@ replace into `BLOG`.`SECTION`
         "1",
         "1",
         "Sports",
-        "Life's dark of battle with gentle winds and fleet, breathe that great the dwellers in europe's trackless wastes. May stand mute with awe as pants the grass cut down, asked their only but who knows no dreams starting him pause. Rode alone he lingered drinking in her bright eyes filmed and hates.",
-        "giriasek.gif"
+        "Except the shepherd call their weaker arms a bow, tune not may aid each might take his her to share our cave. Seemed full for when he will deign to come. Preserving recreating day of her his heaven changed to despair, often rolled from revery ablutions made to eye.",
+        "etcheman.jpg"
     );
 
 replace into `BLOG`.`SECTION`
@@ -20,8 +20,8 @@ replace into `BLOG`.`SECTION`
         "2",
         "2",
         "Gaming",
-        "Transfigured seemed joyful once camped against his son in health, intwined with yellow robe and vale of cherub smile. Becoming poor kingdom gaze of fragrant golden harvests fail, blood run the moving with shouting crowds have taught. Asked his dwelling near its rays to conscious life explain, women and numbers overwhelmed with glittering with dazzling light farther shore to despair. Up cherished and colt of food met the palace flew to them light.",
-        "eitebera.jpg"
+        "Night now he vanished and ran with joy past a life stands pre eminent, far south some deep purpose of old grown old. Shall mingle with brazen tiger's head as souls at length siddartha's bride but never known. Smoothing life's sole to never ending rest the joys, fills all to rescue found knowledge he lately left not neither health nor chanted hymn. It came before my work calls that like shadows so free to all.",
+        "dalehrby.jpg"
     );
 
 replace into `BLOG`.`SECTION`
@@ -33,8 +33,8 @@ replace into `BLOG`.`SECTION`
         "3",
         "3",
         "Entertainment",
-        "Shut out from us brothers were clustered thick with those loving living valor fought. Piercing pain attended men o love knows no mountains spread out from purna's lips. They say will build upon her silent slunk away from its rocky ramparts walled, morn noon and treat with years all convinced received with rarest flowers, matreya's self murder seeking higher love though time to fight each slightest sound. Noting their bright blaze of ropes swung high.",
-        "utcainoj.png"
+        "Perchance of divinest pity charity and most royal line of preparation tells, securely wrapped world whose golden chain of crystal ice. Leading rahula or shepherd's voice as dead on earth, fitter place the scattered slippers thrown with sudden wrath. Enbowered in tumult armed with one eternal sleep he returned when rosy light, first faint rays of battle needs our prayers to dust and was loved to thee. Regardless of youthful bloom with gentleness and sting each living words. Unite our bower of karma's fatal chain thick an hour preceding day, its very living light lined and bald and bleaching bones with graceful limbs and day.",
+        "aplottap.jpg"
     );
 
 replace into `BLOG`.`SECTION`
@@ -46,8 +46,8 @@ replace into `BLOG`.`SECTION`
         "4",
         "4",
         "Science",
-        "Watering its princely pride puffed up a moving with rarest flowers, bringing gifts an only left its close shorn. Snake charmers that poison lurks in his frame, soul flitting a rich curds and half divine may even food. Seems her son and india's silks and air and bone.",
-        "coloscha.gif"
+        "These musings sad thoughts less hardened less of eternal source. Pause not too those groves through vacant nothingness, where fountains fall and gentleness quell haughty power of densest darkness groping in paradise primordial peace. I've seen in filthy by autumn's winds may into mine the bursts through all external pomp. Romping in orange robes as this palace they vanished in life. Except the long farewell o that son in men on bended knees locked, taking sweet young the darkness fell prostrate people rest house for me.",
+        "tausacky.png"
     );
 
 replace into `BLOG`.`SECTION`
@@ -59,8 +59,8 @@ replace into `BLOG`.`SECTION`
         "5",
         "5",
         "History",
-        "I but leaves carpeted his guides the procession forms compact and came, believed religion and nearer seen and paints the watchtower sounds of sparkling red. Untrod immense that waits to part of helpfulness and armor joints had never quenched, outwatch the starched ruffle of opening seas were brothers were knit as victors came near. Unlike that sad notes soft hands busy toil the happy days and highest hills, except the goodly seed can know that good an army there.",
-        "wilerliu.png"
+        "Dreams where cruel chains that severs friends weep not, distant joy of unrequited love and tinged by older and foul air, enter his tangled jungle wind that we angels on himalaya's peaks. 'a little streams leap from higher he made of mail, with feet have just born another's touch his sinking low for man.",
+        "endappex.png"
     );
 
 replace into `BLOG`.`SECTION`
@@ -72,8 +72,8 @@ replace into `BLOG`.`SECTION`
         "6",
         "6",
         "Travel",
-        "Into sudden pain for heaven and unfeeling heart, your companion's age a rock to giddy cliffs framed in orange robes remain to watch, sole to press their only fit place to never gives. Both wind that springs forward passed six troubled sea had danced from hill of liberty, stately tall one found at these varied wares without the cyclone's speed.",
-        "beladden.jpg"
+        "Presenting at trumpet's call me a brilliant roses grown old sad thoughts. Harsh and buddha answered them from outer world i forget their dead. Grand as we saw him speculations fables old hesiod sang his neck, suck out for monarchs fit place the soft hands to leave our every cup to pour. Three days in serving their doctrine soon the rains force india's sun, morning after a queen was loved prince its very fashion plates. Women dishonored mutilated slain now drew aside to show, raptured gaze upon its maker's power cast the rising splendor now open stood his pilgrimage. Ye say that couch without its walls the lying lips from home of basilisk.",
+        "echoodfe.jpg"
     );
 
 replace into `BLOG`.`SECTION`
@@ -85,8 +85,8 @@ replace into `BLOG`.`SECTION`
         "7",
         "7",
         "Finance",
-        "Drop away but on end or gladly i'd climb alone. Fables all from sleep the bravest among the naga nightly resting place, dark despair they knew not sell the air. On spikes with strength was gently he heard a power, dumb as gathering night may cheer with courtly grace saluting him and gaunt. Most noble men on ropes swung high sport, breathed forth she approached close arms stretched his very fountain where nations met the funeral piles. Looks down where crystal wall a devil and bleeding hearts as words, hear grave philosophers so penetrating yet confirmed in air and compass lost.",
-        "odgemaru.gif"
+        "Denounce those who smooth worn with perfect all this prison house. Woman herself cast them as men will i see it comes all powerful love, called a lion rampant standing till in despair they closed and surely know, saw siddartha's noble presence of goats and floods descended chaos reigned. Kshatriyas warriors cruel war to care has grown.",
+        "erschoro.png"
     );
 
 replace into `BLOG`.`USER`
@@ -96,18 +96,84 @@ replace into `BLOG`.`USER`
     values
     (
         "1",
-        "Tana",
-        "Menyhart",
-        "tana.menyhart@gmail.com",
-        "tanamenyhart",
-        "uck6l=oTx",
-        "+55 639 585 602",
-        "55 Presley Boulevard",
-        "Manassas Park",
-        "8560",
-        "Hawaii",
-        "Estonia",
-        "Elbeze Shop",
+        "Judie",
+        "Kuryliak",
+        "judie.kuryliak@outlook.com",
+        "judiekuryliak",
+        "Bim1.bav",
+        "+79 146 698 508",
+        "95 Speaker Boulevard",
+        "Alvin",
+        "6311",
+        "Washington",
+        "Nicaragua",
+        "Owen Tech",
+        "1"
+    );
+
+replace into `BLOG`.`USER`
+    (
+        `Id`, `FirstName`, `LastName`, `Email`, `Pseudonym`, `Password`, `Phone`, `Street`, `City`, `Code`, `Region`, `Country`, `Company`, `ItIsAdministrator`
+    )
+    values
+    (
+        "2",
+        "Wynn",
+        "Dourley",
+        "wynn.dourley@yahoo.com",
+        "wynndourley",
+        "onduK6!",
+        "+64 407 714 602",
+        "95 Kirfman Street",
+        "Elmore",
+        "8176",
+        "Iowa",
+        "South Korea",
+        "Stutts University",
+        "1"
+    );
+
+replace into `BLOG`.`USER`
+    (
+        `Id`, `FirstName`, `LastName`, `Email`, `Pseudonym`, `Password`, `Phone`, `Street`, `City`, `Code`, `Region`, `Country`, `Company`, `ItIsAdministrator`
+    )
+    values
+    (
+        "3",
+        "Veda",
+        "Badowski",
+        "veda.badowski@hotmail.com",
+        "vedabadowski",
+        "uAddleran=0",
+        "+14 211 845 175",
+        "18 Mokros Drive",
+        "Lawtell",
+        "8915",
+        "Virginia",
+        "Hong Kong",
+        "Myrillas Church",
+        "1"
+    );
+
+replace into `BLOG`.`USER`
+    (
+        `Id`, `FirstName`, `LastName`, `Email`, `Pseudonym`, `Password`, `Phone`, `Street`, `City`, `Code`, `Region`, `Country`, `Company`, `ItIsAdministrator`
+    )
+    values
+    (
+        "4",
+        "Riyaz",
+        "Chenier",
+        "riyaz.chenier@outlook.com",
+        "riyazchenier",
+        "ic*hYer4o",
+        "+34 444 321 427",
+        "85 Forland Park",
+        "Newtonsville",
+        "6773",
+        "Missouri",
+        "Ukraine",
+        "Graziano News",
         "0"
     );
 
@@ -117,101 +183,35 @@ replace into `BLOG`.`USER`
     )
     values
     (
-        "2",
-        "Vittorio",
-        "Hannula",
-        "vittorio.hannula@outlook.com",
-        "vittoriohannula",
-        "i1*dSkoctoi",
-        "+27 486 578 984",
-        "62 Praeuner Park",
-        "Rockleigh",
-        "9231",
-        "Arkansas",
-        "Georgia",
-        "Events Company",
-        "1"
-    );
-
-replace into `BLOG`.`USER`
-    (
-        `Id`, `FirstName`, `LastName`, `Email`, `Pseudonym`, `Password`, `Phone`, `Street`, `City`, `Code`, `Region`, `Country`, `Company`, `ItIsAdministrator`
-    )
-    values
-    (
-        "3",
-        "Hali",
-        "Chauhan",
-        "hali.chauhan@outlook.com",
-        "halichauhan",
-        "&1elwMorbou",
-        "+64 319 845 736",
-        "79 Langenberg Drive",
-        "Ellensburg",
-        "6964",
-        "Wyoming",
-        "Namibia",
-        "Burger Studio",
+        "5",
+        "Cherida",
+        "Dando",
+        "cherida.dando@gmail.com",
+        "cheridadando",
+        "!ne8ufinNe",
+        "+64 959 643 939",
+        "36 Prevatt Park",
+        "Mink Creek",
+        "3447",
+        "Alberta",
+        "Cambodia",
+        "Bermel College",
         "0"
     );
 
-replace into `BLOG`.`USER`
+replace into `BLOG`.`ARTICLE`
     (
-        `Id`, `FirstName`, `LastName`, `Email`, `Pseudonym`, `Password`, `Phone`, `Street`, `City`, `Code`, `Region`, `Country`, `Company`, `ItIsAdministrator`
+        `Id`, `SectionId`, `UserId`, `Title`, `Text`, `Image`, `Date`
     )
     values
     (
+        "1",
         "4",
-        "Correna",
-        "Bickford",
-        "correna.bickford@mail.com",
-        "correnabickford",
-        "lov4a=fE",
-        "+26 864 954 946",
-        "33 Magnussen Alley",
-        "Wellsboro",
-        "9090",
-        "Pennsylvania",
-        "Ireland",
-        "Souza Software",
-        "1"
-    );
-
-replace into `BLOG`.`USER`
-    (
-        `Id`, `FirstName`, `LastName`, `Email`, `Pseudonym`, `Password`, `Phone`, `Street`, `City`, `Code`, `Region`, `Country`, `Company`, `ItIsAdministrator`
-    )
-    values
-    (
         "5",
-        "Elysha",
-        "Leclaire",
-        "elysha.leclaire@yahoo.com",
-        "elyshaleclaire",
-        "a+gh6yN",
-        "+65 965 502 555",
-        "55 Ning Lane",
-        "Cebolla",
-        "4485",
-        "North Dakota",
-        "Namibia",
-        "Broten Network",
-        "1"
-    );
-
-replace into `BLOG`.`ARTICLE`
-    (
-        `Id`, `SectionId`, `UserId`, `Title`, `Text`, `Image`, `Date`
-    )
-    values
-    (
-        "1",
-        "1",
-        "4",
-        "Still as too those dark despair.",
-        "Combined endurance beauty passed full for buddha's soul, east the setting calls us wait not consumed or hopeless age to pluck their willing heart. More uncovered four horses bore aloft while one kiss, sails have gone where crystal clear stream guided thence in morbid selfish thoughts all remember this. Covered her gifts returned no harsh unloving word.",
-        "Hedyliob.png",
-        "2005-12-25"
+        "Woman bone of night will scorn my side.",
+        "Arms stretched aloft fingers grown gray one of hawk or buried deep purpose find the gates. Hanging from eye and flaming swords obstruct his path rugged hills, faster flew to groveling base born dwell here is love alone still cold lips, or gold richly spread the peace the banyan tree. Kiss its guilty sleep for age or by inner sight.",
+        "obkiebec.gif",
+        "2000-02-22"
     );
 
 replace into `BLOG`.`ARTICLE`
@@ -221,12 +221,12 @@ replace into `BLOG`.`ARTICLE`
     values
     (
         "2",
-        "1",
         "2",
-        "Distributing her gentle thanks to youth an avenue.",
-        "Entombed in feats of sunlight fill a smile still ringing laugh and earth as you, heedless about this workday world how lonely age o hear this mortal frame, shrunk from whence a holy cause of delight. Dreamed that hid them of trumpet blasts to son return. Thinking the jujube trees mingled with sudden inward peace i this costly pile but cold succeeds, whence spring time on sakwal boundless and merry laugh, fitter for final victory is strong hand one hard road skirted this headlong age. Stirred these cliffs far ahead cries and deep. Calling each snowy white as she only sound a veil is worth in darkness lost.",
-        "iskrawit.gif",
-        "2013-03-12"
+        "5",
+        "Adding each vantage ground.",
+        "Chide none e'er can know full rounded moon, quicker than for those sweet old believed religion but these restless round. Welcome him tell the dwellers in vain dreams where buddha heard, fitter place for rahula and west the charioteers' first born's breath. Winding the embassy is from op'ning flowers may wisdom words can find a gay procession forms. If this empty couch of groves through nature with tears that great highland lake, fall and stills the humbler castes and wretchedness and happy days. Who shall see that folds seemed and rude swain in wagons wandering tribes, again sent the lights the embassy is mangling human heads designed.",
+        "Kaleenak.gif",
+        "2001-10-21"
     );
 
 replace into `BLOG`.`ARTICLE`
@@ -237,11 +237,11 @@ replace into `BLOG`.`ARTICLE`
     (
         "3",
         "2",
-        "3",
-        "Named kantaka was raised hand stretched aloft.",
-        "Distributing her way their new born who played the sharp pain and cried, one hard cold drops were given to shun pollution from light shine. Ill favored creatures lank and clear the coach of ruling your own light he thought, guarded by succession of incense from babe the watchtower sounds she calmly said. Building huge stone wheels by eager crowd gathered every walk, two outer gates wide open groves and called his burning aetna's head. Crying they skim the pompous funeral trains in limb, filling the court with nods and love knows what makes my master said. Fair in serving their gay companions wife should be light fountains sending through life's goal, sleepless he too near to gaze of poet's fancy feigns.",
-        "ottovsko.jpg",
-        "2011-05-03"
+        "1",
+        "Soothing some towering cliff these troubled house.",
+        "Vile as young and dazzling light wings unchecked luxurious grow old, would place to say this old man who went and faster flew, fly from rocks now passing out for heavenly path and doubts and race for rich indeed. Unless within those dark profound complete their infants' steps the fire or wild beasts, who smooth and eating out those bitter sorrows flow perennial harmony and greed.",
+        "worullyu.gif",
+        "2008-06-22"
     );
 
 replace into `BLOG`.`ARTICLE`
@@ -251,12 +251,12 @@ replace into `BLOG`.`ARTICLE`
     values
     (
         "4",
-        "1",
-        "2",
-        "Waved glittered with ignorance profound and jeers.",
-        "Sweep ahead cries 'lo i bid you will makes my father's god so many to grief, enbowered in sweet home leave our coarse hags could wish. Stretching far ahead cries of state with light, accompanied by every disease it waved glittered as all are in summer's rains should even scale. Neglect the noonday sun by a prince eagerly to never thwart.",
-        "pisainvi.gif",
-        "2010-03-11"
+        "6",
+        "3",
+        "Guides every horse so the thunders roll.",
+        "Engaged turn to countless souls drank in sacred things, dark despair they live in golden harvests now leaping in ages have been performed. Gave one full to purity and tartar chief whose ears let not aside, shot through that saraputra and gold I welcome them among the bow in musings sad thoughts. Palanquin bearers droning out an hour preceding dawn.",
+        "geracade.jpg",
+        "2010-10-26"
     );
 
 replace into `BLOG`.`ARTICLE`
@@ -266,12 +266,12 @@ replace into `BLOG`.`ARTICLE`
     values
     (
         "5",
-        "1",
-        "1",
-        "Yet confirmed in beginnings sees nirvana's verge.",
-        "Caught by vulcan's art their self is brahma's rest, fill with room enough the return beseech you great rolling spheres. Into light from mind but pharisees or with thorns, hand that this humble part marked distance meru's holy pity filled a tender flesh, swung high noon of dawn to active consciousness of king of boundless infinite intense. Asita oldest and priests the source of present power unseen. Drums shells and savage prowling beasts did through life's goal.",
-        "atzeorge.png",
-        "2014-02-25"
+        "2",
+        "2",
+        "Ewe necked ill to let every tone.",
+        "Up to bind the boiling sea had filled that on passing through crowded streets, fall his pile neither lack of iron castes and frailer grew. Under many voices raised for you saw proud embassies from feeding grounds by older heads designed, humble home stretch soon are with sudras talks. Baskets well named the universe whose mocking echoes.",
+        "Sarenaco.jpg",
+        "2011-11-01"
     );
 
 replace into `BLOG`.`ARTICLE`
@@ -281,12 +281,12 @@ replace into `BLOG`.`ARTICLE`
     values
     (
         "6",
-        "3",
-        "4",
-        "Piercing thorns no more'.",
-        "An altar rose embowered hiding place their topmost himalayan peaks, master hear this saw in fitting robes benares daily round. Once the second prize while welling up to share our hopes, fled amazed nor solemn silence only sound the tempter said. Bathed in hope for me still so distant mountain peaks, sent up that man so they made insolent by death upon a lesser love.",
-        "avkusseu.gif",
-        "2009-03-09"
+        "5",
+        "5",
+        "Blending all colors of pain.",
+        "Not dressed like that late appeared and pine in that undying flame, lost to quicken time of battle with lamps in ages grew on innocence. Gentle winds may see the skies and tempers every incense breathing inward pain, do such earnestness replied but stretching far and walk in heart. Humbly entreating him reverence let not clothed in paradise primordial peace was born. Sorely perplexed he had here is sent up its falling spray.",
+        "eckworem.jpg",
+        "2011-06-20"
     );
 
 replace into `BLOG`.`ARTICLE`
@@ -296,12 +296,12 @@ replace into `BLOG`.`ARTICLE`
     values
     (
         "7",
-        "3",
+        "5",
         "2",
-        "Live while each well spent.",
-        "Wondering said he would not wealth can cull the other in pain for light be worse, fills all signs of karma's chains of sleep he sank. Age brilliant bloom and stately palace gates this be his own my face, eastward toward a shining with those other now so little twinkling star. Chandala sudra high pruned spreading plain sent up. Joy received the cedars grow old story flew, lumbini called they knew his pillow bathe the holy cause before her fair and children die. Enticing men marked distance with floating in eden's happy homes with shouting crowds, inspiring every ill favored few were again appeared and kills the east.",
-        "faranfam.gif",
-        "2011-07-28"
+        "Fixed eternal sleep may fall.",
+        "First faint and brahma's only lift and eating out by inner eye was so great, laughing innocence of money root as friend of kingly power doth dwell, alarmed at the dust the world must I freely shared. Combined endurance beauty all these sinful world within, drew aside with wild boar or bounding on an ever vomits from off on shoulder bare, scarce raised her dream might fill the prizes all which memory I've heard. Descended chaos shone upon her gifts returned while those poor dwellers in your kingdom far south.",
+        "hautolli.png",
+        "2003-09-18"
     );
 
 replace into `BLOG`.`ARTICLE`
@@ -311,12 +311,12 @@ replace into `BLOG`.`ARTICLE`
     values
     (
         "8",
-        "2",
+        "7",
         "4",
-        "Returned while keeping step and start and staves.",
-        "Once round about this hallowed spot on rubbish heaps that as purest auras freely give, soothed his duty to door to ferry him playing and selfish world and plain. Now changed into atoms blow away the next their weaker arms. Each instant one hand stretched his army old give or do him round, he vanished in coarsest robes of grace of wedded love is kept as they. Grown bears with pain and lambs and selfish half of men, stood as pants the new come from sole to them. Preserve your board is dead on sakwal boundless vault was no prowling thief.",
-        "ancurloh.jpg",
-        "2000-04-24"
+        "Do whate'er the priests 'mid triumphant shouts.",
+        "Morning most needs our strength and wood and proud, eastward toward varanassi hoping there hand they had seen. Useless to teach all their nights with fiery flames lick up they halt for piercing cold, to place for ravening wolves to active consciousness of shades of bread. Speak of groves of people still be day some noble youth.",
+        "erepetor.gif",
+        "2003-02-06"
     );
 
 replace into `BLOG`.`ARTICLE`
@@ -326,12 +326,12 @@ replace into `BLOG`.`ARTICLE`
     values
     (
         "9",
-        "5",
-        "5",
-        "Itself a brother prince.",
-        "Then three one may eat the verdant slopes and found a shepherd's voice, nor dared to fade and woes and creeds. 'tis but real power unseen worlds but bordered by him nay, farewell a timid steps upon cyclopean columns vast, passed since has life corrupt declining rome compelled those ever deepening shade. Striking the spreading plains gilded pinnacles and eyes with kind acts of kingly power, walled on life's low beyond the streams leap down took a shepherd's cottage home leave all. Driving away from gross of rank in a glittering glacial stream. Life to come down to wish no trumpeting of nature sinks to peak to hill, you offer me cringe and spontaneous grow old hesiod sang.",
-        "DarceyMy.gif",
-        "2010-04-12"
+        "2",
+        "3",
+        "Humanity to wealth his people bloody bit.",
+        "Vile as men near to death had been a seeming sleep her strength, older heads erect catching each snowy white and gods above a show. Securely wrapped in brightness of wedded love though all beside the livelong day, adding each pleasure heard no cry out fetters drop still the empire of innocence. Told what ails the vines and called the rites ordained by every breeze, no charity and treat with kindly words of terrors there open book. Blinking and ran with loving kiss spoke my gold, gropes blindly they drew to sting each part of its exhalations fall, twin wonders of sorrow were laid her sweet expression on passing breeze.",
+        "omaJulij.jpg",
+        "2004-07-23"
     );
 
 replace into `BLOG`.`ARTICLE`
@@ -341,12 +341,12 @@ replace into `BLOG`.`ARTICLE`
     values
     (
         "10",
-        "1",
         "5",
-        "Rolled on a tower strange music to raise.",
-        "Still seem so fleet he rode mounted on himalaya's peaks of mail, lending a placid joy conduct his long been mine to threaten or labored steps, would drive the shining pool while earnest purpose find the rabble's gibes. How love embraces all our unborn pledge of suffocating smoke and guide. Whereat the dismal regions of cymbals sound all soon she approached the dance, shone upon its daily business daily duties of rank and joy, cheering him go and brutal savagery high on a brother's path that sends their shadowy hands. Crossing the top before her bosom of toil the goodly seed.",
-        "ilweddek.png",
-        "2006-05-04"
+        "5",
+        "Binds all his brothers met.",
+        "Obedient to active consciousness of our hopes and joy, loaded with trees decayed and gladness music seemed loosely hung useless by lusts and wrath. Approach along to pass the cruelty and miss his counselors. Uprooting cherished evils one most mighty mara answered by ripening fruits and me, until sudata spread the winds roll the universal stillness break, twin wonders to me I dare not war is from my gold to nirvana's verge. A bright pavilion rose a sudden inward pain attended by ripening fruits, stalk boldly on the throne blacker than mortals saw beneath the churl refused. Binds all nature changes into shining waves of strength is vain, seek the pose and stately tall they build a brahman masters teach them is.",
+        "eragimop.gif",
+        "2007-05-25"
     );
 
 replace into `BLOG`.`ARTICLE`
@@ -357,11 +357,11 @@ replace into `BLOG`.`ARTICLE`
     (
         "11",
         "5",
-        "2",
-        "Peace and down past human lives to know.",
-        "Belched forth alone still concealed among the heights, shaded drives him through hunger of cares oppressed with glaring eyes upon its glassy face. Vacant for others' good for vultures moldering to try such grace, passed just fled amazed nor burned with balmy air. None ever haunt poor and thirst for bit and stills the nervous fluid of greater mind.",
-        "urgurige.jpg",
-        "2007-06-18"
+        "1",
+        "Asokas one dazzling blaze.",
+        "Hung useless to eye was passed along from sleep and tiny sparrow when coming first, god and handed down a shepherd call me much on sakwal on shoulder bare. Warming to countless souls will i seem to pluck the hardened conscience from whom no god, nirvana's heights with tenderness he bade the high or eat the morning and fleet. Hearing this great world of rising wakes the frosty air with graceful limbs.",
+        "ariGaala.jpg",
+        "2001-11-12"
     );
 
 replace into `BLOG`.`ARTICLE`
@@ -371,12 +371,12 @@ replace into `BLOG`.`ARTICLE`
     values
     (
         "12",
-        "4",
-        "5",
-        "Friend and no royal games.",
-        "Doing his loves seem to sweet sleep well. Sadly to climb yon shining with skipping lambs, cover the ministers of himalaya's chain of innocence, circled itself as my aid not discouraged still its soil with quips and eternal love. Clothing the pillow with shields adorned with labored steps as at every manly arts. Watched them from my very old hesiod sang, revealed the flowers of suffocating smoke and rice picked grain of victims slain, harsh unloving word had brushed their celestial course.",
-        "beciakwa.jpg",
-        "2010-08-19"
+        "2",
+        "2",
+        "Wondering that stole forth she calmly said.",
+        "Fills homes with wisdom watchfulness and sadly think. Entombed in sleep well nigh spent his way, heedless about his life awaits those struggling up mountain sloping west, wooded terraced hill one sits amid the quick as made me joyful he proclaimed. Shade many outcasts many waters float and truth from all bitter anguish words and forms.",
+        "Tyssenew.jpg",
+        "2003-10-20"
     );
 
 replace into `BLOG`.`ARTICLE`
@@ -386,12 +386,12 @@ replace into `BLOG`.`ARTICLE`
     values
     (
         "13",
-        "5",
-        "1",
-        "Blindly grope on him all living presence was.",
-        "Shall pierce the race alien in firm his cave, thick an outbirth then prostrate they came to die beneath a power moved not. Ye pray to varanassi gone where force in that erring wandering son, chests broad park walled on sakwal on three horses israel's sacred lore, oceans of softest silk a school of greater came down.",
-        "aralarog.jpg",
-        "2009-06-10"
+        "6",
+        "4",
+        "Since gone out greed had deigned to hate.",
+        "Thy deva who follows thus day of god. An entrance to welcome rest heart to beasts, grinding the cock's shrill clarion calls all material things, ruling your country fair and calls us wait and rippling waves of fire. Trapusha one bay and watched them passing by, clothing the hermit from door his presence who drove the darkened by grain. Raptured he climbs those nerveless hands can pierce his greed the great. Untrod immense that swell proud brahman saw siddartha's birth.",
+        "overowef.gif",
+        "2013-10-14"
     );
 
 replace into `BLOG`.`ARTICLE`
@@ -401,12 +401,12 @@ replace into `BLOG`.`ARTICLE`
     values
     (
         "14",
-        "5",
-        "3",
-        "Guided by breath bewailing others' good.",
-        "Fed ill favored few were seeking roamed with that every heartache helping those less sad world. Six wooden alms bowl holding all athletes in tattered robes as of ancient faith, brahman mother suffers all on her as highest emblem of light. Nor drank deep purpose but lights that skim lightly danced, frail his kingdom comforts home stretch soon his unsuspecting prey.",
-        "Jillayne.gif",
-        "2005-06-12"
+        "7",
+        "2",
+        "Fasted and eldest born.",
+        "Sorely perplexed he bade him there her whole heart desires like duty's path, boast of high bred lust the ear with those hands take this mortal round. Devising and black eyed have hearts and work is reached nirvana's heights. Since gone none ever new found sorrow lead where moths ne'er shall last. Led out fetters drop the ferryman the aryan blood bounding on one bay one voice, oceans receding show his mind of faces shows and lash swung high pruned spreading oak, saw and poverty or kite that base born who fain would end.",
+        "arksamoq.png",
+        "2000-09-07"
     );
 
 replace into `BLOG`.`ARTICLE`
@@ -416,12 +416,12 @@ replace into `BLOG`.`ARTICLE`
     values
     (
         "15",
+        "2",
         "4",
-        "1",
-        "Kapilavastu's king and mine.",
-        "Disturbed the city crumbles to my brother prince let him his whitened bones, chandalas clothed instead in with winged feet through giant human ill. More nor yet full of some towering cliff, go hand each morning after death are from four times. Sixty are not joy conduct his years from tree long white beard grown to view. May spare my dwelling place for thievish greed and calmly said.",
-        "insangal.jpg",
-        "2007-06-01"
+        "Binds all keep the dust.",
+        "Cold drops of human passions filled the laggard's loins, dreams by art and an ever grew dim the beast and crag. Brushes away in god's free not master said with plots and upward climbed, gilding the pleasures of pleasure with wondering said weep and death or autumn's forest fires below, fasted and open sin works and sheep with shouting crowds. Coming from life's early prime minister and shining pools. Drums shells and age a suffering brother aid death are never faded from below, that moves to where a leafy carpet spread grateful shade. Alarmed at such fantastic substance of manhood's bloom and hate.",
+        "danipeli.gif",
+        "2006-01-24"
     );
 
 replace into `BLOG`.`COMMENT`
@@ -431,10 +431,10 @@ replace into `BLOG`.`COMMENT`
     values
     (
         "1",
+        "6",
         "3",
-        "1",
-        "Horses bore only left her inmost life, after swept through rich attire. Fitter place for boon companionship. Remain to foes assailed on passing breeze.",
-        "2005-04-07 04:15:25"
+        "Near another train until each vantage ground, bent his companions' gibes and years. Timour a weeping world within, athwart their mission to its brow.",
+        "2015-10-25 06:35:11"
     );
 
 replace into `BLOG`.`COMMENT`
@@ -445,35 +445,35 @@ replace into `BLOG`.`COMMENT`
     (
         "2",
         "3",
+        "4",
+        "Boast not this seemed waving plumes. Whence can this selfish grief and joy, thyself this starless darkness lost. Noting their argol fires below.",
+        "2013-07-26 02:23:29"
+    );
+
+replace into `BLOG`.`COMMENT`
+    (
+        `Id`, `ArticleId`, `UserId`, `Text`, `DateTime`
+    )
+    values
+    (
+        "3",
+        "15",
+        "4",
+        "Again they seek till death. Drivers so frail and sealing of old.",
+        "2008-05-22 06:36:25"
+    );
+
+replace into `BLOG`.`COMMENT`
+    (
+        `Id`, `ArticleId`, `UserId`, `Text`, `DateTime`
+    )
+    values
+    (
+        "4",
+        "5",
         "1",
-        "Forgetting now spread his broad marble form, grown to foot was two.",
-        "2013-03-06 15:38:23"
-    );
-
-replace into `BLOG`.`COMMENT`
-    (
-        `Id`, `ArticleId`, `UserId`, `Text`, `DateTime`
-    )
-    values
-    (
-        "3",
-        "11",
-        "4",
-        "Asked a sacred cord were tinged, scoff not lack for my baby hush.",
-        "2015-12-22 14:44:27"
-    );
-
-replace into `BLOG`.`COMMENT`
-    (
-        `Id`, `ArticleId`, `UserId`, `Text`, `DateTime`
-    )
-    values
-    (
-        "4",
-        "6",
-        "3",
-        "Drums shells and each snowy white. Rising paints the haunts the lofty heights.",
-        "2013-01-20 20:15:39"
+        "Gentle youth manhood a burning brow, bow down past and owl's complaint.",
+        "2005-06-24 12:28:24"
     );
 
 replace into `BLOG`.`COMMENT`
@@ -483,10 +483,10 @@ replace into `BLOG`.`COMMENT`
     values
     (
         "5",
-        "13",
+        "1",
         "3",
-        "Than kingly power sustaining purna's steps. Seen that laid upon his rays, forthwith sudata said he pray.",
-        "2009-04-22 09:11:16"
+        "Ah poor brothers all divine may take, refreshed is tender all coming time. Distilling odors through nature changes never blows, well as darts out with awe.",
+        "2015-10-26 07:22:10"
     );
 
 replace into `BLOG`.`COMMENT`
@@ -496,10 +496,10 @@ replace into `BLOG`.`COMMENT`
     values
     (
         "6",
-        "5",
-        "2",
-        "Mingling sea of mighty pulse, quick sight and deep o'erarching azure vault.",
-        "2004-06-18 19:14:12"
+        "8",
+        "3",
+        "Untrod immense that crashed so often rolled. Eastward he need the festering palms.",
+        "2000-12-07 18:49:38"
     );
 
 replace into `BLOG`.`COMMENT`
@@ -509,10 +509,10 @@ replace into `BLOG`.`COMMENT`
     values
     (
         "7",
-        "9",
-        "2",
-        "Fleeter than light siddartha sat, like fell from benares daily alms, strange prophecies that shall draw near.",
-        "2012-01-05 03:54:32"
+        "8",
+        "1",
+        "My best beloved called him spare. Hung quivering in our inmost joys, 'mid prostrate people bloody track. Perchance of king our prayers to save.",
+        "2012-01-28 21:28:30"
     );
 
 replace into `BLOG`.`COMMENT`
@@ -522,10 +522,10 @@ replace into `BLOG`.`COMMENT`
     values
     (
         "8",
-        "9",
+        "6",
         "2",
-        "Heart desires like oars to visit men. Bodies clothed in tears at last. Weeping world is vain would end.",
-        "2015-12-22 23:15:14"
+        "Hold high risen infant clasp, shall last the greatest buddha lay. Chandalas clothed with themselves buried world.",
+        "2011-08-05 06:02:05"
     );
 
 replace into `BLOG`.`COMMENT`
@@ -535,10 +535,10 @@ replace into `BLOG`.`COMMENT`
     values
     (
         "9",
-        "15",
-        "5",
-        "Born a sweet yasodhara unveiled, circled its very night he learned, beneath their proud gunga's sacred peepul's shade.",
-        "2005-06-10 23:43:28"
+        "12",
+        "2",
+        "Again next tinged by age, saluting buddha all external pomp.",
+        "2004-11-21 11:50:50"
     );
 
 replace into `BLOG`.`COMMENT`
@@ -548,10 +548,10 @@ replace into `BLOG`.`COMMENT`
     values
     (
         "10",
-        "7",
         "5",
-        "Free me still it are unlocked, this vihara rise whom he followed where. Weary years all joy received her lord, far beyond this old age.",
-        "2010-04-19 21:08:30"
+        "4",
+        "Quicker than words of eternal joys, warmed that these savage tribes. Sleepless he could wish no change. Some poor man tottering from below.",
+        "2006-09-26 20:53:00"
     );
 
 replace into `BLOG`.`COMMENT`
@@ -561,10 +561,10 @@ replace into `BLOG`.`COMMENT`
     values
     (
         "11",
-        "4",
         "1",
-        "Praying lifted up toward varanassi gone, receiving coarsest robes exquisite taste not aside.",
-        "2015-02-15 09:10:43"
+        "5",
+        "Fixed eternal rest for words of thieves, wearied by my dwelling place. Friend but sadly think and bars.",
+        "2013-09-27 20:25:45"
     );
 
 replace into `BLOG`.`COMMENT`
@@ -574,10 +574,10 @@ replace into `BLOG`.`COMMENT`
     values
     (
         "12",
-        "11",
-        "5",
-        "Till joints had found a moment's space, cut a towering cliff extending at rest. May stand in triumph home. Strange hopes and unfeeling love.",
-        "2009-12-22 18:21:38"
+        "2",
+        "2",
+        "Waved glittered with celestial light, found within those sacred munja grass. Than half reveals the fathers loved, seek these musings in them all.",
+        "2008-08-15 13:42:20"
     );
 
 replace into `BLOG`.`COMMENT`
@@ -587,10 +587,10 @@ replace into `BLOG`.`COMMENT`
     values
     (
         "13",
+        "13",
         "2",
-        "2",
-        "Profoundly learned from death's door to stone, sad mood he repaid their form, delight in social multitude the brazen swords. Whose slender waist and up.",
-        "2009-10-15 21:13:10"
+        "Toward a hovel by gentle peace, bodies dwell here buddha each vital part.",
+        "2013-04-22 03:48:12"
     );
 
 replace into `BLOG`.`COMMENT`
@@ -600,10 +600,10 @@ replace into `BLOG`.`COMMENT`
     values
     (
         "14",
-        "9",
-        "2",
-        "Cheered on dyaus pittar brahma loca's rest. Nature's olympic copied ne'er excelled, fitter place where loathsome with room enough.",
-        "2001-06-11 07:30:32"
+        "14",
+        "1",
+        "Accompanied by india's climate grows into night. Seek this wealth forsook their bowls, warming the terraced or distress. Lest they demand unblemished goats and furs.",
+        "2010-07-18 21:19:11"
     );
 
 replace into `BLOG`.`COMMENT`
@@ -613,10 +613,10 @@ replace into `BLOG`.`COMMENT`
     values
     (
         "15",
-        "8",
-        "3",
-        "Blending the rounded perfect rest the wall, had dwelt the robber cold bed.",
-        "2009-02-26 01:51:45"
+        "13",
+        "5",
+        "Sending crystal waters lave its shade, shunning brood of ages fades.",
+        "2008-11-01 00:49:44"
     );
 
 replace into `BLOG`.`COMMENT`
@@ -626,10 +626,10 @@ replace into `BLOG`.`COMMENT`
     values
     (
         "16",
+        "12",
         "1",
-        "4",
-        "Fed the blacksmith's heavy laden souls. Hoping that ever seen and sovereign scorn.",
-        "2012-02-19 16:27:05"
+        "Once round as forest leaves, kshatriyas warriors from benares maid.",
+        "2000-04-25 14:00:13"
     );
 
 replace into `BLOG`.`COMMENT`
@@ -639,10 +639,10 @@ replace into `BLOG`.`COMMENT`
     values
     (
         "17",
-        "15",
-        "2",
-        "Thy loved and passed with varied tint, through unfrequented streets were rich not iconoclasts. New glory he stole forth, gladly toils to the wisest answered not.",
-        "2005-02-11 15:17:02"
+        "13",
+        "1",
+        "Bring their birthplace where death shall lead, you go they fly from hidden mine. Well springs of unchanging love, love which as his and travel stained.",
+        "2003-11-18 17:30:33"
     );
 
 replace into `BLOG`.`COMMENT`
@@ -652,10 +652,10 @@ replace into `BLOG`.`COMMENT`
     values
     (
         "18",
-        "5",
-        "4",
-        "Join returning pilgrim bands of clanking chains, inspiring every tree where higher life. Startled at their motions rolling spheres. May spare what makes world sad notes.",
-        "2009-04-08 08:13:48"
+        "1",
+        "3",
+        "Unconscious that inmost souls must sleep, leopards with lions elephants came his flesh. Guiding each passing day that sad notes.",
+        "2015-12-15 06:19:48"
     );
 
 replace into `BLOG`.`COMMENT`
@@ -665,10 +665,10 @@ replace into `BLOG`.`COMMENT`
     values
     (
         "19",
-        "15",
-        "1",
-        "So mara spirit pining pants, regil my home leave my maya home, dumb as spotless white scarlet yellow gold'.",
-        "2004-01-24 20:05:31"
+        "12",
+        "2",
+        "Tears at such men will gladly taught, pure in morbid selfish grief, dance the vines hanging like guilty sleep. Women and ask my side stretched aloft.",
+        "2015-11-28 12:42:29"
     );
 
 replace into `BLOG`.`COMMENT`
@@ -678,10 +678,10 @@ replace into `BLOG`.`COMMENT`
     values
     (
         "20",
-        "10",
+        "2",
         "1",
-        "Dreaming perchance of time only scattered everywhere, gives the sports dyspeptic preachers hear.",
-        "2010-09-23 10:57:03"
+        "Distributing her slender waist and little son, had taken in battle's deadly pain. Scarce can we pass by trickling streams.",
+        "2010-01-19 22:24:49"
     );
 
 replace into `BLOG`.`COMMENT`
@@ -691,10 +691,10 @@ replace into `BLOG`.`COMMENT`
     values
     (
         "21",
-        "14",
+        "8",
         "3",
-        "Kshatriyas sudras or wild figs canopied, sleepless he gazed with glittering glacial stream. Ten days glide through nature's olympic jove's.",
-        "2009-02-18 14:25:57"
+        "Fair cashmere wool or slaves. Those struggling for lack of guilt away, arriving home returned while busy cities wrought. Ill fed his wakened soul.",
+        "2009-03-12 21:09:08"
     );
 
 replace into `BLOG`.`COMMENT`
@@ -706,8 +706,8 @@ replace into `BLOG`.`COMMENT`
         "22",
         "9",
         "2",
-        "Approach this new vihara gatavana called. Kshatriyas sudras or cleave in an hour, gazed with light no waste.",
-        "2004-09-16 21:13:26"
+        "Guarded by sorrow was sinking heart sick, shrouded the neigh of unchanging love, laid aside to dewy eve.",
+        "2002-04-20 06:31:15"
     );
 
 replace into `BLOG`.`COMMENT`
@@ -717,10 +717,10 @@ replace into `BLOG`.`COMMENT`
     values
     (
         "23",
-        "14",
         "3",
-        "Not on innocence of innocence. Waste not too the garden lay.",
-        "2012-07-28 18:43:59"
+        "2",
+        "Weaving with lightly danced from opening west, good seed had recognized the rocks. Father anxious for willing gifts, her from behind this vihara gatavana called.",
+        "2000-12-08 00:34:35"
     );
 
 replace into `BLOG`.`COMMENT`
@@ -730,10 +730,10 @@ replace into `BLOG`.`COMMENT`
     values
     (
         "24",
-        "14",
-        "1",
-        "Wondering awe upon cyclopean columns raised, chandala sudra warrior armor clad.",
-        "2015-02-01 13:02:12"
+        "7",
+        "3",
+        "More northern jargon calmed his pallid cheek, my fathers clearly stood alone.",
+        "2008-11-11 21:10:53"
     );
 
 replace into `BLOG`.`COMMENT`
@@ -743,10 +743,10 @@ replace into `BLOG`.`COMMENT`
     values
     (
         "25",
-        "4",
-        "4",
-        "Weeping world of purity and nisaean steeds, opens unseen may eat for her, big tear drops and here joyful day.",
-        "2002-06-25 04:52:55"
+        "11",
+        "5",
+        "Approach along his charioteer his clumsy loom, venturing too was life's sad world. Itself by vulcan's fabled from karma's chains. Because i seem so long foretold.",
+        "2015-11-08 10:26:09"
     );
 
 replace into `BLOG`.`COMMENT`
@@ -756,10 +756,10 @@ replace into `BLOG`.`COMMENT`
     values
     (
         "26",
-        "6",
-        "4",
-        "Humble door their dying gaze, swoop down upon the moon, cheered on many blossoms blended sweet notes.",
-        "2013-11-03 06:56:20"
+        "11",
+        "5",
+        "Walled by and genial glow. Better world renowned a king.",
+        "2012-01-25 00:07:15"
     );
 
 replace into `BLOG`.`COMMENT`
@@ -769,10 +769,10 @@ replace into `BLOG`.`COMMENT`
     values
     (
         "27",
-        "1",
-        "2",
-        "Was passed unknown and bitterness and came. Ye pray to stone his earnestness. As brahma dwell in words. Mingled with sound the officers would end.",
-        "2011-01-24 20:57:14"
+        "7",
+        "5",
+        "Half its parts the beloved home, ice bound pilgrims clothed instead of care. Starts at home stretch across the worlds.",
+        "2010-03-15 16:59:47"
     );
 
 replace into `BLOG`.`COMMENT`
@@ -782,10 +782,10 @@ replace into `BLOG`.`COMMENT`
     values
     (
         "28",
-        "13",
-        "1",
-        "Oppressed and woes and tartar steeds, securely wrapped in sable clad.",
-        "2009-03-13 16:32:35"
+        "12",
+        "2",
+        "O'erhangs a carpet of joys shall appear, perennial source of grief and sinking sun, intwined with northern jargon spoke.",
+        "2003-01-15 02:32:03"
     );
 
 replace into `BLOG`.`COMMENT`
@@ -795,10 +795,10 @@ replace into `BLOG`.`COMMENT`
     values
     (
         "29",
-        "4",
-        "4",
-        "Breathe softest black eyed babes, delight in gunga's sacred hymns. Dash far away with me.",
-        "2012-04-06 09:31:14"
+        "15",
+        "1",
+        "Cold succeeds long embrace her youthful bloom, ye who bathe green with flowers. Gropes blindly grope blindly we have.",
+        "2010-12-13 21:23:56"
     );
 
 replace into `BLOG`.`COMMENT`
@@ -808,10 +808,10 @@ replace into `BLOG`.`COMMENT`
     values
     (
         "30",
-        "12",
         "4",
-        "Profoundly learned in war was loved prince, as through groves through nature's every sound, smoothing life's humble door the glowing hill. Clave to wish no more'.",
-        "2008-09-01 09:56:33"
+        "2",
+        "Sailing from distant little child, our brahman raised above its strength. Infants impaled on him so absurd.",
+        "2004-12-28 08:47:14"
     );
 
 replace into `BLOG`.`SUBSCRIBER`
@@ -821,8 +821,8 @@ replace into `BLOG`.`SUBSCRIBER`
     values
     (
         "1",
-        "Marcey",
-        "brynne.dunik@hotmail.com"
+        "Kanungo",
+        "minnnie.odale@hotmail.com"
     );
 
 replace into `BLOG`.`SUBSCRIBER`
@@ -832,8 +832,8 @@ replace into `BLOG`.`SUBSCRIBER`
     values
     (
         "2",
-        "Gallion",
-        "gillie.wakefield@outlook.com"
+        "Oestreich",
+        "mauricio.jarmoc@mail.com"
     );
 
 replace into `BLOG`.`SUBSCRIBER`
@@ -843,8 +843,8 @@ replace into `BLOG`.`SUBSCRIBER`
     values
     (
         "3",
-        "Belson",
-        "kaila.charlinski@live.com"
+        "Bayno",
+        "gerhard.pendergrass@hotmail.com"
     );
 
 replace into `BLOG`.`SUBSCRIBER`
@@ -854,8 +854,8 @@ replace into `BLOG`.`SUBSCRIBER`
     values
     (
         "4",
-        "Kalaichelvan",
-        "maury.stampfl@hotmail.com"
+        "Pfifferling",
+        "lorianne.mcintire@mail.com"
     );
 
 replace into `BLOG`.`SUBSCRIBER`
@@ -865,7 +865,7 @@ replace into `BLOG`.`SUBSCRIBER`
     values
     (
         "5",
-        "Quilty",
-        "jodee.ismail@outlook.com"
+        "Chiem",
+        "rui.hasan@gmail.com"
     );
 

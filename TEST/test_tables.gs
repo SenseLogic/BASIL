@@ -1,6 +1,10 @@
 package main;
 
-import "    fmt";
+// -- IMPORTS
+
+import "fmt";
+
+// -- FUNCTIONS
 
 func main(
     )

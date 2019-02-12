@@ -3204,6 +3204,21 @@ class TABLE
         IsLastStored;
     long
         RowCount;
+    string
+        GoAttributeDeclaration,
+        GoTypeDeclaration,
+        GenerisAttributeDeclaration,
+        GenerisTypeDeclaration,
+        CrystalAttributeDeclaration,
+        CrystalTypeDeclaration,
+        CybilAttributeDeclaration,
+        CybilTypeDeclaration,
+        CsharpAttributeDeclaration,
+        CsharpTypeDeclaration,
+        RustAttributeDeclaration,
+        RustTypeDeclaration,
+        JavascriptAttributeDeclaration,
+        JavascriptTypeDeclaration;
 
     // -- CONSTRUCTORS
 
@@ -4454,11 +4469,11 @@ class TABLE
         )
     {
         return
-            "    router.Post( \"/add_" ~ GoVariable ~ "\", HandleAdd" ~ GoAttribute ~ "Request );\n"
-            ~ "    router.Post( \"/set_" ~ GoVariable ~ "\", HandleSet" ~ GoAttribute ~ "Request );\n"
-            ~ "    router.Post( \"/remove_" ~ GoVariable ~ "\", HandleRemove" ~ GoAttribute ~ "Request );\n"
-            ~ "    router.Post( \"/get_" ~ GoVariable ~ "\", HandleGet" ~ GoAttribute ~ "Request );\n"
-            ~ "    router.Post( \"/get_" ~ GoVariable ~ "_array\", HandleGet" ~ GoAttribute ~ "ArrayRequest );\n";
+            "    router.Post( \"/api/add_" ~ GoVariable ~ "\", HandleAdd" ~ GoAttribute ~ "Request );\n"
+            ~ "    router.Post( \"/api/set_" ~ GoVariable ~ "\", HandleSet" ~ GoAttribute ~ "Request );\n"
+            ~ "    router.Post( \"/api/remove_" ~ GoVariable ~ "\", HandleRemove" ~ GoAttribute ~ "Request );\n"
+            ~ "    router.Post( \"/api/get_" ~ GoVariable ~ "\", HandleGet" ~ GoAttribute ~ "Request );\n"
+            ~ "    router.Post( \"/api/get_" ~ GoVariable ~ "_array\", HandleGet" ~ GoAttribute ~ "ArrayRequest );\n";
     }
 
     // ~~
@@ -4476,7 +4491,21 @@ class TABLE
                 .replace( "{{table_crystal_type}}", CrystalType )
                 .replace( "{{table_csharp_type}}", CsharpType )
                 .replace( "{{table_rust_type}}", RustType )
-                .replace( "{{table_javascript_type}}", JavascriptType );
+                .replace( "{{table_javascript_type}}", JavascriptType )
+                .replace( "{{table_go_attribute_declaration}}", GoAttributeDeclaration )
+                .replace( "{{table_go_type_declaration}}", GoTypeDeclaration )
+                .replace( "{{table_generis_attribute_declaration}}", GenerisAttributeDeclaration )
+                .replace( "{{table_generis_type_declaration}}", GenerisTypeDeclaration )
+                .replace( "{{table_crystal_attribute_declaration}}", CrystalAttributeDeclaration )
+                .replace( "{{table_crystal_type_declaration}}", CrystalTypeDeclaration )
+                .replace( "{{table_cibyl_attribute_declaration}}", CybilAttributeDeclaration )
+                .replace( "{{table_cibyl_type_declaration}}", CybilTypeDeclaration )
+                .replace( "{{table_csharp_attribute_declaration}}", CsharpAttributeDeclaration )
+                .replace( "{{table_csharp_type_declaration}}", CsharpTypeDeclaration )
+                .replace( "{{table_javascript_attribute_declaration}}", JavascriptAttributeDeclaration )
+                .replace( "{{table_javascript_type_declaration}}", JavascriptTypeDeclaration )
+                .replace( "{{table_rust_attribute_declaration}}", RustAttributeDeclaration )
+                .replace( "{{table_rust_type_declaration}}", RustTypeDeclaration );
     }
 
     // -- OPERATIONS
@@ -5464,8 +5493,8 @@ class SCHEMA
                 go_attribute_declaration ~= ";\n";
             }
 
-            GoTypeDeclarationMap[ table.Name ] = go_type_declaration;
-            GoAttributeDeclarationMap[ table.Name ] = go_attribute_declaration;
+            table.GoTypeDeclaration = go_type_declaration;
+            table.GoAttributeDeclaration = go_attribute_declaration;
 
             go_type_file_text ~= go_type_declaration ~ " {\n" ~ go_attribute_declaration ~ "}\n";
 
@@ -5519,8 +5548,8 @@ class SCHEMA
                 generis_attribute_declaration ~= ";\n";
             }
 
-            GenerisTypeDeclarationMap[ table.Name ] = generis_type_declaration;
-            GenerisAttributeDeclarationMap[ table.Name ] = generis_attribute_declaration;
+            table.GenerisTypeDeclaration = generis_type_declaration;
+            table.GenerisAttributeDeclaration = generis_attribute_declaration;
 
             generis_type_file_text ~= generis_type_declaration ~ "\n{\n" ~ generis_attribute_declaration ~ "}\n";
 
@@ -5702,8 +5731,8 @@ class SCHEMA
                 crystal_attribute_declaration ~= "    @" ~ column.CrystalName ~ " : " ~ column.CrystalType ~ "\n";
             }
 
-            CrystalTypeDeclarationMap[ table.Name ] = crystal_type_declaration;
-            CrystalAttributeDeclarationMap[ table.Name ] = crystal_attribute_declaration;
+            table.CrystalTypeDeclaration = crystal_type_declaration;
+            table.CrystalAttributeDeclaration = crystal_attribute_declaration;
 
             crystal_type_file_text ~= crystal_type_declaration ~ "\n" ~ crystal_attribute_declaration ~ "end\n";
 
@@ -5755,8 +5784,8 @@ class SCHEMA
                 csharp_attribute_declaration ~= "        " ~ column.CsharpName ~ ";\n";
             }
 
-            CsharpTypeDeclarationMap[ table.Name ] = csharp_type_declaration;
-            CsharpAttributeDeclarationMap[ table.Name ] = csharp_attribute_declaration;
+            table.CsharpTypeDeclaration = csharp_type_declaration;
+            table.CsharpAttributeDeclaration = csharp_attribute_declaration;
 
             csharp_type_file_text ~= csharp_type_declaration ~ "\n{\n" ~ csharp_attribute_declaration ~ "}\n";
 
@@ -5807,8 +5836,8 @@ class SCHEMA
                 rust_attribute_declaration ~= "\n";
             }
 
-            RustTypeDeclarationMap[ table.Name ] = rust_type_declaration;
-            RustAttributeDeclarationMap[ table.Name ] = rust_attribute_declaration;
+            table.RustTypeDeclaration = rust_type_declaration;
+            table.RustAttributeDeclaration = rust_attribute_declaration;
 
             rust_type_file_text ~= rust_type_declaration ~ "\n{\n" ~ rust_attribute_declaration ~ "}\n";
 
@@ -5856,8 +5885,8 @@ class SCHEMA
             javascript_attribute_declaration
                     ~= "    }\n";
 
-            JavascriptTypeDeclarationMap[ table.Name ] = javascript_type_declaration;
-            JavascriptAttributeDeclarationMap[ table.Name ] = javascript_attribute_declaration;
+            table.JavascriptTypeDeclaration = javascript_type_declaration;
+            table.JavascriptAttributeDeclaration = javascript_attribute_declaration;
 
             javascript_type_file_text ~= javascript_type_declaration ~ "\n{\n" ~ javascript_attribute_declaration ~ "}\n";
 
@@ -5881,21 +5910,6 @@ string
 string[]
     OutputFormatArray,
     TemplateFilePathArray;
-string[ string ]
-    CrystalAttributeDeclarationMap,
-    CrystalTypeDeclarationMap,
-    CsharpAttributeDeclarationMap,
-    CsharpTypeDeclarationMap,
-    CybilAttributeDeclarationMap,
-    CybilTypeDeclarationMap,
-    GenerisAttributeDeclarationMap,
-    GenerisTypeDeclarationMap,
-    GoAttributeDeclarationMap,
-    GoTypeDeclarationMap,
-    JavascriptAttributeDeclarationMap,
-    JavascriptTypeDeclarationMap,
-    RustAttributeDeclarationMap,
-    RustTypeDeclarationMap;
 RANDOM
     Random;
 SCHEMA
@@ -6337,7 +6351,7 @@ void ProcessFile(
     string
         base_file_path;
 
-    base_file_path = basil_file_path[ 0 .. $ - 6 ];
+    base_file_path = basil_file_path[ 0 .. $ - 4 ];
 
     Random = new RANDOM();
 
@@ -6480,7 +6494,8 @@ void main(
         }
     }
 
-    if ( argument_array.length >= 1 )
+    if ( argument_array.length >= 1
+         && argument_array[ 0 ].endsWith( ".bsl" ) )
     {
         ProcessFile( argument_array[ 0 ] );
     }

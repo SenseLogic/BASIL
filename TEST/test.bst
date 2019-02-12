@@ -1,18 +1,38 @@
-##test_instance.go
+##test_types.go
 package main;
 
+// -- TYPES
+
 [*type {{table_go_type}} struct {
-<*    {{column_go_type}} {{column_go_name}};
+<*    {{column_go_name}} {{column_go_type}};
 *>}
 
 // ~~
 
 *]
+##test_types.cs
+// -- IMPORTS
 
-##test_instance.gs
+using System;
+using System.Collections.Generic;
+
+// -- TYPES
+
+[*{{table_csharp_type_declaration}}
+{
+{{table_csharp_attribute_declaration}}}
+
+// ~~
+
+*]
+##test_tables.gs
 package main;
 
-import "    fmt";
+// -- IMPORTS
+
+import "fmt";
+
+// -- FUNCTIONS
 
 func main(
     )

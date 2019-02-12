@@ -175,15 +175,32 @@ BLOG | count 5
 
 ![](https://github.com/senselogic/BASIL/blob/master/SAMPLE/CQL/blog.png)
 
-## Sample Go template
+## Template sample
 
 ```go
-##types.go
+##test_types.go
 package main;
 
+// -- TYPES
+
 [*type {{table_go_type}} struct {
-<*    {{column_go_type}} {{column_go_name}};
+<*    {{column_go_name}} {{column_go_type}};
 *>}
+
+// ~~
+
+*]
+##test_types.cs
+// -- IMPORTS
+
+using System;
+using System.Collections.Generic;
+
+// -- TYPES
+
+[*{{table_csharp_type_declaration}}
+{
+{{table_csharp_attribute_declaration}}}
 
 // ~~
 
@@ -367,6 +384,20 @@ POINTER[ ELEMENT_TYPE ] | !stored
 {{table_csharp_type}}
 {{table_rust_type}}
 {{table_javascript_type}}
+{{table_go_attribute_declaration}}
+{{table_go_type_declaration}}
+{{table_generis_attribute_declaration}}
+{{table_generis_type_declaration}}
+{{table_crystal_attribute_declaration}}
+{{table_crystal_type_declaration}}
+{{table_cibyl_attribute_declaration}}
+{{table_cibyl_type_declaration}}
+{{table_csharp_attribute_declaration}}
+{{table_csharp_type_declaration}}
+{{table_javascript_attribute_declaration}}
+{{table_javascript_type_declaration}}
+{{table_rust_attribute_declaration}}
+{{table_rust_type_declaration}}
 {{column_name}}
 {{column_stored_name}}
 {{column_stored_type}}
