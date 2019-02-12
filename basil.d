@@ -1263,7 +1263,7 @@ class TYPE
         }
         else if ( type_name == "BLOB" )
         {
-            return "[]byte";
+            return "[] byte";
         }
         else if ( type_name == "POINTER" )
         {
@@ -3103,7 +3103,7 @@ class COLUMN
             StoredType = CqlType;
         }
 
-        GoType = Type.GetGoText();
+        GoType = Type.GetGoText().replace( "GOCQL.UUID", "UUID" );
         GoAttribute = Type.GetGoAttributeText();
         GoVariable = GoName.GetSnakeCaseText();
         CrystalType = Type.GetCrystalText();
@@ -4189,41 +4189,41 @@ class TABLE
 
     // ~~
 
-    string GetWriteJsonGenerisCode(
+    string GetWriteResponseGenerisCode(
         )
     {
         string
             generis_code;
 
         generis_code
-            = "func WriteJson" ~ GoAttribute ~ "(\n"
+            = "func WriteResponse" ~ GoAttribute ~ "(\n"
               ~ "    response_writer http.ResponseWriter,\n"
               ~ "    " ~ GoVariable ~ " * " ~ GoType ~ "\n"
               ~ "    )\n"
               ~ "{\n"
-              ~ "    WriteJsonText( response_writer, \"{\" );\n";
+              ~ "    WriteResponse( response_writer, \"{\" );\n";
 
         foreach ( ref column; ColumnArray )
         {
             if ( column.IsStored )
             {
                 generis_code
-                    ~= "    WriteJsonText( response_writer, \"\\\"" ~ column.GoName ~ "\\\":\" );\n"
-                       ~ "    WriteJson" ~ column.GoAttribute ~ "( response_writer, " ~ GoVariable ~ "." ~ column.GoName ~ " );\n";
+                    ~= "    WriteResponse( response_writer, \"\\\"" ~ column.GoName ~ "\\\":\" );\n"
+                       ~ "    WriteResponse" ~ column.GoAttribute ~ "( response_writer, " ~ GoVariable ~ "." ~ column.GoName ~ " );\n";
 
                 if ( !column.IsLastStored )
                 {
                     generis_code
-                        ~= "    WriteJsonText( response_writer, \",\" );\n";
+                        ~= "    WriteResponse( response_writer, \",\" );\n";
                 }
             }
         }
 
         generis_code
-            ~= "    WriteJsonText( response_writer, \"}\" );\n"
+            ~= "    WriteResponse( response_writer, \"}\" );\n"
                ~ "}\n";
 
-        return generis_code.replace( "\" );\n    WriteJsonText( response_writer, \"", "" );
+        return generis_code.replace( "\" );\n    WriteResponse( response_writer, \"", "" );
     }
 
     // ~~
@@ -4264,7 +4264,7 @@ class TABLE
         generis_code
             ~= "         && AddDatabase" ~ GoAttribute ~ "( &" ~ GoVariable ~ ", &error_code ) )\n"
                ~ "    {\n"
-               ~ "        WriteJsonText( response_writer, \"{\" );\n";
+               ~ "        WriteResponse( response_writer, \"{\" );\n";
 
         foreach ( ref column; ColumnArray )
         {
@@ -4272,17 +4272,17 @@ class TABLE
                  && column.IsKey )
             {
                 generis_code
-                    ~= "        WriteJsonText( response_writer, \"\\\"" ~ column.GoName ~ "\\\":\" );\n"
-                       ~ "        WriteJson" ~ column.GoAttribute ~ "( response_writer, " ~ GoVariable ~ "." ~ column.GoName ~ " );\n";
+                    ~= "        WriteResponse( response_writer, \"\\\"" ~ column.GoName ~ "\\\":\" );\n"
+                       ~ "        WriteResponse" ~ column.GoAttribute ~ "( response_writer, " ~ GoVariable ~ "." ~ column.GoName ~ " );\n";
             }
         }
 
         generis_code
-            ~= "        WriteJsonText( response_writer, \"}\" );\n"
+            ~= "        WriteResponse( response_writer, \"}\" );\n"
                ~ "    }\n"
                ~ "    else\n"
                ~ "    {\n"
-               ~ "        WriteJsonError( response_writer, &error_code );\n"
+               ~ "        WriteResponseError( response_writer, &error_code );\n"
                ~ "    }\n"
                ~ "}\n";
 
@@ -4322,11 +4322,11 @@ class TABLE
         generis_code
             ~= "         && SetDatabase" ~ GoAttribute ~ "( &" ~ GoVariable ~ ", &error_code ) )\n"
                ~ "    {\n"
-               ~ "        WriteJsonSuccess( response_writer );\n"
+               ~ "        WriteResponseSuccess( response_writer );\n"
                ~ "    }\n"
                ~ "    else\n"
                ~ "    {\n"
-               ~ "        WriteJsonError( response_writer, &error_code );\n"
+               ~ "        WriteResponseError( response_writer, &error_code );\n"
                ~ "    }\n"
                ~ "}\n";
 
@@ -4366,11 +4366,11 @@ class TABLE
         generis_code
             ~= "         && RemoveDatabase" ~ GoAttribute ~ "( &" ~ GoVariable ~ ", &error_code ) )\n"
                ~ "    {\n"
-               ~ "        WriteJsonSuccess( response_writer );\n"
+               ~ "        WriteResponseSuccess( response_writer );\n"
                ~ "    }\n"
                ~ "    else\n"
                ~ "    {\n"
-               ~ "        WriteJsonError( response_writer, &error_code );\n"
+               ~ "        WriteResponseError( response_writer, &error_code );\n"
                ~ "    }\n"
                ~ "}\n";
 
@@ -4410,13 +4410,13 @@ class TABLE
         generis_code
             ~= "         && GetDatabase" ~ GoAttribute ~ "( &" ~ GoVariable ~ ", &error_code ) )\n"
                ~ "    {\n"
-               ~ "        WriteJsonText( response_writer, \"{\\\"" ~ GoAttribute ~ "\\\":\" );\n"
-               ~ "        WriteJson" ~ GoAttribute ~ "( response_writer, &" ~ GoVariable ~ " );\n"
-               ~ "        WriteJsonText( response_writer, \"}\" );\n"
+               ~ "        WriteResponse( response_writer, \"{\\\"" ~ GoAttribute ~ "\\\":\" );\n"
+               ~ "        WriteResponse" ~ GoAttribute ~ "( response_writer, &" ~ GoVariable ~ " );\n"
+               ~ "        WriteResponse( response_writer, \"}\" );\n"
                ~ "    }\n"
                ~ "    else\n"
                ~ "    {\n"
-               ~ "        WriteJsonError( response_writer, &error_code );\n"
+               ~ "        WriteResponseError( response_writer, &error_code );\n"
                ~ "    }\n"
                ~ "}\n";
 
@@ -4442,23 +4442,23 @@ class TABLE
             ~ "    if ( IsAdministratorSession( request, &error_code )\n"
             ~ "         && GetDatabase" ~ GoAttribute ~ "Array( &" ~ GoVariable ~ "_array, &error_code ) )\n"
             ~ "    {\n"
-            ~ "        WriteJsonText( response_writer, \"{\\\"" ~ GoAttribute ~ "Array\\\":[\" );\n"
+            ~ "        WriteResponse( response_writer, \"{\\\"" ~ GoAttribute ~ "Array\\\":[\" );\n"
             ~ "\n"
             ~ "        for " ~ GoVariable ~ "_index, _ := range " ~ GoVariable ~ "_array\n"
             ~ "        {\n"
             ~ "            if ( " ~ GoVariable ~ "_index > 0 )\n"
             ~ "            {\n"
-            ~ "                 WriteJsonText( response_writer, \",\" );\n"
+            ~ "                 WriteResponse( response_writer, \",\" );\n"
             ~ "            }\n"
             ~ "\n"
-            ~ "            WriteJson" ~ GoAttribute ~ "( response_writer, &" ~ GoVariable ~ "_array[ " ~ GoVariable ~ "_index ] );\n"
+            ~ "            WriteResponse" ~ GoAttribute ~ "( response_writer, &" ~ GoVariable ~ "_array[ " ~ GoVariable ~ "_index ] );\n"
             ~ "        }\n"
             ~ "\n"
-            ~ "        WriteJsonText( response_writer, \"]}\" );\n"
+            ~ "        WriteResponse( response_writer, \"]}\" );\n"
             ~ "    }\n"
             ~ "    else\n"
             ~ "    {\n"
-            ~ "        WriteJsonError( response_writer, &error_code );\n"
+            ~ "        WriteResponseError( response_writer, &error_code );\n"
             ~ "    }\n"
             ~ "}\n";
     }
@@ -5618,7 +5618,7 @@ class SCHEMA
             if ( table.IsStored )
             {
                 generis_response_file_text
-                    ~= table.GetWriteJsonGenerisCode();
+                    ~= table.GetWriteResponseGenerisCode();
 
                 if ( table_index + 1 < TableArray.length )
                 {

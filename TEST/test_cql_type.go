@@ -14,7 +14,7 @@ type SIMPLE struct {
     String string    `db:"-"`;
     Date string    `db:"-"`;
     DateTime string    `db:"-"`;
-    Blob []byte    `db:"-"`;
+    Blob [] byte    `db:"-"`;
 }
 
 // ~~

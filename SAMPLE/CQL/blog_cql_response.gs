@@ -1,115 +1,115 @@
-func WriteJsonSection(
+func WriteResponseSection(
     response_writer http.ResponseWriter,
     section * SECTION
     )
 {
-    WriteJsonText( response_writer, "{\"Uuid\":" );
-    WriteJsonUuid( response_writer, section.Uuid );
-    WriteJsonText( response_writer, ",\"Number\":" );
-    WriteJsonUint64( response_writer, section.Number );
-    WriteJsonText( response_writer, ",\"Name\":" );
-    WriteJsonString( response_writer, section.Name );
-    WriteJsonText( response_writer, ",\"Text\":" );
-    WriteJsonString( response_writer, section.Text );
-    WriteJsonText( response_writer, ",\"Image\":" );
-    WriteJsonString( response_writer, section.Image );
-    WriteJsonText( response_writer, "}" );
+    WriteResponse( response_writer, "{\"Uuid\":" );
+    WriteResponseUuid( response_writer, section.Uuid );
+    WriteResponse( response_writer, ",\"Number\":" );
+    WriteResponseUint64( response_writer, section.Number );
+    WriteResponse( response_writer, ",\"Name\":" );
+    WriteResponseString( response_writer, section.Name );
+    WriteResponse( response_writer, ",\"Text\":" );
+    WriteResponseString( response_writer, section.Text );
+    WriteResponse( response_writer, ",\"Image\":" );
+    WriteResponseString( response_writer, section.Image );
+    WriteResponse( response_writer, "}" );
 }
 
 // ~~
 
-func WriteJsonUser(
+func WriteResponseUser(
     response_writer http.ResponseWriter,
     user * USER
     )
 {
-    WriteJsonText( response_writer, "{\"Uuid\":" );
-    WriteJsonUuid( response_writer, user.Uuid );
-    WriteJsonText( response_writer, ",\"FirstName\":" );
-    WriteJsonString( response_writer, user.FirstName );
-    WriteJsonText( response_writer, ",\"LastName\":" );
-    WriteJsonString( response_writer, user.LastName );
-    WriteJsonText( response_writer, ",\"Email\":" );
-    WriteJsonString( response_writer, user.Email );
-    WriteJsonText( response_writer, ",\"Pseudonym\":" );
-    WriteJsonString( response_writer, user.Pseudonym );
-    WriteJsonText( response_writer, ",\"Password\":" );
-    WriteJsonString( response_writer, user.Password );
-    WriteJsonText( response_writer, ",\"Phone\":" );
-    WriteJsonString( response_writer, user.Phone );
-    WriteJsonText( response_writer, ",\"Street\":" );
-    WriteJsonString( response_writer, user.Street );
-    WriteJsonText( response_writer, ",\"City\":" );
-    WriteJsonString( response_writer, user.City );
-    WriteJsonText( response_writer, ",\"Code\":" );
-    WriteJsonString( response_writer, user.Code );
-    WriteJsonText( response_writer, ",\"Region\":" );
-    WriteJsonString( response_writer, user.Region );
-    WriteJsonText( response_writer, ",\"Country\":" );
-    WriteJsonString( response_writer, user.Country );
-    WriteJsonText( response_writer, ",\"Company\":" );
-    WriteJsonString( response_writer, user.Company );
-    WriteJsonText( response_writer, ",\"ItIsAdministrator\":" );
-    WriteJsonBool( response_writer, user.ItIsAdministrator );
-    WriteJsonText( response_writer, "}" );
+    WriteResponse( response_writer, "{\"Uuid\":" );
+    WriteResponseUuid( response_writer, user.Uuid );
+    WriteResponse( response_writer, ",\"FirstName\":" );
+    WriteResponseString( response_writer, user.FirstName );
+    WriteResponse( response_writer, ",\"LastName\":" );
+    WriteResponseString( response_writer, user.LastName );
+    WriteResponse( response_writer, ",\"Email\":" );
+    WriteResponseString( response_writer, user.Email );
+    WriteResponse( response_writer, ",\"Pseudonym\":" );
+    WriteResponseString( response_writer, user.Pseudonym );
+    WriteResponse( response_writer, ",\"Password\":" );
+    WriteResponseString( response_writer, user.Password );
+    WriteResponse( response_writer, ",\"Phone\":" );
+    WriteResponseString( response_writer, user.Phone );
+    WriteResponse( response_writer, ",\"Street\":" );
+    WriteResponseString( response_writer, user.Street );
+    WriteResponse( response_writer, ",\"City\":" );
+    WriteResponseString( response_writer, user.City );
+    WriteResponse( response_writer, ",\"Code\":" );
+    WriteResponseString( response_writer, user.Code );
+    WriteResponse( response_writer, ",\"Region\":" );
+    WriteResponseString( response_writer, user.Region );
+    WriteResponse( response_writer, ",\"Country\":" );
+    WriteResponseString( response_writer, user.Country );
+    WriteResponse( response_writer, ",\"Company\":" );
+    WriteResponseString( response_writer, user.Company );
+    WriteResponse( response_writer, ",\"ItIsAdministrator\":" );
+    WriteResponseBool( response_writer, user.ItIsAdministrator );
+    WriteResponse( response_writer, "}" );
 }
 
 // ~~
 
-func WriteJsonArticle(
+func WriteResponseArticle(
     response_writer http.ResponseWriter,
     article * ARTICLE
     )
 {
-    WriteJsonText( response_writer, "{\"Uuid\":" );
-    WriteJsonUuid( response_writer, article.Uuid );
-    WriteJsonText( response_writer, ",\"SectionUuid\":" );
-    WriteJsonUuid( response_writer, article.SectionUuid );
-    WriteJsonText( response_writer, ",\"UserUuid\":" );
-    WriteJsonUuid( response_writer, article.UserUuid );
-    WriteJsonText( response_writer, ",\"Title\":" );
-    WriteJsonString( response_writer, article.Title );
-    WriteJsonText( response_writer, ",\"Text\":" );
-    WriteJsonString( response_writer, article.Text );
-    WriteJsonText( response_writer, ",\"Image\":" );
-    WriteJsonString( response_writer, article.Image );
-    WriteJsonText( response_writer, ",\"Date\":" );
-    WriteJsonString( response_writer, article.Date );
-    WriteJsonText( response_writer, "}" );
+    WriteResponse( response_writer, "{\"Uuid\":" );
+    WriteResponseUuid( response_writer, article.Uuid );
+    WriteResponse( response_writer, ",\"SectionUuid\":" );
+    WriteResponseUuid( response_writer, article.SectionUuid );
+    WriteResponse( response_writer, ",\"UserUuid\":" );
+    WriteResponseUuid( response_writer, article.UserUuid );
+    WriteResponse( response_writer, ",\"Title\":" );
+    WriteResponseString( response_writer, article.Title );
+    WriteResponse( response_writer, ",\"Text\":" );
+    WriteResponseString( response_writer, article.Text );
+    WriteResponse( response_writer, ",\"Image\":" );
+    WriteResponseString( response_writer, article.Image );
+    WriteResponse( response_writer, ",\"Date\":" );
+    WriteResponseString( response_writer, article.Date );
+    WriteResponse( response_writer, "}" );
 }
 
 // ~~
 
-func WriteJsonComment(
+func WriteResponseComment(
     response_writer http.ResponseWriter,
     comment * COMMENT
     )
 {
-    WriteJsonText( response_writer, "{\"Uuid\":" );
-    WriteJsonUuid( response_writer, comment.Uuid );
-    WriteJsonText( response_writer, ",\"ArticleUuid\":" );
-    WriteJsonUuid( response_writer, comment.ArticleUuid );
-    WriteJsonText( response_writer, ",\"UserUuid\":" );
-    WriteJsonUuid( response_writer, comment.UserUuid );
-    WriteJsonText( response_writer, ",\"Text\":" );
-    WriteJsonString( response_writer, comment.Text );
-    WriteJsonText( response_writer, ",\"DateTime\":" );
-    WriteJsonString( response_writer, comment.DateTime );
-    WriteJsonText( response_writer, "}" );
+    WriteResponse( response_writer, "{\"Uuid\":" );
+    WriteResponseUuid( response_writer, comment.Uuid );
+    WriteResponse( response_writer, ",\"ArticleUuid\":" );
+    WriteResponseUuid( response_writer, comment.ArticleUuid );
+    WriteResponse( response_writer, ",\"UserUuid\":" );
+    WriteResponseUuid( response_writer, comment.UserUuid );
+    WriteResponse( response_writer, ",\"Text\":" );
+    WriteResponseString( response_writer, comment.Text );
+    WriteResponse( response_writer, ",\"DateTime\":" );
+    WriteResponseString( response_writer, comment.DateTime );
+    WriteResponse( response_writer, "}" );
 }
 
 // ~~
 
-func WriteJsonSubscriber(
+func WriteResponseSubscriber(
     response_writer http.ResponseWriter,
     subscriber * SUBSCRIBER
     )
 {
-    WriteJsonText( response_writer, "{\"Uuid\":" );
-    WriteJsonUuid( response_writer, subscriber.Uuid );
-    WriteJsonText( response_writer, ",\"Name\":" );
-    WriteJsonString( response_writer, subscriber.Name );
-    WriteJsonText( response_writer, ",\"Email\":" );
-    WriteJsonString( response_writer, subscriber.Email );
-    WriteJsonText( response_writer, "}" );
+    WriteResponse( response_writer, "{\"Uuid\":" );
+    WriteResponseUuid( response_writer, subscriber.Uuid );
+    WriteResponse( response_writer, ",\"Name\":" );
+    WriteResponseString( response_writer, subscriber.Name );
+    WriteResponse( response_writer, ",\"Email\":" );
+    WriteResponseString( response_writer, subscriber.Email );
+    WriteResponse( response_writer, "}" );
 }

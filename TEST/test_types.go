@@ -18,7 +18,7 @@ type SIMPLE struct {
     String string;
     Date string;
     DateTime string;
-    Blob []byte;
+    Blob [] byte;
 }
 
 // ~~

@@ -26,14 +26,14 @@ func HandleAddSimpleRequest(
          && GetRequestBlob( &simple.Blob, request, "Blob", &error_code )
          && AddDatabaseSimple( &simple, &error_code ) )
     {
-        WriteJsonText( response_writer, "{" );
-        WriteJsonText( response_writer, "\"Uuid\":" );
-        WriteJsonUuid( response_writer, simple.Uuid );
-        WriteJsonText( response_writer, "}" );
+        WriteResponse( response_writer, "{" );
+        WriteResponse( response_writer, "\"Uuid\":" );
+        WriteResponseUuid( response_writer, simple.Uuid );
+        WriteResponse( response_writer, "}" );
     }
     else
     {
-        WriteJsonError( response_writer, &error_code );
+        WriteResponseError( response_writer, &error_code );
     }
 }
 
@@ -68,11 +68,11 @@ func HandleSetSimpleRequest(
          && GetRequestBlob( &simple.Blob, request, "Blob", &error_code )
          && SetDatabaseSimple( &simple, &error_code ) )
     {
-        WriteJsonSuccess( response_writer );
+        WriteResponseSuccess( response_writer );
     }
     else
     {
-        WriteJsonError( response_writer, &error_code );
+        WriteResponseError( response_writer, &error_code );
     }
 }
 
@@ -92,11 +92,11 @@ func HandleRemoveSimpleRequest(
          && GetRequestUuid( &simple.Uuid, request, "Uuid", &error_code )
          && RemoveDatabaseSimple( &simple, &error_code ) )
     {
-        WriteJsonSuccess( response_writer );
+        WriteResponseSuccess( response_writer );
     }
     else
     {
-        WriteJsonError( response_writer, &error_code );
+        WriteResponseError( response_writer, &error_code );
     }
 }
 
@@ -116,13 +116,13 @@ func HandleGetSimpleRequest(
          && GetRequestUuid( &simple.Uuid, request, "Uuid", &error_code )
          && GetDatabaseSimple( &simple, &error_code ) )
     {
-        WriteJsonText( response_writer, "{\"Simple\":" );
-        WriteJsonSimple( response_writer, &simple );
-        WriteJsonText( response_writer, "}" );
+        WriteResponse( response_writer, "{\"Simple\":" );
+        WriteResponseSimple( response_writer, &simple );
+        WriteResponse( response_writer, "}" );
     }
     else
     {
-        WriteJsonError( response_writer, &error_code );
+        WriteResponseError( response_writer, &error_code );
     }
 }
 
@@ -141,23 +141,23 @@ func HandleGetSimpleArrayRequest(
     if ( IsAdministratorSession( request, &error_code )
          && GetDatabaseSimpleArray( &simple_array, &error_code ) )
     {
-        WriteJsonText( response_writer, "{\"SimpleArray\":[" );
+        WriteResponse( response_writer, "{\"SimpleArray\":[" );
 
         for simple_index, _ := range simple_array
         {
             if ( simple_index > 0 )
             {
-                 WriteJsonText( response_writer, "," );
+                 WriteResponse( response_writer, "," );
             }
 
-            WriteJsonSimple( response_writer, &simple_array[ simple_index ] );
+            WriteResponseSimple( response_writer, &simple_array[ simple_index ] );
         }
 
-        WriteJsonText( response_writer, "]}" );
+        WriteResponse( response_writer, "]}" );
     }
     else
     {
-        WriteJsonError( response_writer, &error_code );
+        WriteResponseError( response_writer, &error_code );
     }
 }
 
@@ -187,14 +187,14 @@ func HandleAddCompoundRequest(
          && GetRequestStringStringStringTupleSetMap( &compound.NameSetMap, request, "NameSetMap", &error_code )
          && AddDatabaseCompound( &compound, &error_code ) )
     {
-        WriteJsonText( response_writer, "{" );
-        WriteJsonText( response_writer, "\"Id\":" );
-        WriteJsonInt32( response_writer, compound.Id );
-        WriteJsonText( response_writer, "}" );
+        WriteResponse( response_writer, "{" );
+        WriteResponse( response_writer, "\"Id\":" );
+        WriteResponseInt32( response_writer, compound.Id );
+        WriteResponse( response_writer, "}" );
     }
     else
     {
-        WriteJsonError( response_writer, &error_code );
+        WriteResponseError( response_writer, &error_code );
     }
 }
 
@@ -225,11 +225,11 @@ func HandleSetCompoundRequest(
          && GetRequestStringStringStringTupleSetMap( &compound.NameSetMap, request, "NameSetMap", &error_code )
          && SetDatabaseCompound( &compound, &error_code ) )
     {
-        WriteJsonSuccess( response_writer );
+        WriteResponseSuccess( response_writer );
     }
     else
     {
-        WriteJsonError( response_writer, &error_code );
+        WriteResponseError( response_writer, &error_code );
     }
 }
 
@@ -249,11 +249,11 @@ func HandleRemoveCompoundRequest(
          && GetRequestInt32( &compound.Id, request, "Id", &error_code )
          && RemoveDatabaseCompound( &compound, &error_code ) )
     {
-        WriteJsonSuccess( response_writer );
+        WriteResponseSuccess( response_writer );
     }
     else
     {
-        WriteJsonError( response_writer, &error_code );
+        WriteResponseError( response_writer, &error_code );
     }
 }
 
@@ -273,13 +273,13 @@ func HandleGetCompoundRequest(
          && GetRequestInt32( &compound.Id, request, "Id", &error_code )
          && GetDatabaseCompound( &compound, &error_code ) )
     {
-        WriteJsonText( response_writer, "{\"Compound\":" );
-        WriteJsonCompound( response_writer, &compound );
-        WriteJsonText( response_writer, "}" );
+        WriteResponse( response_writer, "{\"Compound\":" );
+        WriteResponseCompound( response_writer, &compound );
+        WriteResponse( response_writer, "}" );
     }
     else
     {
-        WriteJsonError( response_writer, &error_code );
+        WriteResponseError( response_writer, &error_code );
     }
 }
 
@@ -298,23 +298,23 @@ func HandleGetCompoundArrayRequest(
     if ( IsAdministratorSession( request, &error_code )
          && GetDatabaseCompoundArray( &compound_array, &error_code ) )
     {
-        WriteJsonText( response_writer, "{\"CompoundArray\":[" );
+        WriteResponse( response_writer, "{\"CompoundArray\":[" );
 
         for compound_index, _ := range compound_array
         {
             if ( compound_index > 0 )
             {
-                 WriteJsonText( response_writer, "," );
+                 WriteResponse( response_writer, "," );
             }
 
-            WriteJsonCompound( response_writer, &compound_array[ compound_index ] );
+            WriteResponseCompound( response_writer, &compound_array[ compound_index ] );
         }
 
-        WriteJsonText( response_writer, "]}" );
+        WriteResponse( response_writer, "]}" );
     }
     else
     {
-        WriteJsonError( response_writer, &error_code );
+        WriteResponseError( response_writer, &error_code );
     }
 }
 
@@ -337,14 +337,14 @@ func HandleAddValueRequest(
          && GetRequestString( &value.Text, request, "Text", &error_code )
          && AddDatabaseValue( &value, &error_code ) )
     {
-        WriteJsonText( response_writer, "{" );
-        WriteJsonText( response_writer, "\"Uuid\":" );
-        WriteJsonUuid( response_writer, value.Uuid );
-        WriteJsonText( response_writer, "}" );
+        WriteResponse( response_writer, "{" );
+        WriteResponse( response_writer, "\"Uuid\":" );
+        WriteResponseUuid( response_writer, value.Uuid );
+        WriteResponse( response_writer, "}" );
     }
     else
     {
-        WriteJsonError( response_writer, &error_code );
+        WriteResponseError( response_writer, &error_code );
     }
 }
 
@@ -367,11 +367,11 @@ func HandleSetValueRequest(
          && GetRequestString( &value.Text, request, "Text", &error_code )
          && SetDatabaseValue( &value, &error_code ) )
     {
-        WriteJsonSuccess( response_writer );
+        WriteResponseSuccess( response_writer );
     }
     else
     {
-        WriteJsonError( response_writer, &error_code );
+        WriteResponseError( response_writer, &error_code );
     }
 }
 
@@ -391,11 +391,11 @@ func HandleRemoveValueRequest(
          && GetRequestUuid( &value.Uuid, request, "Uuid", &error_code )
          && RemoveDatabaseValue( &value, &error_code ) )
     {
-        WriteJsonSuccess( response_writer );
+        WriteResponseSuccess( response_writer );
     }
     else
     {
-        WriteJsonError( response_writer, &error_code );
+        WriteResponseError( response_writer, &error_code );
     }
 }
 
@@ -415,13 +415,13 @@ func HandleGetValueRequest(
          && GetRequestUuid( &value.Uuid, request, "Uuid", &error_code )
          && GetDatabaseValue( &value, &error_code ) )
     {
-        WriteJsonText( response_writer, "{\"Value\":" );
-        WriteJsonValue( response_writer, &value );
-        WriteJsonText( response_writer, "}" );
+        WriteResponse( response_writer, "{\"Value\":" );
+        WriteResponseValue( response_writer, &value );
+        WriteResponse( response_writer, "}" );
     }
     else
     {
-        WriteJsonError( response_writer, &error_code );
+        WriteResponseError( response_writer, &error_code );
     }
 }
 
@@ -440,23 +440,23 @@ func HandleGetValueArrayRequest(
     if ( IsAdministratorSession( request, &error_code )
          && GetDatabaseValueArray( &value_array, &error_code ) )
     {
-        WriteJsonText( response_writer, "{\"ValueArray\":[" );
+        WriteResponse( response_writer, "{\"ValueArray\":[" );
 
         for value_index, _ := range value_array
         {
             if ( value_index > 0 )
             {
-                 WriteJsonText( response_writer, "," );
+                 WriteResponse( response_writer, "," );
             }
 
-            WriteJsonValue( response_writer, &value_array[ value_index ] );
+            WriteResponseValue( response_writer, &value_array[ value_index ] );
         }
 
-        WriteJsonText( response_writer, "]}" );
+        WriteResponse( response_writer, "]}" );
     }
     else
     {
-        WriteJsonError( response_writer, &error_code );
+        WriteResponseError( response_writer, &error_code );
     }
 }
 
@@ -477,14 +477,14 @@ func HandleAddDataRequest(
          && GetRequestUuid( &data.ValueUuid, request, "ValueUuid", &error_code )
          && AddDatabaseData( &data, &error_code ) )
     {
-        WriteJsonText( response_writer, "{" );
-        WriteJsonText( response_writer, "\"Uuid\":" );
-        WriteJsonUuid( response_writer, data.Uuid );
-        WriteJsonText( response_writer, "}" );
+        WriteResponse( response_writer, "{" );
+        WriteResponse( response_writer, "\"Uuid\":" );
+        WriteResponseUuid( response_writer, data.Uuid );
+        WriteResponse( response_writer, "}" );
     }
     else
     {
-        WriteJsonError( response_writer, &error_code );
+        WriteResponseError( response_writer, &error_code );
     }
 }
 
@@ -505,11 +505,11 @@ func HandleSetDataRequest(
          && GetRequestUuid( &data.ValueUuid, request, "ValueUuid", &error_code )
          && SetDatabaseData( &data, &error_code ) )
     {
-        WriteJsonSuccess( response_writer );
+        WriteResponseSuccess( response_writer );
     }
     else
     {
-        WriteJsonError( response_writer, &error_code );
+        WriteResponseError( response_writer, &error_code );
     }
 }
 
@@ -529,11 +529,11 @@ func HandleRemoveDataRequest(
          && GetRequestUuid( &data.Uuid, request, "Uuid", &error_code )
          && RemoveDatabaseData( &data, &error_code ) )
     {
-        WriteJsonSuccess( response_writer );
+        WriteResponseSuccess( response_writer );
     }
     else
     {
-        WriteJsonError( response_writer, &error_code );
+        WriteResponseError( response_writer, &error_code );
     }
 }
 
@@ -553,13 +553,13 @@ func HandleGetDataRequest(
          && GetRequestUuid( &data.Uuid, request, "Uuid", &error_code )
          && GetDatabaseData( &data, &error_code ) )
     {
-        WriteJsonText( response_writer, "{\"Data\":" );
-        WriteJsonData( response_writer, &data );
-        WriteJsonText( response_writer, "}" );
+        WriteResponse( response_writer, "{\"Data\":" );
+        WriteResponseData( response_writer, &data );
+        WriteResponse( response_writer, "}" );
     }
     else
     {
-        WriteJsonError( response_writer, &error_code );
+        WriteResponseError( response_writer, &error_code );
     }
 }
 
@@ -578,22 +578,22 @@ func HandleGetDataArrayRequest(
     if ( IsAdministratorSession( request, &error_code )
          && GetDatabaseDataArray( &data_array, &error_code ) )
     {
-        WriteJsonText( response_writer, "{\"DataArray\":[" );
+        WriteResponse( response_writer, "{\"DataArray\":[" );
 
         for data_index, _ := range data_array
         {
             if ( data_index > 0 )
             {
-                 WriteJsonText( response_writer, "," );
+                 WriteResponse( response_writer, "," );
             }
 
-            WriteJsonData( response_writer, &data_array[ data_index ] );
+            WriteResponseData( response_writer, &data_array[ data_index ] );
         }
 
-        WriteJsonText( response_writer, "]}" );
+        WriteResponse( response_writer, "]}" );
     }
     else
     {
-        WriteJsonError( response_writer, &error_code );
+        WriteResponseError( response_writer, &error_code );
     }
 }
