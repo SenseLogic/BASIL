@@ -1,4 +1,4 @@
-##test_instance_types.gs
+##test_instance.go
 package main;
 
 [*type {{table_go_type}} struct {
@@ -9,7 +9,7 @@ package main;
 
 *]
 
-##test_instance_tables.gs
+##test_instance.gs
 package main;
 
 import "    fmt";

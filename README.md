@@ -13,7 +13,7 @@ Database designer and filler.
     *   UML
     *   SQL
     *   CQL
-*   Instantiates template code for the following languages :
+*   Instantiates generic and custom template code for the following languages :
     *   Go / Generis
     *   C#
     *   Crystal / Cibyl
@@ -404,7 +404,7 @@ The UML diagrams can be drawn using [PlantText](https://www.planttext.com/) or [
 ## Command line
 
 ```
-basil [options] script_file.basil
+basil [options] script_file.bsl
 ```
 
 ### Options
@@ -427,16 +427,22 @@ The `--go`, `--generis`, `--crystal`, `--csharp` and `--rust` options require th
 ### Examples
 
 ```bash
-basil --uml blog.basil
+basil --uml blog.bsl
 ```
 
-Generates "blog.uml" from "blog.basil".
+Generates "blog.uml" from "blog.bsl".
 
 ```bash
-basil --uml --sql --go blog.basil
+basil --uml --sql --go blog.bsl
 ```
 
-Generates "blog.uml", "blog.sql", "blog_data.sql", "blog_sql_type.go" from "blog.basil".
+Generates "blog.uml", "blog.sql", "blog_data.sql", "blog_sql_type.go" from "blog.bsl".
+
+```bash
+basil --uml --cql --go --template template.bst blog.bsl
+```
+
+Generates "blog.uml", "blog.sql", "blog_data.sql", "blog_sql_type.go" and custom files from "blog.bsl" and "blog.bsl".
 
 ## Version
 

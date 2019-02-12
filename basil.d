@@ -6487,7 +6487,7 @@ void main(
     else
     {
         writeln( "Usage :" );
-        writeln( "    basil [options] script_file.basil" );
+        writeln( "    basil [options] script_file.bsl" );
         writeln( "Options :" );
         writeln( "    --uml" );
         writeln( "    --sql" );
@@ -6500,8 +6500,8 @@ void main(
         writeln( "    --javascript" );
         writeln( "    --template {template_file_path}" );
         writeln( "Examples :" );
-        writeln( "    basil --uml script_file.basil" );
-        writeln( "    basil --uml --sql --go script_file.basil" );
+        writeln( "    basil --uml script_file.bsl" );
+        writeln( "    basil --uml --sql --go script_file.bsl" );
 
         Abort( "Invalid arguments : " ~ argument_array.to!string() );
     }
