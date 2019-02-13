@@ -2477,7 +2477,19 @@ class VALUE
 
         type_name = Type.ActualType.BaseName;
 
-        if ( type_name == "TUPLE" )
+        if ( type_name == "BOOL" )
+        {
+            if ( Text == "1"
+                 || Text == "true" )
+            {
+                sql_text = "1";
+            }
+            else
+            {
+                sql_text = "0";
+            }
+        }
+        else if ( type_name == "TUPLE" )
         {
             foreach ( sub_value_index, ref sub_value; SubValueArray )
             {
@@ -2559,7 +2571,8 @@ class VALUE
 
         if ( type_name == "BOOL" )
         {
-            if ( Text == "1" )
+            if ( Text == "1"
+                 || Text == "true" )
             {
                 cql_text = "true";
             }
@@ -2718,6 +2731,8 @@ class COLUMN
         IsUppercase;
     VALUE[]
         ValueArray;
+    long
+        ValueCount;
     COLUMN
         ForeignColumn;
     string
@@ -3132,6 +3147,8 @@ class COLUMN
         string text
         )
     {
+        long
+            value_count;
         VALUE
             value;
 
@@ -3144,7 +3161,10 @@ class COLUMN
         }
 
         value.Text = text;
+
         ValueArray ~= value;
+
+        ++ValueCount;
     }
 
     // ~~
@@ -3157,20 +3177,30 @@ class COLUMN
             Abort( "Mutual column dependency : " ~ Table.Name ~ "." ~ Name );
         }
 
-        if ( !IsFilled )
+        if ( !IsFilled
+             || ValueCount < Table.RowCount )
         {
             writeln( "Filling column : " ~ Table.Name ~ "." ~ Name );
 
             IsProcessed = true;
-            ValueArray = new VALUE[ Table.RowCount ];
 
-            foreach ( row_index; 0 .. Table.RowCount )
+            while ( ValueCount < Table.RowCount )
             {
+                if ( ValueCount >= ValueArray.length )
+                {
+                    ValueArray ~= new VALUE( Type );
+                }
+                else
+                {
+                    ValueArray[ ValueCount ] = new VALUE( Type );
+                }
+
                 if ( IsStored )
                 {
-                    ValueArray[ row_index ] = new VALUE( Type );
-                    ValueArray[ row_index ].Make( row_index, Table.RowCount );
+                    ValueArray[ ValueCount ].Make( ValueCount, Table.RowCount );
                 }
+
+                ++ValueCount;
             }
 
             IsFilled = true;
@@ -4837,6 +4867,7 @@ class SCHEMA
             character;
         long
             character_index,
+            row_count,
             value_index;
         string
             stripped_line,
@@ -4917,7 +4948,12 @@ class SCHEMA
                     column_array[ value_index ].AddValue( value_array[ value_index ] );
                 }
 
-                ++table.RowCount;
+                ++row_count;
+
+                if ( row_count > table.RowCount )
+                {
+                    table.RowCount = row_count;
+                }
             }
             else if ( line.startsWith( "        " ) )
             {
@@ -4946,12 +4982,13 @@ class SCHEMA
                     column.IsFilled = true;
                     column_array ~= column;
                 }
+
+                row_count = 0;
             }
             else if ( line.startsWith( "    %" ) )
             {
                 table_name = stripped_line[ 1 .. $ ];
                 table = FindTable( table_name );
-                table.RowCount = 0;
 
                 if ( table is null )
                 {

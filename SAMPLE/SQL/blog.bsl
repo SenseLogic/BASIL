@@ -69,3 +69,10 @@ BLOG | count 5
             5 ~ History
             6 ~ Travel
             7 ~ Finance
+
+    %USER
+
+        FirstName LastName Email Pseudonym Password ItIsAdministrator
+
+            Rick ~ Deckard ~ root@mail.com ~ root ~ root ~ true
+
