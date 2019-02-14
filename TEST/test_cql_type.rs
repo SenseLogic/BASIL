@@ -24,17 +24,17 @@ struct COMPOUND
 {
     id : i32,
     location : String,
-    name : (String,String),
-    name_set : List<(String,String)>,
-    phone_list : List<String>,
-    email_set : List<String>,
-    company_map : Map<String,String>,
+    name : ( String, String ),
+    name_set : List< ( String, String ) >,
+    phone_list : List< String >,
+    email_set : List< String >,
+    company_map : Map< String, String >,
     simple_date : String,
-    simple_date_map : Map<(String,String),String>,
-    simple_date_set : List<String>,
-    simple_date_list : List<String>,
-    name_set_map : Map<String,List<(String,String)>>,
-    simple_pointer_array : Vec<Weak<SIMPLE>>
+    simple_date_map : Map< ( String, String ), String >,
+    simple_date_set : List< String >,
+    simple_date_list : List< String >,
+    name_set_map : Map< String, List< ( String, String ) > >,
+    simple_pointer_array : Vec< Weak< SIMPLE > >
 }
 
 // ~~

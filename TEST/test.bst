@@ -1,4 +1,4 @@
-##test_types.go
+%%test_types.go
 package main;
 
 // -- TYPES
@@ -10,7 +10,7 @@ package main;
 // ~~
 
 *]
-##test_types.cs
+%%test_types.cs
 // -- IMPORTS
 
 using System;
@@ -25,7 +25,7 @@ using System.Collections.Generic;
 // ~~
 
 *]
-##test_tables.gs
+%%test_tables.gs
 package main;
 
 // -- IMPORTS

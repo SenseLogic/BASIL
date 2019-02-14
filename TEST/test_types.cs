@@ -48,25 +48,27 @@ public class COMPOUND
         Id;
     public String
         Location;
-    public Tuple<String,String>
+    public Tuple< String, String >
         Name;
-    public LinkedList<Tuple<String,String>>
+    public HashSet< Tuple< String, String > >
         NameSet;
-    public LinkedList<String>
-        PhoneList,
+    public List< String >
+        PhoneList;
+    public HashSet< String >
         EmailSet;
-    public Dictionary<String,String>
+    public Dictionary< String, String >
         CompanyMap;
     public DateTime
         SimpleDate;
-    public Dictionary<Tuple<String,String>,DateTime>
+    public Dictionary< Tuple< String, String >, DateTime >
         SimpleDateMap;
-    public LinkedList<DateTime>
-        SimpleDateSet,
+    public HashSet< DateTime >
+        SimpleDateSet;
+    public List< DateTime >
         SimpleDateList;
-    public Dictionary<DateTime,LinkedList<Tuple<String,String>>>
+    public Dictionary< DateTime, HashSet< Tuple< String, String > > >
         NameSetMap;
-    public List<SIMPLE>
+    public List< SIMPLE >
         SimplePointerArray;
 }
 

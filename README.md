@@ -19,7 +19,7 @@ Database designer and filler.
     *   Crystal / Cibyl
     *   Rust
 
-## SQL sample
+## Sample SQL schema
 
 ```cpp
 BLOG | count 5
@@ -93,11 +93,17 @@ BLOG | count 5
             5 ~ History
             6 ~ Travel
             7 ~ Finance
+
+    %USER
+
+        FirstName LastName Email Pseudonym Password ItIsAdministrator
+
+            Rick ~ Deckard ~ root@mail.com ~ root ~ root ~ true
 ```
 
 ![](https://github.com/senselogic/BASIL/blob/master/SAMPLE/SQL/blog.png)
 
-## CQL sample
+## Sample CQL schema
 
 ```cpp
 BLOG | count 5
@@ -171,14 +177,20 @@ BLOG | count 5
             5 ~ History
             6 ~ Travel
             7 ~ Finance
+
+    %USER
+
+        FirstName LastName Email Pseudonym Password ItIsAdministrator
+
+            Rick ~ Deckard ~ root@mail.com ~ root ~ root ~ true
 ```
 
 ![](https://github.com/senselogic/BASIL/blob/master/SAMPLE/CQL/blog.png)
 
-## Template sample
+## Sample template
 
 ```go
-##test_types.go
+%%test_types.go
 package main;
 
 // -- TYPES
@@ -190,7 +202,7 @@ package main;
 // ~~
 
 *]
-##test_types.cs
+%%test_types.cs
 // -- IMPORTS
 
 using System;
@@ -361,21 +373,61 @@ POINTER[ ELEMENT_TYPE ] | !stored
 [*tables*]
 [.stored tables.]
 [!not stored tables!]
+
 <*columns*>
 <*^first columns^*>
 <*$last column$*>
+
 <#key columns#>
 <#^first key columns^#>
 <#$last key column$#>
+
 <~not key columns~>
 <~^first not key columns^~>
 <~$last not key column$~>
+
 <.stored columns.>
 <.^first stored columns^.>
 <.$last stored column$.>
+
 <!not stored columns!>
 <!^first not stored columns^!>
 <!$last not stored column$!>
+
+<?=#first text#second text#text if same texts?>
+<?=#first text#second text#text if same texts#text if not same texts?>
+<?!=#first text#second text#text if not same texts?>
+<?!=#first text#second text#text if not same texts#text if same texts?>
+
+<?^#text#prefix#text if prefix found?>
+<?^#text#prefix#text if prefix found#text if prefix not found?>
+<?!^#text#prefix#text if prefix not found?>
+<?!^#text#prefix#text if prefix not found#text if prefix found?>
+
+<?$#text#suffix#text if suffix found?>
+<?$#text#suffix#text if suffix found#text if suffix not found?>
+<?!$#text#suffix#text if suffix not found?>
+<?!$#text#suffix#text if suffix not found#text if suffix found?>
+
+<?@#text#infix#text if infix found?>
+<?@#text#infix#text if infix found#text if infix not found?>
+<?!@#text#infix#text if infix not found?>
+<?!@#text#infix#text if infix not found#text if infix found?>
+
+<?%^#text#prefix to remove#?>
+<?%^#text#prefix to replace#new prefix#?>
+
+<?%$#text#suffix to remove?>
+<?%$#text#suffix to replace#new suffix?>
+
+<?%#text#text to remove?>
+<?%#text#text to replace#new text?>
+
+<?_#text to convert to snakecase?>
+<?~#text to convert to pascalcase?>
+<?-#text to convert to lowercase?>
+<?+#text to convert to uppercase?>
+
 {{table_name}}
 {{table_go_type}}
 {{table_go_attribute}}
@@ -398,6 +450,7 @@ POINTER[ ELEMENT_TYPE ] | !stored
 {{table_javascript_type_declaration}}
 {{table_rust_attribute_declaration}}
 {{table_rust_type_declaration}}
+
 {{column_name}}
 {{column_stored_name}}
 {{column_stored_type}}
@@ -417,7 +470,8 @@ POINTER[ ELEMENT_TYPE ] | !stored
 {{column_rust_type}}
 {{column_javascript_name}}
 {{column_javascript_type}}
-##output file path
+
+%%output file path
 ```
 
 ## Installation

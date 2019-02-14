@@ -24,7 +24,7 @@ import core.stdc.stdlib : exit;
 import std.algorithm : countUntil;
 import std.ascii : isDigit, isLower, isUpper;
 import std.conv : to;
-import std.file : dirEntries, readText, thisExePath, write, SpanMode;
+import std.file : dirEntries, exists, readText, thisExePath, write, SpanMode;
 import std.random : uniform;
 import std.path : dirName;
 import std.regex : regex, replaceAll, Regex;
@@ -1068,7 +1068,6 @@ class TYPE
             type_suffix,
             type_name;
 
-
         type_name = ActualType.BaseName;
 
         if ( type_is_nested
@@ -1427,7 +1426,7 @@ class TYPE
         {
             if ( sub_types_crystal_text != "" )
             {
-                sub_types_crystal_text ~= ",";
+                sub_types_crystal_text ~= ", ";
             }
 
             sub_types_crystal_text ~= sub_type.GetCrystalText();
@@ -1516,23 +1515,23 @@ class TYPE
         }
         else if ( type_name == "ARRAY" )
         {
-            return "Array(" ~ GetSubTypeCrystalText() ~ ")";
+            return "Array( " ~ GetSubTypeCrystalText() ~ " )";
         }
         else if ( type_name == "TUPLE" )
         {
-            return "Tuple(" ~ GetSubTypeCrystalText() ~ ")";
+            return "Tuple( " ~ GetSubTypeCrystalText() ~ " )";
         }
         else if ( type_name == "LIST" )
         {
-            return "List(" ~ GetSubTypeCrystalText() ~ ")";
+            return "List( " ~ GetSubTypeCrystalText() ~ " )";
         }
         else if ( type_name == "SET" )
         {
-            return "Set(" ~ GetSubTypeCrystalText() ~ ")";
+            return "Set( " ~ GetSubTypeCrystalText() ~ " )";
         }
         else if ( type_name == "MAP" )
         {
-            return "Hash(" ~ GetSubTypeCrystalText() ~ ")";
+            return "Hash( " ~ GetSubTypeCrystalText() ~ " )";
         }
         else
         {
@@ -1552,7 +1551,7 @@ class TYPE
         {
             if ( sub_types_csharp_text != "" )
             {
-                sub_types_csharp_text ~= ",";
+                sub_types_csharp_text ~= ", ";
             }
 
             sub_types_csharp_text ~= sub_type.GetCsharpText();
@@ -1641,23 +1640,23 @@ class TYPE
         }
         else if ( type_name == "ARRAY" )
         {
-            return "List<" ~ GetSubTypeCsharpText() ~ ">";
+            return "List< " ~ GetSubTypeCsharpText() ~ " >";
         }
         else if ( type_name == "TUPLE" )
         {
-            return "Tuple<" ~ GetSubTypeCsharpText() ~ ">";
+            return "Tuple< " ~ GetSubTypeCsharpText() ~ " >";
         }
         else if ( type_name == "LIST" )
         {
-            return "LinkedList<" ~ GetSubTypeCsharpText() ~ ">";
+            return "List< " ~ GetSubTypeCsharpText() ~ " >";
         }
         else if ( type_name == "SET" )
         {
-            return "LinkedList<" ~ GetSubTypeCsharpText() ~ ">";
+            return "HashSet< " ~ GetSubTypeCsharpText() ~ " >";
         }
         else if ( type_name == "MAP" )
         {
-            return "Dictionary<" ~ GetSubTypeCsharpText() ~ ">";
+            return "Dictionary< " ~ GetSubTypeCsharpText() ~ " >";
         }
         else
         {
@@ -1677,7 +1676,7 @@ class TYPE
         {
             if ( sub_types_rust_text != "" )
             {
-                sub_types_rust_text ~= ",";
+                sub_types_rust_text ~= ", ";
             }
 
             sub_types_rust_text ~= sub_type.GetRustText();
@@ -1762,27 +1761,27 @@ class TYPE
         }
         else if ( type_name == "POINTER" )
         {
-            return "Weak<" ~ GetSubTypeRustText() ~ ">";
+            return "Weak< " ~ GetSubTypeRustText() ~ " >";
         }
         else if ( type_name == "ARRAY" )
         {
-            return "Vec<" ~ GetSubTypeRustText() ~ ">";
+            return "Vec< " ~ GetSubTypeRustText() ~ " >";
         }
         else if ( type_name == "TUPLE" )
         {
-            return "(" ~ GetSubTypeRustText() ~ ")";
+            return "( " ~ GetSubTypeRustText() ~ " )";
         }
         else if ( type_name == "LIST" )
         {
-            return "List<" ~ GetSubTypeRustText() ~ ">";
+            return "List< " ~ GetSubTypeRustText() ~ " >";
         }
         else if ( type_name == "SET" )
         {
-            return "List<" ~ GetSubTypeRustText() ~ ">";
+            return "List< " ~ GetSubTypeRustText() ~ " >";
         }
         else if ( type_name == "MAP" )
         {
-            return "Map<" ~ GetSubTypeRustText() ~ ">";
+            return "Map< " ~ GetSubTypeRustText() ~ " >";
         }
         else
         {
@@ -4499,11 +4498,11 @@ class TABLE
         )
     {
         return
-            "    router.Post( \"/api/add_" ~ GoVariable ~ "\", HandleAdd" ~ GoAttribute ~ "Request );\n"
-            ~ "    router.Post( \"/api/set_" ~ GoVariable ~ "\", HandleSet" ~ GoAttribute ~ "Request );\n"
-            ~ "    router.Post( \"/api/remove_" ~ GoVariable ~ "\", HandleRemove" ~ GoAttribute ~ "Request );\n"
-            ~ "    router.Post( \"/api/get_" ~ GoVariable ~ "\", HandleGet" ~ GoAttribute ~ "Request );\n"
-            ~ "    router.Post( \"/api/get_" ~ GoVariable ~ "_array\", HandleGet" ~ GoAttribute ~ "ArrayRequest );\n";
+            "    router.Post( \"/add_" ~ GoVariable ~ "\", HandleAdd" ~ GoAttribute ~ "Request );\n"
+            ~ "    router.Post( \"/set_" ~ GoVariable ~ "\", HandleSet" ~ GoAttribute ~ "Request );\n"
+            ~ "    router.Post( \"/remove_" ~ GoVariable ~ "\", HandleRemove" ~ GoAttribute ~ "Request );\n"
+            ~ "    router.Post( \"/get_" ~ GoVariable ~ "\", HandleGet" ~ GoAttribute ~ "Request );\n"
+            ~ "    router.Post( \"/get_" ~ GoVariable ~ "_array\", HandleGet" ~ GoAttribute ~ "ArrayRequest );\n";
     }
 
     // ~~
@@ -5021,8 +5020,8 @@ class SCHEMA
 
     // ~~
 
-    void ReadBasilFile(
-        string basil_file_path
+    void ReadBasilFiles(
+        string[] basil_file_path_array
         )
     {
         bool
@@ -5035,9 +5034,18 @@ class SCHEMA
             line_array,
             schema_line_array;
 
-        writeln( "Reading schema file : ", basil_file_path );
+        foreach ( basil_file_path; basil_file_path_array )
+        {
+            writeln( "Reading schema file : ", basil_file_path );
 
-        basil_file_text = basil_file_path.readText();
+            if ( !basil_file_path.endsWith( ".bsl" )
+                 || !exists( basil_file_path ) )
+            {
+                Abort( "Invalid file path : " ~ basil_file_path );
+            }
+
+            basil_file_text ~= basil_file_path.readText() ~ "\n";
+        }
 
         TableArray = null;
 
@@ -5718,7 +5726,7 @@ class SCHEMA
 
         generis_route_file_text
             = "func RouteDatabaseRequests(\n"
-              ~ "    router Router\n"
+              ~ "    router chi.Router\n"
               ~ "    )\n"
               ~ "{\n";
 
@@ -6313,6 +6321,284 @@ string ReplaceTableTags(
 
 // ~~
 
+string ReplaceConditionalTags(
+    string text
+    )
+{
+    char
+        character,
+        next_character;
+    long
+        character_index,
+        first_character_index,
+        level,
+        post_character_index;
+    string
+        old_text,
+        result_text;
+    string[]
+        argument_array;
+
+    do
+    {
+        old_text = text;
+        first_character_index = -1;
+
+        for ( character_index = 0;
+              character_index + 1 < text.length;
+              ++character_index )
+        {
+            character = text[ character_index ];
+            next_character = text[ character_index + 1 ];
+
+            if ( character == '<'
+                 && next_character == '?' )
+            {
+                first_character_index = character_index;
+                ++character_index;
+            }
+            else if ( character == '?'
+                      && next_character == '>' )
+            {
+                post_character_index = character_index + 2;
+
+                if ( first_character_index < 0 )
+                {
+                    Abort( "Invalid <? ?> block : " ~ text[ 0 .. post_character_index ] );
+                }
+
+                argument_array = text[ first_character_index + 2 .. character_index ].split( '#' );
+
+                if ( ( argument_array.length == 4
+                       || argument_array.length == 5 )
+                     && argument_array[ 0 ] == "=" )
+                {
+                    if ( argument_array[ 1 ] == argument_array[ 2 ] )
+                    {
+                        result_text = argument_array[ 3 ];
+                    }
+                    else if ( argument_array.length == 5 )
+                    {
+                        result_text = argument_array[ 4 ];
+                    }
+                    else
+                    {
+                        result_text = "";
+                    }
+                }
+                else if ( ( argument_array.length == 4
+                            || argument_array.length == 5 )
+                          && argument_array[ 0 ] == "!=" )
+                {
+                    if ( argument_array[ 1 ] != argument_array[ 2 ] )
+                    {
+                        result_text = argument_array[ 3 ];
+                    }
+                    else if ( argument_array.length == 5 )
+                    {
+                        result_text = argument_array[ 4 ];
+                    }
+                    else
+                    {
+                        result_text = "";
+                    }
+                }
+                else if ( ( argument_array.length == 4
+                            || argument_array.length == 5 )
+                          && argument_array[ 0 ] == "^" )
+                {
+                    if ( argument_array[ 1 ].startsWith( argument_array[ 2 ] ) )
+                    {
+                        result_text = argument_array[ 3 ];
+                    }
+                    else if ( argument_array.length == 5 )
+                    {
+                        result_text = argument_array[ 4 ];
+                    }
+                    else
+                    {
+                        result_text = "";
+                    }
+                }
+                else if ( ( argument_array.length == 4
+                            || argument_array.length == 5 )
+                          && argument_array[ 0 ] == "!^" )
+                {
+                    if ( !argument_array[ 1 ].startsWith( argument_array[ 2 ] ) )
+                    {
+                        result_text = argument_array[ 3 ];
+                    }
+                    else if ( argument_array.length == 5 )
+                    {
+                        result_text = argument_array[ 4 ];
+                    }
+                    else
+                    {
+                        result_text = "";
+                    }
+                }
+                else if ( ( argument_array.length == 4
+                            || argument_array.length == 5 )
+                          && argument_array[ 0 ] == "$" )
+                {
+                    if ( argument_array[ 1 ].endsWith( argument_array[ 2 ] ) )
+                    {
+                        result_text = argument_array[ 3 ];
+                    }
+                    else if ( argument_array.length == 5 )
+                    {
+                        result_text = argument_array[ 4 ];
+                    }
+                    else
+                    {
+                        result_text = "";
+                    }
+                }
+                else if ( ( argument_array.length == 4
+                            || argument_array.length == 5 )
+                          && argument_array[ 0 ] == "!$" )
+                {
+                    if ( !argument_array[ 1 ].endsWith( argument_array[ 2 ] ) )
+                    {
+                        result_text = argument_array[ 3 ];
+                    }
+                    else if ( argument_array.length == 5 )
+                    {
+                        result_text = argument_array[ 4 ];
+                    }
+                    else
+                    {
+                        result_text = "";
+                    }
+                }
+                else if ( ( argument_array.length == 4
+                            || argument_array.length == 5 )
+                          && argument_array[ 0 ] == "@" )
+                {
+                    if ( argument_array[ 1 ].indexOf( argument_array[ 2 ] ) >= 0 )
+                    {
+                        result_text = argument_array[ 3 ];
+                    }
+                    else if ( argument_array.length == 5 )
+                    {
+                        result_text = argument_array[ 4 ];
+                    }
+                    else
+                    {
+                        result_text = "";
+                    }
+                }
+                else if ( ( argument_array.length == 4
+                            || argument_array.length == 5 )
+                          && argument_array[ 0 ] == "!@" )
+                {
+                    if ( argument_array[ 1 ].indexOf( argument_array[ 2 ] ) < 0 )
+                    {
+                        result_text = argument_array[ 3 ];
+                    }
+                    else if ( argument_array.length == 5 )
+                    {
+                        result_text = argument_array[ 4 ];
+                    }
+                    else
+                    {
+                        result_text = "";
+                    }
+                }
+                else if ( ( argument_array.length == 3
+                            || argument_array.length == 4 )
+                          && argument_array[ 0 ] == "%^" )
+                {
+                    if ( argument_array[ 1 ].startsWith( argument_array[ 2 ] ) )
+                    {
+                        if ( argument_array.length == 4 )
+                        {
+                            result_text = argument_array[ 3 ] ~ argument_array[ 1 ][ argument_array[ 2 ].length .. $ ];
+                        }
+                        else
+                        {
+                            result_text = argument_array[ 1 ][ argument_array[ 2 ].length .. $ ];
+                        }
+                    }
+                    else
+                    {
+                        result_text = argument_array[ 1 ];
+                    }
+                }
+                else if ( ( argument_array.length == 3
+                            || argument_array.length == 4 )
+                          && argument_array[ 0 ] == "%$" )
+                {
+                    if ( argument_array[ 1 ].endsWith( argument_array[ 2 ] ) )
+                    {
+                        if ( argument_array.length == 4 )
+                        {
+                            result_text = argument_array[ 1 ][ 0 .. $ - argument_array[ 2 ].length ] ~ argument_array[ 3 ];
+                        }
+                        else
+                        {
+                            result_text = argument_array[ 1 ][ 0 .. $ - argument_array[ 2 ].length ];
+                        }
+                    }
+                    else
+                    {
+                        result_text = argument_array[ 1 ];
+                    }
+                }
+                else if ( ( argument_array.length == 3
+                            || argument_array.length == 4 )
+                          && argument_array[ 0 ] == "%" )
+                {
+                    if ( argument_array.length == 4 )
+                    {
+                        result_text = argument_array[ 1 ].replace( argument_array[ 2 ], argument_array[ 3 ] );
+                    }
+                    else
+                    {
+                        result_text = argument_array[ 1 ].replace( argument_array[ 2 ], "" );
+                    }
+                }
+                else if ( argument_array.length == 2
+                          && argument_array[ 0 ] == "_" )
+                {
+                    result_text = GetSnakeCaseText( argument_array[ 1 ] );
+                }
+                else if ( argument_array.length == 2
+                          && argument_array[ 0 ] == "~" )
+                {
+                    result_text = GetPascalCaseText( argument_array[ 1 ] );
+                }
+                else if ( argument_array.length == 2
+                          && argument_array[ 0 ] == "-" )
+                {
+                    result_text = argument_array[ 1 ].toLower();
+                }
+                else if ( argument_array.length == 2
+                          && argument_array[ 0 ] == "+" )
+                {
+                    result_text = argument_array[ 1 ].toUpper();
+                }
+                else
+                {
+                    Abort( "Invalid <? ?> block : " ~ text[ first_character_index .. post_character_index ] );
+                }
+
+                text
+                    = text[ 0 .. first_character_index ]
+                      ~ result_text
+                      ~ text[ post_character_index .. $ ];
+
+                break;
+            }
+        }
+    }
+    while ( text != old_text );
+
+    return text;
+}
+
+// ~~
+
 void WriteInstanceFiles(
     string instance_text
     )
@@ -6323,12 +6609,12 @@ void WriteInstanceFiles(
         instance_file_line_array,
         instance_file_text_array;
 
-    if ( !instance_text.startsWith( "##" ) )
+    if ( !instance_text.startsWith( "%%" ) )
     {
         Abort( "Missing instance file path : " ~ instance_text );
     }
 
-    instance_file_text_array = instance_text[ 2 .. $ ].split( "\n##" );
+    instance_file_text_array = instance_text[ 2 .. $ ].split( "\n%%" );
 
     foreach ( instance_file_text_index, instance_file_text; instance_file_text_array )
     {
@@ -6373,7 +6659,8 @@ void WriteInstanceFiles(
             = template_file_text
                   .ReplaceTableTags( "[*", "*]", schema.TableArray )
                   .ReplaceTableTags( "[.", ".]", schema.TableArray )
-                  .ReplaceTableTags( "[!", "!]", schema.TableArray );
+                  .ReplaceTableTags( "[!", "!]", schema.TableArray )
+                  .ReplaceConditionalTags();
 
         WriteInstanceFiles( instance_file_text );
     }
@@ -6381,19 +6668,19 @@ void WriteInstanceFiles(
 
 // ~~
 
-void ProcessFile(
-    string basil_file_path
+void ProcessFiles(
+    string[] basil_file_path_array
     )
 {
     string
         base_file_path;
 
-    base_file_path = basil_file_path[ 0 .. $ - 4 ];
+    base_file_path = basil_file_path_array[ 0 ][ 0 .. $ - 4 ];
 
     Random = new RANDOM();
 
     Schema = new SCHEMA();
-    Schema.ReadBasilFile( basil_file_path );
+    Schema.ReadBasilFiles( basil_file_path_array );
 
     foreach ( output_format; OutputFormatArray )
     {
@@ -6531,15 +6818,14 @@ void main(
         }
     }
 
-    if ( argument_array.length >= 1
-         && argument_array[ 0 ].endsWith( ".bsl" ) )
+    if ( argument_array.length >= 1 )
     {
-        ProcessFile( argument_array[ 0 ] );
+        ProcessFiles( argument_array );
     }
     else
     {
         writeln( "Usage :" );
-        writeln( "    basil [options] script_file.bsl" );
+        writeln( "    basil [options] script_file.bsl [script_file.bsl ...]" );
         writeln( "Options :" );
         writeln( "    --uml" );
         writeln( "    --sql" );
