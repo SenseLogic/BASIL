@@ -1,6 +1,6 @@
 public class SIMPLE
 {
-    public Guid
+    public String
         Uuid;
     public bool
         Bool;
@@ -69,9 +69,8 @@ public class COMPOUND
 
 public class VALUE
 {
-    public Guid
-        Uuid;
     public String
+        Uuid,
         Name;
     public int
         Integer;
@@ -83,7 +82,7 @@ public class VALUE
 
 public class DATA
 {
-    public Guid
+    public String
         Uuid,
         ValueUuid;
 }

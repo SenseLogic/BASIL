@@ -1628,7 +1628,7 @@ class TYPE
         }
         else if ( type_name == "UUID" )
         {
-            return "Guid";
+            return "String";
         }
         else if ( type_name == "BLOB" )
         {
