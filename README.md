@@ -195,13 +195,13 @@ package main;
 
 // -- TYPES
 
-[*type {{table_go_type}} struct {
-<*    {{column_go_name}} {{column_go_type}};
-*>}
+<%type {{table_go_type}} struct {
+<~    {{column_go_name}} {{column_go_type}};
+~>}<?!{{table_is_last}}#
 
 // ~~
 
-*]
+?>%>
 %%test_types.cs
 // -- IMPORTS
 
@@ -210,13 +210,38 @@ using System.Collections.Generic;
 
 // -- TYPES
 
-[*{{table_csharp_type_declaration}}
+<%{{table_csharp_type_declaration}}
 {
-{{table_csharp_attribute_declaration}}}
+{{table_csharp_attribute_declaration}}}<?!{{table_is_last}}#
 
 // ~~
 
-*]
+?>%>
+%%test_tables.gs
+package main;
+
+// -- IMPORTS
+
+import "fmt";
+
+// -- FUNCTIONS
+
+func main(
+    )
+{
+    fmt.Println( "Tables :" );
+<%    fmt.Println( "    {{table_name}}<?!{{table_is_last}}#,?>" );
+    fmt.Println( "        Columns :" );
+<~    fmt.Println( "            {{column_name}}<?!{{column_is_last}}#,?>" );
+~>    fmt.Println( "        Key columns :" );
+<~<?{{column_is_key}}#    fmt.Println( "            {{column_name}}<?!{{column_is_last_key}}#,?>" );
+?>~>    fmt.Println( "        Not key columns :" );
+<~<?!{{column_is_key}}#    fmt.Println( "            {{column_name}}<?!{{column_is_last_not_key}}#,?>" );
+?>~>    fmt.Println( "        Stored columns :" );
+<~<?{{column_is_stored}}#    fmt.Println( "            {{column_name}}<?!{{column_is_last_stored}}#,?>" );
+?>~>    fmt.Println( "        Not stored columns :" );
+<~<?!{{column_is_stored}}#    fmt.Println( "            {{column_name}}<?!{{column_is_last_not_stored}}#,?>" );
+?>~>%>}
 ```
 
 ## Syntax
@@ -370,63 +395,66 @@ POINTER[ ELEMENT_TYPE ] | !stored
 ### Template tags
 
 ```
-[*tables*]
-[.stored tables.]
-[!not stored tables!]
+<%content for each table%>
+<~content for each column~>
 
-<*columns*>
-<*^first columns^*>
-<*$last column$*>
+<?Equals#first text#second text#text if same texts?>
+<?Equals#first text#second text#text if same texts#text if not same texts?>
+<?!Equals#first text#second text#text if not same texts?>
+<?!Equals#first text#second text#text if not same texts#text if same texts?>
 
-<#key columns#>
-<#^first key columns^#>
-<#$last key column$#>
+<?HasPrefix#text#prefix#text if prefix found?>
+<?HasPrefix#text#prefix#text if prefix found#text if prefix not found?>
 
-<~not key columns~>
-<~^first not key columns^~>
-<~$last not key column$~>
+<?HasSuffix#text#suffix#text if suffix found?>
+<?HasSuffix#text#suffix#text if suffix found#text if suffix not found?>
 
-<.stored columns.>
-<.^first stored columns^.>
-<.$last stored column$.>
+<?Contains#text#content#text if content found?>
+<?Contains#text#content#text if content found#text if content not found?>
 
-<!not stored columns!>
-<!^first not stored columns^!>
-<!$last not stored column$!>
+<?RemovePrefix#prefix?>
+<?ReplacePrefix#old prefix#new prefix?>
 
-<?=#first text#second text#text if same texts?>
-<?=#first text#second text#text if same texts#text if not same texts?>
-<?!=#first text#second text#text if not same texts?>
-<?!=#first text#second text#text if not same texts#text if same texts?>
+<?RemoveSuffix#suffix?>
+<?ReplaceSuffix#old suffix#new suffix?>
 
-<?^#text#prefix#text if prefix found?>
-<?^#text#prefix#text if prefix found#text if prefix not found?>
-<?!^#text#prefix#text if prefix not found?>
-<?!^#text#prefix#text if prefix not found#text if prefix found?>
+<?Remove#content?>
+<?Replace#old content#new content?>
 
-<?$#text#suffix#text if suffix found?>
-<?$#text#suffix#text if suffix found#text if suffix not found?>
-<?!$#text#suffix#text if suffix not found?>
-<?!$#text#suffix#text if suffix not found#text if suffix found?>
+<?Snakecase#text?>
+<?Pascalcase#text?>
+<?Lowercase#text?>
+<?Uppercase#text?>
 
-<?@#text#infix#text if infix found?>
-<?@#text#infix#text if infix found#text if infix not found?>
-<?!@#text#infix#text if infix not found?>
-<?!@#text#infix#text if infix not found#text if infix found?>
-
-<?%^#text#prefix to remove#?>
-<?%^#text#prefix to replace#new prefix#?>
-
-<?%$#text#suffix to remove?>
-<?%$#text#suffix to replace#new suffix?>
-
-<?%#text#text to remove?>
-<?%#text#text to replace#new text?>
-
-<?_#text to convert to snakecase?>
-<?~#text to convert to pascalcase?>
-<?-#text to convert to lowercase?>
-<?+#text to convert to uppercase?>
+{{column_name}}
+{{column_stored_name}}
+{{column_stored_type}}
+{{column_cql_name}}
+{{column_cql_type}}
+{{column_sql_name}}
+{{column_sql_type}}
+{{column_go_name}}
+{{column_go_type}}
+{{column_go_attribute}}
+{{column_go_variable}}
+{{column_crystal_name}}
+{{column_crystal_type}}
+{{column_csharp_name}}
+{{column_csharp_type}}
+{{column_rust_name}}
+{{column_rust_type}}
+{{column_javascript_name}}
+{{column_javascript_type}}
+{{column_is_last}}
+{{column_is_stored}}
+{{column_is_last_stored}}
+{{column_is_last_not_stored}}
+{{column_is_key}}
+{{column_is_last_key}}
+{{column_is_last_not_key}}
+{{column_is_incremented}}
+{{column_is_last_incremented}}
+{{column_is_last_not_incremented}}
 
 {{table_name}}
 {{table_go_type}}
@@ -450,26 +478,10 @@ POINTER[ ELEMENT_TYPE ] | !stored
 {{table_javascript_type_declaration}}
 {{table_rust_attribute_declaration}}
 {{table_rust_type_declaration}}
-
-{{column_name}}
-{{column_stored_name}}
-{{column_stored_type}}
-{{column_cql_name}}
-{{column_cql_type}}
-{{column_sql_name}}
-{{column_sql_type}}
-{{column_go_name}}
-{{column_go_type}}
-{{column_go_attribute}}
-{{column_go_variable}}
-{{column_crystal_name}}
-{{column_crystal_type}}
-{{column_csharp_name}}
-{{column_csharp_type}}
-{{column_rust_name}}
-{{column_rust_type}}
-{{column_javascript_name}}
-{{column_javascript_type}}
+{{table_is_last}}
+{{table_is_stored}}
+{{table_is_last_stored}}
+{{table_is_last_not_stored}}
 
 %%output file path
 ```

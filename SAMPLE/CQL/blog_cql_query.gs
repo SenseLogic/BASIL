@@ -84,16 +84,15 @@ func GetDatabaseSection(
 {
     error_
         := DatabaseSession.Query(
-               "select Number, Name, Text, Image, ImageIndex from SECTION where Uuid = ?",
+               "select Number, Name, Text, Image,  from SECTION where Uuid = ?",
                section.Uuid
                )
                .Consistency( gocql.One )
-               .Scan(
-                    &section.Number,
+               .Scan(                    &section.Number,
                     &section.Name,
                     &section.Text,
                     &section.Image,
-                    &section.ImageIndex
+
                     );
 
     if ( error_ != nil )
@@ -258,8 +257,7 @@ func GetDatabaseUser(
                user.Uuid
                )
                .Consistency( gocql.One )
-               .Scan(
-                    &user.FirstName,
+               .Scan(                    &user.FirstName,
                     &user.LastName,
                     &user.Email,
                     &user.Pseudonym,
@@ -272,6 +270,7 @@ func GetDatabaseUser(
                     &user.Country,
                     &user.Company,
                     &user.ItIsAdministrator
+
                     );
 
     if ( error_ != nil )
@@ -427,20 +426,17 @@ func GetDatabaseArticle(
 {
     error_
         := DatabaseSession.Query(
-               "select SectionUuid, UserUuid, Title, Text, Image, Date, Section, User, ImageIndex from ARTICLE where Uuid = ?",
+               "select SectionUuid, UserUuid, Title, Text, Image, Date,  from ARTICLE where Uuid = ?",
                article.Uuid
                )
                .Consistency( gocql.One )
-               .Scan(
-                    &article.SectionUuid,
+               .Scan(                    &article.SectionUuid,
                     &article.UserUuid,
                     &article.Title,
                     &article.Text,
                     &article.Image,
                     &article.Date,
-                    &article.Section,
-                    &article.User,
-                    &article.ImageIndex
+
                     );
 
     if ( error_ != nil )
@@ -585,17 +581,15 @@ func GetDatabaseComment(
 {
     error_
         := DatabaseSession.Query(
-               "select ArticleUuid, UserUuid, Text, DateTime, Article, User from COMMENT where Uuid = ?",
+               "select ArticleUuid, UserUuid, Text, DateTime,  from COMMENT where Uuid = ?",
                comment.Uuid
                )
                .Consistency( gocql.One )
-               .Scan(
-                    &comment.ArticleUuid,
+               .Scan(                    &comment.ArticleUuid,
                     &comment.UserUuid,
                     &comment.Text,
                     &comment.DateTime,
-                    &comment.Article,
-                    &comment.User
+
                     );
 
     if ( error_ != nil )
@@ -738,9 +732,9 @@ func GetDatabaseSubscriber(
                subscriber.Uuid
                )
                .Consistency( gocql.One )
-               .Scan(
-                    &subscriber.Name,
+               .Scan(                    &subscriber.Name,
                     &subscriber.Email
+
                     );
 
     if ( error_ != nil )

@@ -110,8 +110,7 @@ func GetDatabaseSimple(
                simple.Uuid
                )
                .Consistency( gocql.One )
-               .Scan(
-                    &simple.Bool,
+               .Scan(                    &simple.Bool,
                     &simple.Int8,
                     &simple.Uint8,
                     &simple.Int16,
@@ -126,6 +125,7 @@ func GetDatabaseSimple(
                     &simple.Date,
                     &simple.DateTime,
                     &simple.Blob
+
                     );
 
     if ( error_ != nil )
@@ -290,12 +290,11 @@ func GetDatabaseCompound(
 {
     error_
         := DatabaseSession.Query(
-               "select Location, Name, NameSet, PhoneList, EmailSet, CompanyMap, SimpleDate, SimpleDateMap, SimpleDateSet, SimpleDateList, NameSetMap, SimplePointerArray from COMPOUND where Id = ?",
+               "select Location, Name, NameSet, PhoneList, EmailSet, CompanyMap, SimpleDate, SimpleDateMap, SimpleDateSet, SimpleDateList, NameSetMap,  from COMPOUND where Id = ?",
                compound.Id
                )
                .Consistency( gocql.One )
-               .Scan(
-                    &compound.Location,
+               .Scan(                    &compound.Location,
                     &compound.Name,
                     &compound.NameSet,
                     &compound.PhoneList,
@@ -306,7 +305,7 @@ func GetDatabaseCompound(
                     &compound.SimpleDateSet,
                     &compound.SimpleDateList,
                     &compound.NameSetMap,
-                    &compound.SimplePointerArray
+
                     );
 
     if ( error_ != nil )
@@ -456,10 +455,10 @@ func GetDatabaseValue(
                value.Uuid
                )
                .Consistency( gocql.One )
-               .Scan(
-                    &value.Name,
+               .Scan(                    &value.Name,
                     &value.Integer,
                     &value.Text
+
                     );
 
     if ( error_ != nil )
@@ -597,8 +596,8 @@ func GetDatabaseData(
                data.Uuid
                )
                .Consistency( gocql.One )
-               .Scan(
-                    &data.ValueUuid
+               .Scan(                    &data.ValueUuid
+
                     );
 
     if ( error_ != nil )

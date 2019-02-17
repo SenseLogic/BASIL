@@ -54,7 +54,3 @@ type DATA struct {
     Uuid gocql.UUID;
     ValueUuid gocql.UUID;
 }
-
-// ~~
-
-

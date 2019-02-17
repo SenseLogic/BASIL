@@ -51,7 +51,7 @@ func SetDatabaseSection(
 {
     statement, error_
         := DatabaseSession.Prepare(
-               "update SECTION set Number = ?, Name = ?, Text = ?, Image = ? where Id = ?"
+               "update SECTION set Number = ?, Name = ?, Text = ?, Image = ?,  where Id = ?"
                );
 
     if ( error_ != nil )
@@ -123,7 +123,7 @@ func GetDatabaseSection(
 {
     statement, error_
         := DatabaseSession.Prepare(
-               "select Number, Name, Text, Image, ImageIndex from SECTION where Id = ?"
+               "select Number, Name, Text, Image,  from SECTION where Id = ?"
                );
 
     if ( error_ != nil )
@@ -148,12 +148,11 @@ func GetDatabaseSection(
     for rows.Next()
     {
         error_
-            = rows.Scan(
-                  &section.Number,
+            = rows.Scan(                  &section.Number,
                   &section.Name,
                   &section.Text,
                   &section.Image,
-                  &section.ImageIndex
+
                   );
 
         if ( error_ != nil )
@@ -401,8 +400,7 @@ func GetDatabaseUser(
     for rows.Next()
     {
         error_
-            = rows.Scan(
-                  &user.FirstName,
+            = rows.Scan(                  &user.FirstName,
                   &user.LastName,
                   &user.Email,
                   &user.Pseudonym,
@@ -415,6 +413,7 @@ func GetDatabaseUser(
                   &user.Country,
                   &user.Company,
                   &user.ItIsAdministrator
+
                   );
 
         if ( error_ != nil )
@@ -558,7 +557,7 @@ func SetDatabaseArticle(
 {
     statement, error_
         := DatabaseSession.Prepare(
-               "update ARTICLE set SectionId = ?, UserId = ?, Title = ?, Text = ?, Image = ?, Date = ? where Id = ?"
+               "update ARTICLE set SectionId = ?, UserId = ?, Title = ?, Text = ?, Image = ?, Date = ?,  where Id = ?"
                );
 
     if ( error_ != nil )
@@ -632,7 +631,7 @@ func GetDatabaseArticle(
 {
     statement, error_
         := DatabaseSession.Prepare(
-               "select SectionId, UserId, Title, Text, Image, Date, Section, User, ImageIndex from ARTICLE where Id = ?"
+               "select SectionId, UserId, Title, Text, Image, Date,  from ARTICLE where Id = ?"
                );
 
     if ( error_ != nil )
@@ -657,16 +656,13 @@ func GetDatabaseArticle(
     for rows.Next()
     {
         error_
-            = rows.Scan(
-                  &article.SectionId,
+            = rows.Scan(                  &article.SectionId,
                   &article.UserId,
                   &article.Title,
                   &article.Text,
                   &article.Image,
                   &article.Date,
-                  &article.Section,
-                  &article.User,
-                  &article.ImageIndex
+
                   );
 
         if ( error_ != nil )
@@ -801,7 +797,7 @@ func SetDatabaseComment(
 {
     statement, error_
         := DatabaseSession.Prepare(
-               "update COMMENT set ArticleId = ?, UserId = ?, Text = ?, DateTime = ? where Id = ?"
+               "update COMMENT set ArticleId = ?, UserId = ?, Text = ?, DateTime = ?,  where Id = ?"
                );
 
     if ( error_ != nil )
@@ -873,7 +869,7 @@ func GetDatabaseComment(
 {
     statement, error_
         := DatabaseSession.Prepare(
-               "select ArticleId, UserId, Text, DateTime, Article, User from COMMENT where Id = ?"
+               "select ArticleId, UserId, Text, DateTime,  from COMMENT where Id = ?"
                );
 
     if ( error_ != nil )
@@ -898,13 +894,11 @@ func GetDatabaseComment(
     for rows.Next()
     {
         error_
-            = rows.Scan(
-                  &comment.ArticleId,
+            = rows.Scan(                  &comment.ArticleId,
                   &comment.UserId,
                   &comment.Text,
                   &comment.DateTime,
-                  &comment.Article,
-                  &comment.User
+
                   );
 
         if ( error_ != nil )
@@ -1130,9 +1124,9 @@ func GetDatabaseSubscriber(
     for rows.Next()
     {
         error_
-            = rows.Scan(
-                  &subscriber.Name,
+            = rows.Scan(                  &subscriber.Name,
                   &subscriber.Email
+
                   );
 
         if ( error_ != nil )

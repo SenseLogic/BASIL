@@ -2684,17 +2684,22 @@ class COLUMN
     TYPE
         Type;
     bool
+        IsLast,
         IsStored,
         IsLastStored,
+        IsLastNotStored,
         IsUnique,
         IsKey,
         IsLastKey,
+        IsLastNotKey,
         IsPartitioned,
         IsClustered,
         IsIndexed,
         IsStatic,
         IsRequired,
         IsIncremented,
+        IsLastIncremented,
+        IsLastNotIncremented,
         IsForeign,
         IsProcessed,
         IsFilled;
@@ -2842,7 +2847,17 @@ class COLUMN
                 .replace( "{{column_rust_name}}", RustName )
                 .replace( "{{column_rust_type}}", RustType )
                 .replace( "{{column_javascript_name}}", JavascriptName )
-                .replace( "{{column_javascript_type}}", JavascriptType );
+                .replace( "{{column_javascript_type}}", JavascriptType )
+                .replace( "{{column_is_last}}", GetBooleanText( IsLast ) )
+                .replace( "{{column_is_stored}}", GetBooleanText( IsStored ) )
+                .replace( "{{column_is_last_stored}}", GetBooleanText( IsLastStored ) )
+                .replace( "{{column_is_last_not_stored}}", GetBooleanText( IsLastNotStored ) )
+                .replace( "{{column_is_key}}", GetBooleanText( IsKey ) )
+                .replace( "{{column_is_last_key}}", GetBooleanText( IsLastKey ) )
+                .replace( "{{column_is_last_not_key}}", GetBooleanText( IsLastNotKey ) )
+                .replace( "{{column_is_incremented}}", GetBooleanText( IsIncremented ) )
+                .replace( "{{column_is_last_incremented}}", GetBooleanText( IsLastIncremented ) )
+                .replace( "{{column_is_last_not_incremented}}", GetBooleanText( IsLastNotIncremented ) );
     }
 
     // -- OPERATIONS
@@ -3229,8 +3244,10 @@ class TABLE
     COLUMN[]
         ColumnArray;
     bool
+        IsLast,
         IsStored,
-        IsLastStored;
+        IsLastStored,
+        IsLastNotStored;
     long
         RowCount;
     string
@@ -3265,10 +3282,7 @@ class TABLE
         CsharpType = name;
         RustType = name;
         JavascriptType = name;
-        KeyNameArray = null;
-        ColumnArray = null;
         IsStored = true;
-        IsLastStored = false;
         RowCount = schema.RowCount;
     }
 
@@ -3528,8 +3542,6 @@ class TABLE
     string GetSetDatabaseGenerisCode(
         )
     {
-        long
-            column_count;
         string
             generis_code;
 
@@ -3547,21 +3559,17 @@ class TABLE
                    ~ "        := DatabaseSession.Prepare(\n"
                    ~ "               \"update " ~ Name ~ " set ";
 
-            column_count = 0;
-
             foreach ( ref column; ColumnArray )
             {
                 if ( column.IsStored
                      && !column.IsKey )
                 {
-                    if ( column_count > 0 )
+                    generis_code ~= column.StoredName ~ " = ?";
+
+                    if ( !column.IsLastNotKey )
                     {
                         generis_code ~= ", ";
                     }
-
-                    generis_code ~= column.StoredName ~ " = ?";
-
-                    ++column_count;
                 }
             }
 
@@ -3569,7 +3577,8 @@ class TABLE
 
             foreach ( ref column; ColumnArray )
             {
-                if ( column.IsKey )
+                if ( column.IsStored
+                     && column.IsKey )
                 {
                     generis_code ~= column.StoredName ~ " = ?";
 
@@ -3605,7 +3614,8 @@ class TABLE
 
             foreach ( ref column; ColumnArray )
             {
-                if ( column.IsKey )
+                if ( column.IsStored
+                     && column.IsKey )
                 {
                     generis_code ~= "               " ~ GoVariable ~ "." ~ column.GoName;
 
@@ -3716,7 +3726,8 @@ class TABLE
 
             foreach ( ref column; ColumnArray )
             {
-                if ( column.IsKey )
+                if ( column.IsStored
+                     && column.IsKey )
                 {
                     generis_code ~= column.StoredName ~ " = ?";
 
@@ -3743,7 +3754,8 @@ class TABLE
 
             foreach ( ref column; ColumnArray )
             {
-                if ( column.IsKey )
+                if ( column.IsStored
+                     && column.IsKey )
                 {
                     generis_code ~= "               " ~ GoVariable ~ "." ~ column.GoName;
 
@@ -3768,7 +3780,8 @@ class TABLE
 
             foreach ( ref column; ColumnArray )
             {
-                if ( column.IsKey )
+                if ( column.IsStored
+                     && column.IsKey )
                 {
                     generis_code ~= column.StoredName ~ " = ?";
 
@@ -3783,7 +3796,8 @@ class TABLE
 
             foreach ( ref column; ColumnArray )
             {
-                if ( column.IsKey )
+                if ( column.IsStored
+                     && column.IsKey )
                 {
                     generis_code ~= "               " ~ GoVariable ~ "." ~ column.GoName;
 
@@ -3820,8 +3834,6 @@ class TABLE
     string GetGetDatabaseGenerisCode(
         )
     {
-        long
-            column_count;
         string
             generis_code;
 
@@ -3839,20 +3851,18 @@ class TABLE
                    ~ "        := DatabaseSession.Prepare(\n"
                    ~ "               \"select ";
 
-            column_count = 0;
-
             foreach ( ref column; ColumnArray )
             {
-                if ( !column.IsKey )
+                if ( column.IsStored
+                     && !column.IsKey )
                 {
-                    if ( column_count > 0 )
+                    generis_code ~= column.StoredName;
+
+                    if ( column.IsStored
+                         && !column.IsLastNotKey )
                     {
                         generis_code ~= ", ";
                     }
-
-                    generis_code ~= column.StoredName;
-
-                    ++column_count;
                 }
             }
 
@@ -3860,7 +3870,8 @@ class TABLE
 
             foreach ( ref column; ColumnArray )
             {
-                if ( column.IsKey )
+                if ( column.IsStored
+                     && column.IsKey )
                 {
                     generis_code ~= column.StoredName ~ " = ?";
 
@@ -3887,7 +3898,8 @@ class TABLE
 
             foreach ( ref column; ColumnArray )
             {
-                if ( column.IsKey )
+                if ( column.IsStored
+                     && column.IsKey )
                 {
                     generis_code ~= "               " ~ GoVariable ~ "." ~ column.GoName;
 
@@ -3915,13 +3927,14 @@ class TABLE
                    ~ "        error_\n"
                    ~ "            = rows.Scan(";
 
-            column_count = 0;
-
             foreach ( ref column; ColumnArray )
             {
-                if ( !column.IsKey )
+                if ( column.IsStored
+                     && !column.IsKey )
                 {
-                    if ( column_count > 0 )
+                    generis_code ~= "                  &" ~ GoVariable ~ "." ~ column.GoName;
+
+                    if ( !column.IsLastNotKey )
                     {
                         generis_code ~= ",\n";
                     }
@@ -3929,10 +3942,6 @@ class TABLE
                     {
                         generis_code ~= "\n";
                     }
-
-                    generis_code ~= "                  &" ~ GoVariable ~ "." ~ column.GoName;
-
-                    ++column_count;
                 }
             }
 
@@ -3955,20 +3964,17 @@ class TABLE
                    ~ "        := DatabaseSession.Query(\n"
                    ~ "               \"select ";
 
-            column_count = 0;
-
             foreach ( ref column; ColumnArray )
             {
-                if ( !column.IsKey )
+                if ( column.IsStored
+                     && !column.IsKey )
                 {
-                    if ( column_count > 0 )
+                    generis_code ~= column.StoredName;
+
+                    if ( !column.IsLastNotKey )
                     {
                         generis_code ~= ", ";
                     }
-
-                    generis_code ~= column.StoredName;
-
-                    ++column_count;
                 }
             }
 
@@ -3976,7 +3982,8 @@ class TABLE
 
             foreach ( ref column; ColumnArray )
             {
-                if ( column.IsKey )
+                if ( column.IsStored
+                     && column.IsKey )
                 {
                     generis_code ~= column.StoredName ~ " = ?";
 
@@ -3991,7 +3998,8 @@ class TABLE
 
             foreach ( ref column; ColumnArray )
             {
-                if ( column.IsKey )
+                if ( column.IsStored
+                     && column.IsKey )
                 {
                     generis_code ~= "               " ~ GoVariable ~ "." ~ column.GoName;
 
@@ -4009,13 +4017,14 @@ class TABLE
                    ~ "               .Consistency( gocql.One )\n"
                    ~ "               .Scan(";
 
-            column_count = 0;
-
             foreach ( ref column; ColumnArray )
             {
-                if ( !column.IsKey )
+                if ( column.IsStored
+                     && !column.IsKey )
                 {
-                    if ( column_count > 0 )
+                    generis_code ~= "                    &" ~ GoVariable ~ "." ~ column.GoName;
+
+                    if ( !column.IsLastNotKey )
                     {
                         generis_code ~= ",\n";
                     }
@@ -4023,10 +4032,6 @@ class TABLE
                     {
                         generis_code ~= "\n";
                     }
-
-                    generis_code ~= "                    &" ~ GoVariable ~ "." ~ column.GoName;
-
-                    ++column_count;
                 }
             }
 
@@ -4385,7 +4390,8 @@ class TABLE
 
         foreach ( ref column; ColumnArray )
         {
-            if ( column.IsKey )
+            if ( column.IsStored
+                 && column.IsKey )
             {
                 generis_code
                     ~= "         && GetRequest" ~ column.GoAttribute ~ "( &" ~ GoVariable ~ "." ~ column.GoName ~ ", request, \"" ~ column.StoredName ~ "\", &error_code )\n";
@@ -4429,7 +4435,8 @@ class TABLE
 
         foreach ( ref column; ColumnArray )
         {
-            if ( column.IsKey )
+            if ( column.IsStored
+                 && column.IsKey )
             {
                 generis_code
                     ~= "         && GetRequest" ~ column.GoAttribute ~ "( &" ~ GoVariable ~ "." ~ column.GoName ~ ", request, \"" ~ column.StoredName ~ "\", &error_code )\n";
@@ -4534,7 +4541,11 @@ class TABLE
                 .replace( "{{table_javascript_attribute_declaration}}", JavascriptAttributeDeclaration )
                 .replace( "{{table_javascript_type_declaration}}", JavascriptTypeDeclaration )
                 .replace( "{{table_rust_attribute_declaration}}", RustAttributeDeclaration )
-                .replace( "{{table_rust_type_declaration}}", RustTypeDeclaration );
+                .replace( "{{table_rust_type_declaration}}", RustTypeDeclaration )
+                .replace( "{{table_is_last}}", GetBooleanText( IsLast ) )
+                .replace( "{{table_is_stored}}", GetBooleanText( IsStored ) )
+                .replace( "{{table_is_last_stored}}", GetBooleanText( IsLastStored ) )
+                .replace( "{{table_is_last_not_stored}}", GetBooleanText( IsLastNotStored ) );
     }
 
     // -- OPERATIONS
@@ -4591,6 +4602,11 @@ class TABLE
         )
     {
         COLUMN
+            last_column,
+            last_not_incremented_column,
+            last_not_key_column,
+            last_not_stored_column,
+            last_incremented_column,
             last_key_column,
             last_stored_column;
 
@@ -4601,20 +4617,52 @@ class TABLE
             column.MakeType();
         }
 
+        last_column = null;
         last_stored_column = null;
+        last_not_stored_column = null;
         last_key_column = null;
+        last_not_key_column = null;
+        last_incremented_column = null;
+        last_not_incremented_column = null;
 
         foreach ( ref column; ColumnArray )
         {
+            last_column = column;
+
             if ( column.IsStored )
             {
                 last_stored_column = column;
+            }
+
+            if ( !column.IsStored )
+            {
+                last_not_stored_column = column;
             }
 
             if ( column.IsKey )
             {
                 last_key_column = column;
             }
+
+            if ( !column.IsKey )
+            {
+                last_not_key_column = column;
+            }
+
+            if ( column.IsIncremented )
+            {
+                last_incremented_column = column;
+            }
+
+            if ( !column.IsIncremented )
+            {
+                last_not_incremented_column = column;
+            }
+        }
+
+        if ( last_column !is null )
+        {
+            last_column.IsLast = true;
         }
 
         if ( last_stored_column !is null )
@@ -4622,9 +4670,29 @@ class TABLE
             last_stored_column.IsLastStored = true;
         }
 
+        if ( last_not_stored_column !is null )
+        {
+            last_not_stored_column.IsLastNotStored = true;
+        }
+
         if ( last_key_column !is null )
         {
             last_key_column.IsLastKey = true;
+        }
+
+        if ( last_not_key_column !is null )
+        {
+            last_not_key_column.IsLastNotKey = true;
+        }
+
+        if ( last_incremented_column !is null )
+        {
+            last_incremented_column.IsLastIncremented = true;
+        }
+
+        if ( last_not_incremented_column !is null )
+        {
+            last_not_incremented_column.IsLastNotIncremented = true;
         }
     }
 
@@ -4784,7 +4852,8 @@ class SCHEMA
                             column.SetPropertyValue( property_text.strip() );
                         }
 
-                        if ( column.IsKey )
+                        if ( column.IsStored
+                             && column.IsKey )
                         {
                             table.KeyNameArray ~= column.Name;
                         }
@@ -4850,9 +4919,45 @@ class SCHEMA
     void MakeTypes(
         )
     {
+        TABLE
+            last_not_stored_table,
+            last_stored_table,
+            last_table;
+
+        last_table = null;
+        last_stored_table = null;
+        last_not_stored_table = null;
+
         foreach ( ref table; TableArray )
         {
             table.MakeTypes();
+
+            last_table = table;
+
+            if ( table.IsStored )
+            {
+                last_stored_table = table;
+            }
+
+            if ( !table.IsStored )
+            {
+                last_not_stored_table = table;
+            }
+        }
+
+        if ( last_table !is null )
+        {
+            last_table.IsLast = true;
+        }
+
+        if ( last_stored_table !is null )
+        {
+            last_stored_table.IsLastStored = true;
+        }
+
+        if ( last_not_stored_table !is null )
+        {
+            last_not_stored_table.IsLastNotStored = true;
         }
     }
 
@@ -6200,8 +6305,6 @@ string[] GetSplitText(
 
 string ReplaceColumnTags(
     string template_text,
-    string opening_tag,
-    string closing_tag,
     TABLE table
     )
 {
@@ -6209,10 +6312,8 @@ string ReplaceColumnTags(
         instance_part;
     string[]
         template_part_array;
-    COLUMN[]
-        column_array;
 
-    template_part_array = template_text.GetSplitText( opening_tag, closing_tag );
+    template_part_array = template_text.GetSplitText( "<~", "~>" );
 
     foreach ( template_part_index, ref template_part; template_part_array )
     {
@@ -6220,37 +6321,7 @@ string ReplaceColumnTags(
         {
             instance_part = "";
 
-            column_array = null;
-
             foreach ( column; table.ColumnArray )
-            {
-                if ( opening_tag.startsWith( "<*" )
-                     || ( opening_tag.startsWith( "<#" )
-                          && column.IsKey )
-                     || ( opening_tag.startsWith( "<~" )
-                          && !column.IsKey )
-                     || ( opening_tag.startsWith( "<." )
-                          && column.IsStored )
-                     || ( opening_tag.startsWith( "<!" )
-                          && !column.IsStored ) )
-                {
-                    column_array ~= column;
-                }
-            }
-
-            if ( column_array.length > 0
-                 && opening_tag.endsWith( '^' ) )
-            {
-                column_array = column_array[ 0 .. $ - 1 ];
-            }
-
-            if ( column_array.length > 0
-                 && opening_tag.endsWith( '$' ) )
-            {
-                column_array = column_array[ $ - 1 .. $ ];
-            }
-
-            foreach ( column; column_array )
             {
                 instance_part ~= column.ReplaceTags( template_part );
             }
@@ -6266,8 +6337,6 @@ string ReplaceColumnTags(
 
 string ReplaceTableTags(
     string template_text,
-    string opening_tag,
-    string closing_tag,
     TABLE[] table_array
     )
 {
@@ -6276,7 +6345,7 @@ string ReplaceTableTags(
     string[]
         template_part_array;
 
-    template_part_array = template_text.GetSplitText( opening_tag, closing_tag );
+    template_part_array = template_text.GetSplitText( "<%", "%>" );
 
     foreach ( template_part_index, ref template_part; template_part_array )
     {
@@ -6286,30 +6355,9 @@ string ReplaceTableTags(
 
             foreach ( table; table_array )
             {
-                if ( opening_tag == "[*"
-                     || ( opening_tag == "[."
-                          && table.IsStored )
-                     || ( opening_tag == "[!"
-                          && !table.IsStored ) )
-                {
-                    instance_part
-                        ~= table.ReplaceTags( template_part )
-                               .ReplaceColumnTags( "<*^", "^*>", table )
-                               .ReplaceColumnTags( "<*$", "$*>", table )
-                               .ReplaceColumnTags( "<*", "*>", table )
-                               .ReplaceColumnTags( "<#^", "^#>", table )
-                               .ReplaceColumnTags( "<#$", "$#>", table )
-                               .ReplaceColumnTags( "<#", "#>", table )
-                               .ReplaceColumnTags( "<~^", "^~>", table )
-                               .ReplaceColumnTags( "<~$", "$~>", table )
-                               .ReplaceColumnTags( "<~", "~>", table )
-                               .ReplaceColumnTags( "<.^", "^.>", table )
-                               .ReplaceColumnTags( "<.$", "$.>", table )
-                               .ReplaceColumnTags( "<.", ".>", table )
-                               .ReplaceColumnTags( "<!^", "^!>", table )
-                               .ReplaceColumnTags( "<!$", "$!>", table )
-                               .ReplaceColumnTags( "<!", "!>", table );
-                }
+                instance_part
+                    ~= table.ReplaceTags( template_part )
+                           .ReplaceColumnTags( table );
             }
 
             template_part = instance_part;
@@ -6317,6 +6365,55 @@ string ReplaceTableTags(
     }
 
     return template_part_array.join( "" );
+}
+
+// ~~
+
+string GetBooleanText(
+    bool boolean
+    )
+{
+    if ( boolean )
+    {
+        return "true";
+    }
+    else
+    {
+        return "false";
+    }
+}
+
+// ~~
+
+string EvaluateBooleanExpression(
+    string boolean_expression
+    )
+{
+    string
+        old_boolean_expression;
+
+    do
+    {
+        old_boolean_expression = boolean_expression;
+
+        boolean_expression
+            = boolean_expression
+                  .replace( "!false", "true" )
+                  .replace( "!true", "false" )
+                  .replace( "false&false", "false" )
+                  .replace( "false&true", "false" )
+                  .replace( "true&false", "false" )
+                  .replace( "true&true", "true" )
+                  .replace( "false|false", "false" )
+                  .replace( "false|true", "true" )
+                  .replace( "true|false", "true" )
+                  .replace( "true|true", "true" )
+                  .replace( "(true)", "true")
+                  .replace( "(false)", "false" );
+    }
+    while ( boolean_expression != old_boolean_expression );
+
+    return boolean_expression;
 }
 
 // ~~
@@ -6334,6 +6431,7 @@ string ReplaceConditionalTags(
         level,
         post_character_index;
     string
+        boolean_expression,
         old_text,
         result_text;
     string[]
@@ -6371,7 +6469,7 @@ string ReplaceConditionalTags(
 
                 if ( ( argument_array.length == 4
                        || argument_array.length == 5 )
-                     && argument_array[ 0 ] == "=" )
+                     && argument_array[ 0 ] == "Equals" )
                 {
                     if ( argument_array[ 1 ] == argument_array[ 2 ] )
                     {
@@ -6388,24 +6486,7 @@ string ReplaceConditionalTags(
                 }
                 else if ( ( argument_array.length == 4
                             || argument_array.length == 5 )
-                          && argument_array[ 0 ] == "!=" )
-                {
-                    if ( argument_array[ 1 ] != argument_array[ 2 ] )
-                    {
-                        result_text = argument_array[ 3 ];
-                    }
-                    else if ( argument_array.length == 5 )
-                    {
-                        result_text = argument_array[ 4 ];
-                    }
-                    else
-                    {
-                        result_text = "";
-                    }
-                }
-                else if ( ( argument_array.length == 4
-                            || argument_array.length == 5 )
-                          && argument_array[ 0 ] == "^" )
+                          && argument_array[ 0 ] == "HasPrefix" )
                 {
                     if ( argument_array[ 1 ].startsWith( argument_array[ 2 ] ) )
                     {
@@ -6422,24 +6503,7 @@ string ReplaceConditionalTags(
                 }
                 else if ( ( argument_array.length == 4
                             || argument_array.length == 5 )
-                          && argument_array[ 0 ] == "!^" )
-                {
-                    if ( !argument_array[ 1 ].startsWith( argument_array[ 2 ] ) )
-                    {
-                        result_text = argument_array[ 3 ];
-                    }
-                    else if ( argument_array.length == 5 )
-                    {
-                        result_text = argument_array[ 4 ];
-                    }
-                    else
-                    {
-                        result_text = "";
-                    }
-                }
-                else if ( ( argument_array.length == 4
-                            || argument_array.length == 5 )
-                          && argument_array[ 0 ] == "$" )
+                          && argument_array[ 0 ] == "HasSuffix" )
                 {
                     if ( argument_array[ 1 ].endsWith( argument_array[ 2 ] ) )
                     {
@@ -6456,24 +6520,7 @@ string ReplaceConditionalTags(
                 }
                 else if ( ( argument_array.length == 4
                             || argument_array.length == 5 )
-                          && argument_array[ 0 ] == "!$" )
-                {
-                    if ( !argument_array[ 1 ].endsWith( argument_array[ 2 ] ) )
-                    {
-                        result_text = argument_array[ 3 ];
-                    }
-                    else if ( argument_array.length == 5 )
-                    {
-                        result_text = argument_array[ 4 ];
-                    }
-                    else
-                    {
-                        result_text = "";
-                    }
-                }
-                else if ( ( argument_array.length == 4
-                            || argument_array.length == 5 )
-                          && argument_array[ 0 ] == "@" )
+                          && argument_array[ 0 ] == "Contains" )
                 {
                     if ( argument_array[ 1 ].indexOf( argument_array[ 2 ] ) >= 0 )
                     {
@@ -6488,95 +6535,108 @@ string ReplaceConditionalTags(
                         result_text = "";
                     }
                 }
-                else if ( ( argument_array.length == 4
-                            || argument_array.length == 5 )
-                          && argument_array[ 0 ] == "!@" )
-                {
-                    if ( argument_array[ 1 ].indexOf( argument_array[ 2 ] ) < 0 )
-                    {
-                        result_text = argument_array[ 3 ];
-                    }
-                    else if ( argument_array.length == 5 )
-                    {
-                        result_text = argument_array[ 4 ];
-                    }
-                    else
-                    {
-                        result_text = "";
-                    }
-                }
-                else if ( ( argument_array.length == 3
-                            || argument_array.length == 4 )
-                          && argument_array[ 0 ] == "%^" )
+                else if ( argument_array.length == 3
+                          && argument_array[ 0 ] == "RemovePrefix" )
                 {
                     if ( argument_array[ 1 ].startsWith( argument_array[ 2 ] ) )
                     {
-                        if ( argument_array.length == 4 )
-                        {
-                            result_text = argument_array[ 3 ] ~ argument_array[ 1 ][ argument_array[ 2 ].length .. $ ];
-                        }
-                        else
-                        {
-                            result_text = argument_array[ 1 ][ argument_array[ 2 ].length .. $ ];
-                        }
+                        result_text = argument_array[ 1 ][ argument_array[ 2 ].length .. $ ];
                     }
                     else
                     {
                         result_text = argument_array[ 1 ];
                     }
                 }
-                else if ( ( argument_array.length == 3
-                            || argument_array.length == 4 )
-                          && argument_array[ 0 ] == "%$" )
+                else if ( argument_array.length == 4
+                          && argument_array[ 0 ] == "ReplacePrefix" )
+                {
+                    if ( argument_array[ 1 ].startsWith( argument_array[ 2 ] ) )
+                    {
+                        result_text = argument_array[ 3 ] ~ argument_array[ 1 ][ argument_array[ 2 ].length .. $ ];
+                    }
+                    else
+                    {
+                        result_text = argument_array[ 1 ];
+                    }
+                }
+                else if ( argument_array.length == 3
+                          && argument_array[ 0 ] == "RemoveSuffix" )
                 {
                     if ( argument_array[ 1 ].endsWith( argument_array[ 2 ] ) )
                     {
-                        if ( argument_array.length == 4 )
-                        {
-                            result_text = argument_array[ 1 ][ 0 .. $ - argument_array[ 2 ].length ] ~ argument_array[ 3 ];
-                        }
-                        else
-                        {
-                            result_text = argument_array[ 1 ][ 0 .. $ - argument_array[ 2 ].length ];
-                        }
+                        result_text = argument_array[ 1 ][ 0 .. $ - argument_array[ 2 ].length ];
                     }
                     else
                     {
                         result_text = argument_array[ 1 ];
                     }
                 }
-                else if ( ( argument_array.length == 3
-                            || argument_array.length == 4 )
-                          && argument_array[ 0 ] == "%" )
+                else if ( argument_array.length == 4
+                          && argument_array[ 0 ] == "ReplaceSuffix" )
                 {
-                    if ( argument_array.length == 4 )
+                    if ( argument_array[ 1 ].endsWith( argument_array[ 2 ] ) )
                     {
-                        result_text = argument_array[ 1 ].replace( argument_array[ 2 ], argument_array[ 3 ] );
+                        result_text = argument_array[ 1 ][ 0 .. $ - argument_array[ 2 ].length ] ~ argument_array[ 3 ];
                     }
                     else
                     {
-                        result_text = argument_array[ 1 ].replace( argument_array[ 2 ], "" );
+                        result_text = argument_array[ 1 ];
                     }
                 }
+                else if ( argument_array.length == 3
+                          && argument_array[ 0 ] == "Remove" )
+                {
+                    result_text = argument_array[ 1 ].replace( argument_array[ 2 ], "" );
+                }
+                else if ( argument_array.length == 4
+                          && argument_array[ 0 ] == "Replace" )
+                {
+                    result_text = argument_array[ 1 ].replace( argument_array[ 2 ], argument_array[ 3 ] );
+                }
                 else if ( argument_array.length == 2
-                          && argument_array[ 0 ] == "_" )
+                          && argument_array[ 0 ] == "Snakecase" )
                 {
                     result_text = GetSnakeCaseText( argument_array[ 1 ] );
                 }
                 else if ( argument_array.length == 2
-                          && argument_array[ 0 ] == "~" )
+                          && argument_array[ 0 ] == "Pascalcase" )
                 {
                     result_text = GetPascalCaseText( argument_array[ 1 ] );
                 }
                 else if ( argument_array.length == 2
-                          && argument_array[ 0 ] == "-" )
+                          && argument_array[ 0 ] == "Lowercase" )
                 {
                     result_text = argument_array[ 1 ].toLower();
                 }
                 else if ( argument_array.length == 2
-                          && argument_array[ 0 ] == "+" )
+                          && argument_array[ 0 ] == "Uppercase" )
                 {
                     result_text = argument_array[ 1 ].toUpper();
+                }
+                else if ( ( argument_array.length == 2
+                            || argument_array.length == 3 ) )
+                {
+                    boolean_expression = EvaluateBooleanExpression( argument_array[ 0 ] );
+
+                    if ( boolean_expression == "true" )
+                    {
+                        result_text = argument_array[ 1 ];
+                    }
+                    else if ( boolean_expression == "false" )
+                    {
+                        if ( argument_array.length == 3 )
+                        {
+                            result_text = argument_array[ 2 ];
+                        }
+                        else
+                        {
+                            result_text = "";
+                        }
+                    }
+                    else
+                    {
+                        Abort( "Invalid boolean expression : " ~ argument_array[ 0 ] );
+                    }
                 }
                 else
                 {
@@ -6657,9 +6717,7 @@ void WriteInstanceFiles(
 
         instance_file_text
             = template_file_text
-                  .ReplaceTableTags( "[*", "*]", schema.TableArray )
-                  .ReplaceTableTags( "[.", ".]", schema.TableArray )
-                  .ReplaceTableTags( "[!", "!]", schema.TableArray )
+                  .ReplaceTableTags( schema.TableArray )
                   .ReplaceConditionalTags();
 
         WriteInstanceFiles( instance_file_text );
