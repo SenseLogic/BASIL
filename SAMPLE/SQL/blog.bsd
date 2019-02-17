@@ -15,4 +15,3 @@ USER
     FirstName LastName Email Pseudonym Password ItIsAdministrator
 
         Rick ~ Deckard ~ root@mail.com ~ root ~ root ~ true
-
