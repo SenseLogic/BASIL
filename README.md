@@ -19,7 +19,7 @@ Database designer and filler.
     *   Crystal / Cibyl
     *   Rust
 
-## Sample SQL schema
+## Sample SQL schema file
 
 ```cpp
 BLOG | count 5
@@ -81,29 +81,11 @@ BLOG | count 5
         Id : UINT64 | key, unique, incremented
         Name : STRING | capacity 45
         Email : STRING | capacity 45
-
-    %SECTION
-
-        Number Name
-
-            1 ~ Sports
-            2 ~ Gaming
-            3 ~ Entertainment
-            4 ~ Science
-            5 ~ History
-            6 ~ Travel
-            7 ~ Finance
-
-    %USER
-
-        FirstName LastName Email Pseudonym Password ItIsAdministrator
-
-            Rick ~ Deckard ~ root@mail.com ~ root ~ root ~ true
 ```
 
 ![](https://github.com/senselogic/BASIL/blob/master/SAMPLE/SQL/blog.png)
 
-## Sample CQL schema
+## Sample CQL schema file
 
 ```cpp
 BLOG | count 5
@@ -165,29 +147,33 @@ BLOG | count 5
         Uuid : UUID | key, unique
         Name : STRING
         Email : STRING
-
-    %SECTION
-
-        Number Name
-
-            1 ~ Sports
-            2 ~ Gaming
-            3 ~ Entertainment
-            4 ~ Science
-            5 ~ History
-            6 ~ Travel
-            7 ~ Finance
-
-    %USER
-
-        FirstName LastName Email Pseudonym Password ItIsAdministrator
-
-            Rick ~ Deckard ~ root@mail.com ~ root ~ root ~ true
 ```
 
 ![](https://github.com/senselogic/BASIL/blob/master/SAMPLE/CQL/blog.png)
 
-## Sample template
+## Sample data file
+
+```
+SECTION
+
+    Number Name
+
+        1 ~ Sports
+        2 ~ Gaming
+        3 ~ Entertainment
+        4 ~ Science
+        5 ~ History
+        6 ~ Travel
+        7 ~ Finance
+
+USER
+
+    FirstName LastName Email Pseudonym Password ItIsAdministrator
+
+        Rick ~ Deckard ~ root@mail.com ~ root ~ root ~ true
+```
+
+## Sample template file
 
 ```go
 %%test_types.go
@@ -244,7 +230,7 @@ func main(
 ?>~>%>}
 ```
 
-## Syntax
+## Schema file syntax
 
 ```
 -- comment
@@ -254,17 +240,6 @@ func main(
     {table name} [| {table property}, {table property}, ...]
 
         {column name} : {column type} [| {column property}, {column property}, ...]
-        ...
-
-    ...
-
-    %{table name}
-
-        {column name} {column name} ...
-
-            {column value} ~ {column value} ~ ...
-            ...
-
         ...
 
     ...
@@ -383,16 +358,30 @@ ARRAY[ ELEMENT_TYPE ] | !stored
 POINTER[ ELEMENT_TYPE ] | !stored
 ```
 
-### Data
+## Data file syntax
 
 ```
-^ : unremovable space
-§ : new line symbol
+{table name}
+
+    {column name} {column name} ...
+
+        {column value} ~ {column value} ~ ...
+        ...
+
+    ...
+
+...
+```
+
+```
+# : universal unique identifier
 ~ : value separator
+§ : new line symbol
+^ : unremovable space
 \ : escape character
 ```
 
-### Template tags
+### Template file tags
 
 ```
 <%content for each table%>
@@ -501,7 +490,7 @@ The UML diagrams can be drawn using [PlantText](https://www.planttext.com/) or [
 ## Command line
 
 ```
-basil [options] script_file.bsl
+basil [options] script_file.bsl [script_file.bsl|bsd|bst ...]
 ```
 
 ### Options
@@ -536,10 +525,10 @@ basil --uml --sql --go blog.bsl
 Generates "blog.uml", "blog.sql", "blog_data.sql", "blog_sql_type.go" from "blog.bsl".
 
 ```bash
-basil --uml --cql --go --template template.bst blog.bsl
+basil --uml --cql --go blog.bsl blog.bst
 ```
 
-Generates "blog.uml", "blog.sql", "blog_data.sql", "blog_sql_type.go" and custom files from "blog.bsl" and "blog.bsl".
+Generates "blog.uml", "blog.sql", "blog_data.sql", "blog_sql_type.go" from "blog.bsl", and other custom files from "blog.bst".
 
 ## Version
 

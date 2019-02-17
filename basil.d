@@ -4725,6 +4725,8 @@ class SCHEMA
         TableArray;
     long
         RowCount;
+    string
+        TemplateFileText;
 
     // -- CONSTRUCTORS
 
@@ -4997,7 +4999,7 @@ class SCHEMA
 
             stripped_line = line.strip();
 
-            if ( line.startsWith( "            " ) )
+            if ( line.startsWith( "        " ) )
             {
                 if ( table is null
                      || column_array is null )
@@ -5059,7 +5061,7 @@ class SCHEMA
                     table.RowCount = row_count;
                 }
             }
-            else if ( line.startsWith( "        " ) )
+            else if ( line.startsWith( "    " ) )
             {
                 if ( table is null )
                 {
@@ -5089,19 +5091,15 @@ class SCHEMA
 
                 row_count = 0;
             }
-            else if ( line.startsWith( "    %" ) )
+            else
             {
-                table_name = stripped_line[ 1 .. $ ];
+                table_name = stripped_line;
                 table = FindTable( table_name );
 
                 if ( table is null )
                 {
                     Abort( "Invalid table name : " ~ table_name );
                 }
-            }
-            else
-            {
-                Abort( "Invalid line : " ~ stripped_line );
             }
         }
     }
@@ -5123,41 +5121,18 @@ class SCHEMA
         }
     }
 
-    // ~~
-
-    void ReadBasilFiles(
-        string[] basil_file_path_array
+    string[] GetStrippedLineArray(
+        string text
         )
     {
-        bool
-            line_contains_data;
         string
-            basil_file_text,
             stripped_line;
         string[]
-            data_line_array,
             line_array,
-            schema_line_array;
+            stripped_line_array;
 
-        foreach ( basil_file_path; basil_file_path_array )
-        {
-            writeln( "Reading schema file : ", basil_file_path );
-
-            if ( !basil_file_path.endsWith( ".bsl" )
-                 || !exists( basil_file_path ) )
-            {
-                Abort( "Invalid file path : " ~ basil_file_path );
-            }
-
-            basil_file_text ~= basil_file_path.readText() ~ "\n";
-        }
-
-        TableArray = null;
-
-        line_array = basil_file_text.replace( "\r", "" ).replace( "\t", "    " ).split( '\n' );
-        line_contains_data = false;
-        schema_line_array = null;
-        data_line_array = null;
+        line_array = text.split( '\n' );
+        stripped_line_array = null;
 
         foreach ( line; line_array )
         {
@@ -5167,33 +5142,58 @@ class SCHEMA
             if ( stripped_line != ""
                  && !stripped_line.startsWith( "--" ) )
             {
-                if ( line.startsWith( "    " )
-                     && !line.startsWith( "        " ) )
-                {
-                    if ( line.startsWith( "    %" ) )
-                    {
-                        line_contains_data = true;
-                    }
-                    else
-                    {
-                        line_contains_data = false;
-                    }
-                }
-
-                if ( line_contains_data )
-                {
-                    data_line_array ~= line;
-                }
-                else
-                {
-                    schema_line_array ~= line;
-                }
+                stripped_line_array ~= line;
             }
         }
 
-        AddTables( schema_line_array );
+        return stripped_line_array;
+    }
+
+    // ~~
+
+    void ReadFiles(
+        string[] file_path_array
+        )
+    {
+        string
+            data_file_text,
+            file_text,
+            schema_file_text;
+
+        foreach ( file_path; file_path_array )
+        {
+            writeln( "Reading file : ", file_path );
+
+            if ( !exists( file_path ) )
+            {
+                Abort( "Invalid file path : " ~ file_path );
+            }
+
+            file_text = file_path.readText().replace( "\r", "" ).replace( "\t", "    " ) ~ "\n";
+
+            if ( file_path.endsWith( ".bsl" ) )
+            {
+                schema_file_text ~= file_text;
+            }
+            else if ( file_path.endsWith( ".bsd" ) )
+            {
+                data_file_text ~= file_text;
+            }
+            else if ( file_path.endsWith( ".bst" ) )
+            {
+                TemplateFileText ~= file_text;
+            }
+            else
+            {
+                Abort( "Invalid file path : " ~ file_path );
+            }
+        }
+
+        TableArray = null;
+
+        AddTables( GetStrippedLineArray( schema_file_text ) );
         MakeTypes();
-        AddValues( data_line_array );
+        AddValues( GetStrippedLineArray( data_file_text ) );
         MakeValues();
     }
 
@@ -6048,6 +6048,67 @@ class SCHEMA
 
         javascript_type_file_path.write( javascript_type_file_text );
     }
+
+    // ~~
+
+    void WriteInstanceFiles(
+        string instance_text
+        )
+    {
+        string
+            instance_file_path;
+        string[]
+            instance_file_line_array,
+            instance_file_text_array;
+
+        if ( !instance_text.startsWith( "%%" ) )
+        {
+            Abort( "Missing instance file path : " ~ instance_text );
+        }
+
+        instance_file_text_array = instance_text[ 2 .. $ ].split( "\n%%" );
+
+        foreach ( instance_file_text_index, instance_file_text; instance_file_text_array )
+        {
+            if ( instance_file_text_index + 1 < instance_file_text_array.length )
+            {
+                instance_file_text ~= '\n';
+            }
+
+            instance_file_line_array = instance_file_text.split( '\n' );
+
+            if ( instance_file_line_array.length == 0 )
+            {
+                Abort( "Missing instance file path : " ~ instance_file_text );
+            }
+
+            instance_file_path = instance_file_line_array[ 0 ];
+            instance_file_text = instance_file_line_array[ 1 .. $ ].join( '\n' );
+
+            writeln( "Writing instance file : " ~ instance_file_path );
+
+            instance_file_path.write( instance_file_text );
+        }
+    }
+
+    // ~~
+
+    void WriteInstanceFiles(
+        )
+    {
+        string
+            instance_file_text;
+
+        if ( TemplateFileText != "" )
+        {
+            instance_file_text
+                = TemplateFileText
+                      .ReplaceTableTags( TableArray )
+                      .ReplaceConditionalTags();
+
+            WriteInstanceFiles( instance_file_text );
+        }
+    }
 }
 
 // -- VARIABLES
@@ -6058,8 +6119,7 @@ bool
 string
     DatabaseFormat;
 string[]
-    OutputFormatArray,
-    TemplateFilePathArray;
+    OutputFormatArray;
 RANDOM
     Random;
 SCHEMA
@@ -6398,16 +6458,17 @@ string EvaluateBooleanExpression(
 
         boolean_expression
             = boolean_expression
+                  .replace( " ", "" )
                   .replace( "!false", "true" )
                   .replace( "!true", "false" )
-                  .replace( "false&false", "false" )
-                  .replace( "false&true", "false" )
-                  .replace( "true&false", "false" )
-                  .replace( "true&true", "true" )
-                  .replace( "false|false", "false" )
-                  .replace( "false|true", "true" )
-                  .replace( "true|false", "true" )
-                  .replace( "true|true", "true" )
+                  .replace( "false&&false", "false" )
+                  .replace( "false&&true", "false" )
+                  .replace( "true&&false", "false" )
+                  .replace( "true&&true", "true" )
+                  .replace( "false||false", "false" )
+                  .replace( "false||true", "true" )
+                  .replace( "true||false", "true" )
+                  .replace( "true||true", "true" )
                   .replace( "(true)", "true")
                   .replace( "(false)", "false" );
     }
@@ -6659,86 +6720,19 @@ string ReplaceConditionalTags(
 
 // ~~
 
-void WriteInstanceFiles(
-    string instance_text
-    )
-{
-    string
-        instance_file_path;
-    string[]
-        instance_file_line_array,
-        instance_file_text_array;
-
-    if ( !instance_text.startsWith( "%%" ) )
-    {
-        Abort( "Missing instance file path : " ~ instance_text );
-    }
-
-    instance_file_text_array = instance_text[ 2 .. $ ].split( "\n%%" );
-
-    foreach ( instance_file_text_index, instance_file_text; instance_file_text_array )
-    {
-        if ( instance_file_text_index + 1 < instance_file_text_array.length )
-        {
-            instance_file_text ~= '\n';
-        }
-
-        instance_file_line_array = instance_file_text.split( '\n' );
-
-        if ( instance_file_line_array.length == 0 )
-        {
-            Abort( "Missing instance file path : " ~ instance_file_text );
-        }
-
-        instance_file_path = instance_file_line_array[ 0 ];
-        instance_file_text = instance_file_line_array[ 1 .. $ ].join( '\n' );
-
-        writeln( "Writing instance file : " ~ instance_file_path );
-
-        instance_file_path.write( instance_file_text );
-    }
-}
-
-// ~~
-
-void WriteInstanceFiles(
-    SCHEMA schema
-    )
-{
-    string
-        instance_file_text,
-        template_file_text;
-
-    foreach ( template_file_path; TemplateFilePathArray )
-    {
-        writeln( "Reading template file : ", template_file_path );
-
-        template_file_text = template_file_path.readText().replace( "\r", "" );
-
-        instance_file_text
-            = template_file_text
-                  .ReplaceTableTags( schema.TableArray )
-                  .ReplaceConditionalTags();
-
-        WriteInstanceFiles( instance_file_text );
-    }
-}
-
-// ~~
-
 void ProcessFiles(
-    string[] basil_file_path_array
+    string[] file_path_array
     )
 {
     string
         base_file_path;
 
-    base_file_path = basil_file_path_array[ 0 ][ 0 .. $ - 4 ];
+    base_file_path = file_path_array[ 0 ][ 0 .. $ - 4 ];
 
     Random = new RANDOM();
 
     Schema = new SCHEMA();
-    Schema.ReadBasilFiles( basil_file_path_array );
+    Schema.ReadFiles( file_path_array );
 
     foreach ( output_format; OutputFormatArray )
     {
@@ -6804,7 +6798,6 @@ void main(
     CqlOptionIsEnabled = false;
     OutputFormatArray = null;
     DatabaseFormat = "";
-    TemplateFilePathArray = null;
 
     while ( argument_array.length >= 1
             && argument_array[ 0 ].startsWith( "--" ) )
@@ -6863,13 +6856,6 @@ void main(
         {
             OutputFormatArray ~= "javascript";
         }
-        else if ( option == "--template"
-                  && argument_array.length >= 1 )
-        {
-            TemplateFilePathArray ~= argument_array[ 0 ];
-
-            argument_array = argument_array[ 1 .. $ ];
-        }
         else
         {
             Abort( "Invalid option : " ~ option );
@@ -6883,7 +6869,7 @@ void main(
     else
     {
         writeln( "Usage :" );
-        writeln( "    basil [options] script_file.bsl [script_file.bsl ...]" );
+        writeln( "    basil [options] script_file.bsl [script_file.bsl|bsd|bst ...]" );
         writeln( "Options :" );
         writeln( "    --uml" );
         writeln( "    --sql" );

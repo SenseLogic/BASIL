@@ -1,3 +1,3 @@
 #!/bin/sh
 set -x
-../basil --uml --cql --go --generis --crystal --csharp --rust --template test.bst test.bsl
+../basil --uml --cql --go --generis --crystal --csharp --rust test.bsl test.bsd test.bst

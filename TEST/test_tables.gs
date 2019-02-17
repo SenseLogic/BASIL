@@ -140,3 +140,4 @@ func main(
     fmt.Println( "            ValueUuid" );
     fmt.Println( "        Not stored columns :" );
 }
+

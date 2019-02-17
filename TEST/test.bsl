@@ -46,21 +46,3 @@ TEST | count 10
 
         Uuid : UUID | key
         ValueUuid : VALUE.Uuid
-
-    -- comment
-
-    %VALUE
-
-        Uuid Name Integer Text
-
-            #first ~ first ~ 1 ~ ^This is the first text, with spaces^
-            #second ~ second ~ 2 ~ This is the second text, with escaped characters \^\~
-            #third ~ third ~ 3 ~ This is the third text§with a new line
-
-    %DATA
-
-        ValueUuid
-
-            #first
-            #second
-            #third

@@ -57,22 +57,3 @@ BLOG | count 5
         Uuid : UUID | key, unique
         Name : STRING
         Email : STRING
-
-    %SECTION
-
-        Number Name
-
-            1 ~ Sports
-            2 ~ Gaming
-            3 ~ Entertainment
-            4 ~ Science
-            5 ~ History
-            6 ~ Travel
-            7 ~ Finance
-
-    %USER
-
-        FirstName LastName Email Pseudonym Password ItIsAdministrator
-
-            Rick ~ Deckard ~ root@mail.com ~ root ~ root ~ true
-
