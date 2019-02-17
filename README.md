@@ -381,7 +381,7 @@ POINTER[ ELEMENT_TYPE ] | !stored
 \ : escape character
 ```
 
-### Template file tags
+## Template file syntax
 
 ```
 <%content for each table%>
@@ -414,6 +414,9 @@ POINTER[ ELEMENT_TYPE ] | !stored
 <?Pascalcase#text?>
 <?Lowercase#text?>
 <?Uppercase#text?>
+
+<?boolean expression#text if condition is true?>
+<?boolean expression#text if condition is true#text if condition is false?>
 
 {{column_name}}
 {{column_stored_name}}
@@ -473,6 +476,17 @@ POINTER[ ELEMENT_TYPE ] | !stored
 {{table_is_last_not_stored}}
 
 %%output file path
+```
+
+### Boolean expression syntax
+
+```
+true
+false
+!...
+... && ...
+... || ...
+( ... )
 ```
 
 ## Installation
