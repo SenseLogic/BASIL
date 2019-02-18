@@ -94,7 +94,7 @@ func WriteResponseComment(
     WriteResponse( response_writer, ",\"Text\":" );
     WriteResponseString( response_writer, comment.Text );
     WriteResponse( response_writer, ",\"DateTime\":" );
-    WriteResponseString( response_writer, comment.DateTime );
+    WriteResponseDateTime( response_writer, comment.DateTime );
     WriteResponse( response_writer, "}" );
 }
 

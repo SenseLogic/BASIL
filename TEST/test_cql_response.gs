@@ -32,7 +32,7 @@ func WriteResponseSimple(
     WriteResponse( response_writer, ",\"Date\":" );
     WriteResponseString( response_writer, simple.Date );
     WriteResponse( response_writer, ",\"DateTime\":" );
-    WriteResponseString( response_writer, simple.DateTime );
+    WriteResponseDateTime( response_writer, simple.DateTime );
     WriteResponse( response_writer, ",\"Blob\":" );
     WriteResponseBlob( response_writer, simple.Blob );
     WriteResponse( response_writer, "}" );

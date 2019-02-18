@@ -389,8 +389,6 @@ POINTER[ ELEMENT_TYPE ] | !stored
 
 <?Equals#first text#second text#text if same texts?>
 <?Equals#first text#second text#text if same texts#text if not same texts?>
-<?!Equals#first text#second text#text if not same texts?>
-<?!Equals#first text#second text#text if not same texts#text if same texts?>
 
 <?HasPrefix#text#prefix#text if prefix found?>
 <?HasPrefix#text#prefix#text if prefix found#text if prefix not found?>

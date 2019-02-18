@@ -463,7 +463,7 @@ func HandleAddCommentRequest(
          && GetRequestUint64( &comment.ArticleId, request, "ArticleId", &error_code )
          && GetRequestUint64( &comment.UserId, request, "UserId", &error_code )
          && GetRequestString( &comment.Text, request, "Text", &error_code )
-         && GetRequestString( &comment.DateTime, request, "DateTime", &error_code )
+         && GetRequestDateTime( &comment.DateTime, request, "DateTime", &error_code )
          && AddDatabaseComment( &comment, &error_code ) )
     {
         WriteResponse( response_writer, "{" );
@@ -494,7 +494,7 @@ func HandleSetCommentRequest(
          && GetRequestUint64( &comment.ArticleId, request, "ArticleId", &error_code )
          && GetRequestUint64( &comment.UserId, request, "UserId", &error_code )
          && GetRequestString( &comment.Text, request, "Text", &error_code )
-         && GetRequestString( &comment.DateTime, request, "DateTime", &error_code )
+         && GetRequestDateTime( &comment.DateTime, request, "DateTime", &error_code )
          && SetDatabaseComment( &comment, &error_code ) )
     {
         WriteResponseSuccess( response_writer );

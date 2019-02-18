@@ -17,7 +17,7 @@ type SIMPLE struct {
     Float64 float64;
     String string;
     Date string;
-    DateTime string;
+    DateTime time.Time;
     Blob [] byte;
 }
 

@@ -88,11 +88,11 @@ func GetDatabaseSection(
                section.Uuid
                )
                .Consistency( gocql.One )
-               .Scan(                    &section.Number,
+               .Scan(
+                    &section.Number,
                     &section.Name,
                     &section.Text,
                     &section.Image,
-
                     );
 
     if ( error_ != nil )
@@ -257,7 +257,8 @@ func GetDatabaseUser(
                user.Uuid
                )
                .Consistency( gocql.One )
-               .Scan(                    &user.FirstName,
+               .Scan(
+                    &user.FirstName,
                     &user.LastName,
                     &user.Email,
                     &user.Pseudonym,
@@ -270,7 +271,6 @@ func GetDatabaseUser(
                     &user.Country,
                     &user.Company,
                     &user.ItIsAdministrator
-
                     );
 
     if ( error_ != nil )
@@ -430,13 +430,13 @@ func GetDatabaseArticle(
                article.Uuid
                )
                .Consistency( gocql.One )
-               .Scan(                    &article.SectionUuid,
+               .Scan(
+                    &article.SectionUuid,
                     &article.UserUuid,
                     &article.Title,
                     &article.Text,
                     &article.Image,
                     &article.Date,
-
                     );
 
     if ( error_ != nil )
@@ -585,11 +585,11 @@ func GetDatabaseComment(
                comment.Uuid
                )
                .Consistency( gocql.One )
-               .Scan(                    &comment.ArticleUuid,
+               .Scan(
+                    &comment.ArticleUuid,
                     &comment.UserUuid,
                     &comment.Text,
                     &comment.DateTime,
-
                     );
 
     if ( error_ != nil )
@@ -732,9 +732,9 @@ func GetDatabaseSubscriber(
                subscriber.Uuid
                )
                .Consistency( gocql.One )
-               .Scan(                    &subscriber.Name,
+               .Scan(
+                    &subscriber.Name,
                     &subscriber.Email
-
                     );
 
     if ( error_ != nil )

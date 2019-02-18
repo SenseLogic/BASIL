@@ -1254,7 +1254,7 @@ class TYPE
         }
         else if ( type_name == "DATETIME" )
         {
-            return "string";
+            return "time.Time";
         }
         else if ( type_name == "UUID" )
         {
@@ -1374,7 +1374,7 @@ class TYPE
         }
         else if ( type_name == "DATETIME" )
         {
-            return "String";
+            return "DateTime";
         }
         else if ( type_name == "UUID" )
         {
@@ -4015,7 +4015,7 @@ class TABLE
             generis_code
                 ~= "               )\n"
                    ~ "               .Consistency( gocql.One )\n"
-                   ~ "               .Scan(";
+                   ~ "               .Scan(\n";
 
             foreach ( ref column; ColumnArray )
             {
@@ -4036,8 +4036,7 @@ class TABLE
             }
 
             generis_code
-                ~= "\n"
-                   ~ "                    );\n";
+                ~= "                    );\n";
         }
 
         generis_code
@@ -5630,14 +5629,11 @@ class SCHEMA
 
                 if ( column.IsStored )
                 {
-                    if ( SqlOptionIsEnabled )
-                    {
-                        go_attribute_declaration ~= "    `db:\"" ~ column.StoredName ~ "\"`";
-                    }
-                    else
-                    {
-                        go_attribute_declaration ~= "    `db:\"-\"`";
-                    }
+                    go_attribute_declaration ~= "    `db:\"" ~ column.StoredName ~ "\"`";
+                }
+                else
+                {
+                    go_attribute_declaration ~= "    `db:\"-\"`";
                 }
 
                 go_attribute_declaration ~= ";\n";
@@ -5685,14 +5681,11 @@ class SCHEMA
 
                 if ( column.IsStored )
                 {
-                    if ( SqlOptionIsEnabled )
-                    {
-                        generis_attribute_declaration ~= "    `db:\"" ~ column.StoredName ~ "\"`";
-                    }
-                    else
-                    {
-                        generis_attribute_declaration ~= "    `db:\"-\"`";
-                    }
+                    generis_attribute_declaration ~= "    `db:\"" ~ column.StoredName ~ "\"`";
+                }
+                else
+                {
+                    generis_attribute_declaration ~= "    `db:\"-\"`";
                 }
 
                 generis_attribute_declaration ~= ";\n";

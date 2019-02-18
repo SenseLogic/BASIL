@@ -22,7 +22,7 @@ func HandleAddSimpleRequest(
          && GetRequestFloat64( &simple.Float64, request, "Float64", &error_code )
          && GetRequestString( &simple.String, request, "String", &error_code )
          && GetRequestString( &simple.Date, request, "Date", &error_code )
-         && GetRequestString( &simple.DateTime, request, "DateTime", &error_code )
+         && GetRequestDateTime( &simple.DateTime, request, "DateTime", &error_code )
          && GetRequestBlob( &simple.Blob, request, "Blob", &error_code )
          && AddDatabaseSimple( &simple, &error_code ) )
     {
@@ -64,7 +64,7 @@ func HandleSetSimpleRequest(
          && GetRequestFloat64( &simple.Float64, request, "Float64", &error_code )
          && GetRequestString( &simple.String, request, "String", &error_code )
          && GetRequestString( &simple.Date, request, "Date", &error_code )
-         && GetRequestString( &simple.DateTime, request, "DateTime", &error_code )
+         && GetRequestDateTime( &simple.DateTime, request, "DateTime", &error_code )
          && GetRequestBlob( &simple.Blob, request, "Blob", &error_code )
          && SetDatabaseSimple( &simple, &error_code ) )
     {

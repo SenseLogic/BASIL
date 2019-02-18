@@ -5,7 +5,7 @@ type SECTION struct
     Name string    `db:"Name"`;
     Text string    `db:"Text"`;
     Image string    `db:"Image"`;
-    ImageIndex uint64;
+    ImageIndex uint64    `db:"-"`;
 }
 
 // ~~
@@ -39,9 +39,9 @@ type ARTICLE struct
     Text string    `db:"Text"`;
     Image string    `db:"Image"`;
     Date string    `db:"Date"`;
-    Section * SECTION;
-    User * USER;
-    ImageIndex uint64;
+    Section * SECTION    `db:"-"`;
+    User * USER    `db:"-"`;
+    ImageIndex uint64    `db:"-"`;
 }
 
 // ~~
@@ -52,9 +52,9 @@ type COMMENT struct
     ArticleId uint64    `db:"ArticleId"`;
     UserId uint64    `db:"UserId"`;
     Text string    `db:"Text"`;
-    DateTime string    `db:"DateTime"`;
-    Article * ARTICLE;
-    User * USER;
+    DateTime time.Time    `db:"DateTime"`;
+    Article * ARTICLE    `db:"-"`;
+    User * USER    `db:"-"`;
 }
 
 // ~~
