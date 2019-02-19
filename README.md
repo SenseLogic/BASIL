@@ -506,7 +506,15 @@ The UML diagrams can be drawn using [PlantText](https://www.planttext.com/) or [
 ## Command line
 
 ```
-basil [options] script_file.bs [script_file.bs|bsd|bst ...]
+basil [options] script_file.bs [script_file.bs|bd|bt ...]
+```
+
+### File extensions
+
+```
+.bs : schema
+.bd : data
+.bt : template
 ```
 
 ### Options
