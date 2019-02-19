@@ -1,3 +1,3 @@
 #!/bin/sh
 set -x
-../../basil --uml --sql --go --generis --rust --crystal blog.bsl blog.bsd
+../../basil --uml --sql --go --generis --rust --crystal blog.bs blog.bd

@@ -12,7 +12,7 @@ type SIMPLE struct {
     Float32 float32    `db:"Float32"`;
     Float64 float64    `db:"Float64"`;
     String string    `db:"String"`;
-    Date string    `db:"Date"`;
+    Date time.Time    `db:"Date"`;
     DateTime time.Time    `db:"DateTime"`;
     Blob [] byte    `db:"Blob"`;
 }
@@ -27,11 +27,11 @@ type COMPOUND struct {
     PhoneList STRING_LIST    `db:"PhoneList"`;
     EmailSet STRING_SET    `db:"EmailSet"`;
     CompanyMap STRING_STRING_MAP    `db:"CompanyMap"`;
-    SimpleDate string    `db:"SimpleDate"`;
-    SimpleDateMap STRING_STRING_TUPLE_STRING_MAP    `db:"SimpleDateMap"`;
-    SimpleDateSet STRING_SET    `db:"SimpleDateSet"`;
-    SimpleDateList STRING_LIST    `db:"SimpleDateList"`;
-    NameSetMap STRING_STRING_STRING_TUPLE_SET_MAP    `db:"NameSetMap"`;
+    SimpleDate time.Time    `db:"SimpleDate"`;
+    SimpleDateMap STRING_STRING_TUPLE_TIME.TIME_MAP    `db:"SimpleDateMap"`;
+    SimpleDateSet TIME.TIME_SET    `db:"SimpleDateSet"`;
+    SimpleDateList TIME.TIME_LIST    `db:"SimpleDateList"`;
+    NameSetMap TIME.TIME_STRING_STRING_TUPLE_SET_MAP    `db:"NameSetMap"`;
     SimplePointerArray [] * SIMPLE    `db:"-"`;
 }
 

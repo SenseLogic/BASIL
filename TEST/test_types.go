@@ -16,7 +16,7 @@ type SIMPLE struct {
     Float32 float32;
     Float64 float64;
     String string;
-    Date string;
+    Date time.Time;
     DateTime time.Time;
     Blob [] byte;
 }
@@ -31,11 +31,11 @@ type COMPOUND struct {
     PhoneList STRING_LIST;
     EmailSet STRING_SET;
     CompanyMap STRING_STRING_MAP;
-    SimpleDate string;
-    SimpleDateMap STRING_STRING_TUPLE_STRING_MAP;
-    SimpleDateSet STRING_SET;
-    SimpleDateList STRING_LIST;
-    NameSetMap STRING_STRING_STRING_TUPLE_SET_MAP;
+    SimpleDate time.Time;
+    SimpleDateMap STRING_STRING_TUPLE_TIME.TIME_MAP;
+    SimpleDateSet TIME.TIME_SET;
+    SimpleDateList TIME.TIME_LIST;
+    NameSetMap TIME.TIME_STRING_STRING_TUPLE_SET_MAP;
     SimplePointerArray [] * SIMPLE;
 }
 

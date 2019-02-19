@@ -431,6 +431,8 @@ POINTER[ ELEMENT_TYPE ] | !stored
 {{column_crystal_type}}
 {{column_csharp_name}}
 {{column_csharp_type}}
+{{column_csharp_attribute}}
+{{column_csharp_variable}}
 {{column_rust_name}}
 {{column_rust_type}}
 {{column_javascript_name}}
@@ -452,6 +454,8 @@ POINTER[ ELEMENT_TYPE ] | !stored
 {{table_go_variable}}
 {{table_crystal_type}}
 {{table_csharp_type}}
+{{table_csharp_attribute}}
+{{table_csharp_variable}}
 {{table_rust_type}}
 {{table_javascript_type}}
 {{table_go_attribute_declaration}}
@@ -502,7 +506,7 @@ The UML diagrams can be drawn using [PlantText](https://www.planttext.com/) or [
 ## Command line
 
 ```
-basil [options] script_file.bsl [script_file.bsl|bsd|bst ...]
+basil [options] script_file.bs [script_file.bs|bsd|bst ...]
 ```
 
 ### Options
@@ -525,22 +529,22 @@ The `--go`, `--generis`, `--crystal`, `--csharp` and `--rust` options require th
 ### Examples
 
 ```bash
-basil --uml blog.bsl
+basil --uml blog.bs
 ```
 
-Generates "blog.uml" from "blog.bsl".
+Generates "blog.uml" from "blog.bs".
 
 ```bash
-basil --uml --sql --go blog.bsl
+basil --uml --sql --go blog.bs
 ```
 
-Generates "blog.uml", "blog.sql", "blog_data.sql", "blog_sql_type.go" from "blog.bsl".
+Generates "blog.uml", "blog.sql", "blog_data.sql", "blog_sql_type.go" from "blog.bs".
 
 ```bash
-basil --uml --cql --go blog.bsl blog.bst
+basil --uml --cql --go blog.bs blog.bt
 ```
 
-Generates "blog.uml", "blog.sql", "blog_data.sql", "blog_sql_type.go" from "blog.bsl", and other custom files from "blog.bst".
+Generates "blog.uml", "blog.sql", "blog_data.sql", "blog_sql_type.go" from "blog.bs", and other custom files from "blog.bt".
 
 ## Version
 

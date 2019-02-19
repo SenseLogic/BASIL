@@ -1250,7 +1250,7 @@ class TYPE
         }
         else if ( type_name == "DATE" )
         {
-            return "string";
+            return "time.Time";
         }
         else if ( type_name == "DATETIME" )
         {
@@ -1370,7 +1370,7 @@ class TYPE
         }
         else if ( type_name == "DATE" )
         {
-            return "String";
+            return "DateTime";
         }
         else if ( type_name == "DATETIME" )
         {
@@ -1657,6 +1657,126 @@ class TYPE
         else if ( type_name == "MAP" )
         {
             return "Dictionary< " ~ GetSubTypeCsharpText() ~ " >";
+        }
+        else
+        {
+            return Name;
+        }
+    }
+
+    // ~~
+
+    string GetSubTypeCsharpAttributeText(
+        )
+    {
+        string
+            sub_types_go_text;
+
+        foreach ( ref sub_type; ActualType.SubTypeArray )
+        {
+            sub_types_go_text ~= sub_type.GetCsharpAttributeText();
+        }
+
+        return sub_types_go_text;
+    }
+
+    // ~~
+
+    string GetCsharpAttributeText(
+        )
+    {
+        string
+            type_name;
+
+        type_name = ActualType.BaseName;
+
+        if ( type_name == "BOOL" )
+        {
+            return "Bool";
+        }
+        else if ( type_name == "INT8" )
+        {
+            return "Int8";
+        }
+        else if ( type_name == "UINT8" )
+        {
+            return "Uint8";
+        }
+        else if ( type_name == "INT16" )
+        {
+            return "Int16";
+        }
+        else if ( type_name == "UINT16" )
+        {
+            return "Uint16";
+        }
+        else if ( type_name == "INT32" )
+        {
+            return "Int32";
+        }
+        else if ( type_name == "UINT32" )
+        {
+            return "Uint32";
+        }
+        else if ( type_name == "INT64" )
+        {
+            return "Int64";
+        }
+        else if ( type_name == "UINT64" )
+        {
+            return "Uint64";
+        }
+        else if ( type_name == "FLOAT32" )
+        {
+            return "Float32";
+        }
+        else if ( type_name == "FLOAT64" )
+        {
+            return "Float64";
+        }
+        else if ( type_name == "STRING" )
+        {
+            return "String";
+        }
+        else if ( type_name == "DATE" )
+        {
+            return "DateTime";
+        }
+        else if ( type_name == "DATETIME" )
+        {
+            return "DateTime";
+        }
+        else if ( type_name == "UUID" )
+        {
+            return "String";
+        }
+        else if ( type_name == "BLOB" )
+        {
+            return "String";
+        }
+        else if ( type_name == "POINTER" )
+        {
+            return GetSubTypeCsharpAttributeText() ~ "Pointer";
+        }
+        else if ( type_name == "ARRAY" )
+        {
+            return GetSubTypeCsharpAttributeText() ~ "Array";
+        }
+        else if ( type_name == "TUPLE" )
+        {
+            return GetSubTypeCsharpAttributeText() ~ "Tuple";
+        }
+        else if ( type_name == "LIST" )
+        {
+            return GetSubTypeCsharpAttributeText() ~ "List";
+        }
+        else if ( type_name == "SET" )
+        {
+            return GetSubTypeCsharpAttributeText() ~ "Set";
+        }
+        else if ( type_name == "MAP" )
+        {
+            return GetSubTypeCsharpAttributeText() ~ "Map";
         }
         else
         {
@@ -2757,6 +2877,8 @@ class COLUMN
         CrystalType,
         CsharpName,
         CsharpType,
+        CsharpAttribute,
+        CsharpVariable,
         RustName,
         RustType,
         JavascriptName,
@@ -2844,6 +2966,8 @@ class COLUMN
                 .replace( "{{column_crystal_type}}", CrystalType )
                 .replace( "{{column_csharp_name}}", CsharpName )
                 .replace( "{{column_csharp_type}}", CsharpType )
+                .replace( "{{column_csharp_attribute}}", CsharpAttribute )
+                .replace( "{{column_csharp_variable}}", CsharpVariable )
                 .replace( "{{column_rust_name}}", RustName )
                 .replace( "{{column_rust_type}}", RustType )
                 .replace( "{{column_javascript_name}}", JavascriptName )
@@ -3134,9 +3258,11 @@ class COLUMN
 
         GoType = Type.GetGoText().replace( "GOCQL.UUID", "UUID" );
         GoAttribute = Type.GetGoAttributeText();
-        GoVariable = GoName.GetSnakeCaseText();
+        GoVariable = GoName.GetVariableText();
         CrystalType = Type.GetCrystalText();
         CsharpType = Type.GetCsharpText();
+        CsharpAttribute = Type.GetCsharpAttributeText();
+        CsharpVariable = CsharpName.GetVariableText();
         RustType = Type.GetRustText();
         JavascriptType = Type.GetJavascriptText();
 
@@ -3237,6 +3363,8 @@ class TABLE
         GoVariable,
         CrystalType,
         CsharpType,
+        CsharpAttribute,
+        CsharpVariable,
         RustType,
         JavascriptType;
     string[]
@@ -3276,10 +3404,12 @@ class TABLE
         SchemaName = schema.Name;
         Name = name;
         GoType = name;
-        GoAttribute = name.GetPascalCaseText();
-        GoVariable = name.GetSnakeCaseText();
+        GoAttribute = name.GetAttributeText();
+        GoVariable = name.GetVariableText();
         CrystalType = name;
         CsharpType = name;
+        CsharpAttribute = name.GetAttributeText();
+        CsharpVariable = name.GetVariableText();
         RustType = name;
         JavascriptType = name;
         IsStored = true;
@@ -4525,6 +4655,8 @@ class TABLE
                 .replace( "{{table_go_variable}}", GoVariable )
                 .replace( "{{table_crystal_type}}", CrystalType )
                 .replace( "{{table_csharp_type}}", CsharpType )
+                .replace( "{{table_csharp_attribute}}", CsharpAttribute )
+                .replace( "{{table_csharp_variable}}", CsharpVariable )
                 .replace( "{{table_rust_type}}", RustType )
                 .replace( "{{table_javascript_type}}", JavascriptType )
                 .replace( "{{table_go_attribute_declaration}}", GoAttributeDeclaration )
@@ -5170,15 +5302,15 @@ class SCHEMA
 
             file_text = file_path.readText().replace( "\r", "" ).replace( "\t", "    " ) ~ "\n";
 
-            if ( file_path.endsWith( ".bsl" ) )
+            if ( file_path.endsWith( ".bs" ) )
             {
                 schema_file_text ~= file_text;
             }
-            else if ( file_path.endsWith( ".bsd" ) )
+            else if ( file_path.endsWith( ".bd" ) )
             {
                 data_file_text ~= file_text;
             }
-            else if ( file_path.endsWith( ".bst" ) )
+            else if ( file_path.endsWith( ".bt" ) )
             {
                 TemplateFileText ~= file_text;
             }
@@ -6283,6 +6415,24 @@ string GetSnakeCaseText(
 
 // ~~
 
+string GetAttributeText(
+    string text
+    )
+{
+    return text.GetPascalCaseText();
+}
+
+// ~~
+
+string GetVariableText(
+    string text
+    )
+{
+    return text.GetSnakeCaseText();
+}
+
+// ~~
+
 string GetExecutablePath(
     string file_name
     )
@@ -6720,7 +6870,7 @@ void ProcessFiles(
     string
         base_file_path;
 
-    base_file_path = file_path_array[ 0 ][ 0 .. $ - 4 ];
+    base_file_path = file_path_array[ 0 ][ 0 .. $ - 3 ];
 
     Random = new RANDOM();
 
@@ -6862,7 +7012,7 @@ void main(
     else
     {
         writeln( "Usage :" );
-        writeln( "    basil [options] script_file.bsl [script_file.bsl|bsd|bst ...]" );
+        writeln( "    basil [options] script_file.bs [script_file.bs|bsd|bst ...]" );
         writeln( "Options :" );
         writeln( "    --uml" );
         writeln( "    --sql" );
@@ -6875,8 +7025,8 @@ void main(
         writeln( "    --javascript" );
         writeln( "    --template {template_file_path}" );
         writeln( "Examples :" );
-        writeln( "    basil --uml script_file.bsl" );
-        writeln( "    basil --uml --sql --go script_file.bsl" );
+        writeln( "    basil --uml script_file.bs" );
+        writeln( "    basil --uml --sql --go script_file.bs" );
 
         Abort( "Invalid arguments : " ~ argument_array.to!string() );
     }

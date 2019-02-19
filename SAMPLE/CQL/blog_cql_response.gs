@@ -74,7 +74,7 @@ func WriteResponseArticle(
     WriteResponse( response_writer, ",\"Image\":" );
     WriteResponseString( response_writer, article.Image );
     WriteResponse( response_writer, ",\"Date\":" );
-    WriteResponseString( response_writer, article.Date );
+    WriteResponseDateTime( response_writer, article.Date );
     WriteResponse( response_writer, "}" );
 }
 

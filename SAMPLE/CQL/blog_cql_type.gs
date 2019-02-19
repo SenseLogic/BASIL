@@ -38,7 +38,7 @@ type ARTICLE struct
     Title string    `db:"Title"`;
     Text string    `db:"Text"`;
     Image string    `db:"Image"`;
-    Date string    `db:"Date"`;
+    Date time.Time    `db:"Date"`;
     Section * SECTION    `db:"-"`;
     User * USER    `db:"-"`;
     ImageIndex uint64    `db:"-"`;

@@ -30,7 +30,7 @@ func WriteResponseSimple(
     WriteResponse( response_writer, ",\"String\":" );
     WriteResponseString( response_writer, simple.String );
     WriteResponse( response_writer, ",\"Date\":" );
-    WriteResponseString( response_writer, simple.Date );
+    WriteResponseDateTime( response_writer, simple.Date );
     WriteResponse( response_writer, ",\"DateTime\":" );
     WriteResponseDateTime( response_writer, simple.DateTime );
     WriteResponse( response_writer, ",\"Blob\":" );
@@ -60,15 +60,15 @@ func WriteResponseCompound(
     WriteResponse( response_writer, ",\"CompanyMap\":" );
     WriteResponseStringStringMap( response_writer, compound.CompanyMap );
     WriteResponse( response_writer, ",\"SimpleDate\":" );
-    WriteResponseString( response_writer, compound.SimpleDate );
+    WriteResponseDateTime( response_writer, compound.SimpleDate );
     WriteResponse( response_writer, ",\"SimpleDateMap\":" );
-    WriteResponseStringStringTupleStringMap( response_writer, compound.SimpleDateMap );
+    WriteResponseStringStringTupleDateTimeMap( response_writer, compound.SimpleDateMap );
     WriteResponse( response_writer, ",\"SimpleDateSet\":" );
-    WriteResponseStringSet( response_writer, compound.SimpleDateSet );
+    WriteResponseDateTimeSet( response_writer, compound.SimpleDateSet );
     WriteResponse( response_writer, ",\"SimpleDateList\":" );
-    WriteResponseStringList( response_writer, compound.SimpleDateList );
+    WriteResponseDateTimeList( response_writer, compound.SimpleDateList );
     WriteResponse( response_writer, ",\"NameSetMap\":" );
-    WriteResponseStringStringStringTupleSetMap( response_writer, compound.NameSetMap );
+    WriteResponseDateTimeStringStringTupleSetMap( response_writer, compound.NameSetMap );
     WriteResponse( response_writer, "}" );
 }
 

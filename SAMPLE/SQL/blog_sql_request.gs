@@ -318,7 +318,7 @@ func HandleAddArticleRequest(
          && GetRequestString( &article.Title, request, "Title", &error_code )
          && GetRequestString( &article.Text, request, "Text", &error_code )
          && GetRequestString( &article.Image, request, "Image", &error_code )
-         && GetRequestString( &article.Date, request, "Date", &error_code )
+         && GetRequestDateTime( &article.Date, request, "Date", &error_code )
          && AddDatabaseArticle( &article, &error_code ) )
     {
         WriteResponse( response_writer, "{" );
@@ -351,7 +351,7 @@ func HandleSetArticleRequest(
          && GetRequestString( &article.Title, request, "Title", &error_code )
          && GetRequestString( &article.Text, request, "Text", &error_code )
          && GetRequestString( &article.Image, request, "Image", &error_code )
-         && GetRequestString( &article.Date, request, "Date", &error_code )
+         && GetRequestDateTime( &article.Date, request, "Date", &error_code )
          && SetDatabaseArticle( &article, &error_code ) )
     {
         WriteResponseSuccess( response_writer );
