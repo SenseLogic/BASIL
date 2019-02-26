@@ -1628,7 +1628,7 @@ class TYPE
         }
         else if ( type_name == "UUID" )
         {
-            return "String";
+            return "Guid";
         }
         else if ( type_name == "BLOB" )
         {
@@ -1748,7 +1748,7 @@ class TYPE
         }
         else if ( type_name == "UUID" )
         {
-            return "String";
+            return "Uuid";
         }
         else if ( type_name == "BLOB" )
         {
@@ -3933,10 +3933,12 @@ class TABLE
 
                     if ( !column.IsLastKey )
                     {
-                        generis_code ~= ", ";
+                        generis_code ~= ",\n";
                     }
-
-                    generis_code ~= "\n";
+                    else
+                    {
+                        generis_code ~= "\n";
+                    }
                 }
             }
 
@@ -4193,7 +4195,7 @@ class TABLE
             generis_code;
 
         generis_code
-            = "func GetDatabase" ~ GoAttribute ~ "Array(\n"
+            = "func GetDatabase" ~ GoAttribute ~ "List(\n"
               ~ "    " ~ GoVariable ~ "_array * [] " ~ GoType ~ ",\n"
               ~ "    error_code * ERROR_CODE\n"
               ~ "    ) bool\n"
@@ -4594,7 +4596,7 @@ class TABLE
         )
     {
         return
-            "func HandleGet" ~ GoAttribute ~ "ArrayRequest(\n"
+            "func HandleGet" ~ GoAttribute ~ "ListRequest(\n"
             ~ "    response_writer http.ResponseWriter,\n"
             ~ "    request * http.Request\n"
             ~ "    )\n"
@@ -4605,9 +4607,9 @@ class TABLE
             ~ "        " ~ GoVariable ~ "_array [] " ~ GoType ~ ";\n"
             ~ "\n"
             ~ "    if ( IsAdministratorSession( request, &error_code )\n"
-            ~ "         && GetDatabase" ~ GoAttribute ~ "Array( &" ~ GoVariable ~ "_array, &error_code ) )\n"
+            ~ "         && GetDatabase" ~ GoAttribute ~ "List( &" ~ GoVariable ~ "_array, &error_code ) )\n"
             ~ "    {\n"
-            ~ "        WriteResponse( response_writer, \"{\\\"" ~ GoAttribute ~ "Array\\\":[\" );\n"
+            ~ "        WriteResponse( response_writer, \"{\\\"" ~ GoAttribute ~ "List\\\":[\" );\n"
             ~ "\n"
             ~ "        for " ~ GoVariable ~ "_index, _ := range " ~ GoVariable ~ "_array\n"
             ~ "        {\n"
@@ -4638,7 +4640,7 @@ class TABLE
             ~ "    router.Post( \"/set_" ~ GoVariable ~ "\", HandleSet" ~ GoAttribute ~ "Request );\n"
             ~ "    router.Post( \"/remove_" ~ GoVariable ~ "\", HandleRemove" ~ GoAttribute ~ "Request );\n"
             ~ "    router.Post( \"/get_" ~ GoVariable ~ "\", HandleGet" ~ GoAttribute ~ "Request );\n"
-            ~ "    router.Post( \"/get_" ~ GoVariable ~ "_array\", HandleGet" ~ GoAttribute ~ "ArrayRequest );\n";
+            ~ "    router.Post( \"/get_" ~ GoVariable ~ "_list\", HandleGet" ~ GoAttribute ~ "ListRequest );\n";
     }
 
     // ~~
