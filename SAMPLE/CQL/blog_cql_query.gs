@@ -107,7 +107,7 @@ func GetDatabaseSection(
 
 // ~~
 
-func GetDatabaseSectionArray(
+func GetDatabaseSectionList(
     section_array * [] SECTION,
     error_code * ERROR_CODE
     ) bool
@@ -285,7 +285,7 @@ func GetDatabaseUser(
 
 // ~~
 
-func GetDatabaseUserArray(
+func GetDatabaseUserList(
     user_array * [] USER,
     error_code * ERROR_CODE
     ) bool
@@ -451,7 +451,7 @@ func GetDatabaseArticle(
 
 // ~~
 
-func GetDatabaseArticleArray(
+func GetDatabaseArticleList(
     article_array * [] ARTICLE,
     error_code * ERROR_CODE
     ) bool
@@ -604,7 +604,7 @@ func GetDatabaseComment(
 
 // ~~
 
-func GetDatabaseCommentArray(
+func GetDatabaseCommentList(
     comment_array * [] COMMENT,
     error_code * ERROR_CODE
     ) bool
@@ -749,7 +749,7 @@ func GetDatabaseSubscriber(
 
 // ~~
 
-func GetDatabaseSubscriberArray(
+func GetDatabaseSubscriberList(
     subscriber_array * [] SUBSCRIBER,
     error_code * ERROR_CODE
     ) bool

@@ -106,7 +106,7 @@ func HandleGetSectionRequest(
 
 // ~~
 
-func HandleGetSectionArrayRequest(
+func HandleGetSectionListRequest(
     response_writer http.ResponseWriter,
     request * http.Request
     )
@@ -117,9 +117,9 @@ func HandleGetSectionArrayRequest(
         section_array [] SECTION;
 
     if ( IsAdministratorSession( request, &error_code )
-         && GetDatabaseSectionArray( &section_array, &error_code ) )
+         && GetDatabaseSectionList( &section_array, &error_code ) )
     {
-        WriteResponse( response_writer, "{\"SectionArray\":[" );
+        WriteResponse( response_writer, "{\"SectionList\":[" );
 
         for section_index, _ := range section_array
         {
@@ -267,7 +267,7 @@ func HandleGetUserRequest(
 
 // ~~
 
-func HandleGetUserArrayRequest(
+func HandleGetUserListRequest(
     response_writer http.ResponseWriter,
     request * http.Request
     )
@@ -278,9 +278,9 @@ func HandleGetUserArrayRequest(
         user_array [] USER;
 
     if ( IsAdministratorSession( request, &error_code )
-         && GetDatabaseUserArray( &user_array, &error_code ) )
+         && GetDatabaseUserList( &user_array, &error_code ) )
     {
-        WriteResponse( response_writer, "{\"UserArray\":[" );
+        WriteResponse( response_writer, "{\"UserList\":[" );
 
         for user_index, _ := range user_array
         {
@@ -414,7 +414,7 @@ func HandleGetArticleRequest(
 
 // ~~
 
-func HandleGetArticleArrayRequest(
+func HandleGetArticleListRequest(
     response_writer http.ResponseWriter,
     request * http.Request
     )
@@ -425,9 +425,9 @@ func HandleGetArticleArrayRequest(
         article_array [] ARTICLE;
 
     if ( IsAdministratorSession( request, &error_code )
-         && GetDatabaseArticleArray( &article_array, &error_code ) )
+         && GetDatabaseArticleList( &article_array, &error_code ) )
     {
-        WriteResponse( response_writer, "{\"ArticleArray\":[" );
+        WriteResponse( response_writer, "{\"ArticleList\":[" );
 
         for article_index, _ := range article_array
         {
@@ -557,7 +557,7 @@ func HandleGetCommentRequest(
 
 // ~~
 
-func HandleGetCommentArrayRequest(
+func HandleGetCommentListRequest(
     response_writer http.ResponseWriter,
     request * http.Request
     )
@@ -568,9 +568,9 @@ func HandleGetCommentArrayRequest(
         comment_array [] COMMENT;
 
     if ( IsAdministratorSession( request, &error_code )
-         && GetDatabaseCommentArray( &comment_array, &error_code ) )
+         && GetDatabaseCommentList( &comment_array, &error_code ) )
     {
-        WriteResponse( response_writer, "{\"CommentArray\":[" );
+        WriteResponse( response_writer, "{\"CommentList\":[" );
 
         for comment_index, _ := range comment_array
         {
@@ -696,7 +696,7 @@ func HandleGetSubscriberRequest(
 
 // ~~
 
-func HandleGetSubscriberArrayRequest(
+func HandleGetSubscriberListRequest(
     response_writer http.ResponseWriter,
     request * http.Request
     )
@@ -707,9 +707,9 @@ func HandleGetSubscriberArrayRequest(
         subscriber_array [] SUBSCRIBER;
 
     if ( IsAdministratorSession( request, &error_code )
-         && GetDatabaseSubscriberArray( &subscriber_array, &error_code ) )
+         && GetDatabaseSubscriberList( &subscriber_array, &error_code ) )
     {
-        WriteResponse( response_writer, "{\"SubscriberArray\":[" );
+        WriteResponse( response_writer, "{\"SubscriberList\":[" );
 
         for subscriber_index, _ := range subscriber_array
         {

@@ -140,7 +140,7 @@ func GetDatabaseSimple(
 
 // ~~
 
-func GetDatabaseSimpleArray(
+func GetDatabaseSimpleList(
     simple_array * [] SIMPLE,
     error_code * ERROR_CODE
     ) bool
@@ -320,7 +320,7 @@ func GetDatabaseCompound(
 
 // ~~
 
-func GetDatabaseCompoundArray(
+func GetDatabaseCompoundList(
     compound_array * [] COMPOUND,
     error_code * ERROR_CODE
     ) bool
@@ -473,7 +473,7 @@ func GetDatabaseValue(
 
 // ~~
 
-func GetDatabaseValueArray(
+func GetDatabaseValueList(
     value_array * [] VALUE,
     error_code * ERROR_CODE
     ) bool
@@ -612,7 +612,7 @@ func GetDatabaseData(
 
 // ~~
 
-func GetDatabaseDataArray(
+func GetDatabaseDataList(
     data_array * [] DATA,
     error_code * ERROR_CODE
     ) bool

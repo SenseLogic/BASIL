@@ -128,7 +128,7 @@ func HandleGetSimpleRequest(
 
 // ~~
 
-func HandleGetSimpleArrayRequest(
+func HandleGetSimpleListRequest(
     response_writer http.ResponseWriter,
     request * http.Request
     )
@@ -139,9 +139,9 @@ func HandleGetSimpleArrayRequest(
         simple_array [] SIMPLE;
 
     if ( IsAdministratorSession( request, &error_code )
-         && GetDatabaseSimpleArray( &simple_array, &error_code ) )
+         && GetDatabaseSimpleList( &simple_array, &error_code ) )
     {
-        WriteResponse( response_writer, "{\"SimpleArray\":[" );
+        WriteResponse( response_writer, "{\"SimpleList\":[" );
 
         for simple_index, _ := range simple_array
         {
@@ -285,7 +285,7 @@ func HandleGetCompoundRequest(
 
 // ~~
 
-func HandleGetCompoundArrayRequest(
+func HandleGetCompoundListRequest(
     response_writer http.ResponseWriter,
     request * http.Request
     )
@@ -296,9 +296,9 @@ func HandleGetCompoundArrayRequest(
         compound_array [] COMPOUND;
 
     if ( IsAdministratorSession( request, &error_code )
-         && GetDatabaseCompoundArray( &compound_array, &error_code ) )
+         && GetDatabaseCompoundList( &compound_array, &error_code ) )
     {
-        WriteResponse( response_writer, "{\"CompoundArray\":[" );
+        WriteResponse( response_writer, "{\"CompoundList\":[" );
 
         for compound_index, _ := range compound_array
         {
@@ -427,7 +427,7 @@ func HandleGetValueRequest(
 
 // ~~
 
-func HandleGetValueArrayRequest(
+func HandleGetValueListRequest(
     response_writer http.ResponseWriter,
     request * http.Request
     )
@@ -438,9 +438,9 @@ func HandleGetValueArrayRequest(
         value_array [] VALUE;
 
     if ( IsAdministratorSession( request, &error_code )
-         && GetDatabaseValueArray( &value_array, &error_code ) )
+         && GetDatabaseValueList( &value_array, &error_code ) )
     {
-        WriteResponse( response_writer, "{\"ValueArray\":[" );
+        WriteResponse( response_writer, "{\"ValueList\":[" );
 
         for value_index, _ := range value_array
         {
@@ -565,7 +565,7 @@ func HandleGetDataRequest(
 
 // ~~
 
-func HandleGetDataArrayRequest(
+func HandleGetDataListRequest(
     response_writer http.ResponseWriter,
     request * http.Request
     )
@@ -576,9 +576,9 @@ func HandleGetDataArrayRequest(
         data_array [] DATA;
 
     if ( IsAdministratorSession( request, &error_code )
-         && GetDatabaseDataArray( &data_array, &error_code ) )
+         && GetDatabaseDataList( &data_array, &error_code ) )
     {
-        WriteResponse( response_writer, "{\"DataArray\":[" );
+        WriteResponse( response_writer, "{\"DataList\":[" );
 
         for data_index, _ := range data_array
         {

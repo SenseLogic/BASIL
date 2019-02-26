@@ -7,7 +7,7 @@ using System.Collections.Generic;
 
 public class SIMPLE
 {
-    public String
+    public Guid
         Uuid;
     public bool
         Bool;
@@ -76,8 +76,9 @@ public class COMPOUND
 
 public class VALUE
 {
+    public Guid
+        Uuid;
     public String
-        Uuid,
         Name;
     public int
         Integer;
@@ -89,7 +90,7 @@ public class VALUE
 
 public class DATA
 {
-    public String
+    public Guid
         Uuid,
         ValueUuid;
 }
