@@ -374,7 +374,7 @@ POINTER[ ELEMENT_TYPE ] | !stored
 ```
 
 ```
-# : universal unique identifier
+# : MD5 UUID
 ~ : value separator
 § : new line symbol
 ^ : unremovable space

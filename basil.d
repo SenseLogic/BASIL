@@ -30,7 +30,7 @@ import std.path : dirName;
 import std.regex : regex, replaceAll, Regex;
 import std.stdio : writeln;
 import std.string : endsWith, format, indexOf, join, lineSplitter, replace, startsWith, split, strip, stripRight, toLower, toUpper;
-import std.uuid : sha1UUID;
+import std.digest.md : md5Of, toHexString;
 
 // -- TYPES
 
@@ -524,6 +524,28 @@ class RANDOM
         return blob;
     }
 
+    // ~~
+
+    string MakeBlob(
+        ubyte[] byte_array,
+        long byte_count
+        )
+    {
+        long
+            byte_index;
+        string
+            blob;
+
+        for ( byte_index = 0;
+              byte_index < byte_count;
+              ++byte_index )
+        {
+            blob ~= "0123456789abcdef"[ byte_array[ byte_index ] >> 4 ];
+            blob ~= "0123456789abcdef"[ byte_array[ byte_index ] & 15 ];
+        }
+
+        return blob;
+    }
 
     // ~~
 
@@ -540,6 +562,29 @@ class RANDOM
             ~ MakeBlob( 4 )
             ~ "-"
             ~ MakeBlob( 12 );
+    }
+
+    // ~~
+
+    string MakeUuid(
+        string text
+        )
+    {
+        string
+            uuid;
+
+        uuid = MakeBlob( md5Of( text ), 16 );
+
+        return
+            uuid[ 0 .. 8 ]
+            ~ "-"
+            ~ uuid[ 8 .. 12 ]
+            ~ "-"
+            ~ uuid[ 12 .. 16 ]
+            ~ "-"
+            ~ uuid[ 16 .. 20 ]
+            ~ "-"
+            ~ uuid[ 20 .. 32 ];
     }
 
     // ~~
@@ -3297,7 +3342,7 @@ class COLUMN
         if ( Type.IsUuid()
              && text.startsWith( '#' ) )
         {
-            text = sha1UUID( text ).toString();
+            text = Random.MakeUuid( text[ 1 .. $ ] );
         }
 
         value.Text = text;
