@@ -30,7 +30,7 @@ import std.path : dirName;
 import std.regex : regex, replaceAll, Regex;
 import std.stdio : writeln;
 import std.string : endsWith, format, indexOf, join, lineSplitter, replace, startsWith, split, strip, stripRight, toLower, toUpper;
-import std.digest.md : md5Of, toHexString;
+import std.digest.md : md5Of;
 
 // -- TYPES
 
