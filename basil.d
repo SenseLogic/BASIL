@@ -103,6 +103,10 @@ class RANDOM
     string[]
         WordArray,
         SyllableArray;
+    string[ string ]
+        UuidMap;
+    string[]
+        UuidTextArray;
 
     // -- CONSTRUCTORS
 
@@ -571,20 +575,29 @@ class RANDOM
         )
     {
         string
+            hash,
             uuid;
 
-        uuid = MakeBlob( md5Of( text ), 16 );
+        hash = MakeBlob( md5Of( text ), 16 );
 
-        return
-            uuid[ 0 .. 8 ]
-            ~ "-"
-            ~ uuid[ 8 .. 12 ]
-            ~ "-"
-            ~ uuid[ 12 .. 16 ]
-            ~ "-"
-            ~ uuid[ 16 .. 20 ]
-            ~ "-"
-            ~ uuid[ 20 .. 32 ];
+        uuid
+            = hash[ 0 .. 8 ]
+              ~ "-"
+              ~ hash[ 8 .. 12 ]
+              ~ "-"
+              ~ hash[ 12 .. 16 ]
+              ~ "-"
+              ~ hash[ 16 .. 20 ]
+              ~ "-"
+              ~ hash[ 20 .. 32 ];
+
+        if ( ( text in UuidMap ) is null )
+        {
+            UuidMap[ text ] = uuid;
+            UuidTextArray ~= text;
+        }
+
+        return uuid;
     }
 
     // ~~
@@ -6028,6 +6041,29 @@ class SCHEMA
 
     // ~~
 
+    void WriteGenerisUuidFile(
+        string generis_uuid_file_path
+        )
+    {
+        string
+            generis_uuid_file_text,
+            uuid;
+
+        writeln( "Writing Generis uuid file : ", generis_uuid_file_path );
+
+        foreach ( uuid_text; Random.UuidTextArray )
+        {
+            uuid = Random.UuidMap[ uuid_text ];
+
+            generis_uuid_file_text
+                ~= "// " ~ uuid_text ~ " : " ~ uuid ~ "\n";
+        }
+
+        generis_uuid_file_path.write( generis_uuid_file_text );
+    }
+
+    // ~~
+
     void WriteCrystalTypeFile(
         string crystal_type_file_path
         )
@@ -6118,6 +6154,29 @@ class SCHEMA
         }
 
         csharp_type_file_path.write( csharp_type_file_text );
+    }
+
+    // ~~
+
+    void WriteCsharpUuidFile(
+        string csharp_uuid_file_path
+        )
+    {
+        string
+            csharp_uuid_file_text,
+            uuid;
+
+        writeln( "Writing Csharp uuid file : ", csharp_uuid_file_path );
+
+        foreach ( uuid_text; Random.UuidTextArray )
+        {
+            uuid = Random.UuidMap[ uuid_text ];
+
+            csharp_uuid_file_text
+                ~= "// " ~ uuid_text ~ " : " ~ uuid ~ "\n";
+        }
+
+        csharp_uuid_file_path.write( csharp_uuid_file_text );
     }
 
     // ~~
@@ -6951,6 +7010,7 @@ void ProcessFiles(
             Schema.WriteGenerisResponseFile( base_file_path ~ "_" ~ DatabaseFormat ~ "_response.gs" );
             Schema.WriteGenerisRequestFile( base_file_path ~ "_" ~ DatabaseFormat ~ "_request.gs" );
             Schema.WriteGenerisRouteFile( base_file_path ~ "_" ~ DatabaseFormat ~ "_route.gs" );
+            Schema.WriteGenerisUuidFile( base_file_path ~ "_" ~ DatabaseFormat ~ "_uuid.gs" );
         }
         else if ( output_format == "crystal" )
         {
@@ -6959,6 +7019,7 @@ void ProcessFiles(
         else if ( output_format == "csharp" )
         {
             Schema.WriteCsharpTypeFile( base_file_path ~ "_" ~ DatabaseFormat ~ "_type.cs" );
+            Schema.WriteCsharpUuidFile( base_file_path ~ "_" ~ DatabaseFormat ~ "_uuid.cs" );
         }
         else if ( output_format == "rust" )
         {
