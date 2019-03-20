@@ -374,7 +374,8 @@ POINTER[ ELEMENT_TYPE ] | !stored
 ```
 
 ```
-# : MD5 UUID
+% : CRC64 hash UINT64
+# : MD5 hash UUID
 ~ : value separator
 § : new line symbol
 ^ : unremovable space
