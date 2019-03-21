@@ -14,4 +14,6 @@ USER
 
     FirstName LastName Email Pseudonym Password ItIsAdministrator
 
-        Rick ~ Deckard ~ root@mail.com ~ root ~ root ~ true
+        Rick ~ Deckard ~ rick.deckard@mail.com ~ rick.deckard ~ b-263-54 ~ true
+        Rachael ~ Tyrell ~ rachael.tyrell@outlook.com ~ rachael.tyrell ~ nexus-7 ~ false
+        Arthur ~ Dent ~ arthur.dent@gmail.com ~ arthur.dent ~ 42 ~ false

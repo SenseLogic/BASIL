@@ -168,9 +168,16 @@ SECTION
 
 USER
 
-    FirstName LastName Email Pseudonym Password ItIsAdministrator
+    Uuid FirstName LastName Email Pseudonym Password ItIsAdministrator
 
-        Rick ~ Deckard ~ root@mail.com ~ root ~ root ~ true
+        #RickDeckard ~ Rick ~ Deckard
+            ~ rick.deckard@mail.com ~ rick.deckard ~ b-263-54 ~ true
+
+        #RachaelTyrell ~ Rachael ~ Tyrell
+            ~ rachael.tyrell@outlook.com ~ rachael.tyrell ~ nexus-7 ~ false
+
+        #ArthurDent ~ Arthur ~ Dent
+            ~ arthur.dent@gmail.com ~ arthur.dent ~ 42 ~ false
 ```
 
 ## Sample template file

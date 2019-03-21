@@ -5347,9 +5347,12 @@ class SCHEMA
             character;
         long
             character_index,
+            line_index,
             row_count,
             value_index;
         string
+            line,
+            next_line,
             stripped_line,
             table_name,
             value_line,
@@ -5367,8 +5370,11 @@ class SCHEMA
         table = null;
         column_array = null;
 
-        foreach ( line; line_array )
+        for ( line_index = 0;
+              line_index < line_array.length;
+              ++line_index )
         {
+            line = line_array[ line_index ];
             writeln( line );
 
             stripped_line = line.strip();
@@ -5379,6 +5385,30 @@ class SCHEMA
                      || column_array is null )
                 {
                     Abort( "Invalid line : " ~ stripped_line );
+                }
+
+                while ( line_index + 1 < line_array.length )
+                {
+                    next_line = line_array[ line_index + 1 ];
+
+                    if ( next_line.startsWith( "         " ) )
+                    {
+                        writeln( next_line );
+
+                        if ( stripped_line[ $ - 1 ] != '§'
+                             && stripped_line[ $ - 1 ] != '^' )
+                        {
+                            stripped_line ~= " ";
+                        }
+
+                        stripped_line ~= next_line.strip();
+
+                        ++line_index;
+                    }
+                    else
+                    {
+                        break;
+                    }
                 }
 
                 value_array = null;
@@ -5567,6 +5597,7 @@ class SCHEMA
 
         AddTables( GetStrippedLineArray( schema_file_text ) );
         MakeTypes();
+
         AddValues( GetStrippedLineArray( data_file_text ) );
         MakeValues();
     }
