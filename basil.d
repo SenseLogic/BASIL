@@ -1161,6 +1161,38 @@ class TYPE
 
     // ~~
 
+    bool IsList(
+        )
+    {
+        return ActualType.Name == "LIST";
+    }
+
+    // ~~
+
+    bool IsSet(
+        )
+    {
+        return ActualType.Name == "SET";
+    }
+
+    // ~~
+
+    bool IsMap(
+        )
+    {
+        return ActualType.Name == "MAP";
+    }
+
+    // ~~
+
+    bool IsTuple(
+        )
+    {
+        return ActualType.Name == "TUPLE";
+    }
+
+    // ~~
+
     long GetElementValueCount(
         )
     {
@@ -2313,6 +2345,212 @@ class VALUE
         return false;
     }
 
+    // ~~
+
+    string GetSqlText(
+        bool it_is_sub_value = false
+        )
+    {
+        string
+            sql_text,
+            type_name;
+
+        type_name = Type.ActualType.BaseName;
+
+        if ( type_name == "BOOL" )
+        {
+            if ( Text == "1"
+                 || Text == "true" )
+            {
+                sql_text = "1";
+            }
+            else
+            {
+                sql_text = "0";
+            }
+        }
+        else if ( type_name == "TUPLE" )
+        {
+            foreach ( sub_value_index, ref sub_value; SubValueArray )
+            {
+                if ( sub_value_index > 0 )
+                {
+                    sql_text ~= ", ";
+                }
+
+                sql_text ~= sub_value.GetSqlText( true );
+            }
+
+            sql_text = "( " ~ sql_text ~ " )";
+        }
+        else if ( type_name == "LIST" )
+        {
+            foreach ( element_value_index, ref element_value; ElementValueArray )
+            {
+                if ( element_value_index > 0 )
+                {
+                    sql_text ~= ", ";
+                }
+
+                sql_text ~= element_value.GetSqlText( true );
+            }
+
+            sql_text = "[ " ~ sql_text ~ " ]";
+        }
+        else if ( type_name == "SET" )
+        {
+            foreach ( element_value_index, ref element_value; ElementValueArray )
+            {
+                if ( element_value_index > 0 )
+                {
+                    sql_text ~= ", ";
+                }
+
+                sql_text ~= element_value.GetSqlText( true );
+            }
+
+            sql_text = "{ " ~ sql_text ~ " }";
+        }
+        else if ( type_name == "MAP" )
+        {
+            foreach ( element_value_index, ref element_value; ElementValueArray )
+            {
+                if ( element_value_index > 0 )
+                {
+                    sql_text ~= ", ";
+                }
+
+                sql_text ~= KeyValueArray[ element_value_index ].GetSqlText( true ) ~ " : " ~ element_value.GetSqlText( true );
+            }
+
+            sql_text = "{ " ~ sql_text ~ " }";
+        }
+        else
+        {
+            sql_text = Text;
+        }
+
+        if ( !it_is_sub_value )
+        {
+            sql_text = sql_text.replace( "\"", "\\\"" );
+        }
+
+        return "\"" ~ sql_text ~ "\"";
+    }
+
+    // ~~
+
+    string GetCqlText(
+        )
+    {
+        string
+            cql_text,
+            type_name;
+
+        type_name = Type.ActualType.BaseName;
+
+        if ( type_name == "BOOL" )
+        {
+            if ( Text == "1"
+                 || Text == "true" )
+            {
+                cql_text = "true";
+            }
+            else
+            {
+                cql_text = "false";
+            }
+        }
+        else if ( type_name == "INT8"
+                  || type_name == "UINT8"
+                  || type_name == "INT16"
+                  || type_name == "UINT16"
+                  || type_name == "INT32"
+                  || type_name == "UINT32"
+                  || type_name == "INT64"
+                  || type_name == "UINT64"
+                  || type_name == "FLOAT32"
+                  || type_name == "FLOAT64" )
+        {
+            cql_text = Text;
+        }
+        else if ( type_name == "DATE"
+                  || type_name == "DATETIME" )
+        {
+            cql_text = "'" ~ Text ~ "'";
+        }
+        else if ( type_name == "UUID" )
+        {
+            cql_text = Text;
+        }
+        else if ( type_name == "BLOB" )
+        {
+            cql_text = "0x" ~ Text;
+        }
+        else if ( type_name == "TUPLE" )
+        {
+            foreach ( sub_value_index, ref sub_value; SubValueArray )
+            {
+                if ( sub_value_index > 0 )
+                {
+                    cql_text ~= ", ";
+                }
+
+                cql_text ~= sub_value.GetCqlText();
+            }
+
+            cql_text = "( " ~ cql_text ~ " )";
+        }
+        else if ( type_name == "LIST" )
+        {
+            foreach ( element_value_index, ref element_value; ElementValueArray )
+            {
+                if ( element_value_index > 0 )
+                {
+                    cql_text ~= ", ";
+                }
+
+                cql_text ~= element_value.GetCqlText();
+            }
+
+            cql_text = "[ " ~ cql_text ~ " ]";
+        }
+        else if ( type_name == "SET" )
+        {
+            foreach ( element_value_index, ref element_value; ElementValueArray )
+            {
+                if ( element_value_index > 0 )
+                {
+                    cql_text ~= ", ";
+                }
+
+                cql_text ~= element_value.GetCqlText();
+            }
+
+            cql_text = "{ " ~ cql_text ~ " }";
+        }
+        else if ( type_name == "MAP" )
+        {
+            foreach ( element_value_index, ref element_value; ElementValueArray )
+            {
+                if ( element_value_index > 0 )
+                {
+                    cql_text ~= ", ";
+                }
+
+                cql_text ~= KeyValueArray[ element_value_index ].GetCqlText() ~ " : " ~ element_value.GetCqlText();
+            }
+
+            cql_text = "{ " ~ cql_text ~ " }";
+        }
+        else
+        {
+            cql_text = "'" ~ Text.replace( "'", "''" ) ~ "'";
+        }
+
+        return cql_text;
+    }
+
     // -- OPERATIONS
 
     void Set(
@@ -2323,6 +2561,15 @@ class VALUE
         SubValueArray = value.SubValueArray;
         KeyValueArray = value.KeyValueArray;
         ElementValueArray = value.ElementValueArray;
+    }
+
+    // ~~
+
+    void Set(
+        string text
+        )
+    {
+        Text = text;
     }
 
     // ~~
@@ -2818,212 +3065,6 @@ class VALUE
         while ( !it_is_sub_value
                 && Type.Column.IsUnique
                 && Type.Column.HasPriorValue( this, row_index ) );
-    }
-
-    // ~~
-
-    string GetSqlText(
-        bool it_is_sub_value = false
-        )
-    {
-        string
-            sql_text,
-            type_name;
-
-        type_name = Type.ActualType.BaseName;
-
-        if ( type_name == "BOOL" )
-        {
-            if ( Text == "1"
-                 || Text == "true" )
-            {
-                sql_text = "1";
-            }
-            else
-            {
-                sql_text = "0";
-            }
-        }
-        else if ( type_name == "TUPLE" )
-        {
-            foreach ( sub_value_index, ref sub_value; SubValueArray )
-            {
-                if ( sub_value_index > 0 )
-                {
-                    sql_text ~= ", ";
-                }
-
-                sql_text ~= sub_value.GetSqlText( true );
-            }
-
-            sql_text = "( " ~ sql_text ~ " )";
-        }
-        else if ( type_name == "LIST" )
-        {
-            foreach ( element_value_index, ref element_value; ElementValueArray )
-            {
-                if ( element_value_index > 0 )
-                {
-                    sql_text ~= ", ";
-                }
-
-                sql_text ~= element_value.GetSqlText( true );
-            }
-
-            sql_text = "[ " ~ sql_text ~ " ]";
-        }
-        else if ( type_name == "SET" )
-        {
-            foreach ( element_value_index, ref element_value; ElementValueArray )
-            {
-                if ( element_value_index > 0 )
-                {
-                    sql_text ~= ", ";
-                }
-
-                sql_text ~= element_value.GetSqlText( true );
-            }
-
-            sql_text = "{ " ~ sql_text ~ " }";
-        }
-        else if ( type_name == "MAP" )
-        {
-            foreach ( element_value_index, ref element_value; ElementValueArray )
-            {
-                if ( element_value_index > 0 )
-                {
-                    sql_text ~= ", ";
-                }
-
-                sql_text ~= KeyValueArray[ element_value_index ].GetSqlText( true ) ~ " : " ~ element_value.GetSqlText( true );
-            }
-
-            sql_text = "{ " ~ sql_text ~ " }";
-        }
-        else
-        {
-            sql_text = Text;
-        }
-
-        if ( !it_is_sub_value )
-        {
-            sql_text = sql_text.replace( "\"", "\\\"" );
-        }
-
-        return "\"" ~ sql_text ~ "\"";
-    }
-
-    // ~~
-
-    string GetCqlText(
-        )
-    {
-        string
-            cql_text,
-            type_name;
-
-        type_name = Type.ActualType.BaseName;
-
-        if ( type_name == "BOOL" )
-        {
-            if ( Text == "1"
-                 || Text == "true" )
-            {
-                cql_text = "true";
-            }
-            else
-            {
-                cql_text = "false";
-            }
-        }
-        else if ( type_name == "INT8"
-                  || type_name == "UINT8"
-                  || type_name == "INT16"
-                  || type_name == "UINT16"
-                  || type_name == "INT32"
-                  || type_name == "UINT32"
-                  || type_name == "INT64"
-                  || type_name == "UINT64"
-                  || type_name == "FLOAT32"
-                  || type_name == "FLOAT64" )
-        {
-            cql_text = Text;
-        }
-        else if ( type_name == "DATE"
-                  || type_name == "DATETIME" )
-        {
-            cql_text = "'" ~ Text ~ "'";
-        }
-        else if ( type_name == "UUID" )
-        {
-            cql_text = Text;
-        }
-        else if ( type_name == "BLOB" )
-        {
-            cql_text = "0x" ~ Text;
-        }
-        else if ( type_name == "TUPLE" )
-        {
-            foreach ( sub_value_index, ref sub_value; SubValueArray )
-            {
-                if ( sub_value_index > 0 )
-                {
-                    cql_text ~= ", ";
-                }
-
-                cql_text ~= sub_value.GetCqlText();
-            }
-
-            cql_text = "( " ~ cql_text ~ " )";
-        }
-        else if ( type_name == "LIST" )
-        {
-            foreach ( element_value_index, ref element_value; ElementValueArray )
-            {
-                if ( element_value_index > 0 )
-                {
-                    cql_text ~= ", ";
-                }
-
-                cql_text ~= element_value.GetCqlText();
-            }
-
-            cql_text = "[ " ~ cql_text ~ " ]";
-        }
-        else if ( type_name == "SET" )
-        {
-            foreach ( element_value_index, ref element_value; ElementValueArray )
-            {
-                if ( element_value_index > 0 )
-                {
-                    cql_text ~= ", ";
-                }
-
-                cql_text ~= element_value.GetCqlText();
-            }
-
-            cql_text = "{ " ~ cql_text ~ " }";
-        }
-        else if ( type_name == "MAP" )
-        {
-            foreach ( element_value_index, ref element_value; ElementValueArray )
-            {
-                if ( element_value_index > 0 )
-                {
-                    cql_text ~= ", ";
-                }
-
-                cql_text ~= KeyValueArray[ element_value_index ].GetCqlText() ~ " : " ~ element_value.GetCqlText();
-            }
-
-            cql_text = "{ " ~ cql_text ~ " }";
-        }
-        else
-        {
-            cql_text = "'" ~ Text.replace( "'", "''" ) ~ "'";
-        }
-
-        return cql_text;
     }
 }
 
@@ -3533,15 +3574,30 @@ class COLUMN
         if ( Type.IsUint64()
              && text.startsWith( '%' ) )
         {
-            text = Random.MakeId( text[ 1 .. $ ] );
+            value.Text = Random.MakeId( text[ 1 .. $ ] );
         }
         else if ( Type.IsUuid()
-             && text.startsWith( '#' ) )
+                  && text.startsWith( '#' ) )
         {
-            text = Random.MakeUuid( text[ 1 .. $ ] );
+            value.Text = Random.MakeUuid( text[ 1 .. $ ] );
         }
-
-        value.Text = text;
+        else if ( Type.IsList()
+                  || Type.IsSet() )
+        {
+            value.Set( "[" ~ text ~ "]" );
+        }
+        else if ( Type.IsMap() )
+        {
+            value.Set( "{" ~ text ~ "}" );
+        }
+        else if ( Type.IsTuple() )
+        {
+            value.Set( "(" ~ text ~ ")" );
+        }
+        else
+        {
+            value.Text = text;
+        }
 
         ValueArray ~= value;
 
