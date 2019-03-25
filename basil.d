@@ -723,7 +723,7 @@ class RANDOM
             hash = constant_array[ ( hash ^ character ) & 255 ] ^ ( hash >> 8 );
         }
 
-        id = hash.to!string();
+        id = ( cast( long )hash ).to!string();
 
         if ( ( text in IdMap ) is null )
         {
@@ -1144,6 +1144,14 @@ class TYPE
     }
 
     // -- INQUIRIES
+
+    bool IsInt64(
+        )
+    {
+        return ActualType.Name == "INT64";
+    }
+
+    // ~~
 
     bool IsUint64(
         )
@@ -3098,8 +3106,7 @@ class COLUMN
         IsLastIncremented,
         IsLastNotIncremented,
         IsForeign,
-        IsProcessed,
-        IsFilled;
+        IsProcessed;
     long
         Capacity;
     bool
@@ -3571,7 +3578,7 @@ class COLUMN
 
         value = new VALUE( Type );
 
-        if ( Type.IsUint64()
+        if ( Type.IsInt64()
              && text.startsWith( '%' ) )
         {
             value.Text = Random.MakeId( text[ 1 .. $ ] );
@@ -3614,8 +3621,7 @@ class COLUMN
             Abort( "Mutual column dependency : " ~ Table.Name ~ "." ~ Name );
         }
 
-        if ( !IsFilled
-             || ValueCount < Table.RowCount )
+        if ( ValueCount < Table.RowCount )
         {
             writeln( "Filling column : " ~ Table.Name ~ "." ~ Name );
 
@@ -3640,7 +3646,6 @@ class COLUMN
                 ++ValueCount;
             }
 
-            IsFilled = true;
             IsProcessed = false;
         }
     }
@@ -5540,12 +5545,6 @@ class SCHEMA
                         Abort( "Invalid table name : " ~ column_name );
                     }
 
-                    if ( column.IsFilled )
-                    {
-                        Abort( "Column is already filled : " ~ column_name );
-                    }
-
-                    column.IsFilled = true;
                     column_array ~= column;
                 }
 
@@ -6311,34 +6310,58 @@ class SCHEMA
 
     // ~~
 
-    void WriteGenerisUuidFile(
-        string generis_uuid_file_path
+    void WriteGenerisConstantFile(
+        string generis_constant_file_path
         )
     {
+        long
+            character_index;
         string
-            generis_uuid_file_text,
+            generis_constant_file_text,
             id,
             uuid;
 
-        writeln( "Writing Generis uuid file : ", generis_uuid_file_path );
+        writeln( "Writing Generis uuid file : ", generis_constant_file_path );
 
-        foreach ( id_text; Random.IdTextArray )
+        if ( Random.IdTextArray.length > 0 )
         {
-            id = Random.IdMap[ id_text ];
+            generis_constant_file_text = "const (\n";
 
-            generis_uuid_file_text
-                ~= "// " ~ id_text ~ " : " ~ id ~ "\n";
+            foreach ( id_text; Random.IdTextArray )
+            {
+                id = Random.IdMap[ id_text ];
+
+                generis_constant_file_text ~= "    " ~ id_text ~ " = " ~ id ~ ";\n";
+            }
+
+            generis_constant_file_text ~= "    );\n\n";
         }
 
-        foreach ( uuid_text; Random.UuidTextArray )
+        if ( Random.UuidTextArray.length > 0 )
         {
-            uuid = Random.UuidMap[ uuid_text ];
+            foreach ( uuid_text; Random.UuidTextArray )
+            {
+                uuid = Random.UuidMap[ uuid_text ].replace( "-", "" );
 
-            generis_uuid_file_text
-                ~= "// " ~ uuid_text ~ " : " ~ uuid ~ "\n";
+                generis_constant_file_text ~= "var " ~ uuid_text ~ " = gocql.UUID { ";
+
+                for ( character_index = 0;
+                      character_index < 32;
+                      character_index += 2 )
+                {
+                    if ( character_index > 0 )
+                    {
+                        generis_constant_file_text ~= ", ";
+                    }
+
+                    generis_constant_file_text ~= "0x" ~ uuid[ character_index .. character_index + 2 ];
+                }
+
+                generis_constant_file_text ~= " };\n";
+            }
         }
 
-        generis_uuid_file_path.WriteText( generis_uuid_file_text );
+        generis_constant_file_path.WriteText( generis_constant_file_text );
     }
 
     // ~~
@@ -6437,34 +6460,56 @@ class SCHEMA
 
     // ~~
 
-    void WriteCsharpUuidFile(
-        string csharp_uuid_file_path
+    void WriteCsharpConstantFile(
+        string csharp_constant_file_path
         )
     {
         string
-            csharp_uuid_file_text,
+            csharp_constant_file_text,
             id,
             uuid;
 
-        writeln( "Writing Csharp uuid file : ", csharp_uuid_file_path );
+        writeln( "Writing Csharp uuid file : ", csharp_constant_file_path );
 
-        foreach ( id_text; Random.IdTextArray )
+        if ( Random.IdTextArray.length > 0 )
         {
-            id = Random.IdMap[ id_text ];
+            csharp_constant_file_text = "    public const long\n";
 
-            csharp_uuid_file_text
-                ~= "// " ~ id_text ~ " : " ~ id ~ "\n";
+            foreach ( id_index, id_text; Random.IdTextArray )
+            {
+                if ( id_index > 0 )
+                {
+                    csharp_constant_file_text ~= ",\n";
+                }
+
+                id = Random.IdMap[ id_text ];
+
+                csharp_constant_file_text ~= "        " ~ id_text ~ " = " ~ id;
+            }
+
+            csharp_constant_file_text ~= ";\n";
         }
 
-        foreach ( uuid_text; Random.UuidTextArray )
+        if ( Random.UuidTextArray.length > 0 )
         {
-            uuid = Random.UuidMap[ uuid_text ];
+            csharp_constant_file_text ~= "    public static UUID\n";
 
-            csharp_uuid_file_text
-                ~= "// " ~ uuid_text ~ " : " ~ uuid ~ "\n";
+            foreach ( uuid_index, uuid_text; Random.UuidTextArray )
+            {
+                if ( uuid_index > 0 )
+                {
+                    csharp_constant_file_text ~= ",\n";
+                }
+
+                uuid = Random.UuidMap[ uuid_text ];
+
+                csharp_constant_file_text ~= "        " ~ uuid_text ~ " = new UUID( \"" ~ uuid ~ "\" )";
+            }
+
+            csharp_constant_file_text ~= ";\n";
         }
 
-        csharp_uuid_file_path.WriteText( csharp_uuid_file_text );
+        csharp_constant_file_path.WriteText( csharp_constant_file_text );
     }
 
     // ~~
@@ -7378,7 +7423,7 @@ void ProcessFiles(
             Schema.WriteGenerisResponseFile( base_file_path ~ "_" ~ DatabaseFormat ~ "_response.gs" );
             Schema.WriteGenerisRequestFile( base_file_path ~ "_" ~ DatabaseFormat ~ "_request.gs" );
             Schema.WriteGenerisRouteFile( base_file_path ~ "_" ~ DatabaseFormat ~ "_route.gs" );
-            Schema.WriteGenerisUuidFile( base_file_path ~ "_" ~ DatabaseFormat ~ "_uuid.gs" );
+            Schema.WriteGenerisConstantFile( base_file_path ~ "_" ~ DatabaseFormat ~ "_constant.gs" );
         }
         else if ( output_format == "crystal" )
         {
@@ -7387,7 +7432,7 @@ void ProcessFiles(
         else if ( output_format == "csharp" )
         {
             Schema.WriteCsharpTypeFile( base_file_path ~ "_" ~ DatabaseFormat ~ "_type.cs" );
-            Schema.WriteCsharpUuidFile( base_file_path ~ "_" ~ DatabaseFormat ~ "_uuid.cs" );
+            Schema.WriteCsharpConstantFile( base_file_path ~ "_" ~ DatabaseFormat ~ "_constant.cs" );
         }
         else if ( output_format == "rust" )
         {
