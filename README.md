@@ -381,7 +381,7 @@ POINTER[ ELEMENT_TYPE ] | !stored
 ```
 
 ```
-% : CRC64 hash UINT64
+% : CRC64 hash INT64
 # : MD5 hash UUID
 ~ : value separator
 § : new line symbol
