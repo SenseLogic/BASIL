@@ -1,115 +1,115 @@
 func WriteResponseSection(
-    response_writer http.ResponseWriter,
+    writer io.Writer,
     section * SECTION
     )
 {
-    WriteResponse( response_writer, "{\"Id\":" );
-    WriteResponseUint64( response_writer, section.Id );
-    WriteResponse( response_writer, ",\"Number\":" );
-    WriteResponseUint64( response_writer, section.Number );
-    WriteResponse( response_writer, ",\"Name\":" );
-    WriteResponseString( response_writer, section.Name );
-    WriteResponse( response_writer, ",\"Text\":" );
-    WriteResponseString( response_writer, section.Text );
-    WriteResponse( response_writer, ",\"Image\":" );
-    WriteResponseString( response_writer, section.Image );
-    WriteResponse( response_writer, "}" );
+    WriteResponse( writer, "{\"Id\":" );
+    WriteResponseUint64( writer, section.Id );
+    WriteResponse( writer, ",\"Number\":" );
+    WriteResponseUint64( writer, section.Number );
+    WriteResponse( writer, ",\"Name\":" );
+    WriteResponseString( writer, section.Name );
+    WriteResponse( writer, ",\"Text\":" );
+    WriteResponseString( writer, section.Text );
+    WriteResponse( writer, ",\"Image\":" );
+    WriteResponseString( writer, section.Image );
+    WriteResponse( writer, "}" );
 }
 
 // ~~
 
 func WriteResponseUser(
-    response_writer http.ResponseWriter,
+    writer io.Writer,
     user * USER
     )
 {
-    WriteResponse( response_writer, "{\"Id\":" );
-    WriteResponseUint64( response_writer, user.Id );
-    WriteResponse( response_writer, ",\"FirstName\":" );
-    WriteResponseString( response_writer, user.FirstName );
-    WriteResponse( response_writer, ",\"LastName\":" );
-    WriteResponseString( response_writer, user.LastName );
-    WriteResponse( response_writer, ",\"Email\":" );
-    WriteResponseString( response_writer, user.Email );
-    WriteResponse( response_writer, ",\"Pseudonym\":" );
-    WriteResponseString( response_writer, user.Pseudonym );
-    WriteResponse( response_writer, ",\"Password\":" );
-    WriteResponseString( response_writer, user.Password );
-    WriteResponse( response_writer, ",\"Phone\":" );
-    WriteResponseString( response_writer, user.Phone );
-    WriteResponse( response_writer, ",\"Street\":" );
-    WriteResponseString( response_writer, user.Street );
-    WriteResponse( response_writer, ",\"City\":" );
-    WriteResponseString( response_writer, user.City );
-    WriteResponse( response_writer, ",\"Code\":" );
-    WriteResponseString( response_writer, user.Code );
-    WriteResponse( response_writer, ",\"Region\":" );
-    WriteResponseString( response_writer, user.Region );
-    WriteResponse( response_writer, ",\"Country\":" );
-    WriteResponseString( response_writer, user.Country );
-    WriteResponse( response_writer, ",\"Company\":" );
-    WriteResponseString( response_writer, user.Company );
-    WriteResponse( response_writer, ",\"ItIsAdministrator\":" );
-    WriteResponseBool( response_writer, user.ItIsAdministrator );
-    WriteResponse( response_writer, "}" );
+    WriteResponse( writer, "{\"Id\":" );
+    WriteResponseUint64( writer, user.Id );
+    WriteResponse( writer, ",\"FirstName\":" );
+    WriteResponseString( writer, user.FirstName );
+    WriteResponse( writer, ",\"LastName\":" );
+    WriteResponseString( writer, user.LastName );
+    WriteResponse( writer, ",\"Email\":" );
+    WriteResponseString( writer, user.Email );
+    WriteResponse( writer, ",\"Pseudonym\":" );
+    WriteResponseString( writer, user.Pseudonym );
+    WriteResponse( writer, ",\"Password\":" );
+    WriteResponseString( writer, user.Password );
+    WriteResponse( writer, ",\"Phone\":" );
+    WriteResponseString( writer, user.Phone );
+    WriteResponse( writer, ",\"Street\":" );
+    WriteResponseString( writer, user.Street );
+    WriteResponse( writer, ",\"City\":" );
+    WriteResponseString( writer, user.City );
+    WriteResponse( writer, ",\"Code\":" );
+    WriteResponseString( writer, user.Code );
+    WriteResponse( writer, ",\"Region\":" );
+    WriteResponseString( writer, user.Region );
+    WriteResponse( writer, ",\"Country\":" );
+    WriteResponseString( writer, user.Country );
+    WriteResponse( writer, ",\"Company\":" );
+    WriteResponseString( writer, user.Company );
+    WriteResponse( writer, ",\"ItIsAdministrator\":" );
+    WriteResponseBool( writer, user.ItIsAdministrator );
+    WriteResponse( writer, "}" );
 }
 
 // ~~
 
 func WriteResponseArticle(
-    response_writer http.ResponseWriter,
+    writer io.Writer,
     article * ARTICLE
     )
 {
-    WriteResponse( response_writer, "{\"Id\":" );
-    WriteResponseUint64( response_writer, article.Id );
-    WriteResponse( response_writer, ",\"SectionId\":" );
-    WriteResponseUint64( response_writer, article.SectionId );
-    WriteResponse( response_writer, ",\"UserId\":" );
-    WriteResponseUint64( response_writer, article.UserId );
-    WriteResponse( response_writer, ",\"Title\":" );
-    WriteResponseString( response_writer, article.Title );
-    WriteResponse( response_writer, ",\"Text\":" );
-    WriteResponseString( response_writer, article.Text );
-    WriteResponse( response_writer, ",\"Image\":" );
-    WriteResponseString( response_writer, article.Image );
-    WriteResponse( response_writer, ",\"Date\":" );
-    WriteResponseDateTime( response_writer, article.Date );
-    WriteResponse( response_writer, "}" );
+    WriteResponse( writer, "{\"Id\":" );
+    WriteResponseUint64( writer, article.Id );
+    WriteResponse( writer, ",\"SectionId\":" );
+    WriteResponseUint64( writer, article.SectionId );
+    WriteResponse( writer, ",\"UserId\":" );
+    WriteResponseUint64( writer, article.UserId );
+    WriteResponse( writer, ",\"Title\":" );
+    WriteResponseString( writer, article.Title );
+    WriteResponse( writer, ",\"Text\":" );
+    WriteResponseString( writer, article.Text );
+    WriteResponse( writer, ",\"Image\":" );
+    WriteResponseString( writer, article.Image );
+    WriteResponse( writer, ",\"Date\":" );
+    WriteResponseDateTime( writer, article.Date );
+    WriteResponse( writer, "}" );
 }
 
 // ~~
 
 func WriteResponseComment(
-    response_writer http.ResponseWriter,
+    writer io.Writer,
     comment * COMMENT
     )
 {
-    WriteResponse( response_writer, "{\"Id\":" );
-    WriteResponseUint64( response_writer, comment.Id );
-    WriteResponse( response_writer, ",\"ArticleId\":" );
-    WriteResponseUint64( response_writer, comment.ArticleId );
-    WriteResponse( response_writer, ",\"UserId\":" );
-    WriteResponseUint64( response_writer, comment.UserId );
-    WriteResponse( response_writer, ",\"Text\":" );
-    WriteResponseString( response_writer, comment.Text );
-    WriteResponse( response_writer, ",\"DateTime\":" );
-    WriteResponseDateTime( response_writer, comment.DateTime );
-    WriteResponse( response_writer, "}" );
+    WriteResponse( writer, "{\"Id\":" );
+    WriteResponseUint64( writer, comment.Id );
+    WriteResponse( writer, ",\"ArticleId\":" );
+    WriteResponseUint64( writer, comment.ArticleId );
+    WriteResponse( writer, ",\"UserId\":" );
+    WriteResponseUint64( writer, comment.UserId );
+    WriteResponse( writer, ",\"Text\":" );
+    WriteResponseString( writer, comment.Text );
+    WriteResponse( writer, ",\"DateTime\":" );
+    WriteResponseDateTime( writer, comment.DateTime );
+    WriteResponse( writer, "}" );
 }
 
 // ~~
 
 func WriteResponseSubscriber(
-    response_writer http.ResponseWriter,
+    writer io.Writer,
     subscriber * SUBSCRIBER
     )
 {
-    WriteResponse( response_writer, "{\"Id\":" );
-    WriteResponseUint64( response_writer, subscriber.Id );
-    WriteResponse( response_writer, ",\"Name\":" );
-    WriteResponseString( response_writer, subscriber.Name );
-    WriteResponse( response_writer, ",\"Email\":" );
-    WriteResponseString( response_writer, subscriber.Email );
-    WriteResponse( response_writer, "}" );
+    WriteResponse( writer, "{\"Id\":" );
+    WriteResponseUint64( writer, subscriber.Id );
+    WriteResponse( writer, ",\"Name\":" );
+    WriteResponseString( writer, subscriber.Name );
+    WriteResponse( writer, ",\"Email\":" );
+    WriteResponseString( writer, subscriber.Email );
+    WriteResponse( writer, "}" );
 }

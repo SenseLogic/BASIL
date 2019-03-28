@@ -4664,33 +4664,33 @@ class TABLE
 
         generis_code
             = "func WriteResponse" ~ GoAttribute ~ "(\n"
-              ~ "    response_writer http.ResponseWriter,\n"
+              ~ "    writer io.Writer,\n"
               ~ "    " ~ GoVariable ~ " * " ~ GoType ~ "\n"
               ~ "    )\n"
               ~ "{\n"
-              ~ "    WriteResponse( response_writer, \"{\" );\n";
+              ~ "    WriteResponse( writer, \"{\" );\n";
 
         foreach ( ref column; ColumnArray )
         {
             if ( column.IsStored )
             {
                 generis_code
-                    ~= "    WriteResponse( response_writer, \"\\\"" ~ column.GoName ~ "\\\":\" );\n"
-                       ~ "    WriteResponse" ~ column.GoAttribute ~ "( response_writer, " ~ GoVariable ~ "." ~ column.GoName ~ " );\n";
+                    ~= "    WriteResponse( writer, \"\\\"" ~ column.GoName ~ "\\\":\" );\n"
+                       ~ "    WriteResponse" ~ column.GoAttribute ~ "( writer, " ~ GoVariable ~ "." ~ column.GoName ~ " );\n";
 
                 if ( !column.IsLastStored )
                 {
                     generis_code
-                        ~= "    WriteResponse( response_writer, \",\" );\n";
+                        ~= "    WriteResponse( writer, \",\" );\n";
                 }
             }
         }
 
         generis_code
-            ~= "    WriteResponse( response_writer, \"}\" );\n"
+            ~= "    WriteResponse( writer, \"}\" );\n"
                ~ "}\n";
 
-        return generis_code.replace( "\" );\n    WriteResponse( response_writer, \"", "" );
+        return generis_code.replace( "\" );\n    WriteResponse( writer, \"", "" );
     }
 
     // ~~

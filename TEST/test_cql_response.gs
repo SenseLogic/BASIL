@@ -1,105 +1,105 @@
 func WriteResponseSimple(
-    response_writer http.ResponseWriter,
+    writer io.Writer,
     simple * SIMPLE
     )
 {
-    WriteResponse( response_writer, "{\"Uuid\":" );
-    WriteResponseUuid( response_writer, simple.Uuid );
-    WriteResponse( response_writer, ",\"Bool\":" );
-    WriteResponseBool( response_writer, simple.Bool );
-    WriteResponse( response_writer, ",\"Int8\":" );
-    WriteResponseInt8( response_writer, simple.Int8 );
-    WriteResponse( response_writer, ",\"Uint8\":" );
-    WriteResponseUint8( response_writer, simple.Uint8 );
-    WriteResponse( response_writer, ",\"Int16\":" );
-    WriteResponseInt16( response_writer, simple.Int16 );
-    WriteResponse( response_writer, ",\"Uint16\":" );
-    WriteResponseUint16( response_writer, simple.Uint16 );
-    WriteResponse( response_writer, ",\"Int32\":" );
-    WriteResponseInt32( response_writer, simple.Int32 );
-    WriteResponse( response_writer, ",\"Uint32\":" );
-    WriteResponseUint32( response_writer, simple.Uint32 );
-    WriteResponse( response_writer, ",\"Int64\":" );
-    WriteResponseInt64( response_writer, simple.Int64 );
-    WriteResponse( response_writer, ",\"Uint64\":" );
-    WriteResponseUint64( response_writer, simple.Uint64 );
-    WriteResponse( response_writer, ",\"Float32\":" );
-    WriteResponseFloat32( response_writer, simple.Float32 );
-    WriteResponse( response_writer, ",\"Float64\":" );
-    WriteResponseFloat64( response_writer, simple.Float64 );
-    WriteResponse( response_writer, ",\"String\":" );
-    WriteResponseString( response_writer, simple.String );
-    WriteResponse( response_writer, ",\"Date\":" );
-    WriteResponseDateTime( response_writer, simple.Date );
-    WriteResponse( response_writer, ",\"DateTime\":" );
-    WriteResponseDateTime( response_writer, simple.DateTime );
-    WriteResponse( response_writer, ",\"Blob\":" );
-    WriteResponseBlob( response_writer, simple.Blob );
-    WriteResponse( response_writer, "}" );
+    WriteResponse( writer, "{\"Uuid\":" );
+    WriteResponseUuid( writer, simple.Uuid );
+    WriteResponse( writer, ",\"Bool\":" );
+    WriteResponseBool( writer, simple.Bool );
+    WriteResponse( writer, ",\"Int8\":" );
+    WriteResponseInt8( writer, simple.Int8 );
+    WriteResponse( writer, ",\"Uint8\":" );
+    WriteResponseUint8( writer, simple.Uint8 );
+    WriteResponse( writer, ",\"Int16\":" );
+    WriteResponseInt16( writer, simple.Int16 );
+    WriteResponse( writer, ",\"Uint16\":" );
+    WriteResponseUint16( writer, simple.Uint16 );
+    WriteResponse( writer, ",\"Int32\":" );
+    WriteResponseInt32( writer, simple.Int32 );
+    WriteResponse( writer, ",\"Uint32\":" );
+    WriteResponseUint32( writer, simple.Uint32 );
+    WriteResponse( writer, ",\"Int64\":" );
+    WriteResponseInt64( writer, simple.Int64 );
+    WriteResponse( writer, ",\"Uint64\":" );
+    WriteResponseUint64( writer, simple.Uint64 );
+    WriteResponse( writer, ",\"Float32\":" );
+    WriteResponseFloat32( writer, simple.Float32 );
+    WriteResponse( writer, ",\"Float64\":" );
+    WriteResponseFloat64( writer, simple.Float64 );
+    WriteResponse( writer, ",\"String\":" );
+    WriteResponseString( writer, simple.String );
+    WriteResponse( writer, ",\"Date\":" );
+    WriteResponseDateTime( writer, simple.Date );
+    WriteResponse( writer, ",\"DateTime\":" );
+    WriteResponseDateTime( writer, simple.DateTime );
+    WriteResponse( writer, ",\"Blob\":" );
+    WriteResponseBlob( writer, simple.Blob );
+    WriteResponse( writer, "}" );
 }
 
 // ~~
 
 func WriteResponseCompound(
-    response_writer http.ResponseWriter,
+    writer io.Writer,
     compound * COMPOUND
     )
 {
-    WriteResponse( response_writer, "{\"Id\":" );
-    WriteResponseInt32( response_writer, compound.Id );
-    WriteResponse( response_writer, ",\"Location\":" );
-    WriteResponseString( response_writer, compound.Location );
-    WriteResponse( response_writer, ",\"Name\":" );
-    WriteResponseStringStringTuple( response_writer, compound.Name );
-    WriteResponse( response_writer, ",\"NameSet\":" );
-    WriteResponseStringStringTupleSet( response_writer, compound.NameSet );
-    WriteResponse( response_writer, ",\"PhoneList\":" );
-    WriteResponseStringList( response_writer, compound.PhoneList );
-    WriteResponse( response_writer, ",\"EmailSet\":" );
-    WriteResponseStringSet( response_writer, compound.EmailSet );
-    WriteResponse( response_writer, ",\"CompanyMap\":" );
-    WriteResponseStringStringMap( response_writer, compound.CompanyMap );
-    WriteResponse( response_writer, ",\"SimpleDate\":" );
-    WriteResponseDateTime( response_writer, compound.SimpleDate );
-    WriteResponse( response_writer, ",\"SimpleDateMap\":" );
-    WriteResponseStringStringTupleDateTimeMap( response_writer, compound.SimpleDateMap );
-    WriteResponse( response_writer, ",\"SimpleDateSet\":" );
-    WriteResponseDateTimeSet( response_writer, compound.SimpleDateSet );
-    WriteResponse( response_writer, ",\"SimpleDateList\":" );
-    WriteResponseDateTimeList( response_writer, compound.SimpleDateList );
-    WriteResponse( response_writer, ",\"NameSetMap\":" );
-    WriteResponseDateTimeStringStringTupleSetMap( response_writer, compound.NameSetMap );
-    WriteResponse( response_writer, "}" );
+    WriteResponse( writer, "{\"Id\":" );
+    WriteResponseInt32( writer, compound.Id );
+    WriteResponse( writer, ",\"Location\":" );
+    WriteResponseString( writer, compound.Location );
+    WriteResponse( writer, ",\"Name\":" );
+    WriteResponseStringStringTuple( writer, compound.Name );
+    WriteResponse( writer, ",\"NameSet\":" );
+    WriteResponseStringStringTupleSet( writer, compound.NameSet );
+    WriteResponse( writer, ",\"PhoneList\":" );
+    WriteResponseStringList( writer, compound.PhoneList );
+    WriteResponse( writer, ",\"EmailSet\":" );
+    WriteResponseStringSet( writer, compound.EmailSet );
+    WriteResponse( writer, ",\"CompanyMap\":" );
+    WriteResponseStringStringMap( writer, compound.CompanyMap );
+    WriteResponse( writer, ",\"SimpleDate\":" );
+    WriteResponseDateTime( writer, compound.SimpleDate );
+    WriteResponse( writer, ",\"SimpleDateMap\":" );
+    WriteResponseStringStringTupleDateTimeMap( writer, compound.SimpleDateMap );
+    WriteResponse( writer, ",\"SimpleDateSet\":" );
+    WriteResponseDateTimeSet( writer, compound.SimpleDateSet );
+    WriteResponse( writer, ",\"SimpleDateList\":" );
+    WriteResponseDateTimeList( writer, compound.SimpleDateList );
+    WriteResponse( writer, ",\"NameSetMap\":" );
+    WriteResponseDateTimeStringStringTupleSetMap( writer, compound.NameSetMap );
+    WriteResponse( writer, "}" );
 }
 
 // ~~
 
 func WriteResponseValue(
-    response_writer http.ResponseWriter,
+    writer io.Writer,
     value * VALUE
     )
 {
-    WriteResponse( response_writer, "{\"Uuid\":" );
-    WriteResponseUuid( response_writer, value.Uuid );
-    WriteResponse( response_writer, ",\"Name\":" );
-    WriteResponseString( response_writer, value.Name );
-    WriteResponse( response_writer, ",\"Integer\":" );
-    WriteResponseInt32( response_writer, value.Integer );
-    WriteResponse( response_writer, ",\"Text\":" );
-    WriteResponseString( response_writer, value.Text );
-    WriteResponse( response_writer, "}" );
+    WriteResponse( writer, "{\"Uuid\":" );
+    WriteResponseUuid( writer, value.Uuid );
+    WriteResponse( writer, ",\"Name\":" );
+    WriteResponseString( writer, value.Name );
+    WriteResponse( writer, ",\"Integer\":" );
+    WriteResponseInt32( writer, value.Integer );
+    WriteResponse( writer, ",\"Text\":" );
+    WriteResponseString( writer, value.Text );
+    WriteResponse( writer, "}" );
 }
 
 // ~~
 
 func WriteResponseData(
-    response_writer http.ResponseWriter,
+    writer io.Writer,
     data * DATA
     )
 {
-    WriteResponse( response_writer, "{\"Uuid\":" );
-    WriteResponseUuid( response_writer, data.Uuid );
-    WriteResponse( response_writer, ",\"ValueUuid\":" );
-    WriteResponseUuid( response_writer, data.ValueUuid );
-    WriteResponse( response_writer, "}" );
+    WriteResponse( writer, "{\"Uuid\":" );
+    WriteResponseUuid( writer, data.Uuid );
+    WriteResponse( writer, ",\"ValueUuid\":" );
+    WriteResponseUuid( writer, data.ValueUuid );
+    WriteResponse( writer, "}" );
 }
