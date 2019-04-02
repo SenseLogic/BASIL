@@ -10,7 +10,7 @@ func AddDatabaseSection(
 
     if ( error_ != nil )
     {
-        error_code.Set( error_, http.StatusBadRequest );
+        error_code.SetError( error_, http.StatusBadRequest );
 
         return false;
     }
@@ -25,7 +25,7 @@ func AddDatabaseSection(
 
     if ( error_ != nil )
     {
-        error_code.Set( error_, http.StatusBadRequest );
+        error_code.SetError( error_, http.StatusBadRequest );
 
         return false;
     }
@@ -34,7 +34,7 @@ func AddDatabaseSection(
 
     if ( error_ != nil )
     {
-        error_code.Set( error_, http.StatusBadRequest );
+        error_code.SetError( error_, http.StatusBadRequest );
 
         return false;
     }
@@ -56,7 +56,7 @@ func SetDatabaseSection(
 
     if ( error_ != nil )
     {
-        error_code.Set( error_, http.StatusBadRequest );
+        error_code.SetError( error_, http.StatusBadRequest );
 
         return false;
     }
@@ -72,7 +72,7 @@ func SetDatabaseSection(
 
     if ( error_ != nil )
     {
-        error_code.Set( error_, http.StatusBadRequest );
+        error_code.SetError( error_, http.StatusBadRequest );
 
         return false;
     }
@@ -94,7 +94,7 @@ func RemoveDatabaseSection(
 
     if ( error_ != nil )
     {
-        error_code.Set( error_, http.StatusBadRequest );
+        error_code.SetError( error_, http.StatusBadRequest );
 
         return false;
     }
@@ -106,7 +106,7 @@ func RemoveDatabaseSection(
 
     if ( error_ != nil )
     {
-        error_code.Set( error_, http.StatusBadRequest );
+        error_code.SetError( error_, http.StatusBadRequest );
 
         return false;
     }
@@ -128,7 +128,7 @@ func GetDatabaseSection(
 
     if ( error_ != nil )
     {
-        error_code.Set( error_, http.StatusBadRequest );
+        error_code.SetError( error_, http.StatusBadRequest );
 
         return false;
     }
@@ -140,7 +140,7 @@ func GetDatabaseSection(
 
     if ( error_ != nil )
     {
-        error_code.Set( error_, http.StatusBadRequest );
+        error_code.SetError( error_, http.StatusBadRequest );
 
         return false;
     }
@@ -157,7 +157,7 @@ func GetDatabaseSection(
 
         if ( error_ != nil )
         {
-            error_code.Set( error_, http.StatusBadRequest );
+            error_code.SetError( error_, http.StatusBadRequest );
 
             return false;
         }
@@ -165,7 +165,7 @@ func GetDatabaseSection(
 
     if ( error_ != nil )
     {
-        error_code.Set( error_, http.StatusBadRequest );
+        error_code.SetError( error_, http.StatusBadRequest );
 
         return false;
     }
@@ -190,7 +190,7 @@ func GetDatabaseSectionList(
 
     if ( error_ != nil )
     {
-        error_code.Set( error_, http.StatusBadRequest );
+        error_code.SetError( error_, http.StatusBadRequest );
 
         return false;
     }
@@ -199,7 +199,7 @@ func GetDatabaseSectionList(
 
     if ( error_ != nil )
     {
-        error_code.Set( error_, http.StatusBadRequest );
+        error_code.SetError( error_, http.StatusBadRequest );
 
         return false;
     }
@@ -219,7 +219,7 @@ func GetDatabaseSectionList(
 
         if ( error_ != nil )
         {
-            error_code.Set( error_, http.StatusBadRequest );
+            error_code.SetError( error_, http.StatusBadRequest );
 
             return false;
         }
@@ -244,7 +244,7 @@ func AddDatabaseUser(
 
     if ( error_ != nil )
     {
-        error_code.Set( error_, http.StatusBadRequest );
+        error_code.SetError( error_, http.StatusBadRequest );
 
         return false;
     }
@@ -268,7 +268,7 @@ func AddDatabaseUser(
 
     if ( error_ != nil )
     {
-        error_code.Set( error_, http.StatusBadRequest );
+        error_code.SetError( error_, http.StatusBadRequest );
 
         return false;
     }
@@ -277,7 +277,7 @@ func AddDatabaseUser(
 
     if ( error_ != nil )
     {
-        error_code.Set( error_, http.StatusBadRequest );
+        error_code.SetError( error_, http.StatusBadRequest );
 
         return false;
     }
@@ -299,7 +299,7 @@ func SetDatabaseUser(
 
     if ( error_ != nil )
     {
-        error_code.Set( error_, http.StatusBadRequest );
+        error_code.SetError( error_, http.StatusBadRequest );
 
         return false;
     }
@@ -324,7 +324,7 @@ func SetDatabaseUser(
 
     if ( error_ != nil )
     {
-        error_code.Set( error_, http.StatusBadRequest );
+        error_code.SetError( error_, http.StatusBadRequest );
 
         return false;
     }
@@ -346,7 +346,7 @@ func RemoveDatabaseUser(
 
     if ( error_ != nil )
     {
-        error_code.Set( error_, http.StatusBadRequest );
+        error_code.SetError( error_, http.StatusBadRequest );
 
         return false;
     }
@@ -358,7 +358,7 @@ func RemoveDatabaseUser(
 
     if ( error_ != nil )
     {
-        error_code.Set( error_, http.StatusBadRequest );
+        error_code.SetError( error_, http.StatusBadRequest );
 
         return false;
     }
@@ -380,7 +380,7 @@ func GetDatabaseUser(
 
     if ( error_ != nil )
     {
-        error_code.Set( error_, http.StatusBadRequest );
+        error_code.SetError( error_, http.StatusBadRequest );
 
         return false;
     }
@@ -392,7 +392,7 @@ func GetDatabaseUser(
 
     if ( error_ != nil )
     {
-        error_code.Set( error_, http.StatusBadRequest );
+        error_code.SetError( error_, http.StatusBadRequest );
 
         return false;
     }
@@ -418,7 +418,7 @@ func GetDatabaseUser(
 
         if ( error_ != nil )
         {
-            error_code.Set( error_, http.StatusBadRequest );
+            error_code.SetError( error_, http.StatusBadRequest );
 
             return false;
         }
@@ -426,7 +426,7 @@ func GetDatabaseUser(
 
     if ( error_ != nil )
     {
-        error_code.Set( error_, http.StatusBadRequest );
+        error_code.SetError( error_, http.StatusBadRequest );
 
         return false;
     }
@@ -451,7 +451,7 @@ func GetDatabaseUserList(
 
     if ( error_ != nil )
     {
-        error_code.Set( error_, http.StatusBadRequest );
+        error_code.SetError( error_, http.StatusBadRequest );
 
         return false;
     }
@@ -460,7 +460,7 @@ func GetDatabaseUserList(
 
     if ( error_ != nil )
     {
-        error_code.Set( error_, http.StatusBadRequest );
+        error_code.SetError( error_, http.StatusBadRequest );
 
         return false;
     }
@@ -489,7 +489,7 @@ func GetDatabaseUserList(
 
         if ( error_ != nil )
         {
-            error_code.Set( error_, http.StatusBadRequest );
+            error_code.SetError( error_, http.StatusBadRequest );
 
             return false;
         }
@@ -514,7 +514,7 @@ func AddDatabaseArticle(
 
     if ( error_ != nil )
     {
-        error_code.Set( error_, http.StatusBadRequest );
+        error_code.SetError( error_, http.StatusBadRequest );
 
         return false;
     }
@@ -531,7 +531,7 @@ func AddDatabaseArticle(
 
     if ( error_ != nil )
     {
-        error_code.Set( error_, http.StatusBadRequest );
+        error_code.SetError( error_, http.StatusBadRequest );
 
         return false;
     }
@@ -540,7 +540,7 @@ func AddDatabaseArticle(
 
     if ( error_ != nil )
     {
-        error_code.Set( error_, http.StatusBadRequest );
+        error_code.SetError( error_, http.StatusBadRequest );
 
         return false;
     }
@@ -562,7 +562,7 @@ func SetDatabaseArticle(
 
     if ( error_ != nil )
     {
-        error_code.Set( error_, http.StatusBadRequest );
+        error_code.SetError( error_, http.StatusBadRequest );
 
         return false;
     }
@@ -580,7 +580,7 @@ func SetDatabaseArticle(
 
     if ( error_ != nil )
     {
-        error_code.Set( error_, http.StatusBadRequest );
+        error_code.SetError( error_, http.StatusBadRequest );
 
         return false;
     }
@@ -602,7 +602,7 @@ func RemoveDatabaseArticle(
 
     if ( error_ != nil )
     {
-        error_code.Set( error_, http.StatusBadRequest );
+        error_code.SetError( error_, http.StatusBadRequest );
 
         return false;
     }
@@ -614,7 +614,7 @@ func RemoveDatabaseArticle(
 
     if ( error_ != nil )
     {
-        error_code.Set( error_, http.StatusBadRequest );
+        error_code.SetError( error_, http.StatusBadRequest );
 
         return false;
     }
@@ -636,7 +636,7 @@ func GetDatabaseArticle(
 
     if ( error_ != nil )
     {
-        error_code.Set( error_, http.StatusBadRequest );
+        error_code.SetError( error_, http.StatusBadRequest );
 
         return false;
     }
@@ -648,7 +648,7 @@ func GetDatabaseArticle(
 
     if ( error_ != nil )
     {
-        error_code.Set( error_, http.StatusBadRequest );
+        error_code.SetError( error_, http.StatusBadRequest );
 
         return false;
     }
@@ -667,7 +667,7 @@ func GetDatabaseArticle(
 
         if ( error_ != nil )
         {
-            error_code.Set( error_, http.StatusBadRequest );
+            error_code.SetError( error_, http.StatusBadRequest );
 
             return false;
         }
@@ -675,7 +675,7 @@ func GetDatabaseArticle(
 
     if ( error_ != nil )
     {
-        error_code.Set( error_, http.StatusBadRequest );
+        error_code.SetError( error_, http.StatusBadRequest );
 
         return false;
     }
@@ -700,7 +700,7 @@ func GetDatabaseArticleList(
 
     if ( error_ != nil )
     {
-        error_code.Set( error_, http.StatusBadRequest );
+        error_code.SetError( error_, http.StatusBadRequest );
 
         return false;
     }
@@ -709,7 +709,7 @@ func GetDatabaseArticleList(
 
     if ( error_ != nil )
     {
-        error_code.Set( error_, http.StatusBadRequest );
+        error_code.SetError( error_, http.StatusBadRequest );
 
         return false;
     }
@@ -731,7 +731,7 @@ func GetDatabaseArticleList(
 
         if ( error_ != nil )
         {
-            error_code.Set( error_, http.StatusBadRequest );
+            error_code.SetError( error_, http.StatusBadRequest );
 
             return false;
         }
@@ -756,7 +756,7 @@ func AddDatabaseComment(
 
     if ( error_ != nil )
     {
-        error_code.Set( error_, http.StatusBadRequest );
+        error_code.SetError( error_, http.StatusBadRequest );
 
         return false;
     }
@@ -771,7 +771,7 @@ func AddDatabaseComment(
 
     if ( error_ != nil )
     {
-        error_code.Set( error_, http.StatusBadRequest );
+        error_code.SetError( error_, http.StatusBadRequest );
 
         return false;
     }
@@ -780,7 +780,7 @@ func AddDatabaseComment(
 
     if ( error_ != nil )
     {
-        error_code.Set( error_, http.StatusBadRequest );
+        error_code.SetError( error_, http.StatusBadRequest );
 
         return false;
     }
@@ -802,7 +802,7 @@ func SetDatabaseComment(
 
     if ( error_ != nil )
     {
-        error_code.Set( error_, http.StatusBadRequest );
+        error_code.SetError( error_, http.StatusBadRequest );
 
         return false;
     }
@@ -818,7 +818,7 @@ func SetDatabaseComment(
 
     if ( error_ != nil )
     {
-        error_code.Set( error_, http.StatusBadRequest );
+        error_code.SetError( error_, http.StatusBadRequest );
 
         return false;
     }
@@ -840,7 +840,7 @@ func RemoveDatabaseComment(
 
     if ( error_ != nil )
     {
-        error_code.Set( error_, http.StatusBadRequest );
+        error_code.SetError( error_, http.StatusBadRequest );
 
         return false;
     }
@@ -852,7 +852,7 @@ func RemoveDatabaseComment(
 
     if ( error_ != nil )
     {
-        error_code.Set( error_, http.StatusBadRequest );
+        error_code.SetError( error_, http.StatusBadRequest );
 
         return false;
     }
@@ -874,7 +874,7 @@ func GetDatabaseComment(
 
     if ( error_ != nil )
     {
-        error_code.Set( error_, http.StatusBadRequest );
+        error_code.SetError( error_, http.StatusBadRequest );
 
         return false;
     }
@@ -886,7 +886,7 @@ func GetDatabaseComment(
 
     if ( error_ != nil )
     {
-        error_code.Set( error_, http.StatusBadRequest );
+        error_code.SetError( error_, http.StatusBadRequest );
 
         return false;
     }
@@ -903,7 +903,7 @@ func GetDatabaseComment(
 
         if ( error_ != nil )
         {
-            error_code.Set( error_, http.StatusBadRequest );
+            error_code.SetError( error_, http.StatusBadRequest );
 
             return false;
         }
@@ -911,7 +911,7 @@ func GetDatabaseComment(
 
     if ( error_ != nil )
     {
-        error_code.Set( error_, http.StatusBadRequest );
+        error_code.SetError( error_, http.StatusBadRequest );
 
         return false;
     }
@@ -936,7 +936,7 @@ func GetDatabaseCommentList(
 
     if ( error_ != nil )
     {
-        error_code.Set( error_, http.StatusBadRequest );
+        error_code.SetError( error_, http.StatusBadRequest );
 
         return false;
     }
@@ -945,7 +945,7 @@ func GetDatabaseCommentList(
 
     if ( error_ != nil )
     {
-        error_code.Set( error_, http.StatusBadRequest );
+        error_code.SetError( error_, http.StatusBadRequest );
 
         return false;
     }
@@ -965,7 +965,7 @@ func GetDatabaseCommentList(
 
         if ( error_ != nil )
         {
-            error_code.Set( error_, http.StatusBadRequest );
+            error_code.SetError( error_, http.StatusBadRequest );
 
             return false;
         }
@@ -990,7 +990,7 @@ func AddDatabaseSubscriber(
 
     if ( error_ != nil )
     {
-        error_code.Set( error_, http.StatusBadRequest );
+        error_code.SetError( error_, http.StatusBadRequest );
 
         return false;
     }
@@ -1003,7 +1003,7 @@ func AddDatabaseSubscriber(
 
     if ( error_ != nil )
     {
-        error_code.Set( error_, http.StatusBadRequest );
+        error_code.SetError( error_, http.StatusBadRequest );
 
         return false;
     }
@@ -1012,7 +1012,7 @@ func AddDatabaseSubscriber(
 
     if ( error_ != nil )
     {
-        error_code.Set( error_, http.StatusBadRequest );
+        error_code.SetError( error_, http.StatusBadRequest );
 
         return false;
     }
@@ -1034,7 +1034,7 @@ func SetDatabaseSubscriber(
 
     if ( error_ != nil )
     {
-        error_code.Set( error_, http.StatusBadRequest );
+        error_code.SetError( error_, http.StatusBadRequest );
 
         return false;
     }
@@ -1048,7 +1048,7 @@ func SetDatabaseSubscriber(
 
     if ( error_ != nil )
     {
-        error_code.Set( error_, http.StatusBadRequest );
+        error_code.SetError( error_, http.StatusBadRequest );
 
         return false;
     }
@@ -1070,7 +1070,7 @@ func RemoveDatabaseSubscriber(
 
     if ( error_ != nil )
     {
-        error_code.Set( error_, http.StatusBadRequest );
+        error_code.SetError( error_, http.StatusBadRequest );
 
         return false;
     }
@@ -1082,7 +1082,7 @@ func RemoveDatabaseSubscriber(
 
     if ( error_ != nil )
     {
-        error_code.Set( error_, http.StatusBadRequest );
+        error_code.SetError( error_, http.StatusBadRequest );
 
         return false;
     }
@@ -1104,7 +1104,7 @@ func GetDatabaseSubscriber(
 
     if ( error_ != nil )
     {
-        error_code.Set( error_, http.StatusBadRequest );
+        error_code.SetError( error_, http.StatusBadRequest );
 
         return false;
     }
@@ -1116,7 +1116,7 @@ func GetDatabaseSubscriber(
 
     if ( error_ != nil )
     {
-        error_code.Set( error_, http.StatusBadRequest );
+        error_code.SetError( error_, http.StatusBadRequest );
 
         return false;
     }
@@ -1131,7 +1131,7 @@ func GetDatabaseSubscriber(
 
         if ( error_ != nil )
         {
-            error_code.Set( error_, http.StatusBadRequest );
+            error_code.SetError( error_, http.StatusBadRequest );
 
             return false;
         }
@@ -1139,7 +1139,7 @@ func GetDatabaseSubscriber(
 
     if ( error_ != nil )
     {
-        error_code.Set( error_, http.StatusBadRequest );
+        error_code.SetError( error_, http.StatusBadRequest );
 
         return false;
     }
@@ -1164,7 +1164,7 @@ func GetDatabaseSubscriberList(
 
     if ( error_ != nil )
     {
-        error_code.Set( error_, http.StatusBadRequest );
+        error_code.SetError( error_, http.StatusBadRequest );
 
         return false;
     }
@@ -1173,7 +1173,7 @@ func GetDatabaseSubscriberList(
 
     if ( error_ != nil )
     {
-        error_code.Set( error_, http.StatusBadRequest );
+        error_code.SetError( error_, http.StatusBadRequest );
 
         return false;
     }
@@ -1191,7 +1191,7 @@ func GetDatabaseSubscriberList(
 
         if ( error_ != nil )
         {
-            error_code.Set( error_, http.StatusBadRequest );
+            error_code.SetError( error_, http.StatusBadRequest );
 
             return false;
         }
