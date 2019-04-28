@@ -2243,6 +2243,372 @@ class TYPE
 
 // ~~
 
+class DATA_TOKEN
+{
+    // -- ATTRIBUTES
+
+    string
+        Text;
+    bool
+        IsSeparator;
+    long
+        Level;
+
+    // -- CONSTRUCTORS
+
+    this(
+        )
+    {
+    }
+
+    // ~~
+
+    this(
+        char character
+        )
+    {
+        Text ~= character;
+        IsSeparator = true;
+    }
+}
+
+// ~~
+
+string GetText(
+    DATA_TOKEN[] data_token_array
+    )
+{
+    string
+        text;
+Dump( data_token_array );
+    foreach ( data_token; data_token_array )
+    {
+        if ( data_token.IsSeparator )
+        {
+            if ( data_token.Text == "{" )
+            {
+                text ~= "{ ";
+            }
+            else if ( data_token.Text == "~" )
+            {
+                text ~= " ~ ";
+            }
+            else if ( data_token.Text == "}" )
+            {
+                text ~= " }";
+            }
+            else
+            {
+                text ~= data_token.Text;
+            }
+        }
+        else
+        {
+            text ~= data_token.Text;
+        }
+    }
+
+    return text;
+}
+
+// ~~
+
+void Dump(
+    DATA_TOKEN[] data_token_array
+    )
+{
+    foreach ( data_token_index, data_token; data_token_array )
+    {
+        writeln(
+            "[",
+            data_token_index,
+            "] ",
+            data_token.Level,
+            " ",
+            data_token.IsSeparator,
+            " : \"",
+            data_token.Text,
+            "\""
+            );
+    }
+}
+
+// ~~
+
+class DATA_VALUE
+{
+    // -- ATTRIBUTES
+
+    string
+        Text;
+    DATA_VALUE[]
+        SubValueArray;
+    bool
+        IsList;
+
+    // -- CONSTRUCTORS
+
+    this(
+        DATA_TOKEN[] data_token_array
+        )
+    {
+        SetFromTokenArray( data_token_array );
+    }
+
+    // ~~
+
+    this(
+        string text
+        )
+    {
+        SetFromText( text );
+    }
+
+    // -- INQUIRIES
+
+    string GetText(
+        )
+    {
+        string
+            text;
+
+        if ( IsList )
+        {
+            text = "{ ";
+
+            foreach ( sub_data_value_index, sub_data_value; SubValueArray )
+            {
+                if ( sub_data_value_index > 0 )
+                {
+                    text ~= " ~ ";
+                }
+
+                text ~= sub_data_value.GetText();
+            }
+
+            text ~= " }";
+
+            return text;
+        }
+        else
+        {
+            return Text;
+        }
+    }
+
+    // -- OPERATIONS
+
+    void ProcessTokenArray(
+        DATA_TOKEN[] data_token_array
+        )
+    {
+        char
+            character;
+        long
+            character_index,
+            level;
+        string
+            text;
+
+        foreach ( data_token; data_token_array )
+        {
+            if ( data_token.IsSeparator
+                 && data_token.Text == "}" )
+            {
+                --level;
+            }
+
+            data_token.Level = level;
+
+            if ( data_token.IsSeparator
+                 && data_token.Text == "{" )
+            {
+                ++level;
+            }
+
+            if ( !data_token.IsSeparator )
+            {
+                text = data_token.Text.strip();
+
+                data_token.Text = "";
+
+                for ( character_index = 0;
+                      character_index < text.length;
+                      ++character_index )
+                {
+                    character = text[ character_index ];
+
+                    if ( character == '^' )
+                    {
+                        data_token.Text ~= ' ';
+                    }
+                    else if ( character == '\\'
+                              && character_index + 1 < text.length )
+                    {
+                        ++character_index;
+
+                        data_token.Text ~= text[ character_index ];
+                    }
+                    else
+                    {
+                        data_token.Text ~= character;
+                    }
+                }
+            }
+        }
+    }
+
+    // ~~
+
+    DATA_TOKEN[] GetTokenArray(
+        string text
+        )
+    {
+        char
+            character;
+        long
+            character_index;
+        DATA_TOKEN
+            data_token;
+        DATA_TOKEN[]
+            data_token_array;
+
+        for ( character_index = 0;
+              character_index < text.length;
+              ++character_index )
+        {
+            character = text[ character_index ];
+
+            if ( character == '~'
+                 || character == '{'
+                 || character == '}' )
+            {
+                data_token_array ~= new DATA_TOKEN( character );
+
+                while ( character_index + 1 < text.length
+                        && text[ character_index + 1 ] == ' ' )
+                {
+                    ++character_index;
+                }
+            }
+            else
+            {
+                if ( data_token_array.length == 0
+                     || data_token_array[ $ - 1 ].IsSeparator )
+                {
+                    data_token_array ~= new DATA_TOKEN();
+                }
+
+                data_token = data_token_array[ $ - 1 ];
+                data_token.Text ~= character;
+
+                if ( character == '\\'
+                     && character_index + 1 < text.length )
+                {
+                    ++character_index;
+
+                    data_token.Text ~= text[ character_index ];
+                }
+            }
+        }
+
+        ProcessTokenArray( data_token_array );
+
+        return data_token_array;
+    }
+
+    // ~~
+
+    void SetFromTokenArray(
+        DATA_TOKEN[] data_token_array
+        )
+    {
+        long
+            data_token_index,
+            level,
+            next_data_token_index;
+        DATA_TOKEN
+            next_data_token;
+
+        if ( data_token_array.length > 0
+             && data_token_array[ 0 ].IsSeparator
+             && data_token_array[ 0 ].Text == "{" )
+        {
+            level = data_token_array[ 0 ].Level;
+
+            if ( data_token_array[ $ - 1 ].IsSeparator
+                 && data_token_array[ $ - 1 ].Text == "}"
+                 && data_token_array[ $ - 1 ].Level == level )
+            {
+                IsList = true;
+                SubValueArray = null;
+
+                data_token_array = data_token_array[ 1 .. $ - 1 ];
+
+                for ( data_token_index = 0;
+                      data_token_index < data_token_array.length;
+                      ++data_token_index )
+                {
+                    for ( next_data_token_index = data_token_index;
+                          next_data_token_index < data_token_array.length;
+                          ++next_data_token_index )
+                    {
+                        next_data_token = data_token_array[ next_data_token_index ];
+
+                        if ( next_data_token.IsSeparator
+                             && next_data_token.Text == "~"
+                             && next_data_token.Level == level + 1 )
+                        {
+                            break;
+                        }
+                    }
+
+                    SubValueArray ~= new DATA_VALUE( data_token_array[ data_token_index .. next_data_token_index ] );
+
+                    data_token_index = next_data_token_index;
+                }
+            }
+            else
+            {
+                Abort( "Invalid list data : " ~ data_token_array.GetText() );
+            }
+        }
+        else if ( data_token_array.length == 1
+                  && !data_token_array[ 0 ].IsSeparator )
+        {
+            IsList = false;
+
+            Text = data_token_array[ 0 ].Text;
+        }
+        else if ( data_token_array.length == 0 )
+        {
+            IsList = false;
+
+            Text = "";
+        }
+        else
+        {
+            Abort( "Invalid data : " ~ data_token_array.GetText() );
+        }
+    }
+
+    // ~~
+
+    void SetFromText(
+        string text
+        )
+    {
+        DATA_TOKEN[]
+            data_token_array;
+
+        data_token_array = GetTokenArray( text );
+
+        SetFromTokenArray( data_token_array );
+    }
+}
+
+// ~~
+
 class VALUE
 {
     // -- ATTRIBUTES
@@ -2578,6 +2944,77 @@ class VALUE
         )
     {
         Text = text;
+    }
+
+    // ~~
+
+    void Set(
+        DATA_VALUE data_value
+        )
+    {
+        VALUE
+            element_value,
+            key_value;
+
+        if ( Type.IsList()
+             || Type.IsSet()
+             || Type.IsTuple()
+             || Type.IsMap() )
+        {
+            if ( data_value.IsList )
+            {
+                if ( Type.IsMap() )
+                {
+                    foreach ( sub_data_value; data_value.SubValueArray )
+                    {
+                        key_value = new VALUE( Type.SubTypeArray[ 0 ] );
+                        element_value = new VALUE( Type.SubTypeArray[ 1 ] );
+
+                        if ( sub_data_value.IsList
+                             && sub_data_value.SubValueArray.length == 2 )
+                        {
+                            key_value.Set( sub_data_value.SubValueArray[ 0 ] );
+                            KeyValueArray ~= key_value;
+
+                            element_value.Set( sub_data_value.SubValueArray[ 1 ] );
+                            ElementValueArray ~= element_value;
+                        }
+                        else
+                        {
+                            Abort( "Invalid map data : " ~ data_value.GetText() );
+                        }
+                    }
+                }
+                else
+                {
+                    foreach ( sub_data_value; data_value.SubValueArray )
+                    {
+                        element_value = new VALUE( Type.SubTypeArray[ 0 ] );
+                        element_value.Set( sub_data_value );
+
+                        ElementValueArray ~= element_value;
+                    }
+                }
+            }
+            else
+            {
+                Abort( "Invalid list data : " ~ data_value.GetText() );
+            }
+        }
+        else if ( Type.IsInt64()
+                  && data_value.Text.startsWith( '%' ) )
+        {
+            Text = Random.MakeId( data_value.Text[ 1 .. $ ] );
+        }
+        else if ( Type.IsUuid()
+                  && data_value.Text.startsWith( '#' ) )
+        {
+            Text = Random.MakeUuid( data_value.Text[ 1 .. $ ] );
+        }
+        else
+        {
+            Text = data_value.Text;
+        }
     }
 
     // ~~
@@ -3568,44 +4005,14 @@ class COLUMN
     // ~~
 
     void AddValue(
-        string text
+        DATA_VALUE data_value
         )
     {
-        long
-            value_count;
         VALUE
             value;
 
         value = new VALUE( Type );
-
-        if ( Type.IsInt64()
-             && text.startsWith( '%' ) )
-        {
-            value.Text = Random.MakeId( text[ 1 .. $ ] );
-        }
-        else if ( Type.IsUuid()
-                  && text.startsWith( '#' ) )
-        {
-            value.Text = Random.MakeUuid( text[ 1 .. $ ] );
-        }
-        else if ( Type.IsList()
-                  || Type.IsSet() )
-        {
-            value.Set( "[" ~ text ~ "]" );
-        }
-        else if ( Type.IsMap() )
-        {
-            value.Set( "{" ~ text ~ "}" );
-        }
-        else if ( Type.IsTuple() )
-        {
-            value.Set( "(" ~ text ~ ")" );
-        }
-        else
-        {
-            value.Text = text;
-        }
-
+        value.Set( data_value );
         ValueArray ~= value;
 
         ++ValueCount;
@@ -5416,15 +5823,15 @@ class SCHEMA
             next_line,
             stripped_line,
             table_name,
-            value_line,
-            value;
+            value_line;
         string[]
-            column_name_array,
-            value_array;
+            column_name_array;
         COLUMN
             column;
         COLUMN[]
             column_array;
+        DATA_VALUE
+            data_value;
         TABLE
             table;
 
@@ -5455,13 +5862,6 @@ class SCHEMA
                     if ( next_line.startsWith( "         " ) )
                     {
                         writeln( next_line );
-
-                        if ( stripped_line[ $ - 1 ] != '§'
-                             && stripped_line[ $ - 1 ] != '^' )
-                        {
-                            stripped_line ~= " ";
-                        }
-
                         stripped_line ~= next_line.strip();
 
                         ++line_index;
@@ -5472,51 +5872,18 @@ class SCHEMA
                     }
                 }
 
-                value_array = null;
-                value = "";
+                data_value = new DATA_VALUE( "{" ~ stripped_line ~ "}" );
 
-                value_line = stripped_line;
-
-                for ( character_index = 0;
-                      character_index < value_line.length;
-                      ++character_index )
+                if ( data_value.SubValueArray.length != column_array.length )
                 {
-                    character = value_line[ character_index ];
-
-                    if ( character == '~' )
-                    {
-                        value_array ~= value.GetStrippedText().replace( '\t', ' ' );
-                        value = "";
-                    }
-                    else if ( character == '^' )
-                    {
-                        value ~= '\t';
-                    }
-                    else if ( character == '\\'
-                              && character_index + 1 < value_line.length )
-                    {
-                        value ~= value_line[ character_index + 1 ];
-
-                        ++character_index;
-                    }
-                    else
-                    {
-                        value ~= character;
-                    }
-                }
-
-                value_array ~= value.GetStrippedText().replace( '\t', ' ' );
-
-                if ( value_array.length != column_array.length )
-                {
-                    Abort( "Invalid value count : " ~ stripped_line );
+                    Abort( "Invalid value count : " ~ data_value.GetText() );
                 }
 
                 for ( value_index = 0;
-                      value_index < value_array.length;
+                      value_index < data_value.SubValueArray.length;
                       ++value_index )
                 {
-                    column_array[ value_index ].AddValue( value_array[ value_index ] );
+                    column_array[ value_index ].AddValue( data_value.SubValueArray[ value_index ] );
                 }
 
                 ++row_count;

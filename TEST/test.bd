@@ -1,3 +1,36 @@
+SIMPLE
+
+    Uuid Bool Int8 Uint8 Int16 Uint16 Int32 Uint32 Int64 Uint64 Float32 Float64 String Date DateTime Blob
+
+        #simple
+            ~ false
+            ~ 1
+            ~ 2
+            ~ 3
+            ~ 4
+            ~ 5
+            ~ 6
+            ~ 7
+            ~ 8
+            ~ 1.1
+            ~ 2.2
+            ~ Hello world!
+            ~ 2001-02-03
+            ~ 2001-02-03 04:05:06.789
+            ~ 123456781234567891234567812345678
+
+COMPOUND
+
+    Id Location Name NameSet PhoneList EmailSet CompanyMap
+
+        1
+            ~ Belgium
+            ~ { Malcolm ~ Beech }
+            ~ { { Jack ~ Harper } ~ { Victoria ~ Olsen } }
+            ~ { 12345678 ~ 23456789 }
+            ~ { jack.harper@gmail.com ~ victoria.olsen@outlook.com }
+            ~ { { 12345678 ~ Warner Bros } ~ { 23456789 ~ Universal Pictures } }
+
 VALUE
 
     Uuid Name Integer Text
@@ -5,9 +38,9 @@ VALUE
         #first ~ first ~ 1 ~ ^This is the first text, with spaces^
         #second ~ second ~ 2 ~ This is the second text, with escaped characters \^\~
         #third ~ third ~ 3 ~ This is the third text§with a new line
-        #fourth ~ fourth ~ 4 ~
-            This is the fourth text§
-            also with a new line
+        #fourth ~ fourth ~ 4
+            ~ This is the fourth text§
+              also with a new line
 
 DATA
 
