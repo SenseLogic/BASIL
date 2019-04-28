@@ -36,7 +36,7 @@ VALUE
     Uuid Name Integer Text
 
         #first ~ first ~ 1 ~ ^This is the first text, with spaces^
-        #second ~ second ~ 2 ~ This is the second text, with escaped characters \^\~
+        #second ~ second ~ 2 ~ This is the second text, with escaped characters \^\~\{\}
         #third ~ third ~ 3 ~ This is the third text§with a new line
         #fourth ~ fourth ~ 4
             ~ This is the fourth text§

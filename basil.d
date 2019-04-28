@@ -1145,62 +1145,6 @@ class TYPE
 
     // -- INQUIRIES
 
-    bool IsInt64(
-        )
-    {
-        return ActualType.Name == "INT64";
-    }
-
-    // ~~
-
-    bool IsUint64(
-        )
-    {
-        return ActualType.Name == "UINT64";
-    }
-
-    // ~~
-
-    bool IsUuid(
-        )
-    {
-        return ActualType.Name == "UUID";
-    }
-
-    // ~~
-
-    bool IsList(
-        )
-    {
-        return ActualType.Name == "LIST";
-    }
-
-    // ~~
-
-    bool IsSet(
-        )
-    {
-        return ActualType.Name == "SET";
-    }
-
-    // ~~
-
-    bool IsMap(
-        )
-    {
-        return ActualType.Name == "MAP";
-    }
-
-    // ~~
-
-    bool IsTuple(
-        )
-    {
-        return ActualType.Name == "TUPLE";
-    }
-
-    // ~~
-
     long GetElementValueCount(
         )
     {
@@ -1217,7 +1161,6 @@ class TYPE
 
         return element_value_count;
     }
-
 
     // ~~
 
@@ -2952,18 +2895,37 @@ class VALUE
         DATA_VALUE data_value
         )
     {
+        string
+            type_name;
         VALUE
             element_value,
-            key_value;
+            key_value,
+            sub_value;
 
-        if ( Type.IsList()
-             || Type.IsSet()
-             || Type.IsTuple()
-             || Type.IsMap() )
+        type_name = Type.ActualType.BaseName;
+
+        Text = "";
+        SubValueArray = null;
+        KeyValueArray = null;
+        ElementValueArray = null;
+
+        if ( type_name == "LIST"
+             || type_name == "SET"
+             || type_name == "TUPLE"
+             || type_name == "MAP" )
         {
             if ( data_value.IsList )
             {
-                if ( Type.IsMap() )
+                if ( type_name == "TUPLE" )
+                {
+                    foreach ( sub_data_value; data_value.SubValueArray )
+                    {
+                        sub_value = new VALUE( Type.SubTypeArray[ 0 ] );
+                        sub_value.Set( sub_data_value );
+                        SubValueArray ~= sub_value;
+                    }
+                }
+                else if ( type_name == "MAP" )
                 {
                     foreach ( sub_data_value; data_value.SubValueArray )
                     {
@@ -3001,12 +2963,12 @@ class VALUE
                 Abort( "Invalid list data : " ~ data_value.GetText() );
             }
         }
-        else if ( Type.IsInt64()
+        else if ( type_name == "INT64"
                   && data_value.Text.startsWith( '%' ) )
         {
             Text = Random.MakeId( data_value.Text[ 1 .. $ ] );
         }
-        else if ( Type.IsUuid()
+        else if ( type_name == "UUID"
                   && data_value.Text.startsWith( '#' ) )
         {
             Text = Random.MakeUuid( data_value.Text[ 1 .. $ ] );
