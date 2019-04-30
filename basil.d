@@ -3007,6 +3007,11 @@ class VALUE
             {
                 Type.GetForeignColumn().MakeValues();
 
+                if ( Type.ForeignColumn.ValueArray.length == 0 )
+                {
+                    Abort( "Missing column value : " ~ Type.Name );
+                }
+
                 Set( Random.PickElement( Type.ForeignColumn.ValueArray ) );
             }
             else if ( Type.Column.IsRandomReal )
