@@ -2223,7 +2223,7 @@ string GetText(
 {
     string
         text;
-Dump( data_token_array );
+
     foreach ( data_token; data_token_array )
     {
         if ( data_token.IsSeparator )
