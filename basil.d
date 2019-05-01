@@ -3405,13 +3405,11 @@ class VALUE
             {
                 element_value_count = Type.GetElementValueCount();
 
-                ElementValueArray = new VALUE[ element_value_count ];
-
-                for ( element_value_index = 0;
+                for ( element_value_index = ElementValueArray.length;
                       element_value_index < element_value_count;
                       ++element_value_index )
                 {
-                    ElementValueArray[ element_value_index ] = new VALUE( Type.SubTypeArray[ 0 ] );
+                    ElementValueArray ~= new VALUE( Type.SubTypeArray[ 0 ] );
                     ElementValueArray[ element_value_index ].Make( row_index, row_count, true );
                 }
             }
@@ -3419,13 +3417,11 @@ class VALUE
             {
                 element_value_count = Type.GetElementValueCount();
 
-                ElementValueArray = new VALUE[ element_value_count ];
-
-                for ( element_value_index = 0;
+                for ( element_value_index = ElementValueArray.length;
                       element_value_index < element_value_count;
                       ++element_value_index )
                 {
-                    ElementValueArray[ element_value_index ] = new VALUE( Type.SubTypeArray[ 0 ] );
+                    ElementValueArray ~= new VALUE( Type.SubTypeArray[ 0 ] );
                     ElementValueArray[ element_value_index ].Make( row_index, row_count, true );
 
                     if ( IsPriorValue( ElementValueArray, element_value_index ) )
@@ -3438,14 +3434,11 @@ class VALUE
             {
                 element_value_count = Type.GetElementValueCount();
 
-                KeyValueArray = new VALUE[ element_value_count ];
-                ElementValueArray = new VALUE[ element_value_count ];
-
-                for ( element_value_index = 0;
+                for ( element_value_index = ElementValueArray.length;
                       element_value_index < element_value_count;
                       ++element_value_index )
                 {
-                    KeyValueArray[ element_value_index ] = new VALUE( Type.SubTypeArray[ 0 ] );
+                    KeyValueArray ~= new VALUE( Type.SubTypeArray[ 0 ] );
                     KeyValueArray[ element_value_index ].Make( row_index, row_count, true );
 
                     if ( IsPriorValue( KeyValueArray, element_value_index ) )
@@ -3454,7 +3447,7 @@ class VALUE
                     }
                     else
                     {
-                        ElementValueArray[ element_value_index ] = new VALUE( Type.SubTypeArray[ 1 ] );
+                        ElementValueArray ~= new VALUE( Type.SubTypeArray[ 1 ] );
                         ElementValueArray[ element_value_index ].Make( row_index, row_count, true );
                     }
                 }

@@ -239,34 +239,34 @@ func main(
 
 ## Schema file syntax
 
-```
--- comment
+<pre>
+-- <i>comment</i>
 
-{database name} [| {database property}, {database property}, ...]
+<i>database_name</i> [| <i>database_property</i>, <i>database_property</i>, ...]
 
-    {table name} [| {table property}, {table property}, ...]
+&nbsp;&nbsp;&nbsp;&nbsp;<i>table_name</i> [| <i>table_property</i>, <i>table_property</i>, ...]
 
-        {column name} : {column type} [| {column property}, {column property}, ...]
-        ...
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i>column_name</i> : <i>column_type</i> [| <i>column_property</i>, <i>column_property</i>, ...]
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;..
 
-    ...
-```
+&nbsp;&nbsp;&nbsp;&nbsp;...
+</pre>
 
 ### Database properties
 
-```
-count {row count}
-```
+<pre>
+count <i>row_count</i>
+</pre>
 
 ### Table properties
 
-```
-count {row count}
-```
+<pre>
+count <i>row_count</i>
+</pre>
 
 ### Column properties
 
-```
+<pre>
 [!]stored
 [!]key
 [!]partitioned
@@ -275,31 +275,31 @@ count {row count}
 [!]static
 [!]required
 [!]incremented
-capacity {maximum character count}
-sqlname {SQL column name}
-cqlname {CQL column name}
-goname {Go field name}
-crystalname {Crystal field name}
-csharpname {C# field name}
-rustname {Rust field name}
+capacity <i>maximum_character_count</i>
+sqlname <i>sql_column_name</i>
+cqlname <i>cql_column_name</i>
+goname <i>go_field_name</i>
+crystalname <i>crystal_field_name</i>
+csharpname <i>csharp_field_name</i>
+rustname <i>rust_field_name</i>
 firstname
 lastname
 fullname
 lowercase
 uppercase
-real {minimum value} {maximum value}
-integer {minimum value} {maximum value}
-natural {minimum value} {maximum value} [{digit count}]
-name {minimum letter count} {maximum letter count}
-english {minimum sentence count} {maximum sentence count} {minimum word count} {maximum word count}
-latin  {minimum sentence count} {maximum sentence count} {minimum word count} {maximum word count}
-count {minimum element count} {maximum element count}
-count {element count}
-```
+real <i>minimum_value</i> <i>maximum_value</i>
+integer <i>minimum_value</i> <i>maximum_value</i>
+natural <i>minimum_value</i> <i>maximum_value</i> [<i>digit_count</i>]
+name <i>minimum_letter_count</i> <i>maximum_letter_count</i>
+english <i>minimum_sentence_count</i> <i>maximum_sentence_count</i> <i>minimum_word_count</i> <i>maximum_word_count</i>
+latin  <i>minimum_sentence_count</i> <i>maximum_sentence_count</i> <i>minimum_word_count</i> <i>maximum_word_count</i>
+count <i>minimum_element_count</i> <i>maximum_element_count</i>
+count <i>element_count</i>
+</pre>
 
 ### Field name suffixes
 
-```
+<pre>
 Id
 Year
 Title
@@ -325,7 +325,7 @@ Folder
 Author
 Isbn
 Tags
-```
+<pre>
 
 The "Pseudonym" column is based on the prior "Email" column if it exists.
 
@@ -335,7 +335,7 @@ The "Slug" column is based on the prior "Title" or "Name" column if it exists.
 
 ### Column types
 
-```
+<pre>
 BOOL
 INT8
 UINT8
@@ -352,43 +352,47 @@ DATE
 DATETIME
 UUID
 BLOB
-TABLE_NAME.ColumnName
-TUPLE[ FIELD_TYPE, FIELD_TYPE, ... ]
-TUPLE[ FieldName : FIELD_TYPE, FieldName : FIELD_TYPE, ... ]
-LIST[ ELEMENT_TYPE ]
-LIST[ ElementName : ELEMENT_TYPE ]
-SET[ ELEMENT_TYPE ]
-SET[ ElementName : ELEMENT_TYPE ]
-MAP[ KEY_TYPE, ELEMENT_TYPE ]
-MAP[ KeyName : KEY_TYPE, ElementName : ELEMENT_TYPE ]
-ARRAY[ ELEMENT_TYPE ] | !stored
-POINTER[ ELEMENT_TYPE ] | !stored
-```
+<i>TABLE_NAME</i>.<i>ColumnName</i>
+TUPLE[ <i>FIELD_TYPE</i>, <i>FIELD_TYPE</i>, ... ]
+TUPLE[ <i>FieldName</i> : <i>FIELD_TYPE</i>, <i>FieldName</i> : <i>FIELD_TYPE</i>, ... ]
+LIST[ <i>ELEMENT_TYPE</i> ]
+LIST[ <i>ElementName</i> : <i>ELEMENT_TYPE</i> ]
+SET[ <i>ELEMENT_TYPE</i> ]
+SET[ <i>ElementName</i> : <i>ELEMENT_TYPE</i> ]
+MAP[ <i>KEY_TYPE</i>, <i>ELEMENT_TYPE</i> ]
+MAP[ <i>KeyName</i> : <i>KEY_TYPE</i>, <i>ElementName</i> : <i>ELEMENT_TYPE</i> ]
+ARRAY[ <i>ELEMENT_TYPE</i> ] | !stored
+POINTER[ <i>ELEMENT_TYPE</i> ] | !stored
+</pre>
 
 ## Data file syntax
 
-```
-{table name}
+<pre>
+<i>table_name</i>
 
-    {column name} {column name} ...
+&nbsp;&nbsp;&nbsp;&nbsp;<i>column_name</i> <i>column_name</i> ...
 
-        {column value} ~ {column value} ~ ...
-        ...
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i>column_value</i> ~ <i>column_value</i> ~ ...
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;...
 
-    ...
+&nbsp;&nbsp;&nbsp;&nbsp;...
 
 ...
-```
+</pre>
 
-```
+<pre>
 % : CRC64 hash INT64
 # : MD5 hash UUID
 ~ : value separator
 { } : collection delimiter
-§ : new line symbol
+{ <i>value</i> ~ <i>value</i> ~ ... } : tuple
+{ <i>value</i> ~ <i>value</i> ~ ...} : list
+{ <i>value</i> ~ <i>value</i> ~ ...} : set
+{ { <i>key</i> ~ <i>value</i> } ~ { <i>key</i> ~ <i>value</i> } ~ ... } : map
 ^ : unremovable space
+§ : unreplaced new line symbol
 \ : escape character
-```
+</pre>
 
 ## Template file syntax
 
