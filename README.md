@@ -327,11 +327,11 @@ Isbn
 Tags
 </pre>
 
-The "Pseudonym" column is based on the prior "Email" column if it exists.
+The `Pseudonym` column is based on the prior `Email` column if it exists.
 
-The "Email", "Login" and "Pseudonym" columns are based on the prior "FirstName" and "LastName" columns if they exist.
+The `Email`, `Login` and `Pseudonym` columns are based on the prior `FirstName` and `LastName` columns if they exist.
 
-The "Slug" column is based on the prior "Title" or "Name" column if it exists.
+The `Slug` column is based on the prior `Title` or `Name` column if it exists.
 
 ### Column types
 
@@ -553,19 +553,19 @@ The `--go`, `--generis`, `--crystal`, `--csharp` and `--rust` options require th
 basil --uml blog.bs
 ```
 
-Generates "blog.uml" from "blog.bs".
+Generates `blog.uml` from `blog.bs`.
 
 ```bash
 basil --uml --sql --go blog.bs
 ```
 
-Generates "blog.uml", "blog.sql", "blog_data.sql", "blog_sql_type.go" from "blog.bs".
+Generates `blog.uml`, `blog.sql`, `blog_data.sql`, `blog_sql_type.go` from `blog.bs`.
 
 ```bash
 basil --uml --cql --go blog.bs blog.bt
 ```
 
-Generates "blog.uml", "blog.sql", "blog_data.sql", "blog_sql_type.go" from "blog.bs", and other custom files from "blog.bt".
+Generates `blog.uml`, `blog.sql`, `blog_data.sql`, `blog_sql_type.go` from `blog.bs`, and other custom files from `blog.bt`.
 
 ## Version
 
