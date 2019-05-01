@@ -325,7 +325,7 @@ Folder
 Author
 Isbn
 Tags
-<pre>
+</pre>
 
 The "Pseudonym" column is based on the prior "Email" column if it exists.
 
