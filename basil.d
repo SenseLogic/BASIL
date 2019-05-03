@@ -5069,7 +5069,7 @@ class TABLE
             generis_code;
 
         generis_code
-            = "func HandleAdd" ~ GoAttribute ~ "Request(\n"
+            = "func HandleAdd" ~ GoAttribute ~ "DatabaseRequest(\n"
               ~ "    response_writer http.ResponseWriter,\n"
               ~ "    request * http.Request\n"
               ~ "    )\n"
@@ -5132,7 +5132,7 @@ class TABLE
             generis_code;
 
         generis_code
-            = "func HandleSet" ~ GoAttribute ~ "Request(\n"
+            = "func HandleSet" ~ GoAttribute ~ "DatabaseRequest(\n"
               ~ "    response_writer http.ResponseWriter,\n"
               ~ "    request * http.Request\n"
               ~ "    )\n"
@@ -5176,7 +5176,7 @@ class TABLE
             generis_code;
 
         generis_code
-            = "func HandleRemove" ~ GoAttribute ~ "Request(\n"
+            = "func HandleRemove" ~ GoAttribute ~ "DatabaseRequest(\n"
               ~ "    response_writer http.ResponseWriter,\n"
               ~ "    request * http.Request\n"
               ~ "    )\n"
@@ -5221,7 +5221,7 @@ class TABLE
             generis_code;
 
         generis_code
-            = "func HandleGet" ~ GoAttribute ~ "Request(\n"
+            = "func HandleGet" ~ GoAttribute ~ "DatabaseRequest(\n"
               ~ "    response_writer http.ResponseWriter,\n"
               ~ "    request * http.Request\n"
               ~ "    )\n"
@@ -5265,7 +5265,7 @@ class TABLE
         )
     {
         return
-            "func HandleGet" ~ GoAttribute ~ "ListRequest(\n"
+            "func HandleGet" ~ GoAttribute ~ "ListDatabaseRequest(\n"
             ~ "    response_writer http.ResponseWriter,\n"
             ~ "    request * http.Request\n"
             ~ "    )\n"
@@ -5305,11 +5305,11 @@ class TABLE
         )
     {
         return
-            "    router.Post( \"/add_" ~ GoVariable ~ "\", HandleAdd" ~ GoAttribute ~ "Request );\n"
-            ~ "    router.Post( \"/set_" ~ GoVariable ~ "\", HandleSet" ~ GoAttribute ~ "Request );\n"
-            ~ "    router.Post( \"/remove_" ~ GoVariable ~ "\", HandleRemove" ~ GoAttribute ~ "Request );\n"
-            ~ "    router.Post( \"/get_" ~ GoVariable ~ "\", HandleGet" ~ GoAttribute ~ "Request );\n"
-            ~ "    router.Post( \"/get_" ~ GoVariable ~ "_list\", HandleGet" ~ GoAttribute ~ "ListRequest );\n";
+            "    router.Post( \"/add_" ~ GoVariable ~ "\", HandleAdd" ~ GoAttribute ~ "DatabaseRequest );\n"
+            ~ "    router.Post( \"/set_" ~ GoVariable ~ "\", HandleSet" ~ GoAttribute ~ "DatabaseRequest );\n"
+            ~ "    router.Post( \"/remove_" ~ GoVariable ~ "\", HandleRemove" ~ GoAttribute ~ "DatabaseRequest );\n"
+            ~ "    router.Post( \"/get_" ~ GoVariable ~ "\", HandleGet" ~ GoAttribute ~ "DatabaseRequest );\n"
+            ~ "    router.Post( \"/get_" ~ GoVariable ~ "_list\", HandleGet" ~ GoAttribute ~ "ListDatabaseRequest );\n";
     }
 
     // ~~

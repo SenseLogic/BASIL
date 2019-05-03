@@ -1,4 +1,4 @@
-func HandleAddSectionRequest(
+func HandleAddSectionDatabaseRequest(
     response_writer http.ResponseWriter,
     request * http.Request
     )
@@ -28,7 +28,7 @@ func HandleAddSectionRequest(
 
 // ~~
 
-func HandleSetSectionRequest(
+func HandleSetSectionDatabaseRequest(
     response_writer http.ResponseWriter,
     request * http.Request
     )
@@ -56,7 +56,7 @@ func HandleSetSectionRequest(
 
 // ~~
 
-func HandleRemoveSectionRequest(
+func HandleRemoveSectionDatabaseRequest(
     response_writer http.ResponseWriter,
     request * http.Request
     )
@@ -80,7 +80,7 @@ func HandleRemoveSectionRequest(
 
 // ~~
 
-func HandleGetSectionRequest(
+func HandleGetSectionDatabaseRequest(
     response_writer http.ResponseWriter,
     request * http.Request
     )
@@ -106,7 +106,7 @@ func HandleGetSectionRequest(
 
 // ~~
 
-func HandleGetSectionListRequest(
+func HandleGetSectionListDatabaseRequest(
     response_writer http.ResponseWriter,
     request * http.Request
     )
@@ -141,7 +141,7 @@ func HandleGetSectionListRequest(
 
 // ~~
 
-func HandleAddUserRequest(
+func HandleAddUserDatabaseRequest(
     response_writer http.ResponseWriter,
     request * http.Request
     )
@@ -180,7 +180,7 @@ func HandleAddUserRequest(
 
 // ~~
 
-func HandleSetUserRequest(
+func HandleSetUserDatabaseRequest(
     response_writer http.ResponseWriter,
     request * http.Request
     )
@@ -217,7 +217,7 @@ func HandleSetUserRequest(
 
 // ~~
 
-func HandleRemoveUserRequest(
+func HandleRemoveUserDatabaseRequest(
     response_writer http.ResponseWriter,
     request * http.Request
     )
@@ -241,7 +241,7 @@ func HandleRemoveUserRequest(
 
 // ~~
 
-func HandleGetUserRequest(
+func HandleGetUserDatabaseRequest(
     response_writer http.ResponseWriter,
     request * http.Request
     )
@@ -267,7 +267,7 @@ func HandleGetUserRequest(
 
 // ~~
 
-func HandleGetUserListRequest(
+func HandleGetUserListDatabaseRequest(
     response_writer http.ResponseWriter,
     request * http.Request
     )
@@ -302,7 +302,7 @@ func HandleGetUserListRequest(
 
 // ~~
 
-func HandleAddArticleRequest(
+func HandleAddArticleDatabaseRequest(
     response_writer http.ResponseWriter,
     request * http.Request
     )
@@ -334,7 +334,7 @@ func HandleAddArticleRequest(
 
 // ~~
 
-func HandleSetArticleRequest(
+func HandleSetArticleDatabaseRequest(
     response_writer http.ResponseWriter,
     request * http.Request
     )
@@ -364,7 +364,7 @@ func HandleSetArticleRequest(
 
 // ~~
 
-func HandleRemoveArticleRequest(
+func HandleRemoveArticleDatabaseRequest(
     response_writer http.ResponseWriter,
     request * http.Request
     )
@@ -388,7 +388,7 @@ func HandleRemoveArticleRequest(
 
 // ~~
 
-func HandleGetArticleRequest(
+func HandleGetArticleDatabaseRequest(
     response_writer http.ResponseWriter,
     request * http.Request
     )
@@ -414,7 +414,7 @@ func HandleGetArticleRequest(
 
 // ~~
 
-func HandleGetArticleListRequest(
+func HandleGetArticleListDatabaseRequest(
     response_writer http.ResponseWriter,
     request * http.Request
     )
@@ -449,7 +449,7 @@ func HandleGetArticleListRequest(
 
 // ~~
 
-func HandleAddCommentRequest(
+func HandleAddCommentDatabaseRequest(
     response_writer http.ResponseWriter,
     request * http.Request
     )
@@ -479,7 +479,7 @@ func HandleAddCommentRequest(
 
 // ~~
 
-func HandleSetCommentRequest(
+func HandleSetCommentDatabaseRequest(
     response_writer http.ResponseWriter,
     request * http.Request
     )
@@ -507,7 +507,7 @@ func HandleSetCommentRequest(
 
 // ~~
 
-func HandleRemoveCommentRequest(
+func HandleRemoveCommentDatabaseRequest(
     response_writer http.ResponseWriter,
     request * http.Request
     )
@@ -531,7 +531,7 @@ func HandleRemoveCommentRequest(
 
 // ~~
 
-func HandleGetCommentRequest(
+func HandleGetCommentDatabaseRequest(
     response_writer http.ResponseWriter,
     request * http.Request
     )
@@ -557,7 +557,7 @@ func HandleGetCommentRequest(
 
 // ~~
 
-func HandleGetCommentListRequest(
+func HandleGetCommentListDatabaseRequest(
     response_writer http.ResponseWriter,
     request * http.Request
     )
@@ -592,7 +592,7 @@ func HandleGetCommentListRequest(
 
 // ~~
 
-func HandleAddSubscriberRequest(
+func HandleAddSubscriberDatabaseRequest(
     response_writer http.ResponseWriter,
     request * http.Request
     )
@@ -620,7 +620,7 @@ func HandleAddSubscriberRequest(
 
 // ~~
 
-func HandleSetSubscriberRequest(
+func HandleSetSubscriberDatabaseRequest(
     response_writer http.ResponseWriter,
     request * http.Request
     )
@@ -646,7 +646,7 @@ func HandleSetSubscriberRequest(
 
 // ~~
 
-func HandleRemoveSubscriberRequest(
+func HandleRemoveSubscriberDatabaseRequest(
     response_writer http.ResponseWriter,
     request * http.Request
     )
@@ -670,7 +670,7 @@ func HandleRemoveSubscriberRequest(
 
 // ~~
 
-func HandleGetSubscriberRequest(
+func HandleGetSubscriberDatabaseRequest(
     response_writer http.ResponseWriter,
     request * http.Request
     )
@@ -696,7 +696,7 @@ func HandleGetSubscriberRequest(
 
 // ~~
 
-func HandleGetSubscriberListRequest(
+func HandleGetSubscriberListDatabaseRequest(
     response_writer http.ResponseWriter,
     request * http.Request
     )

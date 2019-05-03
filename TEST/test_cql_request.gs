@@ -1,4 +1,4 @@
-func HandleAddSimpleRequest(
+func HandleAddSimpleDatabaseRequest(
     response_writer http.ResponseWriter,
     request * http.Request
     )
@@ -39,7 +39,7 @@ func HandleAddSimpleRequest(
 
 // ~~
 
-func HandleSetSimpleRequest(
+func HandleSetSimpleDatabaseRequest(
     response_writer http.ResponseWriter,
     request * http.Request
     )
@@ -78,7 +78,7 @@ func HandleSetSimpleRequest(
 
 // ~~
 
-func HandleRemoveSimpleRequest(
+func HandleRemoveSimpleDatabaseRequest(
     response_writer http.ResponseWriter,
     request * http.Request
     )
@@ -102,7 +102,7 @@ func HandleRemoveSimpleRequest(
 
 // ~~
 
-func HandleGetSimpleRequest(
+func HandleGetSimpleDatabaseRequest(
     response_writer http.ResponseWriter,
     request * http.Request
     )
@@ -128,7 +128,7 @@ func HandleGetSimpleRequest(
 
 // ~~
 
-func HandleGetSimpleListRequest(
+func HandleGetSimpleListDatabaseRequest(
     response_writer http.ResponseWriter,
     request * http.Request
     )
@@ -163,7 +163,7 @@ func HandleGetSimpleListRequest(
 
 // ~~
 
-func HandleAddCompoundRequest(
+func HandleAddCompoundDatabaseRequest(
     response_writer http.ResponseWriter,
     request * http.Request
     )
@@ -200,7 +200,7 @@ func HandleAddCompoundRequest(
 
 // ~~
 
-func HandleSetCompoundRequest(
+func HandleSetCompoundDatabaseRequest(
     response_writer http.ResponseWriter,
     request * http.Request
     )
@@ -235,7 +235,7 @@ func HandleSetCompoundRequest(
 
 // ~~
 
-func HandleRemoveCompoundRequest(
+func HandleRemoveCompoundDatabaseRequest(
     response_writer http.ResponseWriter,
     request * http.Request
     )
@@ -259,7 +259,7 @@ func HandleRemoveCompoundRequest(
 
 // ~~
 
-func HandleGetCompoundRequest(
+func HandleGetCompoundDatabaseRequest(
     response_writer http.ResponseWriter,
     request * http.Request
     )
@@ -285,7 +285,7 @@ func HandleGetCompoundRequest(
 
 // ~~
 
-func HandleGetCompoundListRequest(
+func HandleGetCompoundListDatabaseRequest(
     response_writer http.ResponseWriter,
     request * http.Request
     )
@@ -320,7 +320,7 @@ func HandleGetCompoundListRequest(
 
 // ~~
 
-func HandleAddValueRequest(
+func HandleAddValueDatabaseRequest(
     response_writer http.ResponseWriter,
     request * http.Request
     )
@@ -350,7 +350,7 @@ func HandleAddValueRequest(
 
 // ~~
 
-func HandleSetValueRequest(
+func HandleSetValueDatabaseRequest(
     response_writer http.ResponseWriter,
     request * http.Request
     )
@@ -377,7 +377,7 @@ func HandleSetValueRequest(
 
 // ~~
 
-func HandleRemoveValueRequest(
+func HandleRemoveValueDatabaseRequest(
     response_writer http.ResponseWriter,
     request * http.Request
     )
@@ -401,7 +401,7 @@ func HandleRemoveValueRequest(
 
 // ~~
 
-func HandleGetValueRequest(
+func HandleGetValueDatabaseRequest(
     response_writer http.ResponseWriter,
     request * http.Request
     )
@@ -427,7 +427,7 @@ func HandleGetValueRequest(
 
 // ~~
 
-func HandleGetValueListRequest(
+func HandleGetValueListDatabaseRequest(
     response_writer http.ResponseWriter,
     request * http.Request
     )
@@ -462,7 +462,7 @@ func HandleGetValueListRequest(
 
 // ~~
 
-func HandleAddDataRequest(
+func HandleAddDataDatabaseRequest(
     response_writer http.ResponseWriter,
     request * http.Request
     )
@@ -490,7 +490,7 @@ func HandleAddDataRequest(
 
 // ~~
 
-func HandleSetDataRequest(
+func HandleSetDataDatabaseRequest(
     response_writer http.ResponseWriter,
     request * http.Request
     )
@@ -515,7 +515,7 @@ func HandleSetDataRequest(
 
 // ~~
 
-func HandleRemoveDataRequest(
+func HandleRemoveDataDatabaseRequest(
     response_writer http.ResponseWriter,
     request * http.Request
     )
@@ -539,7 +539,7 @@ func HandleRemoveDataRequest(
 
 // ~~
 
-func HandleGetDataRequest(
+func HandleGetDataDatabaseRequest(
     response_writer http.ResponseWriter,
     request * http.Request
     )
@@ -565,7 +565,7 @@ func HandleGetDataRequest(
 
 // ~~
 
-func HandleGetDataListRequest(
+func HandleGetDataListDatabaseRequest(
     response_writer http.ResponseWriter,
     request * http.Request
     )
