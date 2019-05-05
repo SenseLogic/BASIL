@@ -449,7 +449,6 @@ POINTER[ <i>ELEMENT_TYPE</i> ] | !stored
 {{column_rust_name}}
 {{column_rust_type}}
 {{column_javascript_name}}
-{{column_javascript_type}}
 {{column_is_last}}
 {{column_is_stored}}
 {{column_is_last_stored}}
@@ -471,6 +470,7 @@ POINTER[ <i>ELEMENT_TYPE</i> ] | !stored
 {{table_csharp_variable}}
 {{table_rust_type}}
 {{table_javascript_type}}
+{{table_javascript_attribute}}
 {{table_go_attribute_declaration}}
 {{table_go_type_declaration}}
 {{table_generis_attribute_declaration}}
@@ -536,16 +536,18 @@ basil [options] script_file.bs [script_file.bs|bd|bt ...]
 --uml : generate the UML schema file
 --sql : generate the SQL schema and data files
 --cql : generate the CQL schema and data files
+--json : generate the JSON data file
 --go : generate the Go type file
 --generis : generate the Generis type, query, response, request and route files
 --crystal : generate the Crystal type file
 --csharp : generate the C# type file
 --rust : generate the Rust type file
+--javascript : generate the Javascript type file
 ```
 
 The `--sql` and `--cql` options are mutually exclusive.
 
-The `--go`, `--generis`, `--crystal`, `--csharp` and `--rust` options require the `--sql` or the `--cql` option.
+The `--json`, `--go`, `--generis`, `--crystal`, `--csharp`, `--rust` and `--javascript` options require the `--sql` or the `--cql` option.
 
 ### Examples
 

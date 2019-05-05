@@ -2124,14 +2124,6 @@ class TYPE
         }
     }
 
-    // ~~
-
-    string GetJavascriptText(
-        )
-    {
-        return GetGoText();
-    }
-
     // -- OPERATIONS
 
     COLUMN GetForeignColumn(
@@ -2868,6 +2860,100 @@ class VALUE
         return cql_text;
     }
 
+    // ~~
+
+    string GetJsonText(
+        )
+    {
+        string
+            json_text,
+            type_name;
+
+        type_name = Type.ActualType.BaseName;
+
+        if ( type_name == "BOOL" )
+        {
+            if ( Text == "1"
+                 || Text == "true" )
+            {
+                json_text = "true";
+            }
+            else
+            {
+                json_text = "false";
+            }
+        }
+        else if ( type_name == "INT8"
+                  || type_name == "UINT8"
+                  || type_name == "INT16"
+                  || type_name == "UINT16"
+                  || type_name == "INT32"
+                  || type_name == "UINT32"
+                  || type_name == "INT64"
+                  || type_name == "UINT64"
+                  || type_name == "FLOAT32"
+                  || type_name == "FLOAT64" )
+        {
+            json_text = Text;
+        }
+        else if ( type_name == "DATE"
+                  || type_name == "DATETIME"
+                  || type_name == "UUID"
+                  || type_name == "BLOB" )
+        {
+            json_text = "\"" ~ Text ~ "\"";
+        }
+        else if ( type_name == "TUPLE" )
+        {
+            foreach ( sub_value_index, ref sub_value; SubValueArray )
+            {
+                if ( sub_value_index > 0 )
+                {
+                    json_text ~= ",";
+                }
+
+                json_text ~= sub_value.GetJsonText();
+            }
+
+            json_text = "[" ~ json_text ~ "]";
+        }
+        else if ( type_name == "LIST"
+                  || type_name == "SET" )
+        {
+            foreach ( element_value_index, ref element_value; ElementValueArray )
+            {
+                if ( element_value_index > 0 )
+                {
+                    json_text ~= ",";
+                }
+
+                json_text ~= element_value.GetJsonText();
+            }
+
+            json_text = "[" ~ json_text ~ "]";
+        }
+        else if ( type_name == "MAP" )
+        {
+            foreach ( element_value_index, ref element_value; ElementValueArray )
+            {
+                if ( element_value_index > 0 )
+                {
+                    json_text ~= ",";
+                }
+
+                json_text ~= KeyValueArray[ element_value_index ].GetJsonText() ~ ":" ~ element_value.GetJsonText();
+            }
+
+            json_text = "{" ~ json_text ~ "}";
+        }
+        else
+        {
+            json_text = "\"" ~ Text.replace( "\"", "\\\"" ) ~ "\"";
+        }
+
+        return json_text;
+    }
+
     // -- OPERATIONS
 
     void Set(
@@ -3562,8 +3648,7 @@ class COLUMN
         CsharpVariable,
         RustName,
         RustType,
-        JavascriptName,
-        JavascriptType;
+        JavascriptName;
 
     // -- CONSTRUCTORS
 
@@ -3652,7 +3737,6 @@ class COLUMN
                 .replace( "{{column_rust_name}}", RustName )
                 .replace( "{{column_rust_type}}", RustType )
                 .replace( "{{column_javascript_name}}", JavascriptName )
-                .replace( "{{column_javascript_type}}", JavascriptType )
                 .replace( "{{column_is_last}}", GetBooleanText( IsLast ) )
                 .replace( "{{column_is_stored}}", GetBooleanText( IsStored ) )
                 .replace( "{{column_is_last_stored}}", GetBooleanText( IsLastStored ) )
@@ -3945,7 +4029,6 @@ class COLUMN
         CsharpAttribute = Type.GetCsharpAttributeText();
         CsharpVariable = CsharpName.GetVariableText();
         RustType = Type.GetRustText();
-        JavascriptType = Type.GetJavascriptText();
 
         if ( IsKey || IsRequired )
         {
@@ -4035,7 +4118,8 @@ class TABLE
         CsharpAttribute,
         CsharpVariable,
         RustType,
-        JavascriptType;
+        JavascriptType,
+        JavascriptAttribute;
     string[]
         KeyNameArray;
     COLUMN[]
@@ -4081,6 +4165,7 @@ class TABLE
         CsharpVariable = name.GetVariableText();
         RustType = name;
         JavascriptType = name;
+        JavascriptAttribute = name.GetAttributeText();
         IsStored = true;
         RowCount = schema.RowCount;
     }
@@ -5330,6 +5415,7 @@ class TABLE
                 .replace( "{{table_csharp_variable}}", CsharpVariable )
                 .replace( "{{table_rust_type}}", RustType )
                 .replace( "{{table_javascript_type}}", JavascriptType )
+                .replace( "{{table_javascript_attribute}}", JavascriptAttribute )
                 .replace( "{{table_go_attribute_declaration}}", GoAttributeDeclaration )
                 .replace( "{{table_go_type_declaration}}", GoTypeDeclaration )
                 .replace( "{{table_generis_attribute_declaration}}", GenerisAttributeDeclaration )
@@ -6351,13 +6437,13 @@ class SCHEMA
 
                 foreach ( row_index; 0 .. table.RowCount )
                 {
-                    cql_data_file_text ~= "insert into " ~ table.SchemaName ~ "." ~ table.Name ~ " ( " ;
+                    cql_data_file_text ~= "insert into " ~ table.SchemaName ~ "." ~ table.Name ~ " ( ";
 
                     foreach ( ref column; table.ColumnArray )
                     {
                         if ( column.IsStored )
                         {
-                            cql_data_file_text ~= "" ~ column.CqlName ~ "";
+                            cql_data_file_text ~= column.CqlName ~ "";
 
                             if ( !column.IsLastStored )
                             {
@@ -6387,6 +6473,66 @@ class SCHEMA
         }
 
         cql_data_file_path.WriteText( cql_data_file_text );
+    }
+
+    // ~~
+
+    void WriteJsonDataFile(
+        string json_data_file_path
+        )
+    {
+        long
+            column_count;
+        string
+            json_data_file_text;
+
+        writeln( "Writing JSON data file : ", json_data_file_path );
+
+        json_data_file_text = "{";
+
+        foreach ( ref table; TableArray )
+        {
+            if ( table.IsStored )
+            {
+                json_data_file_text ~= table.JavascriptAttribute ~ "List=[";
+
+                column_count = table.ColumnArray.length;
+
+                foreach ( row_index; 0 .. table.RowCount )
+                {
+                    if ( row_index > 0 )
+                    {
+                        json_data_file_text ~= ",";
+                    }
+
+                    json_data_file_text ~= "{";
+
+                    foreach ( ref column; table.ColumnArray )
+                    {
+                        if ( column.IsStored )
+                        {
+                            json_data_file_text ~= column.JavascriptName ~ "=" ~ column.ValueArray[ row_index ].GetJsonText();
+
+                            if ( !column.IsLastStored )
+                            {
+                                json_data_file_text ~= ",";
+                            }
+                        }
+                    }
+
+                    json_data_file_text ~= "}";
+                }
+
+                json_data_file_text ~= "]";
+
+                if ( !table.IsLastStored )
+                {
+                    json_data_file_text ~= ",";
+                }
+            }
+        }
+
+        json_data_file_path.WriteText( json_data_file_text );
     }
 
     // ~~
@@ -7739,6 +7885,10 @@ void ProcessFiles(
             Schema.WriteCqlSchemaFile( base_file_path ~ ".cql" );
             Schema.WriteCqlDataFile( base_file_path ~ "_data.cql" );
         }
+        else if ( output_format == "json" )
+        {
+            Schema.WriteJsonDataFile( base_file_path ~ "_data.json" );
+        }
         else if ( output_format == "go" )
         {
             Schema.WriteGoTypeFile( base_file_path ~ "_" ~ DatabaseFormat ~ "_type.go" );
@@ -7816,6 +7966,11 @@ void main(
 
             OutputFormatArray ~= "cql";
             DatabaseFormat = "cql";
+        }
+        else if ( option == "--json"
+                  && DatabaseFormat != "" )
+        {
+            OutputFormatArray ~= "json";
         }
         else if ( option == "--go"
                   && DatabaseFormat != "" )
