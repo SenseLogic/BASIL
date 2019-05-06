@@ -5955,7 +5955,7 @@ class SCHEMA
 
                     if ( column is null )
                     {
-                        Abort( "Invalid table name : " ~ column_name );
+                        Abort( "Invalid column name : " ~ column_name );
                     }
 
                     column_array ~= column;
