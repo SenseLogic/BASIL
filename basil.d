@@ -4172,6 +4172,25 @@ class TABLE
 
     // -- INQUIRIES
 
+    long GetValueCount(
+        )
+    {
+        long
+            value_count;
+
+        foreach ( ref column; ColumnArray )
+        {
+            if ( column.ValueCount > value_count )
+            {
+                value_count = column.ValueCount;
+            }
+        }
+
+        return value_count;
+    }
+
+    // ~~
+
     COLUMN FindColumn(
         string column_name
         )
@@ -5863,7 +5882,7 @@ class SCHEMA
             character_index,
             line_index,
             row_count,
-            value_index;
+            sub_value_index;
         string
             line,
             next_line,
@@ -5925,11 +5944,11 @@ class SCHEMA
                     Abort( "Invalid value count : " ~ data_value.GetText() );
                 }
 
-                for ( value_index = 0;
-                      value_index < data_value.SubValueArray.length;
-                      ++value_index )
+                for ( sub_value_index = 0;
+                      sub_value_index < data_value.SubValueArray.length;
+                      ++sub_value_index )
                 {
-                    column_array[ value_index ].AddValue( data_value.SubValueArray[ value_index ] );
+                    column_array[ sub_value_index ].AddValue( data_value.SubValueArray[ sub_value_index ] );
                 }
 
                 ++row_count;
@@ -5961,7 +5980,7 @@ class SCHEMA
                     column_array ~= column;
                 }
 
-                row_count = 0;
+                row_count = table.GetValueCount();
             }
             else
             {
