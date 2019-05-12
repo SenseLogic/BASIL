@@ -376,7 +376,8 @@ func AddDatabaseValue(
 {
     error_
         := DatabaseSession.Query(
-               "insert into VALUE( Uuid, Name, Integer, Text ) values( ?, ?, ?, ? )",
+               "insert into VALUE( Id, Uuid, Name, Integer, Text ) values( ?, ?, ?, ?, ? )",
+               value.Id,
                value.Uuid,
                value.Name,
                value.Integer,
@@ -402,7 +403,8 @@ func SetDatabaseValue(
 {
     error_
         := DatabaseSession.Query(
-               "insert into VALUE( Uuid, Name, Integer, Text ) values( ?, ?, ?, ? )",
+               "insert into VALUE( Id, Uuid, Name, Integer, Text ) values( ?, ?, ?, ?, ? )",
+               value.Id,
                value.Uuid,
                value.Name,
                value.Integer,
@@ -428,8 +430,8 @@ func RemoveDatabaseValue(
 {
     error_
         := DatabaseSession.Query(
-               "delete from VALUE where Uuid = ?",
-               value.Uuid
+               "delete from VALUE where Id = ?",
+               value.Id
                ).Exec();
 
     if ( error_ != nil )
@@ -451,11 +453,12 @@ func GetDatabaseValue(
 {
     error_
         := DatabaseSession.Query(
-               "select Name, Integer, Text from VALUE where Uuid = ?",
-               value.Uuid
+               "select Uuid, Name, Integer, Text from VALUE where Id = ?",
+               value.Id
                )
                .Consistency( gocql.One )
                .Scan(
+                    &value.Uuid,
                     &value.Name,
                     &value.Integer,
                     &value.Text
@@ -483,7 +486,7 @@ func GetDatabaseValueList(
 
     iterator
         := DatabaseSession.Query(
-               "select Uuid, Name, Integer, Text from VALUE"
+               "select Id, Uuid, Name, Integer, Text from VALUE"
                )
                .Consistency( gocql.One )
                .Iter();
@@ -491,6 +494,7 @@ func GetDatabaseValueList(
     *value_array = make( [] VALUE, 0 );
 
     for iterator.Scan(
+            &value.Id,
             &value.Uuid,
             &value.Name,
             &value.Integer,
@@ -521,8 +525,9 @@ func AddDatabaseData(
 {
     error_
         := DatabaseSession.Query(
-               "insert into DATA( Uuid, ValueUuid ) values( ?, ? )",
+               "insert into DATA( Uuid, ValueId, ValueUuid ) values( ?, ?, ? )",
                data.Uuid,
+               data.ValueId,
                data.ValueUuid
                ).Exec();
 
@@ -545,8 +550,9 @@ func SetDatabaseData(
 {
     error_
         := DatabaseSession.Query(
-               "insert into DATA( Uuid, ValueUuid ) values( ?, ? )",
+               "insert into DATA( Uuid, ValueId, ValueUuid ) values( ?, ?, ? )",
                data.Uuid,
+               data.ValueId,
                data.ValueUuid
                ).Exec();
 
@@ -592,11 +598,12 @@ func GetDatabaseData(
 {
     error_
         := DatabaseSession.Query(
-               "select ValueUuid from DATA where Uuid = ?",
+               "select ValueId, ValueUuid from DATA where Uuid = ?",
                data.Uuid
                )
                .Consistency( gocql.One )
                .Scan(
+                    &data.ValueId,
                     &data.ValueUuid
                     );
 
@@ -622,7 +629,7 @@ func GetDatabaseDataList(
 
     iterator
         := DatabaseSession.Query(
-               "select Uuid, ValueUuid from DATA"
+               "select Uuid, ValueId, ValueUuid from DATA"
                )
                .Consistency( gocql.One )
                .Iter();
@@ -631,6 +638,7 @@ func GetDatabaseDataList(
 
     for iterator.Scan(
             &data.Uuid,
+            &data.ValueId,
             &data.ValueUuid
             )
     {

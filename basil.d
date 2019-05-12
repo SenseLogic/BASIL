@@ -2954,6 +2954,46 @@ class VALUE
         return json_text;
     }
 
+    // ~~
+
+    string GetText(
+        )
+    {
+        string
+            text,
+            type_name;
+
+        text = GetCqlText();
+        type_name = Type.ActualType.BaseName;
+
+        if ( type_name == "INT64" )
+        {
+            foreach ( id_text, id; Random.IdMap )
+            {
+                if ( id == Text )
+                {
+                    text = "%" ~ id_text;
+
+                    break;
+                }
+            }
+        }
+        else if ( type_name == "UUID" )
+        {
+            foreach ( uuid_text, uuid; Random.UuidMap )
+            {
+                if ( uuid == Text )
+                {
+                    text = "#" ~ uuid_text;
+
+                    break;
+                }
+            }
+        }
+
+        return text;
+    }
+
     // -- OPERATIONS
 
     void Set(
@@ -4097,6 +4137,53 @@ class COLUMN
             }
 
             IsProcessed = false;
+        }
+    }
+
+    // ~~
+
+    void CheckValues(
+        )
+    {
+        bool
+            value_is_found;
+        long
+            foreign_value_index,
+            value_index;
+        VALUE
+            foreign_value,
+            value;
+
+        if ( IsForeign )
+        {
+            writeln( "Checking column : " ~ Table.Name ~ "." ~ Name );
+
+            for ( value_index = 0;
+                  value_index < ValueArray.length;
+                  ++value_index )
+            {
+                value = ValueArray[ value_index ];
+                value_is_found = false;
+
+                for ( foreign_value_index = 0;
+                      foreign_value_index < ForeignColumn.ValueArray.length;
+                      ++foreign_value_index )
+                {
+                    foreign_value = ForeignColumn.ValueArray[ foreign_value_index ];
+
+                    if ( foreign_value.IsEqual( value ) )
+                    {
+                        value_is_found = true;
+
+                        break;
+                    }
+                }
+
+                if ( !value_is_found )
+                {
+                    PrintWarning( "Invalid foreign value : " ~ value.GetText() );
+                }
+            }
         }
     }
 }
@@ -6012,6 +6099,25 @@ class SCHEMA
         }
     }
 
+    // ~~
+
+    void CheckValues(
+        )
+    {
+        foreach ( ref table; TableArray )
+        {
+            foreach ( ref column; table.ColumnArray )
+            {
+                if ( column.IsStored )
+                {
+                    column.CheckValues();
+                }
+            }
+        }
+    }
+
+    // ~~
+
     string[] GetStrippedLineArray(
         string text
         )
@@ -6087,6 +6193,7 @@ class SCHEMA
 
         AddValues( GetStrippedLineArray( data_file_text ) );
         MakeValues();
+        CheckValues();
     }
 
     // ~~
@@ -7182,6 +7289,15 @@ SCHEMA
     Schema;
 
 // -- FUNCTIONS
+
+void PrintWarning(
+    string message
+    )
+{
+    writeln( "*** WARNING : ", message );
+}
+
+// ~~
 
 void PrintError(
     string message

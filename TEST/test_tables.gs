@@ -111,17 +111,20 @@ func main(
     fmt.Println( "            SimplePointerArray" );
     fmt.Println( "    VALUE," );
     fmt.Println( "        Columns :" );
+    fmt.Println( "            Id," );
     fmt.Println( "            Uuid," );
     fmt.Println( "            Name," );
     fmt.Println( "            Integer," );
     fmt.Println( "            Text" );
     fmt.Println( "        Key columns :" );
-    fmt.Println( "            Uuid" );
+    fmt.Println( "            Id" );
     fmt.Println( "        Not key columns :" );
+    fmt.Println( "            Uuid," );
     fmt.Println( "            Name," );
     fmt.Println( "            Integer," );
     fmt.Println( "            Text" );
     fmt.Println( "        Stored columns :" );
+    fmt.Println( "            Id," );
     fmt.Println( "            Uuid," );
     fmt.Println( "            Name," );
     fmt.Println( "            Integer," );
@@ -130,13 +133,16 @@ func main(
     fmt.Println( "    DATA" );
     fmt.Println( "        Columns :" );
     fmt.Println( "            Uuid," );
+    fmt.Println( "            ValueId," );
     fmt.Println( "            ValueUuid" );
     fmt.Println( "        Key columns :" );
     fmt.Println( "            Uuid" );
     fmt.Println( "        Not key columns :" );
+    fmt.Println( "            ValueId," );
     fmt.Println( "            ValueUuid" );
     fmt.Println( "        Stored columns :" );
     fmt.Println( "            Uuid," );
+    fmt.Println( "            ValueId," );
     fmt.Println( "            ValueUuid" );
     fmt.Println( "        Not stored columns :" );
 }

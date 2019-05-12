@@ -47,6 +47,7 @@ class COMPOUND {
 }
 
 class VALUE {
+    Id : INT64
     Uuid : UUID
     Name : STRING
     Integer : INT32
@@ -55,10 +56,13 @@ class VALUE {
 
 class DATA {
     Uuid : UUID
+    ValueId : VALUE.Id
     ValueUuid : VALUE.Uuid
 }
 
 SIMPLE <-- COMPOUND : SimpleDate
+
+VALUE <-- DATA : ValueId
 
 VALUE <-- DATA : ValueUuid
 

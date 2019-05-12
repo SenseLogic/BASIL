@@ -38,6 +38,7 @@ type COMPOUND struct {
 // ~~
 
 type VALUE struct {
+    Id int64    `db:"Id"`;
     Uuid gocql.UUID    `db:"Uuid"`;
     Name string    `db:"Name"`;
     Integer int32    `db:"Integer"`;
@@ -48,5 +49,6 @@ type VALUE struct {
 
 type DATA struct {
     Uuid gocql.UUID    `db:"Uuid"`;
+    ValueId int64    `db:"ValueId"`;
     ValueUuid gocql.UUID    `db:"ValueUuid"`;
 }

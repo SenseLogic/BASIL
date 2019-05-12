@@ -331,6 +331,7 @@ func HandleAddValueDatabaseRequest(
         value VALUE;
 
     if ( IsAdministratorSession( request, &error_code )
+         && GetRequestInt64( &value.Id, request, "Id", &error_code )
          && GetRequestUuid( &value.Uuid, request, "Uuid", &error_code )
          && GetRequestString( &value.Name, request, "Name", &error_code )
          && GetRequestInt32( &value.Integer, request, "Integer", &error_code )
@@ -338,8 +339,8 @@ func HandleAddValueDatabaseRequest(
          && AddDatabaseValue( &value, &error_code ) )
     {
         WriteResponse( response_writer, "{" );
-        WriteResponse( response_writer, "\"Uuid\":" );
-        WriteResponseUuid( response_writer, value.Uuid );
+        WriteResponse( response_writer, "\"Id\":" );
+        WriteResponseInt64( response_writer, value.Id );
         WriteResponse( response_writer, "}" );
     }
     else
@@ -361,6 +362,7 @@ func HandleSetValueDatabaseRequest(
         value VALUE;
 
     if ( IsAdministratorSession( request, &error_code )
+         && GetRequestInt64( &value.Id, request, "Id", &error_code )
          && GetRequestUuid( &value.Uuid, request, "Uuid", &error_code )
          && GetRequestString( &value.Name, request, "Name", &error_code )
          && GetRequestInt32( &value.Integer, request, "Integer", &error_code )
@@ -388,7 +390,7 @@ func HandleRemoveValueDatabaseRequest(
         value VALUE;
 
     if ( IsAdministratorSession( request, &error_code )
-         && GetRequestUuid( &value.Uuid, request, "Uuid", &error_code )
+         && GetRequestInt64( &value.Id, request, "Id", &error_code )
          && RemoveDatabaseValue( &value, &error_code ) )
     {
         WriteResponseSuccess( response_writer );
@@ -412,7 +414,7 @@ func HandleGetValueDatabaseRequest(
         value VALUE;
 
     if ( IsAdministratorSession( request, &error_code )
-         && GetRequestUuid( &value.Uuid, request, "Uuid", &error_code )
+         && GetRequestInt64( &value.Id, request, "Id", &error_code )
          && GetDatabaseValue( &value, &error_code ) )
     {
         WriteResponse( response_writer, "{\"Value\":" );
@@ -474,6 +476,7 @@ func HandleAddDataDatabaseRequest(
 
     if ( IsAdministratorSession( request, &error_code )
          && GetRequestUuid( &data.Uuid, request, "Uuid", &error_code )
+         && GetRequestInt64( &data.ValueId, request, "ValueId", &error_code )
          && GetRequestUuid( &data.ValueUuid, request, "ValueUuid", &error_code )
          && AddDatabaseData( &data, &error_code ) )
     {
@@ -502,6 +505,7 @@ func HandleSetDataDatabaseRequest(
 
     if ( IsAdministratorSession( request, &error_code )
          && GetRequestUuid( &data.Uuid, request, "Uuid", &error_code )
+         && GetRequestInt64( &data.ValueId, request, "ValueId", &error_code )
          && GetRequestUuid( &data.ValueUuid, request, "ValueUuid", &error_code )
          && SetDatabaseData( &data, &error_code ) )
     {

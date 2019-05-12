@@ -38,6 +38,7 @@ end
 # ~~
 
 class VALUE
+    @id : Int64
     @uuid : String
     @name : String
     @integer : Int32
@@ -48,5 +49,6 @@ end
 
 class DATA
     @uuid : String
+    @value_id : Int64
     @value_uuid : String
 end

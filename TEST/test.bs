@@ -37,7 +37,8 @@ TEST | count 10
 
     VALUE | stored
 
-        Uuid : UUID | key
+        Id : INT64 | key
+        Uuid : UUID | indexed
         Name : STRING
         Integer : INT32
         Text : STRING
@@ -45,4 +46,5 @@ TEST | count 10
     DATA
 
         Uuid : UUID | key
+        ValueId : VALUE.Id
         ValueUuid : VALUE.Uuid

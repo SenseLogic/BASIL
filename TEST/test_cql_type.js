@@ -52,6 +52,7 @@ class VALUE
     constructor(
         )
     {
+        this.Id = null;
         this.Uuid = null;
         this.Name = null;
         this.Integer = null;
@@ -67,6 +68,7 @@ class DATA
         )
     {
         this.Uuid = null;
+        this.ValueId = null;
         this.ValueUuid = null;
     }
 }

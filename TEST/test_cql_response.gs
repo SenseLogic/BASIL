@@ -79,7 +79,9 @@ func WriteResponseValue(
     value * VALUE
     )
 {
-    WriteResponse( writer, "{\"Uuid\":" );
+    WriteResponse( writer, "{\"Id\":" );
+    WriteResponseInt64( writer, value.Id );
+    WriteResponse( writer, ",\"Uuid\":" );
     WriteResponseUuid( writer, value.Uuid );
     WriteResponse( writer, ",\"Name\":" );
     WriteResponseString( writer, value.Name );
@@ -99,6 +101,8 @@ func WriteResponseData(
 {
     WriteResponse( writer, "{\"Uuid\":" );
     WriteResponseUuid( writer, data.Uuid );
+    WriteResponse( writer, ",\"ValueId\":" );
+    WriteResponseInt64( writer, data.ValueId );
     WriteResponse( writer, ",\"ValueUuid\":" );
     WriteResponseUuid( writer, data.ValueUuid );
     WriteResponse( writer, "}" );

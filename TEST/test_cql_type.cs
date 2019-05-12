@@ -69,6 +69,8 @@ public class COMPOUND
 
 public class VALUE
 {
+    public long
+        Id;
     public Guid
         Uuid;
     public String
@@ -84,6 +86,9 @@ public class VALUE
 public class DATA
 {
     public Guid
-        Uuid,
+        Uuid;
+    public long
+        ValueId;
+    public Guid
         ValueUuid;
 }
