@@ -744,23 +744,30 @@ class RANDOM
             hash,
             uuid;
 
-        hash = MakeBlob( md5Of( text ), 16 );
-
-        uuid
-            = hash[ 0 .. 8 ]
-              ~ "-"
-              ~ hash[ 8 .. 12 ]
-              ~ "-"
-              ~ hash[ 12 .. 16 ]
-              ~ "-"
-              ~ hash[ 16 .. 20 ]
-              ~ "-"
-              ~ hash[ 20 .. 32 ];
-
-        if ( ( text in UuidMap ) is null )
+        if ( text == "" )
         {
-            UuidMap[ text ] = uuid;
-            UuidTextArray ~= text;
+            uuid = "00000000-0000-0000-0000-000000000000";
+        }
+        else
+        {
+            hash = MakeBlob( md5Of( text ), 16 );
+
+            uuid
+                = hash[ 0 .. 8 ]
+                  ~ "-"
+                  ~ hash[ 8 .. 12 ]
+                  ~ "-"
+                  ~ hash[ 12 .. 16 ]
+                  ~ "-"
+                  ~ hash[ 16 .. 20 ]
+                  ~ "-"
+                  ~ hash[ 20 .. 32 ];
+
+            if ( ( text in UuidMap ) is null )
+            {
+                UuidMap[ text ] = uuid;
+                UuidTextArray ~= text;
+            }
         }
 
         return uuid;
@@ -2980,13 +2987,20 @@ class VALUE
         }
         else if ( type_name == "UUID" )
         {
-            foreach ( uuid_text, uuid; Random.UuidMap )
+            if ( Text == "00000000-0000-0000-0000-000000000000" )
             {
-                if ( uuid == Text )
+                text = "#";
+            }
+            else
+            {
+                foreach ( uuid_text, uuid; Random.UuidMap )
                 {
-                    text = "#" ~ uuid_text;
+                    if ( uuid == Text )
+                    {
+                        text = "#" ~ uuid_text;
 
-                    break;
+                        break;
+                    }
                 }
             }
         }
@@ -5282,7 +5296,7 @@ class TABLE
                             || column.IsIncremented) ) )
             {
                 generis_code
-                    ~= "         && GetRequest" ~ column.GoAttribute ~ "( &" ~ GoVariable ~ "." ~ column.GoName ~ ", request, \"" ~ column.StoredName ~ "\", &error_code )\n";
+                    ~= "         && GetRequest" ~ column.GoAttribute ~ "( request, &" ~ GoVariable ~ "." ~ column.GoName ~ ", \"" ~ column.StoredName ~ "\", &error_code )\n";
             }
         }
 
@@ -5340,7 +5354,7 @@ class TABLE
             if ( column.IsStored )
             {
                 generis_code
-                    ~= "         && GetRequest" ~ column.GoAttribute ~ "( &" ~ GoVariable ~ "." ~ column.GoName ~ ", request, \"" ~ column.StoredName ~ "\", &error_code )\n";
+                    ~= "         && GetRequest" ~ column.GoAttribute ~ "( request, &" ~ GoVariable ~ "." ~ column.GoName ~ ", \"" ~ column.StoredName ~ "\", &error_code )\n";
             }
         }
 
@@ -5385,7 +5399,7 @@ class TABLE
                  && column.IsKey )
             {
                 generis_code
-                    ~= "         && GetRequest" ~ column.GoAttribute ~ "( &" ~ GoVariable ~ "." ~ column.GoName ~ ", request, \"" ~ column.StoredName ~ "\", &error_code )\n";
+                    ~= "         && GetRequest" ~ column.GoAttribute ~ "( request, &" ~ GoVariable ~ "." ~ column.GoName ~ ", \"" ~ column.StoredName ~ "\", &error_code )\n";
             }
         }
 
@@ -5430,7 +5444,7 @@ class TABLE
                  && column.IsKey )
             {
                 generis_code
-                    ~= "         && GetRequest" ~ column.GoAttribute ~ "( &" ~ GoVariable ~ "." ~ column.GoName ~ ", request, \"" ~ column.StoredName ~ "\", &error_code )\n";
+                    ~= "         && GetRequest" ~ column.GoAttribute ~ "( request, &" ~ GoVariable ~ "." ~ column.GoName ~ ", \"" ~ column.StoredName ~ "\", &error_code )\n";
             }
         }
 

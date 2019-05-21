@@ -381,8 +381,9 @@ POINTER[ <i>ELEMENT_TYPE</i> ] | !stored
 </pre>
 
 <pre>
-% : CRC64 hash INT64
-# : MD5 hash UUID
+%identifier : CRC64 hash INT64
+#identifier : MD5 hash UUID
+# : null UUID
 ~ : value separator
 { } : collection delimiter
 { <i>value</i> ~ <i>value</i> ~ ... } : tuple

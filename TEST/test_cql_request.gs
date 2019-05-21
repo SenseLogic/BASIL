@@ -9,21 +9,21 @@ func HandleAddSimpleDatabaseRequest(
         simple SIMPLE;
 
     if ( IsAdministratorSession( request, &error_code )
-         && GetRequestBool( &simple.Bool, request, "Bool", &error_code )
-         && GetRequestInt8( &simple.Int8, request, "Int8", &error_code )
-         && GetRequestUint8( &simple.Uint8, request, "Uint8", &error_code )
-         && GetRequestInt16( &simple.Int16, request, "Int16", &error_code )
-         && GetRequestUint16( &simple.Uint16, request, "Uint16", &error_code )
-         && GetRequestInt32( &simple.Int32, request, "Int32", &error_code )
-         && GetRequestUint32( &simple.Uint32, request, "Uint32", &error_code )
-         && GetRequestInt64( &simple.Int64, request, "Int64", &error_code )
-         && GetRequestUint64( &simple.Uint64, request, "Uint64", &error_code )
-         && GetRequestFloat32( &simple.Float32, request, "Float32", &error_code )
-         && GetRequestFloat64( &simple.Float64, request, "Float64", &error_code )
-         && GetRequestString( &simple.String, request, "String", &error_code )
-         && GetRequestDateTime( &simple.Date, request, "Date", &error_code )
-         && GetRequestDateTime( &simple.DateTime, request, "DateTime", &error_code )
-         && GetRequestBlob( &simple.Blob, request, "Blob", &error_code )
+         && GetRequestBool( request, &simple.Bool, "Bool", &error_code )
+         && GetRequestInt8( request, &simple.Int8, "Int8", &error_code )
+         && GetRequestUint8( request, &simple.Uint8, "Uint8", &error_code )
+         && GetRequestInt16( request, &simple.Int16, "Int16", &error_code )
+         && GetRequestUint16( request, &simple.Uint16, "Uint16", &error_code )
+         && GetRequestInt32( request, &simple.Int32, "Int32", &error_code )
+         && GetRequestUint32( request, &simple.Uint32, "Uint32", &error_code )
+         && GetRequestInt64( request, &simple.Int64, "Int64", &error_code )
+         && GetRequestUint64( request, &simple.Uint64, "Uint64", &error_code )
+         && GetRequestFloat32( request, &simple.Float32, "Float32", &error_code )
+         && GetRequestFloat64( request, &simple.Float64, "Float64", &error_code )
+         && GetRequestString( request, &simple.String, "String", &error_code )
+         && GetRequestDateTime( request, &simple.Date, "Date", &error_code )
+         && GetRequestDateTime( request, &simple.DateTime, "DateTime", &error_code )
+         && GetRequestBlob( request, &simple.Blob, "Blob", &error_code )
          && AddDatabaseSimple( &simple, &error_code ) )
     {
         WriteResponse( response_writer, "{" );
@@ -50,22 +50,22 @@ func HandleSetSimpleDatabaseRequest(
         simple SIMPLE;
 
     if ( IsAdministratorSession( request, &error_code )
-         && GetRequestUuid( &simple.Uuid, request, "Uuid", &error_code )
-         && GetRequestBool( &simple.Bool, request, "Bool", &error_code )
-         && GetRequestInt8( &simple.Int8, request, "Int8", &error_code )
-         && GetRequestUint8( &simple.Uint8, request, "Uint8", &error_code )
-         && GetRequestInt16( &simple.Int16, request, "Int16", &error_code )
-         && GetRequestUint16( &simple.Uint16, request, "Uint16", &error_code )
-         && GetRequestInt32( &simple.Int32, request, "Int32", &error_code )
-         && GetRequestUint32( &simple.Uint32, request, "Uint32", &error_code )
-         && GetRequestInt64( &simple.Int64, request, "Int64", &error_code )
-         && GetRequestUint64( &simple.Uint64, request, "Uint64", &error_code )
-         && GetRequestFloat32( &simple.Float32, request, "Float32", &error_code )
-         && GetRequestFloat64( &simple.Float64, request, "Float64", &error_code )
-         && GetRequestString( &simple.String, request, "String", &error_code )
-         && GetRequestDateTime( &simple.Date, request, "Date", &error_code )
-         && GetRequestDateTime( &simple.DateTime, request, "DateTime", &error_code )
-         && GetRequestBlob( &simple.Blob, request, "Blob", &error_code )
+         && GetRequestUuid( request, &simple.Uuid, "Uuid", &error_code )
+         && GetRequestBool( request, &simple.Bool, "Bool", &error_code )
+         && GetRequestInt8( request, &simple.Int8, "Int8", &error_code )
+         && GetRequestUint8( request, &simple.Uint8, "Uint8", &error_code )
+         && GetRequestInt16( request, &simple.Int16, "Int16", &error_code )
+         && GetRequestUint16( request, &simple.Uint16, "Uint16", &error_code )
+         && GetRequestInt32( request, &simple.Int32, "Int32", &error_code )
+         && GetRequestUint32( request, &simple.Uint32, "Uint32", &error_code )
+         && GetRequestInt64( request, &simple.Int64, "Int64", &error_code )
+         && GetRequestUint64( request, &simple.Uint64, "Uint64", &error_code )
+         && GetRequestFloat32( request, &simple.Float32, "Float32", &error_code )
+         && GetRequestFloat64( request, &simple.Float64, "Float64", &error_code )
+         && GetRequestString( request, &simple.String, "String", &error_code )
+         && GetRequestDateTime( request, &simple.Date, "Date", &error_code )
+         && GetRequestDateTime( request, &simple.DateTime, "DateTime", &error_code )
+         && GetRequestBlob( request, &simple.Blob, "Blob", &error_code )
          && SetDatabaseSimple( &simple, &error_code ) )
     {
         WriteResponseSuccess( response_writer );
@@ -89,7 +89,7 @@ func HandleRemoveSimpleDatabaseRequest(
         simple SIMPLE;
 
     if ( IsAdministratorSession( request, &error_code )
-         && GetRequestUuid( &simple.Uuid, request, "Uuid", &error_code )
+         && GetRequestUuid( request, &simple.Uuid, "Uuid", &error_code )
          && RemoveDatabaseSimple( &simple, &error_code ) )
     {
         WriteResponseSuccess( response_writer );
@@ -113,7 +113,7 @@ func HandleGetSimpleDatabaseRequest(
         simple SIMPLE;
 
     if ( IsAdministratorSession( request, &error_code )
-         && GetRequestUuid( &simple.Uuid, request, "Uuid", &error_code )
+         && GetRequestUuid( request, &simple.Uuid, "Uuid", &error_code )
          && GetDatabaseSimple( &simple, &error_code ) )
     {
         WriteResponse( response_writer, "{\"Simple\":" );
@@ -174,17 +174,17 @@ func HandleAddCompoundDatabaseRequest(
         compound COMPOUND;
 
     if ( IsAdministratorSession( request, &error_code )
-         && GetRequestString( &compound.Location, request, "Location", &error_code )
-         && GetRequestStringStringTuple( &compound.Name, request, "Name", &error_code )
-         && GetRequestStringStringTupleSet( &compound.NameSet, request, "NameSet", &error_code )
-         && GetRequestStringList( &compound.PhoneList, request, "PhoneList", &error_code )
-         && GetRequestStringSet( &compound.EmailSet, request, "EmailSet", &error_code )
-         && GetRequestStringStringMap( &compound.CompanyMap, request, "CompanyMap", &error_code )
-         && GetRequestDateTime( &compound.SimpleDate, request, "SimpleDate", &error_code )
-         && GetRequestStringStringTupleDateTimeMap( &compound.SimpleDateMap, request, "SimpleDateMap", &error_code )
-         && GetRequestDateTimeSet( &compound.SimpleDateSet, request, "SimpleDateSet", &error_code )
-         && GetRequestDateTimeList( &compound.SimpleDateList, request, "SimpleDateList", &error_code )
-         && GetRequestDateTimeStringStringTupleSetMap( &compound.NameSetMap, request, "NameSetMap", &error_code )
+         && GetRequestString( request, &compound.Location, "Location", &error_code )
+         && GetRequestStringStringTuple( request, &compound.Name, "Name", &error_code )
+         && GetRequestStringStringTupleSet( request, &compound.NameSet, "NameSet", &error_code )
+         && GetRequestStringList( request, &compound.PhoneList, "PhoneList", &error_code )
+         && GetRequestStringSet( request, &compound.EmailSet, "EmailSet", &error_code )
+         && GetRequestStringStringMap( request, &compound.CompanyMap, "CompanyMap", &error_code )
+         && GetRequestDateTime( request, &compound.SimpleDate, "SimpleDate", &error_code )
+         && GetRequestStringStringTupleDateTimeMap( request, &compound.SimpleDateMap, "SimpleDateMap", &error_code )
+         && GetRequestDateTimeSet( request, &compound.SimpleDateSet, "SimpleDateSet", &error_code )
+         && GetRequestDateTimeList( request, &compound.SimpleDateList, "SimpleDateList", &error_code )
+         && GetRequestDateTimeStringStringTupleSetMap( request, &compound.NameSetMap, "NameSetMap", &error_code )
          && AddDatabaseCompound( &compound, &error_code ) )
     {
         WriteResponse( response_writer, "{" );
@@ -211,18 +211,18 @@ func HandleSetCompoundDatabaseRequest(
         compound COMPOUND;
 
     if ( IsAdministratorSession( request, &error_code )
-         && GetRequestInt32( &compound.Id, request, "Id", &error_code )
-         && GetRequestString( &compound.Location, request, "Location", &error_code )
-         && GetRequestStringStringTuple( &compound.Name, request, "Name", &error_code )
-         && GetRequestStringStringTupleSet( &compound.NameSet, request, "NameSet", &error_code )
-         && GetRequestStringList( &compound.PhoneList, request, "PhoneList", &error_code )
-         && GetRequestStringSet( &compound.EmailSet, request, "EmailSet", &error_code )
-         && GetRequestStringStringMap( &compound.CompanyMap, request, "CompanyMap", &error_code )
-         && GetRequestDateTime( &compound.SimpleDate, request, "SimpleDate", &error_code )
-         && GetRequestStringStringTupleDateTimeMap( &compound.SimpleDateMap, request, "SimpleDateMap", &error_code )
-         && GetRequestDateTimeSet( &compound.SimpleDateSet, request, "SimpleDateSet", &error_code )
-         && GetRequestDateTimeList( &compound.SimpleDateList, request, "SimpleDateList", &error_code )
-         && GetRequestDateTimeStringStringTupleSetMap( &compound.NameSetMap, request, "NameSetMap", &error_code )
+         && GetRequestInt32( request, &compound.Id, "Id", &error_code )
+         && GetRequestString( request, &compound.Location, "Location", &error_code )
+         && GetRequestStringStringTuple( request, &compound.Name, "Name", &error_code )
+         && GetRequestStringStringTupleSet( request, &compound.NameSet, "NameSet", &error_code )
+         && GetRequestStringList( request, &compound.PhoneList, "PhoneList", &error_code )
+         && GetRequestStringSet( request, &compound.EmailSet, "EmailSet", &error_code )
+         && GetRequestStringStringMap( request, &compound.CompanyMap, "CompanyMap", &error_code )
+         && GetRequestDateTime( request, &compound.SimpleDate, "SimpleDate", &error_code )
+         && GetRequestStringStringTupleDateTimeMap( request, &compound.SimpleDateMap, "SimpleDateMap", &error_code )
+         && GetRequestDateTimeSet( request, &compound.SimpleDateSet, "SimpleDateSet", &error_code )
+         && GetRequestDateTimeList( request, &compound.SimpleDateList, "SimpleDateList", &error_code )
+         && GetRequestDateTimeStringStringTupleSetMap( request, &compound.NameSetMap, "NameSetMap", &error_code )
          && SetDatabaseCompound( &compound, &error_code ) )
     {
         WriteResponseSuccess( response_writer );
@@ -246,7 +246,7 @@ func HandleRemoveCompoundDatabaseRequest(
         compound COMPOUND;
 
     if ( IsAdministratorSession( request, &error_code )
-         && GetRequestInt32( &compound.Id, request, "Id", &error_code )
+         && GetRequestInt32( request, &compound.Id, "Id", &error_code )
          && RemoveDatabaseCompound( &compound, &error_code ) )
     {
         WriteResponseSuccess( response_writer );
@@ -270,7 +270,7 @@ func HandleGetCompoundDatabaseRequest(
         compound COMPOUND;
 
     if ( IsAdministratorSession( request, &error_code )
-         && GetRequestInt32( &compound.Id, request, "Id", &error_code )
+         && GetRequestInt32( request, &compound.Id, "Id", &error_code )
          && GetDatabaseCompound( &compound, &error_code ) )
     {
         WriteResponse( response_writer, "{\"Compound\":" );
@@ -331,11 +331,11 @@ func HandleAddValueDatabaseRequest(
         value VALUE;
 
     if ( IsAdministratorSession( request, &error_code )
-         && GetRequestInt64( &value.Id, request, "Id", &error_code )
-         && GetRequestUuid( &value.Uuid, request, "Uuid", &error_code )
-         && GetRequestString( &value.Name, request, "Name", &error_code )
-         && GetRequestInt32( &value.Integer, request, "Integer", &error_code )
-         && GetRequestString( &value.Text, request, "Text", &error_code )
+         && GetRequestInt64( request, &value.Id, "Id", &error_code )
+         && GetRequestUuid( request, &value.Uuid, "Uuid", &error_code )
+         && GetRequestString( request, &value.Name, "Name", &error_code )
+         && GetRequestInt32( request, &value.Integer, "Integer", &error_code )
+         && GetRequestString( request, &value.Text, "Text", &error_code )
          && AddDatabaseValue( &value, &error_code ) )
     {
         WriteResponse( response_writer, "{" );
@@ -362,11 +362,11 @@ func HandleSetValueDatabaseRequest(
         value VALUE;
 
     if ( IsAdministratorSession( request, &error_code )
-         && GetRequestInt64( &value.Id, request, "Id", &error_code )
-         && GetRequestUuid( &value.Uuid, request, "Uuid", &error_code )
-         && GetRequestString( &value.Name, request, "Name", &error_code )
-         && GetRequestInt32( &value.Integer, request, "Integer", &error_code )
-         && GetRequestString( &value.Text, request, "Text", &error_code )
+         && GetRequestInt64( request, &value.Id, "Id", &error_code )
+         && GetRequestUuid( request, &value.Uuid, "Uuid", &error_code )
+         && GetRequestString( request, &value.Name, "Name", &error_code )
+         && GetRequestInt32( request, &value.Integer, "Integer", &error_code )
+         && GetRequestString( request, &value.Text, "Text", &error_code )
          && SetDatabaseValue( &value, &error_code ) )
     {
         WriteResponseSuccess( response_writer );
@@ -390,7 +390,7 @@ func HandleRemoveValueDatabaseRequest(
         value VALUE;
 
     if ( IsAdministratorSession( request, &error_code )
-         && GetRequestInt64( &value.Id, request, "Id", &error_code )
+         && GetRequestInt64( request, &value.Id, "Id", &error_code )
          && RemoveDatabaseValue( &value, &error_code ) )
     {
         WriteResponseSuccess( response_writer );
@@ -414,7 +414,7 @@ func HandleGetValueDatabaseRequest(
         value VALUE;
 
     if ( IsAdministratorSession( request, &error_code )
-         && GetRequestInt64( &value.Id, request, "Id", &error_code )
+         && GetRequestInt64( request, &value.Id, "Id", &error_code )
          && GetDatabaseValue( &value, &error_code ) )
     {
         WriteResponse( response_writer, "{\"Value\":" );
@@ -475,9 +475,9 @@ func HandleAddDataDatabaseRequest(
         data DATA;
 
     if ( IsAdministratorSession( request, &error_code )
-         && GetRequestUuid( &data.Uuid, request, "Uuid", &error_code )
-         && GetRequestInt64( &data.ValueId, request, "ValueId", &error_code )
-         && GetRequestUuid( &data.ValueUuid, request, "ValueUuid", &error_code )
+         && GetRequestUuid( request, &data.Uuid, "Uuid", &error_code )
+         && GetRequestInt64( request, &data.ValueId, "ValueId", &error_code )
+         && GetRequestUuid( request, &data.ValueUuid, "ValueUuid", &error_code )
          && AddDatabaseData( &data, &error_code ) )
     {
         WriteResponse( response_writer, "{" );
@@ -504,9 +504,9 @@ func HandleSetDataDatabaseRequest(
         data DATA;
 
     if ( IsAdministratorSession( request, &error_code )
-         && GetRequestUuid( &data.Uuid, request, "Uuid", &error_code )
-         && GetRequestInt64( &data.ValueId, request, "ValueId", &error_code )
-         && GetRequestUuid( &data.ValueUuid, request, "ValueUuid", &error_code )
+         && GetRequestUuid( request, &data.Uuid, "Uuid", &error_code )
+         && GetRequestInt64( request, &data.ValueId, "ValueId", &error_code )
+         && GetRequestUuid( request, &data.ValueUuid, "ValueUuid", &error_code )
          && SetDatabaseData( &data, &error_code ) )
     {
         WriteResponseSuccess( response_writer );
@@ -530,7 +530,7 @@ func HandleRemoveDataDatabaseRequest(
         data DATA;
 
     if ( IsAdministratorSession( request, &error_code )
-         && GetRequestUuid( &data.Uuid, request, "Uuid", &error_code )
+         && GetRequestUuid( request, &data.Uuid, "Uuid", &error_code )
          && RemoveDatabaseData( &data, &error_code ) )
     {
         WriteResponseSuccess( response_writer );
@@ -554,7 +554,7 @@ func HandleGetDataDatabaseRequest(
         data DATA;
 
     if ( IsAdministratorSession( request, &error_code )
-         && GetRequestUuid( &data.Uuid, request, "Uuid", &error_code )
+         && GetRequestUuid( request, &data.Uuid, "Uuid", &error_code )
          && GetDatabaseData( &data, &error_code ) )
     {
         WriteResponse( response_writer, "{\"Data\":" );
