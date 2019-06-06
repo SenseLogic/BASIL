@@ -13,11 +13,11 @@ Database designer and filler.
     *   UML
     *   SQL
     *   CQL
-*   Instantiates generic and custom template code for the following languages :
-    *   Go / Generis
-    *   C#
-    *   Crystal / Cibyl
-    *   Rust
+*   Instantiates database access code for the following languages :
+    *   Go / Generis (types, routes, requests, queries, responses)
+    *   C# (types)
+    *   Crystal / Cibyl (types)
+    *   Rust (types)
 
 ## Sample SQL schema file
 
