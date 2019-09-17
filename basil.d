@@ -5981,6 +5981,7 @@ class SCHEMA
             character;
         long
             character_index,
+            column_index,
             line_index,
             row_count,
             sub_value_index;
@@ -6042,7 +6043,28 @@ class SCHEMA
 
                 if ( data_value.SubValueArray.length != column_array.length )
                 {
-                    Abort( "Invalid value count : " ~ data_value.GetText() );
+                    for ( column_index = 0;
+                          column_index < column_array.length;
+                          ++column_index )
+                    {
+                        if ( column_index < data_value.SubValueArray.length )
+                        {
+                            writeln( "[", column_index, "] ", column_array[ column_index ].Name, " : ", data_value.SubValueArray[ column_index ].GetText() );
+                        }
+                        else
+                        {
+                            writeln( "[", column_index, "] ", column_array[ column_index ].Name, " ?" );
+                        }
+                    }
+
+                    while ( column_index < data_value.SubValueArray.length )
+                    {
+                        writeln( "[", column_index, "] ? : ", data_value.SubValueArray[ column_index ].GetText() );
+
+                        ++column_index;
+                    }
+
+                    Abort( "Invalid value count (" ~ data_value.SubValueArray.length.to!string() ~ "/" ~ column_array.length.to!string() ~ ") : " ~ data_value.GetText() );
                 }
 
                 for ( sub_value_index = 0;
