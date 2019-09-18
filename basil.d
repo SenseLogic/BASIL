@@ -29,7 +29,7 @@ import std.random : uniform;
 import std.path : dirName;
 import std.regex : regex, replaceAll, Regex;
 import std.stdio : writeln;
-import std.string : endsWith, format, indexOf, join, lineSplitter, replace, startsWith, split, strip, stripRight, toLower, toUpper;
+import std.string : endsWith, format, indexOf, join, lastIndexOf, lineSplitter, replace, startsWith, split, strip, stripRight, toLower, toUpper;
 import std.digest.md : md5Of;
 
 // -- TYPES
@@ -1265,7 +1265,7 @@ class TYPE
         string
             sub_types_cql_text;
 
-        foreach ( ref sub_type; ActualType.SubTypeArray )
+        foreach ( sub_type; ActualType.SubTypeArray )
         {
             if ( sub_types_cql_text != "" )
             {
@@ -1399,7 +1399,7 @@ class TYPE
         string
             sub_types_go_text;
 
-        foreach ( ref sub_type; ActualType.SubTypeArray )
+        foreach ( sub_type; ActualType.SubTypeArray )
         {
             if ( sub_types_go_text != "" )
             {
@@ -1524,7 +1524,7 @@ class TYPE
         string
             sub_types_go_text;
 
-        foreach ( ref sub_type; ActualType.SubTypeArray )
+        foreach ( sub_type; ActualType.SubTypeArray )
         {
             sub_types_go_text ~= sub_type.GetGoAttributeText();
         }
@@ -1638,13 +1638,217 @@ class TYPE
 
     // ~~
 
+    string GetPhpText(
+        )
+    {
+        string
+            type_name;
+
+        type_name = ActualType.BaseName;
+
+        if ( type_name == "BOOL" )
+        {
+            return "bool";
+        }
+        else if ( type_name == "INT8"
+                  || type_name == "UINT8"
+                  || type_name == "INT16"
+                  || type_name == "UINT16"
+                  || type_name == "INT32"
+                  || type_name == "UINT32"
+                  || type_name == "INT64"
+                  || type_name == "UINT64" )
+        {
+            return "int";
+        }
+        else if ( type_name == "FLOAT32"
+                  || type_name == "FLOAT64" )
+        {
+            return "float";
+        }
+        else if ( type_name == "STRING"
+                  || type_name == "DATE"
+                  || type_name == "DATETIME"
+                  || type_name == "UUID"
+                  || type_name == "BLOB"
+                  || type_name == "POINTER" )
+        {
+            return "string";
+        }
+        else if ( type_name == "ARRAY"
+                  || type_name == "TUPLE"
+                  || type_name == "LIST"
+                  || type_name == "SET"
+                  || type_name == "MAP" )
+        {
+            return "array";
+        }
+        else
+        {
+            return Name;
+        }
+    }
+
+    // ~~
+
+    string GetPhpParameterTypeText(
+        )
+    {
+        string
+            type_name;
+
+        type_name = ActualType.BaseName;
+
+        if ( type_name == "BOOL" )
+        {
+            return "PDO::PARAM_BOOL";
+        }
+        else if ( type_name == "INT8"
+                  || type_name == "UINT8"
+                  || type_name == "INT16"
+                  || type_name == "UINT16"
+                  || type_name == "INT32"
+                  || type_name == "UINT32"
+                  || type_name == "INT64"
+                  || type_name == "UINT64" )
+        {
+            return "PDO::PARAM_INT";
+        }
+        else
+        {
+            return "PDO::PARAM_STR";
+        }
+    }
+
+    // ~~
+
+    string GetSubTypePhpAttributeText(
+        )
+    {
+        string
+            sub_types_php_text;
+
+        foreach ( sub_type; ActualType.SubTypeArray )
+        {
+            sub_types_php_text ~= sub_type.GetPhpAttributeText();
+        }
+
+        return sub_types_php_text;
+    }
+
+    // ~~
+
+    string GetPhpAttributeText(
+        )
+    {
+        string
+            type_name;
+
+        type_name = ActualType.BaseName;
+
+        if ( type_name == "BOOL" )
+        {
+            return "Bool";
+        }
+        else if ( type_name == "INT8" )
+        {
+            return "Int8";
+        }
+        else if ( type_name == "UINT8" )
+        {
+            return "Uint8";
+        }
+        else if ( type_name == "INT16" )
+        {
+            return "Int16";
+        }
+        else if ( type_name == "UINT16" )
+        {
+            return "Uint16";
+        }
+        else if ( type_name == "INT32" )
+        {
+            return "Int32";
+        }
+        else if ( type_name == "UINT32" )
+        {
+            return "Uint32";
+        }
+        else if ( type_name == "INT64" )
+        {
+            return "Int64";
+        }
+        else if ( type_name == "UINT64" )
+        {
+            return "Uint64";
+        }
+        else if ( type_name == "FLOAT32" )
+        {
+            return "Float32";
+        }
+        else if ( type_name == "FLOAT64" )
+        {
+            return "Float64";
+        }
+        else if ( type_name == "STRING" )
+        {
+            return "String";
+        }
+        else if ( type_name == "DATE" )
+        {
+            return "DateTime";
+        }
+        else if ( type_name == "DATETIME" )
+        {
+            return "DateTime";
+        }
+        else if ( type_name == "UUID" )
+        {
+            return "Uuid";
+        }
+        else if ( type_name == "BLOB" )
+        {
+            return "Blob";
+        }
+        else if ( type_name == "POINTER" )
+        {
+            return GetSubTypePhpAttributeText() ~ "Pointer";
+        }
+        else if ( type_name == "ARRAY" )
+        {
+            return GetSubTypePhpAttributeText() ~ "Array";
+        }
+        else if ( type_name == "TUPLE" )
+        {
+            return GetSubTypePhpAttributeText() ~ "Tuple";
+        }
+        else if ( type_name == "LIST" )
+        {
+            return GetSubTypePhpAttributeText() ~ "List";
+        }
+        else if ( type_name == "SET" )
+        {
+            return GetSubTypePhpAttributeText() ~ "Set";
+        }
+        else if ( type_name == "MAP" )
+        {
+            return GetSubTypePhpAttributeText() ~ "Map";
+        }
+        else
+        {
+            return Name;
+        }
+    }
+
+    // ~~
+
     string GetSubTypeCrystalText(
         )
     {
         string
             sub_types_crystal_text;
 
-        foreach ( ref sub_type; ActualType.SubTypeArray )
+        foreach ( sub_type; ActualType.SubTypeArray )
         {
             if ( sub_types_crystal_text != "" )
             {
@@ -1769,7 +1973,7 @@ class TYPE
         string
             sub_types_csharp_text;
 
-        foreach ( ref sub_type; ActualType.SubTypeArray )
+        foreach ( sub_type; ActualType.SubTypeArray )
         {
             if ( sub_types_csharp_text != "" )
             {
@@ -1894,7 +2098,7 @@ class TYPE
         string
             sub_types_go_text;
 
-        foreach ( ref sub_type; ActualType.SubTypeArray )
+        foreach ( sub_type; ActualType.SubTypeArray )
         {
             sub_types_go_text ~= sub_type.GetCsharpAttributeText();
         }
@@ -2014,7 +2218,7 @@ class TYPE
         string
             sub_types_rust_text;
 
-        foreach ( ref sub_type; ActualType.SubTypeArray )
+        foreach ( sub_type; ActualType.SubTypeArray )
         {
             if ( sub_types_rust_text != "" )
             {
@@ -2579,7 +2783,7 @@ class VALUE
     {
         Type = type;
 
-        foreach ( ref sub_type; type.SubTypeArray )
+        foreach ( sub_type; type.SubTypeArray )
         {
             SubValueArray ~= new VALUE( sub_type );
         }
@@ -3536,7 +3740,7 @@ class VALUE
             }
             else if ( Type.BaseName == "TUPLE" )
             {
-                foreach ( ref sub_value; SubValueArray )
+                foreach ( sub_value; SubValueArray )
                 {
                     sub_value.Make( row_index, row_count, true );
                 }
@@ -3694,6 +3898,11 @@ class COLUMN
         GoType,
         GoAttribute,
         GoVariable,
+        PhpName,
+        PhpType,
+        PhpParameterType,
+        PhpAttribute,
+        PhpVariable,
         CrystalName,
         CrystalType,
         CsharpName,
@@ -3782,6 +3991,10 @@ class COLUMN
                 .replace( "{{column_go_type}}", GoType )
                 .replace( "{{column_go_attribute}}", GoAttribute )
                 .replace( "{{column_go_variable}}", GoVariable )
+                .replace( "{{column_php_name}}", PhpName )
+                .replace( "{{column_php_type}}", PhpType )
+                .replace( "{{column_php_attribute}}", PhpAttribute )
+                .replace( "{{column_php_variable}}", PhpVariable )
                 .replace( "{{column_crystal_name}}", CrystalName )
                 .replace( "{{column_crystal_type}}", CrystalType )
                 .replace( "{{column_csharp_name}}", CsharpName )
@@ -3886,6 +4099,10 @@ class COLUMN
                 else if ( property_name == "goname" )
                 {
                     GoName = value_text_array[ 1 ];
+                }
+                else if ( property_name == "phpname" )
+                {
+                    PhpName = value_text_array[ 1 ];
                 }
                 else if ( property_name == "crystalname" )
                 {
@@ -4040,6 +4257,11 @@ class COLUMN
             GoName = Name;
         }
 
+        if ( PhpName == "" )
+        {
+            PhpName = Name;
+        }
+
         if ( CrystalName == "" )
         {
             CrystalName = GetSnakeCaseText( Name );
@@ -4078,6 +4300,10 @@ class COLUMN
         GoType = Type.GetGoText().replace( "GOCQL.UUID", "UUID" );
         GoAttribute = Type.GetGoAttributeText();
         GoVariable = GoName.GetVariableText();
+        PhpType = Type.GetPhpText();
+        PhpParameterType = Type.GetPhpParameterTypeText();
+        PhpAttribute = Type.GetPhpAttributeText();
+        PhpVariable = PhpName.GetVariableText();
         CrystalType = Type.GetCrystalText();
         CsharpType = Type.GetCsharpText();
         CsharpAttribute = Type.GetCsharpAttributeText();
@@ -4214,6 +4440,9 @@ class TABLE
         GoType,
         GoAttribute,
         GoVariable,
+        PhpType,
+        PhpAttribute,
+        PhpVariable,
         CrystalType,
         CsharpType,
         CsharpAttribute,
@@ -4260,6 +4489,9 @@ class TABLE
         GoType = name;
         GoAttribute = name.GetAttributeText();
         GoVariable = name.GetVariableText();
+        PhpType = name;
+        PhpAttribute = name.GetAttributeText();
+        PhpVariable = name.GetVariableText();
         CrystalType = name;
         CsharpType = name;
         CsharpAttribute = name.GetAttributeText();
@@ -4279,7 +4511,7 @@ class TABLE
         long
             value_count;
 
-        foreach ( ref column; ColumnArray )
+        foreach ( column; ColumnArray )
         {
             if ( column.ValueCount > value_count )
             {
@@ -4296,7 +4528,7 @@ class TABLE
         string column_name
         )
     {
-        foreach ( ref column; ColumnArray )
+        foreach ( column; ColumnArray )
         {
             if ( column.Name == column_name )
             {
@@ -4327,7 +4559,7 @@ class TABLE
 
         column_count = 0;
 
-        foreach ( ref column; ColumnArray )
+        foreach ( column; ColumnArray )
         {
             if ( column.IsKey
                  && column.IsUnique
@@ -4342,7 +4574,7 @@ class TABLE
 
         if ( column_count > 0 )
         {
-            generis_code ~="\n";
+            generis_code ~= "\n";
         }
 
         if ( SqlOptionIsEnabled )
@@ -4354,7 +4586,7 @@ class TABLE
 
             column_count = 0;
 
-            foreach ( ref column; ColumnArray )
+            foreach ( column; ColumnArray )
             {
                 if ( column.IsStored
                      && !column.IsIncremented )
@@ -4374,7 +4606,7 @@ class TABLE
 
             column_count = 0;
 
-            foreach ( ref column; ColumnArray )
+            foreach ( column; ColumnArray )
             {
                 if ( column.IsStored
                      && !column.IsIncremented )
@@ -4406,7 +4638,7 @@ class TABLE
 
             column_index = 0;
 
-            foreach ( ref column; ColumnArray )
+            foreach ( column; ColumnArray )
             {
                 if ( column.IsStored
                      && !column.IsIncremented )
@@ -4435,7 +4667,7 @@ class TABLE
                    ~ "    }\n"
                    ~ "\n";
 
-            foreach ( ref column; ColumnArray )
+            foreach ( column; ColumnArray )
             {
                 if ( column.IsKey
                      && column.IsIncremented )
@@ -4466,7 +4698,7 @@ class TABLE
 
             column_count = 0;
 
-            foreach ( ref column; ColumnArray )
+            foreach ( column; ColumnArray )
             {
                 if ( column.IsStored
                      && !column.IsIncremented )
@@ -4486,7 +4718,7 @@ class TABLE
 
             column_count = 0;
 
-            foreach ( ref column; ColumnArray )
+            foreach ( column; ColumnArray )
             {
                 if ( column.IsStored
                      && !column.IsIncremented )
@@ -4506,7 +4738,7 @@ class TABLE
 
             column_index = 0;
 
-            foreach ( ref column; ColumnArray )
+            foreach ( column; ColumnArray )
             {
                 if ( column.IsStored
                      && !column.IsIncremented )
@@ -4563,7 +4795,7 @@ class TABLE
                    ~ "        := DatabaseSession.Prepare(\n"
                    ~ "               \"update " ~ Name ~ " set ";
 
-            foreach ( ref column; ColumnArray )
+            foreach ( column; ColumnArray )
             {
                 if ( column.IsStored
                      && !column.IsKey )
@@ -4579,7 +4811,7 @@ class TABLE
 
             generis_code ~= " where ";
 
-            foreach ( ref column; ColumnArray )
+            foreach ( column; ColumnArray )
             {
                 if ( column.IsStored
                      && column.IsKey )
@@ -4607,7 +4839,7 @@ class TABLE
                    ~ "    result, error_\n"
                    ~ "        := statement.Exec(\n";
 
-            foreach ( ref column; ColumnArray )
+            foreach ( column; ColumnArray )
             {
                 if ( column.IsStored
                      && !column.IsKey )
@@ -4616,7 +4848,7 @@ class TABLE
                 }
             }
 
-            foreach ( ref column; ColumnArray )
+            foreach ( column; ColumnArray )
             {
                 if ( column.IsStored
                      && column.IsKey )
@@ -4642,7 +4874,7 @@ class TABLE
                    ~ "        := DatabaseSession.Query(\n"
                    ~ "               \"insert into " ~ Name ~ "( ";
 
-            foreach ( ref column; ColumnArray )
+            foreach ( column; ColumnArray )
             {
                 if ( column.IsStored )
                 {
@@ -4657,7 +4889,7 @@ class TABLE
 
             generis_code ~= " ) values( ";
 
-            foreach ( ref column; ColumnArray )
+            foreach ( column; ColumnArray )
             {
                 if ( column.IsStored )
                 {
@@ -4672,7 +4904,7 @@ class TABLE
 
             generis_code ~= " )\",\n";
 
-            foreach ( ref column; ColumnArray )
+            foreach ( column; ColumnArray )
             {
                 if ( column.IsStored )
                 {
@@ -4728,7 +4960,7 @@ class TABLE
                    ~ "        := DatabaseSession.Prepare(\n"
                    ~ "               \"delete from " ~ Name ~ " where ";
 
-            foreach ( ref column; ColumnArray )
+            foreach ( column; ColumnArray )
             {
                 if ( column.IsStored
                      && column.IsKey )
@@ -4756,7 +4988,7 @@ class TABLE
                    ~ "    result, error_\n"
                    ~ "        := statement.Exec(\n";
 
-            foreach ( ref column; ColumnArray )
+            foreach ( column; ColumnArray )
             {
                 if ( column.IsStored
                      && column.IsKey )
@@ -4782,7 +5014,7 @@ class TABLE
                    ~ "        := DatabaseSession.Query(\n"
                    ~ "               \"delete from " ~ Name ~ " where ";
 
-            foreach ( ref column; ColumnArray )
+            foreach ( column; ColumnArray )
             {
                 if ( column.IsStored
                      && column.IsKey )
@@ -4798,7 +5030,7 @@ class TABLE
 
             generis_code ~= "\",\n";
 
-            foreach ( ref column; ColumnArray )
+            foreach ( column; ColumnArray )
             {
                 if ( column.IsStored
                      && column.IsKey )
@@ -4857,7 +5089,7 @@ class TABLE
                    ~ "        := DatabaseSession.Prepare(\n"
                    ~ "               \"select ";
 
-            foreach ( ref column; ColumnArray )
+            foreach ( column; ColumnArray )
             {
                 if ( column.IsStored
                      && !column.IsKey )
@@ -4874,7 +5106,7 @@ class TABLE
 
             generis_code ~= " from " ~ Name ~ " where ";
 
-            foreach ( ref column; ColumnArray )
+            foreach ( column; ColumnArray )
             {
                 if ( column.IsStored
                      && column.IsKey )
@@ -4902,7 +5134,7 @@ class TABLE
                    ~ "    rows, error_\n"
                    ~ "        := statement.Query(\n";
 
-            foreach ( ref column; ColumnArray )
+            foreach ( column; ColumnArray )
             {
                 if ( column.IsStored
                      && column.IsKey )
@@ -4933,7 +5165,7 @@ class TABLE
                    ~ "        error_\n"
                    ~ "            = rows.Scan(";
 
-            foreach ( ref column; ColumnArray )
+            foreach ( column; ColumnArray )
             {
                 if ( column.IsStored
                      && !column.IsKey )
@@ -4970,7 +5202,7 @@ class TABLE
                    ~ "        := DatabaseSession.Query(\n"
                    ~ "               \"select ";
 
-            foreach ( ref column; ColumnArray )
+            foreach ( column; ColumnArray )
             {
                 if ( column.IsStored
                      && !column.IsKey )
@@ -4986,7 +5218,7 @@ class TABLE
 
             generis_code ~= " from " ~ Name ~ " where ";
 
-            foreach ( ref column; ColumnArray )
+            foreach ( column; ColumnArray )
             {
                 if ( column.IsStored
                      && column.IsKey )
@@ -5002,7 +5234,7 @@ class TABLE
 
             generis_code ~= "\",\n";
 
-            foreach ( ref column; ColumnArray )
+            foreach ( column; ColumnArray )
             {
                 if ( column.IsStored
                      && column.IsKey )
@@ -5023,7 +5255,7 @@ class TABLE
                    ~ "               .Consistency( gocql.One )\n"
                    ~ "               .Scan(\n";
 
-            foreach ( ref column; ColumnArray )
+            foreach ( column; ColumnArray )
             {
                 if ( column.IsStored
                      && !column.IsKey )
@@ -5085,7 +5317,7 @@ class TABLE
                    ~ "        := DatabaseSession.Prepare(\n"
                    ~ "               \"select ";
 
-            foreach ( ref column; ColumnArray )
+            foreach ( column; ColumnArray )
             {
                 if ( column.IsStored )
                 {
@@ -5125,7 +5357,7 @@ class TABLE
                    ~ "        error_\n"
                    ~ "            = rows.Scan(\n";
 
-            foreach ( ref column; ColumnArray )
+            foreach ( column; ColumnArray )
             {
                 if ( column.IsStored )
                 {
@@ -5162,7 +5394,7 @@ class TABLE
                    ~ "        := DatabaseSession.Query(\n"
                    ~ "               \"select ";
 
-            foreach ( ref column; ColumnArray )
+            foreach ( column; ColumnArray )
             {
                 if ( column.IsStored )
                 {
@@ -5185,7 +5417,7 @@ class TABLE
                    ~ "\n"
                    ~ "    for iterator.Scan(\n";
 
-            foreach ( ref column; ColumnArray )
+            foreach ( column; ColumnArray )
             {
                 if ( column.IsStored )
                 {
@@ -5242,7 +5474,7 @@ class TABLE
               ~ "{\n"
               ~ "    WriteResponse( writer, \"{\" );\n";
 
-        foreach ( ref column; ColumnArray )
+        foreach ( column; ColumnArray )
         {
             if ( column.IsStored )
             {
@@ -5287,7 +5519,7 @@ class TABLE
 
         generis_code ~= "    if ( IsAdministratorSession( request, &error_code )\n";
 
-        foreach ( ref column; ColumnArray )
+        foreach ( column; ColumnArray )
         {
             if ( column.IsStored
                  && !( column.IsKey
@@ -5305,7 +5537,7 @@ class TABLE
                ~ "    {\n"
                ~ "        WriteResponse( response_writer, \"{\" );\n";
 
-        foreach ( ref column; ColumnArray )
+        foreach ( column; ColumnArray )
         {
             if ( column.IsStored
                  && column.IsKey )
@@ -5349,7 +5581,7 @@ class TABLE
               ~ "\n"
               ~ "    if ( IsAdministratorSession( request, &error_code )\n";
 
-        foreach ( ref column; ColumnArray )
+        foreach ( column; ColumnArray )
         {
             if ( column.IsStored )
             {
@@ -5393,7 +5625,7 @@ class TABLE
               ~ "\n"
               ~ "    if ( IsAdministratorSession( request, &error_code )\n";
 
-        foreach ( ref column; ColumnArray )
+        foreach ( column; ColumnArray )
         {
             if ( column.IsStored
                  && column.IsKey )
@@ -5438,7 +5670,7 @@ class TABLE
               ~ "\n"
               ~ "    if ( IsAdministratorSession( request, &error_code )\n";
 
-        foreach ( ref column; ColumnArray )
+        foreach ( column; ColumnArray )
         {
             if ( column.IsStored
                  && column.IsKey )
@@ -5515,6 +5747,466 @@ class TABLE
             ~ "    router.Post( \"/remove_" ~ GoVariable ~ "\", HandleRemove" ~ GoAttribute ~ "DatabaseRequest );\n"
             ~ "    router.Post( \"/get_" ~ GoVariable ~ "\", HandleGet" ~ GoAttribute ~ "DatabaseRequest );\n"
             ~ "    router.Post( \"/get_" ~ GoVariable ~ "_list\", HandleGet" ~ GoAttribute ~ "ListDatabaseRequest );\n";
+    }
+
+    // ~~
+
+    string GetAddDatabasePhoenixCode(
+        )
+    {
+        long
+            column_count,
+            column_index;
+        string
+            phoenix_code;
+
+        phoenix_code
+            = "function AddDatabase" ~ PhpAttribute ~ "(";
+
+        column_count = 0;
+
+        foreach ( column; ColumnArray )
+        {
+            if ( column.IsStored
+                 && !column.IsIncremented )
+            {
+                if ( column_count > 0 )
+                {
+                    phoenix_code ~= ",";
+                }
+
+                phoenix_code
+                    ~= "\n    " ~ column.PhpType ~ " " ~ column.PhpVariable;
+
+                ++column_count;
+            }
+        }
+
+        phoenix_code
+              ~= "\n    )\n"
+                 ~ "{\n";
+
+        if ( SqlOptionIsEnabled )
+        {
+            phoenix_code
+                ~= "    var statement = GetStatement( 'insert into " ~ Name ~ "( ";
+
+            column_count = 0;
+
+            foreach ( column; ColumnArray )
+            {
+                if ( column.IsStored
+                     && !column.IsIncremented )
+                {
+                    if ( column_count > 0 )
+                    {
+                        phoenix_code ~= ", ";
+                    }
+
+                    phoenix_code ~= column.StoredName;
+
+                    ++column_count;
+                }
+            }
+
+            phoenix_code ~= " ) values( ";
+
+            column_count = 0;
+
+            foreach ( column; ColumnArray )
+            {
+                if ( column.IsStored
+                     && !column.IsIncremented )
+                {
+                    if ( column_count > 0 )
+                    {
+                        phoenix_code ~= ", ";
+                    }
+
+                    phoenix_code ~= "?";
+
+                    ++column_count;
+                }
+            }
+
+            phoenix_code
+                ~= " )' );\n";
+
+            column_index = 0;
+
+            foreach ( column; ColumnArray )
+            {
+                if ( column.IsStored
+                     && !column.IsIncremented )
+                {
+                    phoenix_code
+                        ~= "    statement.bindParam( "
+                           ~ ( column_index + 1 ).to!string()
+                           ~ ", "
+                           ~ column.PhpVariable
+                           ~ ", "
+                           ~ column.PhpParameterType
+                           ~ " );\n";
+
+                    ++column_index;
+                }
+            }
+
+            phoenix_code
+                ~= "    statement.execute();\n"
+                   ~ "\n"
+                   ~ "    return GetAddedId( statement );\n";
+        }
+
+        phoenix_code
+            ~= "}\n";
+
+        return phoenix_code;
+    }
+
+    // ~~
+
+    string GetSetDatabasePhoenixCode(
+        )
+    {
+        long
+            column_index;
+        string
+            phoenix_code;
+
+        phoenix_code
+            = "function SetDatabase" ~ PhpAttribute ~ "(";
+
+        column_index = 0;
+
+        foreach ( column; ColumnArray )
+        {
+            if ( column.IsStored )
+            {
+                if ( column_index > 0 )
+                {
+                    phoenix_code ~= ",";
+                }
+
+                phoenix_code
+                    ~= "\n    " ~ column.PhpType ~ " " ~ column.PhpVariable;
+
+                ++column_index;
+            }
+        }
+
+        phoenix_code
+              ~= "\n    )\n"
+                 ~ "{\n";
+
+        if ( SqlOptionIsEnabled )
+        {
+            phoenix_code
+                ~= "    var statement = GetStatement( 'update " ~ Name ~ " set ";
+
+            foreach ( column; ColumnArray )
+            {
+                if ( column.IsStored
+                     && !column.IsKey )
+                {
+                    phoenix_code ~= column.StoredName ~ " = ?";
+
+                    if ( !column.IsLastNotKey )
+                    {
+                        phoenix_code ~= ", ";
+                    }
+                }
+            }
+
+            phoenix_code ~= " where ";
+
+            foreach ( column; ColumnArray )
+            {
+                if ( column.IsStored
+                     && column.IsKey )
+                {
+                    phoenix_code ~= column.StoredName ~ " = ?";
+
+                    if ( !column.IsLastKey )
+                    {
+                        phoenix_code ~= ", ";
+                    }
+                }
+            }
+
+            phoenix_code
+                ~= "' );\n";
+
+            column_index = 0;
+
+            foreach ( column; ColumnArray )
+            {
+                if ( column.IsStored
+                     && !column.IsKey )
+                {
+                    phoenix_code
+                        ~= "    statement.bindParam( "
+                           ~ ( column_index + 1 ).to!string()
+                           ~ ", "
+                           ~ column.PhpVariable
+                           ~ ", "
+                           ~ column.PhpParameterType
+                           ~ " );\n";
+
+                    ++column_index;
+                }
+            }
+
+            foreach ( column; ColumnArray )
+            {
+                if ( column.IsStored
+                     && column.IsKey )
+                {
+                    phoenix_code
+                        ~= "    statement.bindParam( "
+                           ~ ( column_index + 1 ).to!string()
+                           ~ ", "
+                           ~ column.PhpVariable
+                           ~ ", "
+                           ~ column.PhpParameterType
+                           ~ " );\n";
+
+                    ++column_index;
+                }
+            }
+
+            phoenix_code
+                ~= "    statement.execute();\n";
+        }
+
+        phoenix_code
+            ~= "}\n";
+
+        return phoenix_code;
+    }
+
+    // ~~
+
+    string GetRemoveDatabasePhoenixCode(
+        )
+    {
+        long
+            column_index;
+        string
+            phoenix_code;
+
+        phoenix_code
+            = "function RemoveDatabase" ~ PhpAttribute ~ "(";
+
+        column_index = 0;
+
+        foreach ( column; ColumnArray )
+        {
+            if ( column.IsStored
+                 && column.IsKey )
+            {
+                if ( column_index > 0 )
+                {
+                    phoenix_code ~= ",";
+                }
+
+                phoenix_code
+                    ~= "\n    " ~ column.PhpType ~ " " ~ column.PhpVariable;
+
+                ++column_index;
+            }
+        }
+
+        phoenix_code
+              ~= "\n    )\n"
+                 ~ "{\n";
+
+        if ( SqlOptionIsEnabled )
+        {
+            phoenix_code
+                ~= "    var statement = GetStatement( 'delete from " ~ Name ~ " where ";
+
+            foreach ( column; ColumnArray )
+            {
+                if ( column.IsStored
+                     && column.IsKey )
+                {
+                    phoenix_code ~= column.StoredName ~ " = ?";
+
+                    if ( !column.IsLastKey )
+                    {
+                        phoenix_code ~= " and ";
+                    }
+                }
+            }
+
+            phoenix_code
+                ~= "' );\n";
+
+            column_index = 0;
+
+            foreach ( column; ColumnArray )
+            {
+                if ( column.IsStored
+                     && column.IsKey )
+                {
+                    phoenix_code
+                        ~= "    statement.bindParam( "
+                           ~ ( column_index + 1 ).to!string()
+                           ~ ", "
+                           ~ column.PhpVariable
+                           ~ ", "
+                           ~ column.PhpParameterType
+                           ~ " );\n";
+
+                    ++column_index;
+                }
+            }
+
+            phoenix_code
+                ~= "    statement.execute();\n";
+        }
+
+        phoenix_code
+            ~= "}\n";
+
+        return phoenix_code;
+    }
+
+    // ~~
+
+    string GetGetDatabasePhoenixCode(
+        )
+    {
+        long
+            column_index;
+        string
+            phoenix_code;
+
+        phoenix_code
+            = "function GetDatabase" ~ PhpAttribute ~ "(";
+
+        column_index = 0;
+
+        foreach ( column; ColumnArray )
+        {
+            if ( column.IsStored
+                 && column.IsKey )
+            {
+                if ( column_index > 0 )
+                {
+                    phoenix_code ~= ",";
+                }
+
+                phoenix_code
+                    ~= "\n    " ~ column.PhpType ~ " " ~ column.PhpVariable;
+
+                ++column_index;
+            }
+        }
+
+        phoenix_code
+              ~= "\n    )\n"
+                 ~ "{\n";
+
+        if ( SqlOptionIsEnabled )
+        {
+            phoenix_code
+                ~= "    var statement = GetStatement( 'select * from " ~ Name ~ " where ";
+
+            foreach ( column; ColumnArray )
+            {
+                if ( column.IsStored
+                     && column.IsKey )
+                {
+                    phoenix_code ~= column.StoredName ~ " = ?";
+
+                    if ( !column.IsLastKey )
+                    {
+                        phoenix_code ~= " and ";
+                    }
+                }
+            }
+
+            phoenix_code
+                ~= "' );\n";
+
+            column_index = 0;
+
+            foreach ( column; ColumnArray )
+            {
+                if ( column.IsStored
+                     && column.IsKey )
+                {
+                    phoenix_code
+                        ~= "    statement.bindParam( "
+                           ~ ( column_index + 1 ).to!string()
+                           ~ ", "
+                           ~ column.PhpVariable
+                           ~ ", "
+                           ~ column.PhpParameterType
+                           ~ " );\n";
+
+                    ++column_index;
+                }
+            }
+
+            phoenix_code
+                ~= "    statement.execute();\n"
+                   ~ "\n"
+                   ~ "    return GetObject( statement );\n";
+        }
+
+        phoenix_code
+            ~= "}\n";
+
+        return phoenix_code;
+    }
+
+    // ~~
+
+    string GetGetDatabaseArrayPhoenixCode(
+        )
+    {
+        long
+            column_index;
+        string
+            phoenix_code;
+
+        phoenix_code
+            = "function GetDatabase" ~ PhpAttribute ~ "Array(\n"
+              ~ "    )\n"
+              ~ "{\n";
+
+        if ( SqlOptionIsEnabled )
+        {
+            phoenix_code
+                ~= "    var statement = GetStatement( 'select ";
+
+            foreach ( column; ColumnArray )
+            {
+                if ( column.IsStored )
+                {
+                    phoenix_code ~= column.StoredName;
+
+                    if ( !column.IsLastStored )
+                    {
+                        phoenix_code ~= ", ";
+                    }
+                }
+            }
+
+            phoenix_code
+                ~= " from " ~ Name ~ "' );\n"
+                   ~ "    statement.execute();\n"
+                   ~ "\n"
+                   ~ "    return GetObjectArray( statement );\n";
+        }
+
+        phoenix_code
+            ~= "}\n";
+
+        return phoenix_code;
     }
 
     // ~~
@@ -5620,7 +6312,7 @@ class TABLE
 
         writeln( "Processing table : ", Name );
 
-        foreach ( ref column; ColumnArray )
+        foreach ( column; ColumnArray )
         {
             column.MakeType();
         }
@@ -5633,7 +6325,7 @@ class TABLE
         last_incremented_column = null;
         last_not_incremented_column = null;
 
-        foreach ( ref column; ColumnArray )
+        foreach ( column; ColumnArray )
         {
             last_column = column;
 
@@ -5711,7 +6403,7 @@ class TABLE
     {
         writeln( "Filling table : ", Name );
 
-        foreach ( ref column; ColumnArray )
+        foreach ( column; ColumnArray )
         {
             if ( column.IsStored )
             {
@@ -5750,7 +6442,7 @@ class SCHEMA
         string table_name
         )
     {
-        foreach ( ref table; TableArray )
+        foreach ( table; TableArray )
         {
             if ( table.Name == table_name )
             {
@@ -5938,7 +6630,7 @@ class SCHEMA
         last_stored_table = null;
         last_not_stored_table = null;
 
-        foreach ( ref table; TableArray )
+        foreach ( table; TableArray )
         {
             table.MakeTypes();
 
@@ -6123,7 +6815,7 @@ class SCHEMA
     void MakeValues(
         )
     {
-        foreach ( ref table; TableArray )
+        foreach ( table; TableArray )
         {
             foreach ( ref column; table.ColumnArray )
             {
@@ -6140,7 +6832,7 @@ class SCHEMA
     void CheckValues(
         )
     {
-        foreach ( ref table; TableArray )
+        foreach ( table; TableArray )
         {
             foreach ( ref column; table.ColumnArray )
             {
@@ -6258,7 +6950,7 @@ class SCHEMA
               ~ "hide methods\n"
               ~ "left to right direction\n";
 
-        foreach ( ref table; TableArray )
+        foreach ( table; TableArray )
         {
             uml_schema_file_text ~= "\nclass " ~ table.Name ~ " {\n";
 
@@ -6270,7 +6962,7 @@ class SCHEMA
             uml_schema_file_text ~= "}\n";
         }
 
-        foreach ( ref table; TableArray )
+        foreach ( table; TableArray )
         {
             foreach ( ref column; table.ColumnArray )
             {
@@ -6308,7 +7000,7 @@ class SCHEMA
               ~ "create schema if not exists `" ~ Name ~ "` default character set utf8 collate utf8_general_ci;\n\n"
               ~ "use `" ~ Name ~ "`;\n\n";
 
-        foreach ( ref table; TableArray )
+        foreach ( table; TableArray )
         {
             if ( table.IsStored )
             {
@@ -6427,7 +7119,7 @@ class SCHEMA
 
         writeln( "Writing SQL data file : ", sql_data_file_path );
 
-        foreach ( ref table; TableArray )
+        foreach ( table; TableArray )
         {
             if ( table.IsStored )
             {
@@ -6492,7 +7184,7 @@ class SCHEMA
             = "drop keyspace if exists " ~ Name ~ ";\n"
               ~ "create keyspace if not exists " ~ Name ~ " with replication = { 'class' : 'SimpleStrategy', 'replication_factor' : 1 };\n";
 
-        foreach ( ref table; TableArray )
+        foreach ( table; TableArray )
         {
             if ( table.IsStored )
             {
@@ -6591,7 +7283,7 @@ class SCHEMA
 
         writeln( "Writing CQL data file : ", cql_data_file_path );
 
-        foreach ( ref table; TableArray )
+        foreach ( table; TableArray )
         {
             if ( table.IsStored )
             {
@@ -6652,7 +7344,7 @@ class SCHEMA
 
         json_data_file_text = "{";
 
-        foreach ( ref table; TableArray )
+        foreach ( table; TableArray )
         {
             if ( table.IsStored )
             {
@@ -6997,6 +7689,39 @@ class SCHEMA
         }
 
         generis_constant_file_path.WriteText( generis_constant_file_text );
+    }
+
+    // ~~
+
+    void WritePhoenixQueryFiles(
+        string phoenix_folder_path
+        )
+    {
+        string
+            phoenix_model_file_path,
+            phoenix_model_file_text;
+
+        foreach ( table_index, ref table; TableArray )
+        {
+            if ( table.IsStored )
+            {
+                phoenix_model_file_path = phoenix_folder_path ~ table.PhpVariable ~ ".phx";
+                writeln( "Writing Phoenix model file : ", phoenix_model_file_path );
+
+                phoenix_model_file_text
+                    = table.GetGetDatabaseArrayPhoenixCode()
+                      ~ "\n// ~~\n\n"
+                      ~ table.GetGetDatabasePhoenixCode()
+                      ~ "\n// ~~\n\n"
+                      ~ table.GetAddDatabasePhoenixCode()
+                      ~ "\n// ~~\n\n"
+                      ~ table.GetSetDatabasePhoenixCode()
+                      ~ "\n// ~~\n\n"
+                      ~ table.GetRemoveDatabasePhoenixCode();
+
+                phoenix_model_file_path.WriteText( phoenix_model_file_text );
+            }
+        }
     }
 
     // ~~
@@ -7364,6 +8089,27 @@ void Abort(
     PrintError( file_exception.msg );
 
     exit( -1 );
+}
+
+// ~~
+
+string GetFolderPath(
+    string file_path
+    )
+{
+    long
+        folder_separator_character_index;
+
+    folder_separator_character_index = file_path.replace( '\\', '/' ).lastIndexOf( '/' );
+
+    if ( folder_separator_character_index >= 0 )
+    {
+        return file_path[ 0 .. folder_separator_character_index + 1 ];
+    }
+    else
+    {
+        return "";
+    }
 }
 
 // ~~
@@ -8073,6 +8819,10 @@ void ProcessFiles(
             Schema.WriteGenerisRouteFile( base_file_path ~ "_" ~ DatabaseFormat ~ "_route.gs" );
             Schema.WriteGenerisConstantFile( base_file_path ~ "_" ~ DatabaseFormat ~ "_constant.gs" );
         }
+        else if ( output_format == "phoenix" )
+        {
+            Schema.WritePhoenixQueryFiles( GetFolderPath( base_file_path ) ~ "PHX/MODEL/" );
+        }
         else if ( output_format == "crystal" )
         {
             Schema.WriteCrystalTypeFile( base_file_path ~ "_" ~ DatabaseFormat ~ "_type.cr" );
@@ -8153,6 +8903,11 @@ void main(
         {
             OutputFormatArray ~= "generis";
         }
+        else if ( option == "--phoenix"
+                  && DatabaseFormat != "" )
+        {
+            OutputFormatArray ~= "phoenix";
+        }
         else if ( option == "--crystal"
                   && DatabaseFormat != "" )
         {
@@ -8193,6 +8948,7 @@ void main(
         writeln( "    --cql" );
         writeln( "    --go" );
         writeln( "    --generis" );
+        writeln( "    --phoenix" );
         writeln( "    --crystal" );
         writeln( "    --csharp" );
         writeln( "    --rust" );
