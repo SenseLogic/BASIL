@@ -7,7 +7,7 @@ func AddDatabaseSection(
 
     error_
         := DatabaseSession.Query(
-               "insert into SECTION( Uuid, Number, Name, Text, Image ) values( ?, ?, ?, ?, ? )",
+               "insert into SECTION ( Uuid, Number, Name, Text, Image ) values ( ?, ?, ?, ?, ? )",
                section.Uuid,
                section.Number,
                section.Name,
@@ -34,7 +34,7 @@ func SetDatabaseSection(
 {
     error_
         := DatabaseSession.Query(
-               "insert into SECTION( Uuid, Number, Name, Text, Image ) values( ?, ?, ?, ?, ? )",
+               "insert into SECTION ( Uuid, Number, Name, Text, Image ) values ( ?, ?, ?, ?, ? )",
                section.Uuid,
                section.Number,
                section.Name,
@@ -158,7 +158,7 @@ func AddDatabaseUser(
 
     error_
         := DatabaseSession.Query(
-               "insert into USER( Uuid, FirstName, LastName, Email, Pseudonym, Password, Phone, Street, City, Code, Region, Country, Company, ItIsAdministrator ) values( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? )",
+               "insert into USER ( Uuid, FirstName, LastName, Email, Pseudonym, Password, Phone, Street, City, Code, Region, Country, Company, ItIsAdministrator ) values ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? )",
                user.Uuid,
                user.FirstName,
                user.LastName,
@@ -194,7 +194,7 @@ func SetDatabaseUser(
 {
     error_
         := DatabaseSession.Query(
-               "insert into USER( Uuid, FirstName, LastName, Email, Pseudonym, Password, Phone, Street, City, Code, Region, Country, Company, ItIsAdministrator ) values( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? )",
+               "insert into USER ( Uuid, FirstName, LastName, Email, Pseudonym, Password, Phone, Street, City, Code, Region, Country, Company, ItIsAdministrator ) values ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? )",
                user.Uuid,
                user.FirstName,
                user.LastName,
@@ -345,7 +345,7 @@ func AddDatabaseArticle(
 
     error_
         := DatabaseSession.Query(
-               "insert into ARTICLE( Uuid, SectionUuid, UserUuid, Title, Text, Image, Date ) values( ?, ?, ?, ?, ?, ?, ? )",
+               "insert into ARTICLE ( Uuid, SectionUuid, UserUuid, Title, Text, Image, Date ) values ( ?, ?, ?, ?, ?, ?, ? )",
                article.Uuid,
                article.SectionUuid,
                article.UserUuid,
@@ -374,7 +374,7 @@ func SetDatabaseArticle(
 {
     error_
         := DatabaseSession.Query(
-               "insert into ARTICLE( Uuid, SectionUuid, UserUuid, Title, Text, Image, Date ) values( ?, ?, ?, ?, ?, ?, ? )",
+               "insert into ARTICLE ( Uuid, SectionUuid, UserUuid, Title, Text, Image, Date ) values ( ?, ?, ?, ?, ?, ?, ? )",
                article.Uuid,
                article.SectionUuid,
                article.UserUuid,
@@ -504,7 +504,7 @@ func AddDatabaseComment(
 
     error_
         := DatabaseSession.Query(
-               "insert into COMMENT( Uuid, ArticleUuid, UserUuid, Text, DateTime ) values( ?, ?, ?, ?, ? )",
+               "insert into COMMENT ( Uuid, ArticleUuid, UserUuid, Text, DateTime ) values ( ?, ?, ?, ?, ? )",
                comment.Uuid,
                comment.ArticleUuid,
                comment.UserUuid,
@@ -531,7 +531,7 @@ func SetDatabaseComment(
 {
     error_
         := DatabaseSession.Query(
-               "insert into COMMENT( Uuid, ArticleUuid, UserUuid, Text, DateTime ) values( ?, ?, ?, ?, ? )",
+               "insert into COMMENT ( Uuid, ArticleUuid, UserUuid, Text, DateTime ) values ( ?, ?, ?, ?, ? )",
                comment.Uuid,
                comment.ArticleUuid,
                comment.UserUuid,
@@ -655,7 +655,7 @@ func AddDatabaseSubscriber(
 
     error_
         := DatabaseSession.Query(
-               "insert into SUBSCRIBER( Uuid, Name, Email ) values( ?, ?, ? )",
+               "insert into SUBSCRIBER ( Uuid, Name, Email ) values ( ?, ?, ? )",
                subscriber.Uuid,
                subscriber.Name,
                subscriber.Email
@@ -680,7 +680,7 @@ func SetDatabaseSubscriber(
 {
     error_
         := DatabaseSession.Query(
-               "insert into SUBSCRIBER( Uuid, Name, Email ) values( ?, ?, ? )",
+               "insert into SUBSCRIBER ( Uuid, Name, Email ) values ( ?, ?, ? )",
                subscriber.Uuid,
                subscriber.Name,
                subscriber.Email

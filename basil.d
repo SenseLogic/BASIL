@@ -4582,7 +4582,7 @@ class TABLE
             generis_code
                 ~= "    statement, error_\n"
                    ~ "        := DatabaseSession.Prepare(\n"
-                   ~ "               \"insert into " ~ Name ~ "( ";
+                   ~ "               \"insert into " ~ Name ~ " ( ";
 
             column_count = 0;
 
@@ -4602,7 +4602,7 @@ class TABLE
                 }
             }
 
-            generis_code ~= " ) values( ";
+            generis_code ~= " ) values ( ";
 
             column_count = 0;
 
@@ -4694,7 +4694,7 @@ class TABLE
             generis_code
                 ~= "    error_\n"
                    ~ "        := DatabaseSession.Query(\n"
-                   ~ "               \"insert into " ~ Name ~ "( ";
+                   ~ "               \"insert into " ~ Name ~ " ( ";
 
             column_count = 0;
 
@@ -4714,7 +4714,7 @@ class TABLE
                 }
             }
 
-            generis_code ~= " ) values( ";
+            generis_code ~= " ) values ( ";
 
             column_count = 0;
 
@@ -4872,7 +4872,7 @@ class TABLE
             generis_code
                 ~= "    error_\n"
                    ~ "        := DatabaseSession.Query(\n"
-                   ~ "               \"insert into " ~ Name ~ "( ";
+                   ~ "               \"insert into " ~ Name ~ " ( ";
 
             foreach ( column; ColumnArray )
             {
@@ -4887,7 +4887,7 @@ class TABLE
                 }
             }
 
-            generis_code ~= " ) values( ";
+            generis_code ~= " ) values ( ";
 
             foreach ( column; ColumnArray )
             {
@@ -5789,7 +5789,7 @@ class TABLE
         if ( SqlOptionIsEnabled )
         {
             phoenix_code
-                ~= "    var statement = GetStatement( 'insert into " ~ Name ~ "( ";
+                ~= "    var statement = GetDatabaseStatement( 'insert into " ~ Name ~ " ( ";
 
             column_count = 0;
 
@@ -5809,7 +5809,7 @@ class TABLE
                 }
             }
 
-            phoenix_code ~= " ) values( ";
+            phoenix_code ~= " ) values ( ";
 
             column_count = 0;
 
@@ -5855,7 +5855,7 @@ class TABLE
             phoenix_code
                 ~= "    statement.execute();\n"
                    ~ "\n"
-                   ~ "    return GetAddedId( statement );\n";
+                   ~ "    return GetDatabaseAddedId( statement );\n";
         }
 
         phoenix_code
@@ -5902,7 +5902,7 @@ class TABLE
         if ( SqlOptionIsEnabled )
         {
             phoenix_code
-                ~= "    var statement = GetStatement( 'update " ~ Name ~ " set ";
+                ~= "    var statement = GetDatabaseStatement( 'update " ~ Name ~ " set ";
 
             foreach ( column; ColumnArray )
             {
@@ -6024,7 +6024,7 @@ class TABLE
         if ( SqlOptionIsEnabled )
         {
             phoenix_code
-                ~= "    var statement = GetStatement( 'delete from " ~ Name ~ " where ";
+                ~= "    var statement = GetDatabaseStatement( 'delete from " ~ Name ~ " where ";
 
             foreach ( column; ColumnArray )
             {
@@ -6112,7 +6112,7 @@ class TABLE
         if ( SqlOptionIsEnabled )
         {
             phoenix_code
-                ~= "    var statement = GetStatement( 'select * from " ~ Name ~ " where ";
+                ~= "    var statement = GetDatabaseStatement( 'select * from " ~ Name ~ " where ";
 
             foreach ( column; ColumnArray )
             {
@@ -6154,7 +6154,7 @@ class TABLE
             phoenix_code
                 ~= "    statement.execute();\n"
                    ~ "\n"
-                   ~ "    return GetObject( statement );\n";
+                   ~ "    return GetDatabaseObject( statement );\n";
         }
 
         phoenix_code
@@ -6181,7 +6181,7 @@ class TABLE
         if ( SqlOptionIsEnabled )
         {
             phoenix_code
-                ~= "    var statement = GetStatement( 'select ";
+                ~= "    var statement = GetDatabaseStatement( 'select ";
 
             foreach ( column; ColumnArray )
             {
@@ -6200,7 +6200,7 @@ class TABLE
                 ~= " from " ~ Name ~ "' );\n"
                    ~ "    statement.execute();\n"
                    ~ "\n"
-                   ~ "    return GetObjectArray( statement );\n";
+                   ~ "    return GetDatabaseObjectArray( statement );\n";
         }
 
         phoenix_code
@@ -7709,7 +7709,8 @@ class SCHEMA
                 writeln( "Writing Phoenix model file : ", phoenix_model_file_path );
 
                 phoenix_model_file_text
-                    = table.GetGetDatabaseArrayPhoenixCode()
+                    = "// -- FUNCTIONS\n\n"
+                      ~ table.GetGetDatabaseArrayPhoenixCode()
                       ~ "\n// ~~\n\n"
                       ~ table.GetGetDatabasePhoenixCode()
                       ~ "\n// ~~\n\n"

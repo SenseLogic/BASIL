@@ -5,7 +5,7 @@ func AddDatabaseSection(
 {
     statement, error_
         := DatabaseSession.Prepare(
-               "insert into SECTION( Number, Name, Text, Image ) values( ?, ?, ?, ? )"
+               "insert into SECTION ( Number, Name, Text, Image ) values ( ?, ?, ?, ? )"
                );
 
     if ( error_ != nil )
@@ -239,7 +239,7 @@ func AddDatabaseUser(
 {
     statement, error_
         := DatabaseSession.Prepare(
-               "insert into USER( FirstName, LastName, Email, Pseudonym, Password, Phone, Street, City, Code, Region, Country, Company, ItIsAdministrator ) values( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? )"
+               "insert into USER ( FirstName, LastName, Email, Pseudonym, Password, Phone, Street, City, Code, Region, Country, Company, ItIsAdministrator ) values ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? )"
                );
 
     if ( error_ != nil )
@@ -509,7 +509,7 @@ func AddDatabaseArticle(
 {
     statement, error_
         := DatabaseSession.Prepare(
-               "insert into ARTICLE( SectionId, UserId, Title, Text, Image, Date ) values( ?, ?, ?, ?, ?, ? )"
+               "insert into ARTICLE ( SectionId, UserId, Title, Text, Image, Date ) values ( ?, ?, ?, ?, ?, ? )"
                );
 
     if ( error_ != nil )
@@ -751,7 +751,7 @@ func AddDatabaseComment(
 {
     statement, error_
         := DatabaseSession.Prepare(
-               "insert into COMMENT( ArticleId, UserId, Text, DateTime ) values( ?, ?, ?, ? )"
+               "insert into COMMENT ( ArticleId, UserId, Text, DateTime ) values ( ?, ?, ?, ? )"
                );
 
     if ( error_ != nil )
@@ -985,7 +985,7 @@ func AddDatabaseSubscriber(
 {
     statement, error_
         := DatabaseSession.Prepare(
-               "insert into SUBSCRIBER( Name, Email ) values( ?, ? )"
+               "insert into SUBSCRIBER ( Name, Email ) values ( ?, ? )"
                );
 
     if ( error_ != nil )

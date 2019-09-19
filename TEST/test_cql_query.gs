@@ -7,7 +7,7 @@ func AddDatabaseSimple(
 
     error_
         := DatabaseSession.Query(
-               "insert into SIMPLE( Uuid, Bool, Int8, Uint8, Int16, Uint16, Int32, Uint32, Int64, Uint64, Float32, Float64, String, Date, DateTime, Blob ) values( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? )",
+               "insert into SIMPLE ( Uuid, Bool, Int8, Uint8, Int16, Uint16, Int32, Uint32, Int64, Uint64, Float32, Float64, String, Date, DateTime, Blob ) values ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? )",
                simple.Uuid,
                simple.Bool,
                simple.Int8,
@@ -45,7 +45,7 @@ func SetDatabaseSimple(
 {
     error_
         := DatabaseSession.Query(
-               "insert into SIMPLE( Uuid, Bool, Int8, Uint8, Int16, Uint16, Int32, Uint32, Int64, Uint64, Float32, Float64, String, Date, DateTime, Blob ) values( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? )",
+               "insert into SIMPLE ( Uuid, Bool, Int8, Uint8, Int16, Uint16, Int32, Uint32, Int64, Uint64, Float32, Float64, String, Date, DateTime, Blob ) values ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? )",
                simple.Uuid,
                simple.Bool,
                simple.Int8,
@@ -200,7 +200,7 @@ func AddDatabaseCompound(
 {
     error_
         := DatabaseSession.Query(
-               "insert into COMPOUND( Location, Name, NameSet, PhoneList, EmailSet, CompanyMap, SimpleDate, SimpleDateMap, SimpleDateSet, SimpleDateList, NameSetMap ) values( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? )",
+               "insert into COMPOUND ( Location, Name, NameSet, PhoneList, EmailSet, CompanyMap, SimpleDate, SimpleDateMap, SimpleDateSet, SimpleDateList, NameSetMap ) values ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? )",
                compound.Location,
                compound.Name,
                compound.NameSet,
@@ -233,7 +233,7 @@ func SetDatabaseCompound(
 {
     error_
         := DatabaseSession.Query(
-               "insert into COMPOUND( Id, Location, Name, NameSet, PhoneList, EmailSet, CompanyMap, SimpleDate, SimpleDateMap, SimpleDateSet, SimpleDateList, NameSetMap ) values( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? )",
+               "insert into COMPOUND ( Id, Location, Name, NameSet, PhoneList, EmailSet, CompanyMap, SimpleDate, SimpleDateMap, SimpleDateSet, SimpleDateList, NameSetMap ) values ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? )",
                compound.Id,
                compound.Location,
                compound.Name,
@@ -376,7 +376,7 @@ func AddDatabaseValue(
 {
     error_
         := DatabaseSession.Query(
-               "insert into VALUE( Id, Uuid, Name, Integer, Text ) values( ?, ?, ?, ?, ? )",
+               "insert into VALUE ( Id, Uuid, Name, Integer, Text ) values ( ?, ?, ?, ?, ? )",
                value.Id,
                value.Uuid,
                value.Name,
@@ -403,7 +403,7 @@ func SetDatabaseValue(
 {
     error_
         := DatabaseSession.Query(
-               "insert into VALUE( Id, Uuid, Name, Integer, Text ) values( ?, ?, ?, ?, ? )",
+               "insert into VALUE ( Id, Uuid, Name, Integer, Text ) values ( ?, ?, ?, ?, ? )",
                value.Id,
                value.Uuid,
                value.Name,
@@ -525,7 +525,7 @@ func AddDatabaseData(
 {
     error_
         := DatabaseSession.Query(
-               "insert into DATA( Uuid, ValueId, ValueUuid ) values( ?, ?, ? )",
+               "insert into DATA ( Uuid, ValueId, ValueUuid ) values ( ?, ?, ? )",
                data.Uuid,
                data.ValueId,
                data.ValueUuid
@@ -550,7 +550,7 @@ func SetDatabaseData(
 {
     error_
         := DatabaseSession.Query(
-               "insert into DATA( Uuid, ValueId, ValueUuid ) values( ?, ?, ? )",
+               "insert into DATA ( Uuid, ValueId, ValueUuid ) values ( ?, ?, ? )",
                data.Uuid,
                data.ValueId,
                data.ValueUuid
