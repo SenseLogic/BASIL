@@ -14,7 +14,8 @@ Database designer and filler.
     *   SQL
     *   CQL
 *   Instantiates database access code for the following languages :
-    *   Go / Generis (types, routes, requests, queries, responses)
+    *   Generis (types, routes, requests, queries, responses)
+    *   Phoenix (queries)
     *   C# (types)
     *   Crystal / Cibyl (types)
     *   Rust (types)
@@ -26,61 +27,42 @@ BLOG | count 5
 
     SECTION
 
-        Id : UINT64 | key, unique, incremented
-        Number : UINT64
+        Id : UINT32 | key, unique, incremented
+        Number : UINT32 | indexed, ascending
         Name : STRING | capacity 45
         Text : STRING
         Image : STRING | capacity 45
 
-        ImageIndex : UINT64 | !stored
-
     USER
 
-        Id : UINT64 | key, unique, incremented
-        FirstName : STRING | capacity 45
-        LastName : STRING | capacity 45
-        Email : STRING | capacity 45
+        Id : UINT32 | key, unique, incremented
+        Email : STRING | capacity 45, indexed, ascending
         Pseudonym : STRING | capacity 45
         Password : STRING | capacity 45
-        Phone : STRING | capacity 45
-        Street : STRING
-        City : STRING | capacity 45
-        Code : STRING | capacity 45
-        Region : STRING | capacity 45
-        Country : STRING | capacity 45
-        Company : STRING | capacity 45
         ItIsAdministrator : BOOL
 
     ARTICLE | count 15
 
-        Id : UINT64 | key, unique, incremented
-        SectionId : SECTION.Id | indexed
-        UserId : USER.Id | indexed
+        Id : UINT32 | key, unique, incremented
+        SectionId : SECTION.Id
+        UserId : USER.Id
         Title : STRING
         Text : STRING
         Image : STRING | capacity 45
-        Date : DATE
-
-        Section : POINTER[ SECTION ] | !stored
-        User : POINTER[ USER ] | !stored
-        ImageIndex : UINT64 | !stored
+        Date : DATE | indexed, descending
 
     COMMENT | count 30
 
-        Id : UINT64 | key, unique, incremented
-        ArticleId : ARTICLE.Id | indexed
-        UserId : USER.Id | indexed
+        Id : UINT32 | key, unique, incremented
+        ArticleId : ARTICLE.Id
+        UserId : USER.Id
         Text : STRING | english 2 4 5 7
-        DateTime : DATETIME
-
-        Article : POINTER[ ARTICLE ] | !stored
-        User : POINTER[ USER ] | !stored
+        DateTime : DATETIME | indexed, descending
 
     SUBSCRIBER
 
-        Id : UINT64 | key, unique, incremented
-        Name : STRING | capacity 45
-        Email : STRING | capacity 45
+        Id : UINT32 | key, unique, incremented
+        Email : STRING | capacity 45, indexed, ascending
 ```
 
 ![](https://github.com/senselogic/BASIL/blob/master/SAMPLE/SQL/blog.png)
@@ -272,6 +254,8 @@ count <i>row_count</i>
 [!]partitioned
 [!]clustered
 [!]indexed
+[!]ascending
+[!]descending
 [!]static
 [!]required
 [!]incremented
@@ -540,6 +524,7 @@ basil [options] script_file.bs [script_file.bs|bd|bt ...]
 --json : generate the JSON data file
 --go : generate the Go type file
 --generis : generate the Generis type, query, response, request and route files
+--phoenix : generate the Phoenix query files
 --crystal : generate the Crystal type file
 --csharp : generate the C# type file
 --rust : generate the Rust type file

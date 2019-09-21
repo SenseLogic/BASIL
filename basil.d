@@ -3841,6 +3841,8 @@ class COLUMN
         IsPartitioned,
         IsClustered,
         IsIndexed,
+        IsAscending,
+        IsDescending,
         IsStatic,
         IsRequired,
         IsIncremented,
@@ -4071,6 +4073,14 @@ class COLUMN
                 else if ( property_name == "indexed" )
                 {
                     IsIndexed = ( value_text_array[ 1 ] != "0" );
+                }
+                else if ( property_name == "ascending" )
+                {
+                    IsAscending = ( value_text_array[ 1 ] != "0" );
+                }
+                else if ( property_name == "descending" )
+                {
+                    IsDescending = ( value_text_array[ 1 ] != "0" );
                 }
                 else if ( property_name == "static" )
                 {
@@ -4574,7 +4584,8 @@ class TABLE
 
         if ( column_count > 0 )
         {
-            generis_code ~= "\n";
+            generis_code
+                ~= "\n";
         }
 
         if ( SqlOptionIsEnabled )
@@ -4593,16 +4604,19 @@ class TABLE
                 {
                     if ( column_count > 0 )
                     {
-                        generis_code ~= ", ";
+                        generis_code
+                            ~= ", ";
                     }
 
-                    generis_code ~= column.StoredName;
+                    generis_code
+                        ~= column.StoredName;
 
                     ++column_count;
                 }
             }
 
-            generis_code ~= " ) values ( ";
+            generis_code
+                ~= " ) values ( ";
 
             column_count = 0;
 
@@ -4613,10 +4627,12 @@ class TABLE
                 {
                     if ( column_count > 0 )
                     {
-                        generis_code ~= ", ";
+                        generis_code
+                            ~= ", ";
                     }
 
-                    generis_code ~= "?";
+                    generis_code
+                        ~= "?";
 
                     ++column_count;
                 }
@@ -4643,14 +4659,17 @@ class TABLE
                 if ( column.IsStored
                      && !column.IsIncremented )
                 {
-                    generis_code ~= "               " ~ GoVariable ~ "." ~ column.GoName;
+                    generis_code
+                        ~= "               " ~ GoVariable ~ "." ~ column.GoName;
 
                     if ( column_index + 1 < column_count )
                     {
-                        generis_code ~= ",";
+                        generis_code
+                            ~= ",";
                     }
 
-                    generis_code ~= "\n";
+                    generis_code
+                        ~= "\n";
 
                     ++column_index;
                 }
@@ -4705,16 +4724,19 @@ class TABLE
                 {
                     if ( column_count > 0 )
                     {
-                        generis_code ~= ", ";
+                        generis_code
+                            ~= ", ";
                     }
 
-                    generis_code ~= column.StoredName;
+                    generis_code
+                        ~= column.StoredName;
 
                     ++column_count;
                 }
             }
 
-            generis_code ~= " ) values ( ";
+            generis_code
+                ~= " ) values ( ";
 
             column_count = 0;
 
@@ -4725,16 +4747,19 @@ class TABLE
                 {
                     if ( column_count > 0 )
                     {
-                        generis_code ~= ", ";
+                        generis_code
+                            ~= ", ";
                     }
 
-                    generis_code ~= "?";
+                    generis_code
+                        ~= "?";
 
                     ++column_count;
                 }
             }
 
-            generis_code ~= " )\",\n";
+            generis_code
+                ~= " )\",\n";
 
             column_index = 0;
 
@@ -4743,14 +4768,17 @@ class TABLE
                 if ( column.IsStored
                      && !column.IsIncremented )
                 {
-                    generis_code ~= "               " ~ GoVariable ~ "." ~ column.GoName;
+                    generis_code
+                        ~= "               " ~ GoVariable ~ "." ~ column.GoName;
 
                     if ( column_index + 1 < column_count )
                     {
-                        generis_code ~= ",";
+                        generis_code
+                            ~= ",";
                     }
 
-                    generis_code ~= "\n";
+                    generis_code
+                        ~= "\n";
 
                     ++column_index;
                 }
@@ -4800,27 +4828,32 @@ class TABLE
                 if ( column.IsStored
                      && !column.IsKey )
                 {
-                    generis_code ~= column.StoredName ~ " = ?";
+                    generis_code
+                        ~= column.StoredName ~ " = ?";
 
                     if ( !column.IsLastNotKey )
                     {
-                        generis_code ~= ", ";
+                        generis_code
+                            ~= ", ";
                     }
                 }
             }
 
-            generis_code ~= " where ";
+            generis_code
+                ~= " where ";
 
             foreach ( column; ColumnArray )
             {
                 if ( column.IsStored
                      && column.IsKey )
                 {
-                    generis_code ~= column.StoredName ~ " = ?";
+                    generis_code
+                        ~= column.StoredName ~ " = ?";
 
                     if ( !column.IsLastKey )
                     {
-                        generis_code ~= ", ";
+                        generis_code
+                            ~= ", ";
                     }
                 }
             }
@@ -4844,7 +4877,8 @@ class TABLE
                 if ( column.IsStored
                      && !column.IsKey )
                 {
-                    generis_code ~= "               " ~ GoVariable ~ "." ~ column.GoName ~ ",\n";
+                    generis_code
+                        ~= "               " ~ GoVariable ~ "." ~ column.GoName ~ ",\n";
                 }
             }
 
@@ -4853,14 +4887,17 @@ class TABLE
                 if ( column.IsStored
                      && column.IsKey )
                 {
-                    generis_code ~= "               " ~ GoVariable ~ "." ~ column.GoName;
+                    generis_code
+                        ~= "               " ~ GoVariable ~ "." ~ column.GoName;
 
                     if ( !column.IsLastKey )
                     {
-                        generis_code ~= ",";
+                        generis_code
+                            ~= ",";
                     }
 
-                    generis_code ~= "\n";
+                    generis_code
+                        ~= "\n";
                 }
             }
 
@@ -4878,44 +4915,53 @@ class TABLE
             {
                 if ( column.IsStored )
                 {
-                    generis_code ~= column.StoredName;
+                    generis_code
+                        ~= column.StoredName;
 
                     if ( !column.IsLastStored )
                     {
-                        generis_code ~= ", ";
+                        generis_code
+                            ~= ", ";
                     }
                 }
             }
 
-            generis_code ~= " ) values ( ";
+            generis_code
+                ~= " ) values ( ";
 
             foreach ( column; ColumnArray )
             {
                 if ( column.IsStored )
                 {
-                    generis_code ~= "?";
+                    generis_code
+                        ~= "?";
 
                     if ( !column.IsLastStored )
                     {
-                        generis_code ~= ", ";
+                        generis_code
+                            ~= ", ";
                     }
                 }
             }
 
-            generis_code ~= " )\",\n";
+            generis_code
+                ~= " )\",\n";
 
             foreach ( column; ColumnArray )
             {
                 if ( column.IsStored )
                 {
-                    generis_code ~= "               " ~ GoVariable ~ "." ~ column.GoName;
+                    generis_code
+                        ~= "               " ~ GoVariable ~ "." ~ column.GoName;
 
                     if ( !column.IsLastStored )
                     {
-                        generis_code ~= ",";
+                        generis_code
+                            ~= ",";
                     }
 
-                    generis_code ~= "\n";
+                    generis_code
+                        ~= "\n";
                 }
             }
 
@@ -4965,11 +5011,13 @@ class TABLE
                 if ( column.IsStored
                      && column.IsKey )
                 {
-                    generis_code ~= column.StoredName ~ " = ?";
+                    generis_code
+                        ~= column.StoredName ~ " = ?";
 
                     if ( !column.IsLastKey )
                     {
-                        generis_code ~= " and ";
+                        generis_code
+                            ~= " and ";
                     }
                 }
             }
@@ -4993,14 +5041,17 @@ class TABLE
                 if ( column.IsStored
                      && column.IsKey )
                 {
-                    generis_code ~= "               " ~ GoVariable ~ "." ~ column.GoName;
+                    generis_code
+                        ~= "               " ~ GoVariable ~ "." ~ column.GoName;
 
                     if ( !column.IsLastKey )
                     {
-                        generis_code ~= ", ";
+                        generis_code
+                            ~= ", ";
                     }
 
-                    generis_code ~= "\n";
+                    generis_code
+                        ~= "\n";
                 }
             }
 
@@ -5019,31 +5070,37 @@ class TABLE
                 if ( column.IsStored
                      && column.IsKey )
                 {
-                    generis_code ~= column.StoredName ~ " = ?";
+                    generis_code
+                        ~= column.StoredName ~ " = ?";
 
                     if ( !column.IsLastKey )
                     {
-                        generis_code ~= " and ";
+                        generis_code
+                            ~= " and ";
                     }
                 }
             }
 
-            generis_code ~= "\",\n";
+            generis_code
+                ~= "\",\n";
 
             foreach ( column; ColumnArray )
             {
                 if ( column.IsStored
                      && column.IsKey )
                 {
-                    generis_code ~= "               " ~ GoVariable ~ "." ~ column.GoName;
+                    generis_code
+                        ~= "               " ~ GoVariable ~ "." ~ column.GoName;
 
                     if ( !column.IsLastKey )
                     {
-                        generis_code ~= ",\n";
+                        generis_code
+                            ~= ",\n";
                     }
                     else
                     {
-                        generis_code ~= "\n";
+                        generis_code
+                            ~= "\n";
                     }
                 }
             }
@@ -5094,28 +5151,33 @@ class TABLE
                 if ( column.IsStored
                      && !column.IsKey )
                 {
-                    generis_code ~= column.StoredName;
+                    generis_code
+                        ~= column.StoredName;
 
                     if ( column.IsStored
                          && !column.IsLastNotKey )
                     {
-                        generis_code ~= ", ";
+                        generis_code
+                            ~= ", ";
                     }
                 }
             }
 
-            generis_code ~= " from " ~ Name ~ " where ";
+            generis_code
+                ~= " from " ~ Name ~ " where ";
 
             foreach ( column; ColumnArray )
             {
                 if ( column.IsStored
                      && column.IsKey )
                 {
-                    generis_code ~= column.StoredName ~ " = ?";
+                    generis_code
+                        ~= column.StoredName ~ " = ?";
 
                     if ( !column.IsLastKey )
                     {
-                        generis_code ~= " and ";
+                        generis_code
+                            ~= " and ";
                     }
                 }
             }
@@ -5139,14 +5201,17 @@ class TABLE
                 if ( column.IsStored
                      && column.IsKey )
                 {
-                    generis_code ~= "               " ~ GoVariable ~ "." ~ column.GoName;
+                    generis_code
+                        ~= "               " ~ GoVariable ~ "." ~ column.GoName;
 
                     if ( !column.IsLastKey )
                     {
-                        generis_code ~= ",";
+                        generis_code
+                            ~= ",";
                     }
 
-                    generis_code ~= "\n";
+                    generis_code
+                        ~= "\n";
                 }
             }
 
@@ -5170,15 +5235,18 @@ class TABLE
                 if ( column.IsStored
                      && !column.IsKey )
                 {
-                    generis_code ~= "                  &" ~ GoVariable ~ "." ~ column.GoName;
+                    generis_code
+                        ~= "                  &" ~ GoVariable ~ "." ~ column.GoName;
 
                     if ( !column.IsLastNotKey )
                     {
-                        generis_code ~= ",\n";
+                        generis_code
+                            ~= ",\n";
                     }
                     else
                     {
-                        generis_code ~= "\n";
+                        generis_code
+                            ~= "\n";
                     }
                 }
             }
@@ -5207,46 +5275,55 @@ class TABLE
                 if ( column.IsStored
                      && !column.IsKey )
                 {
-                    generis_code ~= column.StoredName;
+                    generis_code
+                        ~= column.StoredName;
 
                     if ( !column.IsLastNotKey )
                     {
-                        generis_code ~= ", ";
+                        generis_code
+                            ~= ", ";
                     }
                 }
             }
 
-            generis_code ~= " from " ~ Name ~ " where ";
+            generis_code
+                ~= " from " ~ Name ~ " where ";
 
             foreach ( column; ColumnArray )
             {
                 if ( column.IsStored
                      && column.IsKey )
                 {
-                    generis_code ~= column.StoredName ~ " = ?";
+                    generis_code
+                        ~= column.StoredName ~ " = ?";
 
                     if ( !column.IsLastKey )
                     {
-                        generis_code ~= " and ";
+                        generis_code
+                            ~= " and ";
                     }
                 }
             }
 
-            generis_code ~= "\",\n";
+            generis_code
+                ~= "\",\n";
 
             foreach ( column; ColumnArray )
             {
                 if ( column.IsStored
                      && column.IsKey )
                 {
-                    generis_code ~= "               " ~ GoVariable ~ "." ~ column.GoName;
+                    generis_code
+                        ~= "               " ~ GoVariable ~ "." ~ column.GoName;
 
                     if ( !column.IsLastKey )
                     {
-                        generis_code ~= ",";
+                        generis_code
+                            ~= ",";
                     }
 
-                    generis_code ~= "\n";
+                    generis_code
+                        ~= "\n";
                 }
             }
 
@@ -5260,15 +5337,18 @@ class TABLE
                 if ( column.IsStored
                      && !column.IsKey )
                 {
-                    generis_code ~= "                    &" ~ GoVariable ~ "." ~ column.GoName;
+                    generis_code
+                        ~= "                    &" ~ GoVariable ~ "." ~ column.GoName;
 
                     if ( !column.IsLastNotKey )
                     {
-                        generis_code ~= ",\n";
+                        generis_code
+                            ~= ",\n";
                     }
                     else
                     {
-                        generis_code ~= "\n";
+                        generis_code
+                            ~= "\n";
                     }
                 }
             }
@@ -5321,11 +5401,13 @@ class TABLE
             {
                 if ( column.IsStored )
                 {
-                    generis_code ~= column.StoredName;
+                    generis_code
+                        ~= column.StoredName;
 
                     if ( !column.IsLastStored )
                     {
-                        generis_code ~= ", ";
+                        generis_code
+                            ~= ", ";
                     }
                 }
             }
@@ -5361,15 +5443,18 @@ class TABLE
             {
                 if ( column.IsStored )
                 {
-                    generis_code ~= "                  &" ~ GoVariable ~ "." ~ column.GoName;
+                    generis_code
+                        ~= "                  &" ~ GoVariable ~ "." ~ column.GoName;
 
                     if ( !column.IsLastStored )
                     {
-                        generis_code ~= ",\n";
+                        generis_code
+                            ~= ",\n";
                     }
                     else
                     {
-                        generis_code ~= "\n";
+                        generis_code
+                            ~= "\n";
                     }
                 }
             }
@@ -5398,11 +5483,13 @@ class TABLE
             {
                 if ( column.IsStored )
                 {
-                    generis_code ~= column.StoredName;
+                    generis_code
+                        ~= column.StoredName;
 
                     if ( !column.IsLastStored )
                     {
-                        generis_code ~= ", ";
+                        generis_code
+                            ~= ", ";
                     }
                 }
             }
@@ -5421,15 +5508,18 @@ class TABLE
             {
                 if ( column.IsStored )
                 {
-                    generis_code ~= "            &" ~ GoVariable ~ "." ~ column.GoName;
+                    generis_code
+                        ~= "            &" ~ GoVariable ~ "." ~ column.GoName;
 
                     if ( !column.IsLastStored )
                     {
-                        generis_code ~= ",\n";
+                        generis_code
+                            ~= ",\n";
                     }
                     else
                     {
-                        generis_code ~= "\n";
+                        generis_code
+                            ~= "\n";
                     }
                 }
             }
@@ -5517,7 +5607,8 @@ class TABLE
               ~ "        " ~ GoVariable ~ " " ~ GoType ~ ";\n"
               ~ "\n";
 
-        generis_code ~= "    if ( IsAdministratorSession( request, &error_code )\n";
+        generis_code
+            ~= "    if ( IsAdministratorSession( request, &error_code )\n";
 
         foreach ( column; ColumnArray )
         {
@@ -5772,7 +5863,8 @@ class TABLE
             {
                 if ( column_count > 0 )
                 {
-                    phoenix_code ~= ",";
+                    phoenix_code
+                        ~= ",";
                 }
 
                 phoenix_code
@@ -5800,16 +5892,19 @@ class TABLE
                 {
                     if ( column_count > 0 )
                     {
-                        phoenix_code ~= ", ";
+                        phoenix_code
+                            ~= ", ";
                     }
 
-                    phoenix_code ~= column.StoredName;
+                    phoenix_code
+                        ~= column.StoredName;
 
                     ++column_count;
                 }
             }
 
-            phoenix_code ~= " ) values ( ";
+            phoenix_code
+                ~= " ) values ( ";
 
             column_count = 0;
 
@@ -5820,10 +5915,12 @@ class TABLE
                 {
                     if ( column_count > 0 )
                     {
-                        phoenix_code ~= ", ";
+                        phoenix_code
+                            ~= ", ";
                     }
 
-                    phoenix_code ~= "?";
+                    phoenix_code
+                        ~= "?";
 
                     ++column_count;
                 }
@@ -5885,7 +5982,8 @@ class TABLE
             {
                 if ( column_index > 0 )
                 {
-                    phoenix_code ~= ",";
+                    phoenix_code
+                        ~= ",";
                 }
 
                 phoenix_code
@@ -5909,27 +6007,32 @@ class TABLE
                 if ( column.IsStored
                      && !column.IsKey )
                 {
-                    phoenix_code ~= column.StoredName ~ " = ?";
+                    phoenix_code
+                        ~= column.StoredName ~ " = ?";
 
                     if ( !column.IsLastNotKey )
                     {
-                        phoenix_code ~= ", ";
+                        phoenix_code
+                            ~= ", ";
                     }
                 }
             }
 
-            phoenix_code ~= " where ";
+            phoenix_code
+                ~= " where ";
 
             foreach ( column; ColumnArray )
             {
                 if ( column.IsStored
                      && column.IsKey )
                 {
-                    phoenix_code ~= column.StoredName ~ " = ?";
+                    phoenix_code
+                        ~= column.StoredName ~ " = ?";
 
                     if ( !column.IsLastKey )
                     {
-                        phoenix_code ~= ", ";
+                        phoenix_code
+                            ~= ", ";
                     }
                 }
             }
@@ -6007,7 +6110,8 @@ class TABLE
             {
                 if ( column_index > 0 )
                 {
-                    phoenix_code ~= ",";
+                    phoenix_code
+                        ~= ",";
                 }
 
                 phoenix_code
@@ -6031,11 +6135,13 @@ class TABLE
                 if ( column.IsStored
                      && column.IsKey )
                 {
-                    phoenix_code ~= column.StoredName ~ " = ?";
+                    phoenix_code
+                        ~= column.StoredName ~ " = ?";
 
                     if ( !column.IsLastKey )
                     {
-                        phoenix_code ~= " and ";
+                        phoenix_code
+                            ~= " and ";
                     }
                 }
             }
@@ -6095,7 +6201,8 @@ class TABLE
             {
                 if ( column_index > 0 )
                 {
-                    phoenix_code ~= ",";
+                    phoenix_code
+                        ~= ",";
                 }
 
                 phoenix_code
@@ -6112,18 +6219,38 @@ class TABLE
         if ( SqlOptionIsEnabled )
         {
             phoenix_code
-                ~= "    var statement = GetDatabaseStatement( 'select * from " ~ Name ~ " where ";
+                ~= "    var statement = GetDatabaseStatement( 'select ";
+
+            foreach ( column; ColumnArray )
+            {
+                if ( column.IsStored )
+                {
+                    phoenix_code
+                        ~= column.StoredName;
+
+                    if ( !column.IsLastStored )
+                    {
+                        phoenix_code
+                            ~= ", ";
+                    }
+                }
+            }
+
+            phoenix_code
+                ~= " from " ~ Name ~ " where ";
 
             foreach ( column; ColumnArray )
             {
                 if ( column.IsStored
                      && column.IsKey )
                 {
-                    phoenix_code ~= column.StoredName ~ " = ?";
+                    phoenix_code
+                        ~= column.StoredName ~ " = ?";
 
                     if ( !column.IsLastKey )
                     {
-                        phoenix_code ~= " and ";
+                        phoenix_code
+                            ~= " and ";
                     }
                 }
             }
@@ -6187,17 +6314,58 @@ class TABLE
             {
                 if ( column.IsStored )
                 {
-                    phoenix_code ~= column.StoredName;
+                    phoenix_code
+                        ~= column.StoredName;
 
                     if ( !column.IsLastStored )
                     {
-                        phoenix_code ~= ", ";
+                        phoenix_code
+                            ~= ", ";
                     }
                 }
             }
 
             phoenix_code
-                ~= " from " ~ Name ~ "' );\n"
+                ~= " from " ~ Name;
+
+            column_index = 0;
+
+            foreach ( column; ColumnArray )
+            {
+                if ( column.IsAscending
+                     || column.IsDescending )
+                {
+                    if ( column_index == 0 )
+                    {
+                        phoenix_code
+                            ~= " order by ";
+                    }
+                    else
+                    {
+                        phoenix_code
+                            ~= ", ";
+                    }
+
+                    phoenix_code
+                        ~= column.StoredName;
+
+                    if ( column.IsAscending )
+                    {
+                        phoenix_code
+                            ~= " asc";
+                    }
+                    else
+                    {
+                        phoenix_code
+                            ~= " desc";
+                    }
+
+                    ++column_index;
+                }
+            }
+
+            phoenix_code
+                ~= "' );\n"
                    ~ "    statement.execute();\n"
                    ~ "\n"
                    ~ "    return GetDatabaseObjectArray( statement );\n";
