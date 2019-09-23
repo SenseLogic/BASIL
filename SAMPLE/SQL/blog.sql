@@ -4,7 +4,7 @@ set @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='TRADITIONAL,ALLOW_INVALID_DATES';
 
 drop schema if exists `BLOG`;
 
-create schema if not exists `BLOG` default character set utf8 collate utf8_general_ci;
+create schema if not exists `BLOG` default character set utf8mb4 collate utf8mb4_general_ci;
 
 use `BLOG`;
 

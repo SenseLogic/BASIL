@@ -7165,7 +7165,7 @@ class SCHEMA
               ~ "set @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;\n"
               ~ "set @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='TRADITIONAL,ALLOW_INVALID_DATES';\n\n"
               ~ "drop schema if exists `" ~ Name ~ "`;\n\n"
-              ~ "create schema if not exists `" ~ Name ~ "` default character set utf8 collate utf8_general_ci;\n\n"
+              ~ "create schema if not exists `" ~ Name ~ "` default character set utf8mb4 collate utf8mb4_general_ci;\n\n"
               ~ "use `" ~ Name ~ "`;\n\n";
 
         foreach ( table; TableArray )
