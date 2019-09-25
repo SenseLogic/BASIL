@@ -1,0 +1,106 @@
+// -- FUNCTIONS
+
+function GetDatabaseSubscriberArray(
+    )
+{
+    var statement = GetDatabaseStatement( 'select Id, Name, Email from SUBSCRIBER' );
+
+    if ( !statement.execute() )
+    {
+        var_dump( statement.errorInfo() );
+    }
+
+    return GetDatabaseObjectArray( statement );
+}
+
+// ~~
+
+function GetDatabaseSubscriberMap(
+    )
+{
+    var statement = GetDatabaseStatement( 'select Id, Name, Email from SUBSCRIBER' );
+
+    if ( !statement.execute() )
+    {
+        var_dump( statement.errorInfo() );
+    }
+
+    var subscriber_map = [];
+
+    while ( var subscriber = statement.fetchObject() )
+    {
+        subscriber[ subscriber.Id ] = subscriber;
+    }
+
+    return subscriber_map;
+}
+
+// ~~
+
+function GetDatabaseSubscriber(
+    int id
+    )
+{
+    var statement = GetDatabaseStatement( 'select Id, Name, Email from SUBSCRIBER where Id = ?' );
+    statement.bindParam( 1, id, PDO::PARAM_INT );
+
+    if ( !statement.execute() )
+    {
+        var_dump( statement.errorInfo() );
+    }
+
+    return GetDatabaseObject( statement );
+}
+
+// ~~
+
+function AddDatabaseSubscriber(
+    string name,
+    string email
+    )
+{
+    var statement = GetDatabaseStatement( 'insert into SUBSCRIBER ( Name, Email ) values ( ?, ? )' );
+    statement.bindParam( 1, name, PDO::PARAM_STR );
+    statement.bindParam( 2, email, PDO::PARAM_STR );
+
+    if ( !statement.execute() )
+    {
+        var_dump( statement.errorInfo() );
+    }
+
+    return GetDatabaseAddedId( statement );
+}
+
+// ~~
+
+function SetDatabaseSubscriber(
+    int id,
+    string name,
+    string email
+    )
+{
+    var statement = GetDatabaseStatement( 'update SUBSCRIBER set Name = ?, Email = ? where Id = ?' );
+    statement.bindParam( 1, name, PDO::PARAM_STR );
+    statement.bindParam( 2, email, PDO::PARAM_STR );
+    statement.bindParam( 3, id, PDO::PARAM_INT );
+
+    if ( !statement.execute() )
+    {
+        var_dump( statement.errorInfo() );
+    }
+}
+
+// ~~
+
+function RemoveDatabaseSubscriber(
+    int id
+    )
+{
+    var statement = GetDatabaseStatement( 'delete from SUBSCRIBER where Id = ?' );
+    statement.bindParam( 1, id, PDO::PARAM_INT );
+
+    if ( !statement.execute() )
+    {
+        var_dump( statement.errorInfo() );
+    }
+}

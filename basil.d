@@ -4571,7 +4571,8 @@ class TABLE
 
         foreach ( column; ColumnArray )
         {
-            if ( column.IsKey
+            if ( column.IsStored
+                 && column.IsKey
                  && column.IsUnique
                  && column.StoredType == "uuid" )
             {
@@ -4688,7 +4689,8 @@ class TABLE
 
             foreach ( column; ColumnArray )
             {
-                if ( column.IsKey
+                if ( column.IsStored
+                     && column.IsKey
                      && column.IsIncremented )
                 {
                     generis_code
@@ -5950,7 +5952,11 @@ class TABLE
             }
 
             phoenix_code
-                ~= "    statement.execute();\n"
+                ~= "\n"
+                   ~ "    if ( !statement.execute() )\n"
+                   ~ "    {\n"
+                   ~ "        var_dump( statement.errorInfo() );\n"
+                   ~ "    }\n"
                    ~ "\n"
                    ~ "    return GetDatabaseAddedId( statement );\n";
         }
@@ -6079,7 +6085,11 @@ class TABLE
             }
 
             phoenix_code
-                ~= "    statement.execute();\n";
+                ~= "\n"
+                   ~ "    if ( !statement.execute() )\n"
+                   ~ "    {\n"
+                   ~ "        var_dump( statement.errorInfo() );\n"
+                   ~ "    }\n";
         }
 
         phoenix_code
@@ -6170,7 +6180,11 @@ class TABLE
             }
 
             phoenix_code
-                ~= "    statement.execute();\n";
+                ~= "\n"
+                   ~ "    if ( !statement.execute() )\n"
+                   ~ "    {\n"
+                   ~ "        var_dump( statement.errorInfo() );\n"
+                   ~ "    }\n";
         }
 
         phoenix_code
@@ -6279,7 +6293,11 @@ class TABLE
             }
 
             phoenix_code
-                ~= "    statement.execute();\n"
+                ~= "\n"
+                   ~ "    if ( !statement.execute() )\n"
+                   ~ "    {\n"
+                   ~ "        var_dump( statement.errorInfo() );\n"
+                   ~ "    }\n"
                    ~ "\n"
                    ~ "    return GetDatabaseObject( statement );\n";
         }
@@ -6366,9 +6384,89 @@ class TABLE
 
             phoenix_code
                 ~= "' );\n"
-                   ~ "    statement.execute();\n"
+                   ~ "\n"
+                   ~ "    if ( !statement.execute() )\n"
+                   ~ "    {\n"
+                   ~ "        var_dump( statement.errorInfo() );\n"
+                   ~ "    }\n"
                    ~ "\n"
                    ~ "    return GetDatabaseObjectArray( statement );\n";
+        }
+
+        phoenix_code
+            ~= "}\n";
+
+        return phoenix_code;
+    }
+
+    // ~~
+
+    string GetGetDatabaseMapPhoenixCode(
+        )
+    {
+        string
+            phoenix_code;
+
+        phoenix_code
+            = "function GetDatabase" ~ PhpAttribute ~ "Map(\n"
+              ~ "    )\n"
+              ~ "{\n";
+
+        if ( SqlOptionIsEnabled )
+        {
+            phoenix_code
+                ~= "    var statement = GetDatabaseStatement( 'select ";
+
+            foreach ( column; ColumnArray )
+            {
+                if ( column.IsStored )
+                {
+                    phoenix_code
+                        ~= column.StoredName;
+
+                    if ( !column.IsLastStored )
+                    {
+                        phoenix_code
+                            ~= ", ";
+                    }
+                }
+            }
+
+            phoenix_code
+                ~= " from " ~ Name ~ "' );\n"
+                   ~ "\n"
+                   ~ "    if ( !statement.execute() )\n"
+                   ~ "    {\n"
+                   ~ "        var_dump( statement.errorInfo() );\n"
+                   ~ "    }\n"
+                   ~ "\n"
+                   ~ "    var " ~ PhpVariable ~ "_map = [];\n"
+                   ~ "\n"
+                   ~ "    while ( var " ~ PhpVariable ~ " = statement.fetchObject() )\n"
+                   ~ "    {\n"
+                   ~ "        " ~ PhpVariable ~ "[ ";
+
+            foreach ( column; ColumnArray )
+            {
+                if ( column.IsStored
+                     && column.IsKey )
+                {
+                    phoenix_code
+                        ~= PhpVariable ~ "." ~ column.PhpName;
+
+                    if ( !column.IsLastKey )
+                    {
+                        phoenix_code
+                            ~= " .. ";
+                    }
+                }
+            }
+
+            phoenix_code
+                ~= " ] = " ~ PhpVariable ~ ";\n"
+                   ~ "    }\n"
+                   ~ "\n"
+                   ~ "    return " ~ PhpVariable ~ "_map;\n";
         }
 
         phoenix_code
@@ -7879,6 +7977,8 @@ class SCHEMA
                 phoenix_model_file_text
                     = "// -- FUNCTIONS\n\n"
                       ~ table.GetGetDatabaseArrayPhoenixCode()
+                      ~ "\n// ~~\n\n"
+                      ~ table.GetGetDatabaseMapPhoenixCode()
                       ~ "\n// ~~\n\n"
                       ~ table.GetGetDatabasePhoenixCode()
                       ~ "\n// ~~\n\n"
