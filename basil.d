@@ -6408,9 +6408,28 @@ class TABLE
             phoenix_code;
 
         phoenix_code
-            = "function GetDatabase" ~ PhpAttribute ~ "Map(\n"
-              ~ "    )\n"
-              ~ "{\n";
+            = "function GetDatabase" ~ PhpAttribute ~ "By";
+
+        foreach ( column; ColumnArray )
+        {
+            if ( column.IsStored
+                 && column.IsKey )
+            {
+                phoenix_code
+                    ~= column.PhpName;
+
+                if ( !column.IsLastKey )
+                {
+                    phoenix_code
+                        ~= "And";
+                }
+            }
+        }
+
+        phoenix_code
+            ~= "Map(\n"
+               ~ "    )\n"
+               ~ "{\n";
 
         if ( SqlOptionIsEnabled )
         {
@@ -6444,7 +6463,7 @@ class TABLE
                    ~ "\n"
                    ~ "    while ( var " ~ PhpVariable ~ " = statement.fetchObject() )\n"
                    ~ "    {\n"
-                   ~ "        " ~ PhpVariable ~ "[ ";
+                   ~ "        " ~ PhpVariable ~ "_map[ ";
 
             foreach ( column; ColumnArray )
             {
@@ -7369,7 +7388,7 @@ class SCHEMA
                ~ "set FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;\n"
                ~ "set UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;\n";
 
-        sql_schema_file_path.WriteText( sql_schema_file_text );
+        sql_schema_file_path.WriteText( sql_schema_file_text.GetFilteredScript( ExcludedCommandArray ) );
     }
 
     // ~~
@@ -7533,7 +7552,7 @@ class SCHEMA
             }
         }
 
-        cql_schema_file_path.WriteText( cql_schema_file_text );
+        cql_schema_file_path.WriteText( cql_schema_file_text.GetFilteredScript( ExcludedCommandArray ) );
     }
 
     // ~~
@@ -8313,6 +8332,8 @@ string
     DatabaseFormat;
 string[]
     OutputFormatArray;
+string[]
+    ExcludedCommandArray;
 RANDOM
     Random;
 SCHEMA
@@ -8607,6 +8628,53 @@ string GetVariableText(
     )
 {
     return text.GetSnakeCaseText();
+}
+
+// ~~
+
+bool HasCommand(
+    string line,
+    string[] command_array
+    )
+{
+    foreach ( command; command_array )
+    {
+        if ( line.startsWith( command ) )
+        {
+            return true;
+        }
+    }
+
+    return false;
+}
+
+// ~~
+
+string GetFilteredScript(
+    string script,
+    string[] excluded_command_array
+    )
+{
+    string[]
+        filtered_line_array,
+        line_array;
+
+    line_array = script.split( '\n' );
+
+    foreach ( line; line_array )
+    {
+        if ( !line.HasCommand( excluded_command_array ) )
+        {
+            filtered_line_array ~= line;
+        }
+        else if ( filtered_line_array.length > 0
+                  && filtered_line_array[ $ - 1 ] == "" )
+        {
+            --filtered_line_array.length;
+        }
+    }
+
+    return filtered_line_array.join( '\n' );
 }
 
 // ~~
@@ -9197,6 +9265,13 @@ void main(
         {
             OutputFormatArray ~= "javascript";
         }
+        else if ( option == "--exclude_command"
+                  && argument_array.length >= 1 )
+        {
+            ExcludedCommandArray ~= argument_array[ 0 ] ~ ' ';
+
+            argument_array = argument_array[ 1 .. $ ];
+        }
         else
         {
             Abort( "Invalid option : " ~ option );
@@ -9223,6 +9298,7 @@ void main(
         writeln( "    --rust" );
         writeln( "    --javascript" );
         writeln( "    --template {template_file_path}" );
+        writeln( "    --exclude_command {command_name}" );
         writeln( "Examples :" );
         writeln( "    basil --uml script_file.bs" );
         writeln( "    basil --uml --sql --go script_file.bs" );
