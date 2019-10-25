@@ -16,8 +16,9 @@ Database designer and filler.
 *   Instantiates database access code for the following languages :
     *   Generis (types, routes, requests, queries, responses)
     *   Phoenix (queries)
+    *   Cibyl (types)
+    *   Crystal (types)
     *   C# (types)
-    *   Crystal / Cibyl (types)
     *   Rust (types)
 
 ## Sample SQL schema file
@@ -259,6 +260,7 @@ count <i>row_count</i>
 [!]static
 [!]required
 [!]incremented
+now
 capacity <i>maximum_character_count</i>
 sqlname <i>sql_column_name</i>
 cqlname <i>cql_column_name</i>

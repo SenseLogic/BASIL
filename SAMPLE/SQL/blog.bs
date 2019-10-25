@@ -35,7 +35,7 @@ BLOG | count 5
         Title : STRING
         Text : STRING
         Image : STRING | capacity 45
-        Date : DATE
+        Date : DATE | now
 
         Section : POINTER[ SECTION ] | !stored
         User : POINTER[ USER ] | !stored
@@ -47,7 +47,7 @@ BLOG | count 5
         ArticleId : ARTICLE.Id | indexed
         UserId : USER.Id | indexed
         Text : STRING | english 2 4 5 7
-        DateTime : DATETIME
+        DateTime : DATETIME | now
 
         Article : POINTER[ ARTICLE ] | !stored
         User : POINTER[ USER ] | !stored

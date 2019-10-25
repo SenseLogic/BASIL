@@ -123,7 +123,7 @@ func GetDatabaseSection(
 {
     statement, error_
         := DatabaseSession.Prepare(
-               "select Number, Name, Text, Image,  from SECTION where Id = ?"
+               "select Number, Name, Text, Image,  from SECTION where Id = ? limit 1"
                );
 
     if ( error_ != nil )
@@ -375,7 +375,7 @@ func GetDatabaseUser(
 {
     statement, error_
         := DatabaseSession.Prepare(
-               "select FirstName, LastName, Email, Pseudonym, Password, Phone, Street, City, Code, Region, Country, Company, ItIsAdministrator from USER where Id = ?"
+               "select FirstName, LastName, Email, Pseudonym, Password, Phone, Street, City, Code, Region, Country, Company, ItIsAdministrator from USER where Id = ? limit 1"
                );
 
     if ( error_ != nil )
@@ -509,7 +509,7 @@ func AddDatabaseArticle(
 {
     statement, error_
         := DatabaseSession.Prepare(
-               "insert into ARTICLE ( SectionId, UserId, Title, Text, Image, Date ) values ( ?, ?, ?, ?, ?, ? )"
+               "insert into ARTICLE ( SectionId, UserId, Title, Text, Image, Date ) values ( ?, ?, ?, ?, ?, date( now() ) )"
                );
 
     if ( error_ != nil )
@@ -525,8 +525,7 @@ func AddDatabaseArticle(
                article.UserId,
                article.Title,
                article.Text,
-               article.Image,
-               article.Date
+               article.Image
                );
 
     if ( error_ != nil )
@@ -631,7 +630,7 @@ func GetDatabaseArticle(
 {
     statement, error_
         := DatabaseSession.Prepare(
-               "select SectionId, UserId, Title, Text, Image, Date,  from ARTICLE where Id = ?"
+               "select SectionId, UserId, Title, Text, Image, Date,  from ARTICLE where Id = ? limit 1"
                );
 
     if ( error_ != nil )
@@ -751,7 +750,7 @@ func AddDatabaseComment(
 {
     statement, error_
         := DatabaseSession.Prepare(
-               "insert into COMMENT ( ArticleId, UserId, Text, DateTime ) values ( ?, ?, ?, ? )"
+               "insert into COMMENT ( ArticleId, UserId, Text, DateTime ) values ( ?, ?, ?, now() )"
                );
 
     if ( error_ != nil )
@@ -765,8 +764,7 @@ func AddDatabaseComment(
         := statement.Exec(
                comment.ArticleId,
                comment.UserId,
-               comment.Text,
-               comment.DateTime
+               comment.Text
                );
 
     if ( error_ != nil )
@@ -869,7 +867,7 @@ func GetDatabaseComment(
 {
     statement, error_
         := DatabaseSession.Prepare(
-               "select ArticleId, UserId, Text, DateTime,  from COMMENT where Id = ?"
+               "select ArticleId, UserId, Text, DateTime,  from COMMENT where Id = ? limit 1"
                );
 
     if ( error_ != nil )
@@ -1099,7 +1097,7 @@ func GetDatabaseSubscriber(
 {
     statement, error_
         := DatabaseSession.Prepare(
-               "select Name, Email from SUBSCRIBER where Id = ?"
+               "select Name, Email from SUBSCRIBER where Id = ? limit 1"
                );
 
     if ( error_ != nil )

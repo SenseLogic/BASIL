@@ -3848,6 +3848,7 @@ class COLUMN
         IsIncremented,
         IsLastIncremented,
         IsLastNotIncremented,
+        IsNow,
         IsForeign,
         IsProcessed;
     long
@@ -3932,6 +3933,22 @@ class COLUMN
     }
 
     // -- INQUIRIES
+
+    bool IsDate(
+        )
+    {
+        return Type.ActualType.BaseName == "DATE";
+    }
+
+    // ~~
+
+    bool IsDateTime(
+        )
+    {
+        return Type.ActualType.BaseName == "DATETIME";
+    }
+
+    // ~~
 
     bool HasPriorValue(
         VALUE value,
@@ -4093,6 +4110,10 @@ class COLUMN
                 else if ( property_name == "incremented" )
                 {
                     IsIncremented = ( value_text_array[ 1 ] != "0" );
+                }
+                else if ( property_name == "now" )
+                {
+                    IsNow = ( value_text_array[ 1 ] != "0" );
                 }
                 else if ( property_name == "capacity" )
                 {
@@ -4632,8 +4653,24 @@ class TABLE
                             ~= ", ";
                     }
 
-                    generis_code
-                        ~= "?";
+                    if ( column.IsNow )
+                    {
+                        if ( column.IsDate() )
+                        {
+                            generis_code
+                                ~= "date( now() )";
+                        }
+                        else
+                        {
+                            generis_code
+                                ~= "now()";
+                        }
+                    }
+                    else
+                    {
+                        generis_code
+                            ~= "?";
+                    }
 
                     ++column_count;
                 }
@@ -4653,12 +4690,25 @@ class TABLE
                    ~ "    result, error_\n"
                    ~ "        := statement.Exec(\n";
 
+            column_count = 0;
+
+            foreach ( column; ColumnArray )
+            {
+                if ( column.IsStored
+                     && !column.IsIncremented
+                     && !column.IsNow )
+                {
+                    ++column_count;
+                }
+            }
+
             column_index = 0;
 
             foreach ( column; ColumnArray )
             {
                 if ( column.IsStored
-                     && !column.IsIncremented )
+                     && !column.IsIncremented
+                     && !column.IsNow )
                 {
                     generis_code
                         ~= "               " ~ GoVariable ~ "." ~ column.GoName;
@@ -5185,7 +5235,7 @@ class TABLE
             }
 
             generis_code
-                ~= "\"\n"
+                ~= " limit 1\"\n"
                    ~ "               );\n"
                    ~ "\n"
                    ~ "    if ( error_ != nil )\n"
@@ -5861,7 +5911,8 @@ class TABLE
         foreach ( column; ColumnArray )
         {
             if ( column.IsStored
-                 && !column.IsIncremented )
+                 && !column.IsIncremented
+                 && !column.IsNow )
             {
                 if ( column_count > 0 )
                 {
@@ -5921,8 +5972,24 @@ class TABLE
                             ~= ", ";
                     }
 
-                    phoenix_code
-                        ~= "?";
+                    if ( column.IsNow )
+                    {
+                        if ( column.IsDate() )
+                        {
+                            phoenix_code
+                                ~= "date( now() )";
+                        }
+                        else
+                        {
+                            phoenix_code
+                                ~= "now()";
+                        }
+                    }
+                    else
+                    {
+                        phoenix_code
+                            ~= "?";
+                    }
 
                     ++column_count;
                 }
@@ -5936,7 +6003,8 @@ class TABLE
             foreach ( column; ColumnArray )
             {
                 if ( column.IsStored
-                     && !column.IsIncremented )
+                     && !column.IsIncremented
+                     && !column.IsNow )
                 {
                     phoenix_code
                         ~= "    statement.bindParam( "
@@ -6270,7 +6338,7 @@ class TABLE
             }
 
             phoenix_code
-                ~= "' );\n";
+                ~= " limit 1' );\n";
 
             column_index = 0;
 

@@ -15,7 +15,7 @@ function GetDatabaseSectionArray(
 
 // ~~
 
-function GetDatabaseSectionMap(
+function GetDatabaseSectionByIdMap(
     )
 {
     var statement = GetDatabaseStatement( 'select Id, Number, Name, Text, Image from SECTION' );
@@ -29,7 +29,7 @@ function GetDatabaseSectionMap(
 
     while ( var section = statement.fetchObject() )
     {
-        section[ section.Id ] = section;
+        section_map[ section.Id ] = section;
     }
 
     return section_map;
@@ -41,7 +41,7 @@ function GetDatabaseSection(
     int id
     )
 {
-    var statement = GetDatabaseStatement( 'select Id, Number, Name, Text, Image from SECTION where Id = ?' );
+    var statement = GetDatabaseStatement( 'select Id, Number, Name, Text, Image from SECTION where Id = ? limit 1' );
     statement.bindParam( 1, id, PDO::PARAM_INT );
 
     if ( !statement.execute() )

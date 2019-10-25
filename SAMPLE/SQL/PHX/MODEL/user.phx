@@ -15,7 +15,7 @@ function GetDatabaseUserArray(
 
 // ~~
 
-function GetDatabaseUserMap(
+function GetDatabaseUserByIdMap(
     )
 {
     var statement = GetDatabaseStatement( 'select Id, FirstName, LastName, Email, Pseudonym, Password, Phone, Street, City, Code, Region, Country, Company, ItIsAdministrator from USER' );
@@ -29,7 +29,7 @@ function GetDatabaseUserMap(
 
     while ( var user = statement.fetchObject() )
     {
-        user[ user.Id ] = user;
+        user_map[ user.Id ] = user;
     }
 
     return user_map;
@@ -41,7 +41,7 @@ function GetDatabaseUser(
     int id
     )
 {
-    var statement = GetDatabaseStatement( 'select Id, FirstName, LastName, Email, Pseudonym, Password, Phone, Street, City, Code, Region, Country, Company, ItIsAdministrator from USER where Id = ?' );
+    var statement = GetDatabaseStatement( 'select Id, FirstName, LastName, Email, Pseudonym, Password, Phone, Street, City, Code, Region, Country, Company, ItIsAdministrator from USER where Id = ? limit 1' );
     statement.bindParam( 1, id, PDO::PARAM_INT );
 
     if ( !statement.execute() )
