@@ -1053,6 +1053,8 @@ class TYPE
         ColumnName,
         Name,
         BaseName;
+    long
+        Capacity;
     TYPE
         ActualType;
     TYPE[]
@@ -1225,22 +1227,26 @@ class TYPE
         }
         else if ( type_name == "STRING" )
         {
-            if ( Column.Capacity != 0 )
+            if ( ActualType.Capacity != 0 )
             {
-                return "VARCHAR( " ~ Column.Capacity.to!string() ~ " )";
+                return "VARCHAR( " ~ ActualType.Capacity.to!string() ~ " )";
             }
             else
             {
                 return "TEXT";
             }
         }
+        else if ( type_name == "DATETIME" )
+        {
+            return "DATETIME";
+        }
         else if ( type_name == "DATE" )
         {
             return "DATE";
         }
-        else if ( type_name == "DATETIME" )
+        else if ( type_name == "TIME" )
         {
-            return "DATETIME";
+            return "TIME";
         }
         else if ( type_name == "UUID" )
         {
@@ -1353,11 +1359,9 @@ class TYPE
         {
             return "text";
         }
-        else if ( type_name == "DATE" )
-        {
-            return "timestamp";
-        }
-        else if ( type_name == "DATETIME" )
+        else if ( type_name == "DATETIME"
+                  || type_name == "DATE"
+                  || type_name == "TIME" )
         {
             return "timestamp";
         }
@@ -1470,11 +1474,9 @@ class TYPE
         {
             return "string";
         }
-        else if ( type_name == "DATE" )
-        {
-            return "time.Time";
-        }
-        else if ( type_name == "DATETIME" )
+        else if ( type_name == "DATETIME"
+                  || type_name == "DATE"
+                  || type_name == "TIME" )
         {
             return "time.Time";
         }
@@ -1590,11 +1592,9 @@ class TYPE
         {
             return "String";
         }
-        else if ( type_name == "DATE" )
-        {
-            return "DateTime";
-        }
-        else if ( type_name == "DATETIME" )
+        else if ( type_name == "DATETIME"
+                  || type_name == "DATE"
+                  || type_name == "TIME" )
         {
             return "DateTime";
         }
@@ -1667,8 +1667,9 @@ class TYPE
             return "float";
         }
         else if ( type_name == "STRING"
-                  || type_name == "DATE"
                   || type_name == "DATETIME"
+                  || type_name == "DATE"
+                  || type_name == "TIME"
                   || type_name == "UUID"
                   || type_name == "BLOB"
                   || type_name == "POINTER" )
@@ -1794,11 +1795,9 @@ class TYPE
         {
             return "String";
         }
-        else if ( type_name == "DATE" )
-        {
-            return "DateTime";
-        }
-        else if ( type_name == "DATETIME" )
+        else if ( type_name == "DATETIME"
+                  || type_name == "DATE"
+                  || type_name == "TIME" )
         {
             return "DateTime";
         }
@@ -1915,23 +1914,12 @@ class TYPE
         {
             return "Float64";
         }
-        else if ( type_name == "STRING" )
-        {
-            return "String";
-        }
-        else if ( type_name == "DATE" )
-        {
-            return "String";
-        }
-        else if ( type_name == "DATETIME" )
-        {
-            return "String";
-        }
-        else if ( type_name == "UUID" )
-        {
-            return "String";
-        }
-        else if ( type_name == "BLOB" )
+        else if ( type_name == "STRING"
+                  || type_name == "DATETIME"
+                  || type_name == "DATE"
+                  || type_name == "TIME"
+                  || type_name == "UUID"
+                  || type_name == "BLOB" )
         {
             return "String";
         }
@@ -2044,11 +2032,9 @@ class TYPE
         {
             return "String";
         }
-        else if ( type_name == "DATE" )
-        {
-            return "DateTime";
-        }
-        else if ( type_name == "DATETIME" )
+        else if ( type_name == "DATETIME"
+                  || type_name == "DATE"
+                  || type_name == "TIME" )
         {
             return "DateTime";
         }
@@ -2164,11 +2150,9 @@ class TYPE
         {
             return "String";
         }
-        else if ( type_name == "DATE" )
-        {
-            return "DateTime";
-        }
-        else if ( type_name == "DATETIME" )
+        else if ( type_name == "DATETIME"
+                  || type_name == "DATE"
+                  || type_name == "TIME" )
         {
             return "DateTime";
         }
@@ -2285,23 +2269,12 @@ class TYPE
         {
             return "f64";
         }
-        else if ( type_name == "STRING" )
-        {
-            return "String";
-        }
-        else if ( type_name == "DATE" )
-        {
-            return "String";
-        }
-        else if ( type_name == "DATETIME" )
-        {
-            return "String";
-        }
-        else if ( type_name == "UUID" )
-        {
-            return "String";
-        }
-        else if ( type_name == "BLOB" )
+        else if ( type_name == "STRING"
+                  || type_name == "DATETIME"
+                  || type_name == "DATE"
+                  || type_name == "TIME"
+                  || type_name == "UUID"
+                  || type_name == "BLOB" )
         {
             return "String";
         }
@@ -2994,8 +2967,9 @@ class VALUE
         {
             cql_text = Text;
         }
-        else if ( type_name == "DATE"
-                  || type_name == "DATETIME" )
+        else if ( type_name == "DATETIME"
+                  || type_name == "DATE"
+                  || type_name == "TIME" )
         {
             cql_text = "'" ~ Text ~ "'";
         }
@@ -3107,8 +3081,9 @@ class VALUE
         {
             json_text = Text;
         }
-        else if ( type_name == "DATE"
-                  || type_name == "DATETIME"
+        else if ( type_name == "DATETIME"
+                  || type_name == "DATE"
+                  || type_name == "TIME"
                   || type_name == "UUID"
                   || type_name == "BLOB" )
         {
@@ -3720,13 +3695,17 @@ class VALUE
             {
                 Text = ( Random.MakeInteger( 1000, 9999 ) / 100.0 ).to!string();
             }
+            else if ( Type.BaseName == "DATETIME" )
+            {
+                Text = Random.MakeDate() ~ " " ~ Random.MakeTime();
+            }
             else if ( Type.BaseName == "DATE" )
             {
                 Text = Random.MakeDate();
             }
-            else if ( Type.BaseName == "DATETIME" )
+            else if ( Type.BaseName == "TIME" )
             {
-                Text = Random.MakeDate() ~ " " ~ Random.MakeTime();
+                Text = Random.MakeTime();
             }
             else if ( Type.BaseName == "UUID" )
             {
@@ -3851,8 +3830,6 @@ class COLUMN
         IsNow,
         IsForeign,
         IsProcessed;
-    long
-        Capacity;
     bool
         IsRandomReal;
     double
@@ -3934,6 +3911,14 @@ class COLUMN
 
     // -- INQUIRIES
 
+    bool IsDateTime(
+        )
+    {
+        return Type.ActualType.BaseName == "DATETIME";
+    }
+
+    // ~~
+
     bool IsDate(
         )
     {
@@ -3942,10 +3927,10 @@ class COLUMN
 
     // ~~
 
-    bool IsDateTime(
+    bool IsTime(
         )
     {
-        return Type.ActualType.BaseName == "DATETIME";
+        return Type.ActualType.BaseName == "TIME";
     }
 
     // ~~
@@ -4067,7 +4052,11 @@ class COLUMN
 
             if ( value_text_array.length == 2 )
             {
-                if ( property_name == "stored" )
+                if ( property_name == "capacity" )
+                {
+                    Type.Capacity = value_text_array[ 1 ].to!long();
+                }
+                else if ( property_name == "stored" )
                 {
                     IsStored = ( value_text_array[ 1 ] != "0" );
                 }
@@ -4114,10 +4103,6 @@ class COLUMN
                 else if ( property_name == "now" )
                 {
                     IsNow = ( value_text_array[ 1 ] != "0" );
-                }
-                else if ( property_name == "capacity" )
-                {
-                    Capacity = value_text_array[ 1 ].to!long();
                 }
                 else if ( property_name == "sqlname" )
                 {
