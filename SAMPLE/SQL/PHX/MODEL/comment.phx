@@ -3,7 +3,7 @@
 function GetDatabaseCommentArray(
     )
 {
-    var statement = GetDatabaseStatement( 'select Id, ArticleId, UserId, Text, DateTime from COMMENT' );
+    var statement = GetDatabaseStatement( 'select Id, ArticleId, UserId, Text, DateTime from COMMENT order by DateTime desc' );
 
     if ( !statement.execute() )
     {
@@ -15,29 +15,7 @@ function GetDatabaseCommentArray(
 
 // ~~
 
-function GetDatabaseCommentByIdMap(
-    )
-{
-    var statement = GetDatabaseStatement( 'select Id, ArticleId, UserId, Text, DateTime from COMMENT' );
-
-    if ( !statement.execute() )
-    {
-        var_dump( statement.errorInfo() );
-    }
-
-    var comment_map = [];
-
-    while ( var comment = statement.fetchObject() )
-    {
-        comment_map[ comment.Id ] = comment;
-    }
-
-    return comment_map;
-}
-
-// ~~
-
-function GetDatabaseComment(
+function GetDatabaseCommentById(
     int id
     )
 {
@@ -98,7 +76,7 @@ function SetDatabaseComment(
 
 // ~~
 
-function RemoveDatabaseComment(
+function RemoveDatabaseCommentById(
     int id
     )
 {

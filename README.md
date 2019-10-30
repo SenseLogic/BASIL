@@ -28,42 +28,61 @@ BLOG | count 5
 
     SECTION
 
-        Id : UINT32 | key, unique, incremented
-        Number : UINT32 | indexed, ascending
+        Id : UINT64 | key, unique, incremented
+        Number : UINT64
         Name : STRING | capacity 45
         Text : STRING
         Image : STRING | capacity 45
 
+        ImageIndex : UINT64 | !stored
+
     USER
 
-        Id : UINT32 | key, unique, incremented
-        Email : STRING | capacity 45, indexed, ascending
+        Id : UINT64 | key, unique, incremented
+        FirstName : STRING | capacity 45
+        LastName : STRING | capacity 45
+        Email : STRING | capacity 45, mapped
         Pseudonym : STRING | capacity 45
         Password : STRING | capacity 45
+        Phone : STRING | capacity 45
+        Street : STRING
+        City : STRING | capacity 45
+        Code : STRING | capacity 45
+        Region : STRING | capacity 45
+        Country : STRING | capacity 45
+        Company : STRING | capacity 45
         ItIsAdministrator : BOOL
 
     ARTICLE | count 15
 
-        Id : UINT32 | key, unique, incremented
-        SectionId : SECTION.Id
-        UserId : USER.Id
+        Id : UINT64 | key, unique, incremented
+        SectionId : SECTION.Id | indexed, ascending 2
+        UserId : USER.Id | indexed, ascending 1
         Title : STRING
         Text : STRING
         Image : STRING | capacity 45
-        Date : DATE | indexed, descending
+        Date : DATE | now
 
-    COMMENT | count 30
+        Section : POINTER[ SECTION ] | !stored
+        User : POINTER[ USER ] | !stored
+        ImageIndex : UINT64 | !stored
 
-        Id : UINT32 | key, unique, incremented
-        ArticleId : ARTICLE.Id
-        UserId : USER.Id
+    COMMENT | count 30, sorted
+
+        Id : UINT64 | key, unique, incremented
+        ArticleId : ARTICLE.Id | indexed
+        UserId : USER.Id | indexed
         Text : STRING | english 2 4 5 7
-        DateTime : DATETIME | indexed, descending
+        DateTime : DATETIME | now, descending
+
+        Article : POINTER[ ARTICLE ] | !stored
+        User : POINTER[ USER ] | !stored
 
     SUBSCRIBER
 
-        Id : UINT32 | key, unique, incremented
-        Email : STRING | capacity 45, indexed, ascending
+        Id : UINT64 | key, unique, incremented
+        Name : STRING | capacity 45
+        Email : STRING | capacity 45
 ```
 
 ![](https://github.com/senselogic/BASIL/blob/master/SAMPLE/SQL/blog.png)
@@ -244,6 +263,8 @@ count <i>row_count</i>
 ### Table properties
 
 <pre>
+stored
+sorted
 count <i>row_count</i>
 </pre>
 
@@ -255,11 +276,12 @@ count <i>row_count</i>
 [!]partitioned
 [!]clustered
 [!]indexed
-[!]ascending
-[!]descending
+[!]mapped
 [!]static
 [!]required
 [!]incremented
+ascending [<i>order index</i>]
+descending [<i>order index</i>]
 now
 capacity <i>maximum_character_count</i>
 sqlname <i>sql_column_name</i>

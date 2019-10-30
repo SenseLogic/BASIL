@@ -15,7 +15,7 @@ BLOG | count 5
         Id : UINT64 | key, unique, incremented
         FirstName : STRING | capacity 45
         LastName : STRING | capacity 45
-        Email : STRING | capacity 45
+        Email : STRING | capacity 45, mapped
         Pseudonym : STRING | capacity 45
         Password : STRING | capacity 45
         Phone : STRING | capacity 45
@@ -30,8 +30,8 @@ BLOG | count 5
     ARTICLE | count 15
 
         Id : UINT64 | key, unique, incremented
-        SectionId : SECTION.Id | indexed
-        UserId : USER.Id | indexed
+        SectionId : SECTION.Id | indexed, ascending 2
+        UserId : USER.Id | indexed, ascending 1
         Title : STRING
         Text : STRING
         Image : STRING | capacity 45
@@ -41,13 +41,13 @@ BLOG | count 5
         User : POINTER[ USER ] | !stored
         ImageIndex : UINT64 | !stored
 
-    COMMENT | count 30
+    COMMENT | count 30, sorted
 
         Id : UINT64 | key, unique, incremented
         ArticleId : ARTICLE.Id | indexed
         UserId : USER.Id | indexed
         Text : STRING | english 2 4 5 7
-        DateTime : DATETIME | now
+        DateTime : DATETIME | now, descending
 
         Article : POINTER[ ARTICLE ] | !stored
         User : POINTER[ USER ] | !stored

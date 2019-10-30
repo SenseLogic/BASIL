@@ -3808,6 +3808,9 @@ class COLUMN
         Name;
     TYPE
         Type;
+    long
+        Index,
+        OrderIndex;
     bool
         IsLast,
         IsStored,
@@ -3820,13 +3823,14 @@ class COLUMN
         IsPartitioned,
         IsClustered,
         IsIndexed,
-        IsAscending,
-        IsDescending,
+        IsMapped,
         IsStatic,
         IsRequired,
         IsIncremented,
         IsLastIncremented,
         IsLastNotIncremented,
+        IsAscending,
+        IsDescending,
         IsNow,
         IsForeign,
         IsProcessed;
@@ -4080,13 +4084,9 @@ class COLUMN
                 {
                     IsIndexed = ( value_text_array[ 1 ] != "0" );
                 }
-                else if ( property_name == "ascending" )
+                else if ( property_name == "mapped" )
                 {
-                    IsAscending = ( value_text_array[ 1 ] != "0" );
-                }
-                else if ( property_name == "descending" )
-                {
-                    IsDescending = ( value_text_array[ 1 ] != "0" );
+                    IsMapped = ( value_text_array[ 1 ] != "0" );
                 }
                 else if ( property_name == "static" )
                 {
@@ -4099,6 +4099,32 @@ class COLUMN
                 else if ( property_name == "incremented" )
                 {
                     IsIncremented = ( value_text_array[ 1 ] != "0" );
+                }
+                else if ( property_name == "ascending" )
+                {
+                    IsAscending = ( value_text_array[ 1 ] != "0" );
+
+                    if ( property_text == "ascending" )
+                    {
+                        OrderIndex = Index + 1;
+                    }
+                    else
+                    {
+                        OrderIndex = value_text_array[ 1 ].to!long();
+                    }
+                }
+                else if ( property_name == "descending" )
+                {
+                    IsDescending = ( value_text_array[ 1 ] != "0" );
+
+                    if ( property_text == "descending" )
+                    {
+                        OrderIndex = Index + 1;
+                    }
+                    else
+                    {
+                        OrderIndex = value_text_array[ 1 ].to!long();
+                    }
                 }
                 else if ( property_name == "now" )
                 {
@@ -4474,7 +4500,8 @@ class TABLE
         IsLast,
         IsStored,
         IsLastStored,
-        IsLastNotStored;
+        IsLastNotStored,
+        IsSorted;
     long
         RowCount;
     string
@@ -6162,7 +6189,30 @@ class TABLE
             phoenix_code;
 
         phoenix_code
-            = "function RemoveDatabase" ~ PhpAttribute ~ "(";
+            = "function RemoveDatabase" ~ PhpAttribute ~ "By";
+
+        column_index = 0;
+
+        foreach ( column; ColumnArray )
+        {
+            if ( column.IsStored
+                 && column.IsKey )
+            {
+                if ( column_index > 0 )
+                {
+                    phoenix_code
+                        ~= "And";
+                }
+
+                phoenix_code
+                    ~= column.PhpName;
+
+                ++column_index;
+            }
+        }
+
+        phoenix_code
+            ~= "(";
 
         column_index = 0;
 
@@ -6257,7 +6307,30 @@ class TABLE
             phoenix_code;
 
         phoenix_code
-            = "function GetDatabase" ~ PhpAttribute ~ "(";
+            = "function GetDatabase" ~ PhpAttribute ~ "By";
+
+        column_index = 0;
+
+        foreach ( column; ColumnArray )
+        {
+            if ( column.IsStored
+                 && column.IsKey )
+            {
+                if ( column_index > 0 )
+                {
+                    phoenix_code
+                        ~= "And";
+                }
+
+                phoenix_code
+                    ~= column.PhpName;
+
+                ++column_index;
+            }
+        }
+
+        phoenix_code
+            ~= "(";
 
         column_index = 0;
 
@@ -6364,15 +6437,18 @@ class TABLE
     // ~~
 
     string GetGetDatabaseArrayPhoenixCode(
+        string function_prefix,
+        bool table_is_sorted
         )
     {
         long
-            column_index;
+            column_index,
+            order_index;
         string
             phoenix_code;
 
         phoenix_code
-            = "function GetDatabase" ~ PhpAttribute ~ "Array(\n"
+            = "function Get" ~ function_prefix ~ "Database" ~ PhpAttribute ~ "Array(\n"
               ~ "    )\n"
               ~ "{\n";
 
@@ -6399,39 +6475,49 @@ class TABLE
             phoenix_code
                 ~= " from " ~ Name;
 
-            column_index = 0;
-
-            foreach ( column; ColumnArray )
+            if ( table_is_sorted )
             {
-                if ( column.IsAscending
-                     || column.IsDescending )
+                column_index = 0;
+
+                for ( order_index = 1;
+                      order_index <= ColumnArray.length;
+                      ++order_index )
                 {
-                    if ( column_index == 0 )
+                    foreach ( column; ColumnArray )
                     {
-                        phoenix_code
-                            ~= " order by ";
-                    }
-                    else
-                    {
-                        phoenix_code
-                            ~= ", ";
-                    }
+                        if ( column.IsStored
+                             && ( column.IsAscending
+                               || column.IsDescending )
+                             && column.OrderIndex == order_index )
+                        {
+                            if ( column_index == 0 )
+                            {
+                                phoenix_code
+                                    ~= " order by ";
+                            }
+                            else
+                            {
+                                phoenix_code
+                                    ~= ", ";
+                            }
 
-                    phoenix_code
-                        ~= column.StoredName;
+                            phoenix_code
+                                ~= column.StoredName;
 
-                    if ( column.IsAscending )
-                    {
-                        phoenix_code
-                            ~= " asc";
-                    }
-                    else
-                    {
-                        phoenix_code
-                            ~= " desc";
-                    }
+                            if ( column.IsAscending )
+                            {
+                                phoenix_code
+                                    ~= " asc";
+                            }
+                            else
+                            {
+                                phoenix_code
+                                    ~= " desc";
+                            }
 
-                    ++column_index;
+                            ++column_index;
+                        }
+                    }
                 }
             }
 
@@ -6454,95 +6540,95 @@ class TABLE
 
     // ~~
 
+    string GetGetDatabaseArrayPhoenixCode(
+        )
+    {
+        bool
+            table_is_sorted;
+
+        foreach ( column; ColumnArray )
+        {
+            if ( column.IsStored
+                 && ( column.IsAscending
+                      || column.IsDescending ) )
+            {
+                table_is_sorted = true;
+            }
+        }
+
+        if ( IsSorted || !table_is_sorted )
+        {
+            return GetGetDatabaseArrayPhoenixCode( "", true );
+        }
+        else
+        {
+            return
+                GetGetDatabaseArrayPhoenixCode( "", false )
+                ~ "\n// ~~\n\n"
+                ~ GetGetDatabaseArrayPhoenixCode( "Sorted", true );
+        }
+    }
+
+    // ~~
+
     string GetGetDatabaseMapPhoenixCode(
         )
     {
         string
             phoenix_code;
 
-        phoenix_code
-            = "function GetDatabase" ~ PhpAttribute ~ "By";
-
-        foreach ( column; ColumnArray )
+        foreach ( key_column; ColumnArray )
         {
-            if ( column.IsStored
-                 && column.IsKey )
+            if ( key_column.IsMapped )
             {
                 phoenix_code
-                    ~= column.PhpName;
+                    = "\n// ~~\n\n"
+                      ~ "function GetDatabase" ~ PhpAttribute ~ "By" ~ key_column.PhpName ~ "Map(\n"
+                      ~ "    )\n"
+                      ~ "{\n";
 
-                if ( !column.IsLastKey )
+                if ( SqlOptionIsEnabled )
                 {
                     phoenix_code
-                        ~= "And";
+                        ~= "    var statement = GetDatabaseStatement( 'select ";
+
+                    foreach ( column; ColumnArray )
+                    {
+                        if ( column.IsStored )
+                        {
+                            phoenix_code
+                                ~= column.StoredName;
+
+                            if ( !column.IsLastStored )
+                            {
+                                phoenix_code
+                                    ~= ", ";
+                            }
+                        }
+                    }
+
+                    phoenix_code
+                        ~= " from " ~ Name ~ "' );\n"
+                           ~ "\n"
+                           ~ "    if ( !statement.execute() )\n"
+                           ~ "    {\n"
+                           ~ "        var_dump( statement.errorInfo() );\n"
+                           ~ "    }\n"
+                           ~ "\n"
+                           ~ "    var " ~ PhpVariable ~ "_map = [];\n"
+                           ~ "\n"
+                           ~ "    while ( var " ~ PhpVariable ~ " = statement.fetchObject() )\n"
+                           ~ "    {\n"
+                           ~ "        " ~ PhpVariable ~ "_map[ " ~ PhpVariable ~ "." ~ key_column.PhpName ~ " ] = " ~ PhpVariable ~ ";\n"
+                           ~ "    }\n"
+                           ~ "\n"
+                           ~ "    return " ~ PhpVariable ~ "_map;\n";
                 }
+
+                phoenix_code
+                    ~= "}\n";
             }
         }
-
-        phoenix_code
-            ~= "Map(\n"
-               ~ "    )\n"
-               ~ "{\n";
-
-        if ( SqlOptionIsEnabled )
-        {
-            phoenix_code
-                ~= "    var statement = GetDatabaseStatement( 'select ";
-
-            foreach ( column; ColumnArray )
-            {
-                if ( column.IsStored )
-                {
-                    phoenix_code
-                        ~= column.StoredName;
-
-                    if ( !column.IsLastStored )
-                    {
-                        phoenix_code
-                            ~= ", ";
-                    }
-                }
-            }
-
-            phoenix_code
-                ~= " from " ~ Name ~ "' );\n"
-                   ~ "\n"
-                   ~ "    if ( !statement.execute() )\n"
-                   ~ "    {\n"
-                   ~ "        var_dump( statement.errorInfo() );\n"
-                   ~ "    }\n"
-                   ~ "\n"
-                   ~ "    var " ~ PhpVariable ~ "_map = [];\n"
-                   ~ "\n"
-                   ~ "    while ( var " ~ PhpVariable ~ " = statement.fetchObject() )\n"
-                   ~ "    {\n"
-                   ~ "        " ~ PhpVariable ~ "_map[ ";
-
-            foreach ( column; ColumnArray )
-            {
-                if ( column.IsStored
-                     && column.IsKey )
-                {
-                    phoenix_code
-                        ~= PhpVariable ~ "." ~ column.PhpName;
-
-                    if ( !column.IsLastKey )
-                    {
-                        phoenix_code
-                            ~= " .. ";
-                    }
-                }
-            }
-
-            phoenix_code
-                ~= " ] = " ~ PhpVariable ~ ";\n"
-                   ~ "    }\n"
-                   ~ "\n"
-                   ~ "    return " ~ PhpVariable ~ "_map;\n";
-        }
-
-        phoenix_code
-            ~= "}\n";
 
         return phoenix_code;
     }
@@ -6621,6 +6707,10 @@ class TABLE
                 if ( property_name == "stored" )
                 {
                     IsStored = ( value_text_array[ 1 ] != "0" );
+                }
+                else if ( property_name == "sorted" )
+                {
+                    IsSorted = ( value_text_array[ 1 ] != "0" );
                 }
                 else if ( value_text_array[ 0 ] == "count" )
                 {
@@ -6839,7 +6929,7 @@ class SCHEMA
         }
         else
         {
-            Abort( "Invalid table property : " ~ property_text );
+            Abort( "Invalid schema property : " ~ property_text );
         }
     }
 
@@ -6881,6 +6971,8 @@ class SCHEMA
                     column_type = column_part_array[ 1 .. $ ].join( ':' ).strip();
 
                     column = new COLUMN( table, column_name, column_type );
+                    column.Index = table.ColumnArray.length;
+
                     table.ColumnArray ~= column;
 
                     if ( line_part_array.length == 2 )
@@ -8049,7 +8141,6 @@ class SCHEMA
                 phoenix_model_file_text
                     = "// -- FUNCTIONS\n\n"
                       ~ table.GetGetDatabaseArrayPhoenixCode()
-                      ~ "\n// ~~\n\n"
                       ~ table.GetGetDatabaseMapPhoenixCode()
                       ~ "\n// ~~\n\n"
                       ~ table.GetGetDatabasePhoenixCode()
@@ -8452,6 +8543,27 @@ string GetFolderPath(
     else
     {
         return "";
+    }
+}
+
+// ~~
+
+string GetFileName(
+    string file_path
+    )
+{
+    long
+        folder_separator_character_index;
+
+    folder_separator_character_index = file_path.replace( '\\', '/' ).lastIndexOf( '/' );
+
+    if ( folder_separator_character_index >= 0 )
+    {
+        return file_path[ folder_separator_character_index + 1 .. $ ];
+    }
+    else
+    {
+        return file_path;
     }
 }
 
@@ -9198,16 +9310,16 @@ void ProcessFiles(
         }
         else if ( output_format == "go" )
         {
-            Schema.WriteGoTypeFile( base_file_path ~ "_" ~ DatabaseFormat ~ "_type.go" );
+            Schema.WriteGoTypeFile( GetFolderPath( base_file_path ) ~ "GO/" ~ GetFileName( base_file_path ) ~ "_type.go" );
         }
         else if ( output_format == "generis" )
         {
-            Schema.WriteGenerisTypeFile( base_file_path ~ "_" ~ DatabaseFormat ~ "_type.gs" );
-            Schema.WriteGenerisQueryFile( base_file_path ~ "_" ~ DatabaseFormat ~ "_query.gs" );
-            Schema.WriteGenerisResponseFile( base_file_path ~ "_" ~ DatabaseFormat ~ "_response.gs" );
-            Schema.WriteGenerisRequestFile( base_file_path ~ "_" ~ DatabaseFormat ~ "_request.gs" );
-            Schema.WriteGenerisRouteFile( base_file_path ~ "_" ~ DatabaseFormat ~ "_route.gs" );
-            Schema.WriteGenerisConstantFile( base_file_path ~ "_" ~ DatabaseFormat ~ "_constant.gs" );
+            Schema.WriteGenerisTypeFile( GetFolderPath( base_file_path ) ~ "GS/" ~ GetFileName( base_file_path ) ~ "_type.gs" );
+            Schema.WriteGenerisQueryFile( GetFolderPath( base_file_path ) ~ "GS/" ~ GetFileName( base_file_path ) ~ "_query.gs" );
+            Schema.WriteGenerisResponseFile( GetFolderPath( base_file_path ) ~ "GS/" ~ GetFileName( base_file_path ) ~ "_response.gs" );
+            Schema.WriteGenerisRequestFile( GetFolderPath( base_file_path ) ~ "GS/" ~ GetFileName( base_file_path ) ~ "_request.gs" );
+            Schema.WriteGenerisRouteFile( GetFolderPath( base_file_path ) ~ "GS/" ~ GetFileName( base_file_path ) ~ "_route.gs" );
+            Schema.WriteGenerisConstantFile( GetFolderPath( base_file_path ) ~ "GS/" ~ GetFileName( base_file_path ) ~ "_constant.gs" );
         }
         else if ( output_format == "phoenix" )
         {
@@ -9215,20 +9327,20 @@ void ProcessFiles(
         }
         else if ( output_format == "crystal" )
         {
-            Schema.WriteCrystalTypeFile( base_file_path ~ "_" ~ DatabaseFormat ~ "_type.cr" );
+            Schema.WriteCrystalTypeFile( GetFolderPath( base_file_path ) ~ "CR/" ~ GetFileName( base_file_path ) ~ "_type.cr" );
         }
         else if ( output_format == "csharp" )
         {
-            Schema.WriteCsharpTypeFile( base_file_path ~ "_" ~ DatabaseFormat ~ "_type.cs" );
-            Schema.WriteCsharpConstantFile( base_file_path ~ "_" ~ DatabaseFormat ~ "_constant.cs" );
+            Schema.WriteCsharpTypeFile( GetFolderPath( base_file_path ) ~ "CS/" ~ GetFileName( base_file_path ) ~ "_type.cs" );
+            Schema.WriteCsharpConstantFile( GetFolderPath( base_file_path ) ~ "CS/" ~ GetFileName( base_file_path ) ~ "_constant.cs" );
         }
         else if ( output_format == "rust" )
         {
-            Schema.WriteRustTypeFile( base_file_path ~ "_" ~ DatabaseFormat ~ "_type.rs" );
+            Schema.WriteRustTypeFile( GetFolderPath( base_file_path ) ~ "RS/" ~ GetFileName( base_file_path ) ~ "_type.rs" );
         }
         else if ( output_format == "javascript" )
         {
-            Schema.WriteJavascriptTypeFile( base_file_path ~ "_" ~ DatabaseFormat ~ "_type.js" );
+            Schema.WriteJavascriptTypeFile( GetFolderPath( base_file_path ) ~ "JS/" ~ GetFileName( base_file_path ) ~ "_type.js" );
         }
     }
 

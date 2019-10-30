@@ -15,29 +15,22 @@ function GetDatabaseArticleArray(
 
 // ~~
 
-function GetDatabaseArticleByIdMap(
+function GetSortedDatabaseArticleArray(
     )
 {
-    var statement = GetDatabaseStatement( 'select Id, SectionId, UserId, Title, Text, Image, Date from ARTICLE' );
+    var statement = GetDatabaseStatement( 'select Id, SectionId, UserId, Title, Text, Image, Date from ARTICLE order by UserId asc, SectionId asc' );
 
     if ( !statement.execute() )
     {
         var_dump( statement.errorInfo() );
     }
 
-    var article_map = [];
-
-    while ( var article = statement.fetchObject() )
-    {
-        article_map[ article.Id ] = article;
-    }
-
-    return article_map;
+    return GetDatabaseObjectArray( statement );
 }
 
 // ~~
 
-function GetDatabaseArticle(
+function GetDatabaseArticleById(
     int id
     )
 {
@@ -106,7 +99,7 @@ function SetDatabaseArticle(
 
 // ~~
 
-function RemoveDatabaseArticle(
+function RemoveDatabaseArticleById(
     int id
     )
 {
