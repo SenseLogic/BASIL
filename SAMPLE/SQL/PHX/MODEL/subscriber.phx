@@ -32,6 +32,23 @@ function GetDatabaseSubscriberById(
 
 // ~~
 
+function GetDatabaseSubscriberByEmail(
+    string email
+    )
+{
+    var statement = GetDatabaseStatement( 'select Id, Name, Email from SUBSCRIBER where Email = ? limit 1' );
+    statement.bindParam( 1, email, PDO::PARAM_STR );
+
+    if ( !statement.execute() )
+    {
+        var_dump( statement.errorInfo() );
+    }
+
+    return GetDatabaseObject( statement );
+}
+
+// ~~
+
 function AddDatabaseSubscriber(
     string name,
     string email

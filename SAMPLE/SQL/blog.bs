@@ -56,4 +56,4 @@ BLOG | count 5
 
         Id : UINT64 | key, unique, incremented
         Name : STRING | capacity 45
-        Email : STRING | capacity 45
+        Email : STRING | capacity 45, indexed, accessed

@@ -82,7 +82,7 @@ BLOG | count 5
 
         Id : UINT64 | key, unique, incremented
         Name : STRING | capacity 45
-        Email : STRING | capacity 45
+        Email : STRING | capacity 45, indexed, accessed
 ```
 
 ![](https://github.com/senselogic/BASIL/blob/master/SAMPLE/SQL/blog.png)
@@ -277,6 +277,7 @@ count <i>row_count</i>
 [!]clustered
 [!]indexed
 [!]mapped
+[!]accessed
 [!]static
 [!]required
 [!]incremented

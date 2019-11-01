@@ -3824,6 +3824,7 @@ class COLUMN
         IsClustered,
         IsIndexed,
         IsMapped,
+        IsAccessed,
         IsStatic,
         IsRequired,
         IsIncremented,
@@ -4087,6 +4088,10 @@ class COLUMN
                 else if ( property_name == "mapped" )
                 {
                     IsMapped = ( value_text_array[ 1 ] != "0" );
+                }
+                else if ( property_name == "accessed" )
+                {
+                    IsAccessed = ( value_text_array[ 1 ] != "0" );
                 }
                 else if ( property_name == "static" )
                 {
@@ -5916,7 +5921,8 @@ class TABLE
             phoenix_code;
 
         phoenix_code
-            = "function AddDatabase" ~ PhpAttribute ~ "(";
+            = "\n// ~~\n\n"
+              ~ "function AddDatabase" ~ PhpAttribute ~ "(";
 
         column_count = 0;
 
@@ -6058,7 +6064,8 @@ class TABLE
             phoenix_code;
 
         phoenix_code
-            = "function SetDatabase" ~ PhpAttribute ~ "(";
+            = "\n// ~~\n\n"
+              ~ "function SetDatabase" ~ PhpAttribute ~ "(";
 
         column_index = 0;
 
@@ -6189,7 +6196,8 @@ class TABLE
             phoenix_code;
 
         phoenix_code
-            = "function RemoveDatabase" ~ PhpAttribute ~ "By";
+            = "\n// ~~\n\n"
+              ~ "function RemoveDatabase" ~ PhpAttribute ~ "By";
 
         column_index = 0;
 
@@ -6307,7 +6315,8 @@ class TABLE
             phoenix_code;
 
         phoenix_code
-            = "function GetDatabase" ~ PhpAttribute ~ "By";
+            = "\n// ~~\n\n"
+              ~ "function GetDatabase" ~ PhpAttribute ~ "By";
 
         column_index = 0;
 
@@ -6430,6 +6439,67 @@ class TABLE
 
         phoenix_code
             ~= "}\n";
+
+        return phoenix_code;
+    }
+
+    // ~~
+
+    string GetGetDatabaseByPhoenixCode(
+        )
+    {
+        long
+            column_index;
+        string
+            phoenix_code;
+
+        foreach ( key_column; ColumnArray )
+        {
+            if ( key_column.IsAccessed )
+            {
+                phoenix_code
+                    = "\n// ~~\n\n"
+                      ~ "function GetDatabase" ~ PhpAttribute ~ "By" ~ key_column.PhpName ~ "(\n"
+                      ~ "    " ~ key_column.PhpType ~ " " ~ key_column.PhpVariable ~ "\n"
+                      ~ "    )\n"
+                      ~ "{\n";
+
+                if ( SqlOptionIsEnabled )
+                {
+                    phoenix_code
+                        ~= "    var statement = GetDatabaseStatement( 'select ";
+
+                    foreach ( column; ColumnArray )
+                    {
+                        if ( column.IsStored )
+                        {
+                            phoenix_code
+                                ~= column.StoredName;
+
+                            if ( !column.IsLastStored )
+                            {
+                                phoenix_code
+                                    ~= ", ";
+                            }
+                        }
+                    }
+
+                    phoenix_code
+                        ~= " from " ~ Name ~ " where " ~ key_column.StoredName ~ " = ? limit 1' );\n"
+                           ~ "    statement.bindParam( 1, " ~ key_column.PhpVariable ~ ", " ~ key_column.PhpParameterType ~ " );\n"
+                           ~ "\n"
+                           ~ "    if ( !statement.execute() )\n"
+                           ~ "    {\n"
+                           ~ "        var_dump( statement.errorInfo() );\n"
+                           ~ "    }\n"
+                           ~ "\n"
+                           ~ "    return GetDatabaseObject( statement );\n";
+                }
+
+                phoenix_code
+                    ~= "}\n";
+            }
+        }
 
         return phoenix_code;
     }
@@ -8142,13 +8212,10 @@ class SCHEMA
                     = "// -- FUNCTIONS\n\n"
                       ~ table.GetGetDatabaseArrayPhoenixCode()
                       ~ table.GetGetDatabaseMapPhoenixCode()
-                      ~ "\n// ~~\n\n"
                       ~ table.GetGetDatabasePhoenixCode()
-                      ~ "\n// ~~\n\n"
+                      ~ table.GetGetDatabaseByPhoenixCode()
                       ~ table.GetAddDatabasePhoenixCode()
-                      ~ "\n// ~~\n\n"
                       ~ table.GetSetDatabasePhoenixCode()
-                      ~ "\n// ~~\n\n"
                       ~ table.GetRemoveDatabasePhoenixCode();
 
                 phoenix_model_file_path.WriteText( phoenix_model_file_text );
