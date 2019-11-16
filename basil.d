@@ -3643,31 +3643,31 @@ class VALUE
 
                         if ( Type.BaseName == "INT8" )
                         {
-                            random_natural = random_natural & 7;
+                            random_natural = random_natural & 127;
                         }
                         else if ( Type.BaseName == "UINT8" )
                         {
-                            random_natural = random_natural & 8;
+                            random_natural = random_natural & 255;
                         }
                         else if ( Type.BaseName == "INT16" )
                         {
-                            random_natural = random_natural & 15;
+                            random_natural = random_natural & 32767;
                         }
                         else if ( Type.BaseName == "UINT16" )
                         {
-                            random_natural = random_natural & 16;
+                            random_natural = random_natural & 65535;
                         }
                         else if ( Type.BaseName == "INT32" )
                         {
-                            random_natural = random_natural & 31;
+                            random_natural = random_natural & 2147483647;
                         }
                         else if ( Type.BaseName == "UINT32" )
                         {
-                            random_natural = random_natural & 32;
+                            random_natural = random_natural & 4294967295;
                         }
                         else if ( Type.BaseName == "INT64" )
                         {
-                            random_natural = random_natural & 63;
+                            random_natural = random_natural & 9223372036854775807;
                         }
 
                         Text = random_natural.to!string();
@@ -4506,7 +4506,8 @@ class TABLE
         IsStored,
         IsLastStored,
         IsLastNotStored,
-        IsSorted;
+        IsSorted,
+        IsDropped;
     long
         RowCount;
     string
@@ -6782,9 +6783,17 @@ class TABLE
                 {
                     IsSorted = ( value_text_array[ 1 ] != "0" );
                 }
+                else if ( value_text_array[ 0 ] == "dropped" )
+                {
+                    IsDropped = ( value_text_array[ 1 ] != "0" );
+                }
                 else if ( value_text_array[ 0 ] == "count" )
                 {
                     RowCount = value_text_array[ 1 ].to!long();
+                }
+                else
+                {
+                    Abort( "Invalid table property : " ~ property_text );
                 }
             }
             else
@@ -6921,6 +6930,8 @@ class SCHEMA
         Name;
     TABLE[]
         TableArray;
+    bool
+        IsDropped;
     long
         RowCount;
     string
@@ -6990,16 +7001,40 @@ class SCHEMA
 
         value_text_array = property_text.split( ' ' );
 
-        if ( value_text_array.length == 2 )
+        if ( value_text_array.length > 0 )
         {
-            if ( value_text_array[ 0 ] == "count" )
+            if ( value_text_array.length == 1 )
             {
-                RowCount = value_text_array[ 1 ].to!long();
+                if ( value_text_array[ 0 ].startsWith( '!' ) )
+                {
+                    value_text_array[ 0 ] = value_text_array[ 0 ][ 1 .. $ ];
+                    value_text_array ~= "0";
+                }
+                else
+                {
+                    value_text_array ~= "1";
+                }
             }
-        }
-        else
-        {
-            Abort( "Invalid schema property : " ~ property_text );
+
+            if ( value_text_array.length == 2 )
+            {
+                if ( value_text_array[ 0 ] == "dropped" )
+                {
+                    IsDropped = ( value_text_array[ 1 ] != "0" );
+                }
+                else if ( value_text_array[ 0 ] == "count" )
+                {
+                    RowCount = value_text_array[ 1 ].to!long();
+                }
+                else
+                {
+                    Abort( "Invalid schema property : " ~ property_text );
+                }
+            }
+            else
+            {
+                Abort( "Invalid schema property : " ~ property_text );
+            }
         }
     }
 
@@ -7495,18 +7530,30 @@ class SCHEMA
         sql_schema_file_text
             = "set @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;\n"
               ~ "set @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;\n"
-              ~ "set @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='TRADITIONAL,ALLOW_INVALID_DATES';\n\n"
-              ~ "drop schema if exists `" ~ Name ~ "`;\n\n"
-              ~ "create schema if not exists `" ~ Name ~ "` default character set utf8mb4 collate utf8mb4_general_ci;\n\n"
-              ~ "use `" ~ Name ~ "`;\n\n";
+              ~ "set @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='TRADITIONAL,ALLOW_INVALID_DATES';\n\n";
+
+        if ( IsDropped )
+        {
+            sql_schema_file_text
+                ~= "drop schema if exists `" ~ Name ~ "`;\n\n";
+        }
+
+        sql_schema_file_text
+            ~= "create schema if not exists `" ~ Name ~ "` default character set utf8mb4 collate utf8mb4_general_ci;\n\n"
+               ~ "use `" ~ Name ~ "`;\n\n";
 
         foreach ( table; TableArray )
         {
             if ( table.IsStored )
             {
+                if ( table.IsDropped )
+                {
+                    sql_schema_file_text
+                        ~= "drop table if exists `" ~ Name ~ "`.`" ~ table.Name ~ "`;\n\n";
+                }
+
                 sql_schema_file_text
-                    ~= "drop table if exists `" ~ Name ~ "`.`" ~ table.Name ~ "`;\n\n"
-                       ~ "create table if not exists `" ~ Name ~ "`.`" ~ table.Name ~ "`(\n";
+                    ~= "create table if not exists `" ~ Name ~ "`.`" ~ table.Name ~ "`(\n";
 
                 foreach ( ref column; table.ColumnArray )
                 {

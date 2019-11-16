@@ -2,13 +2,9 @@ set @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;
 set @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
 set @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='TRADITIONAL,ALLOW_INVALID_DATES';
 
-drop schema if exists `BLOG`;
-
 create schema if not exists `BLOG` default character set utf8mb4 collate utf8mb4_general_ci;
 
 use `BLOG`;
-
-drop table if exists `BLOG`.`SECTION`;
 
 create table if not exists `BLOG`.`SECTION`(
     `Id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
@@ -18,8 +14,6 @@ create table if not exists `BLOG`.`SECTION`(
     `Image` VARCHAR( 45 ) NULL,
     primary key( `Id` )
     ) engine = InnoDB;
-
-drop table if exists `BLOG`.`USER`;
 
 create table if not exists `BLOG`.`USER`(
     `Id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
@@ -38,8 +32,6 @@ create table if not exists `BLOG`.`USER`(
     `ItIsAdministrator` TINYINT UNSIGNED NULL,
     primary key( `Id` )
     ) engine = InnoDB;
-
-drop table if exists `BLOG`.`ARTICLE`;
 
 create table if not exists `BLOG`.`ARTICLE`(
     `Id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
@@ -64,8 +56,6 @@ create table if not exists `BLOG`.`ARTICLE`(
         on update no action
     ) engine = InnoDB;
 
-drop table if exists `BLOG`.`COMMENT`;
-
 create table if not exists `BLOG`.`COMMENT`(
     `Id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
     `ArticleId` BIGINT UNSIGNED NULL,
@@ -86,8 +76,6 @@ create table if not exists `BLOG`.`COMMENT`(
         on delete set null
         on update no action
     ) engine = InnoDB;
-
-drop table if exists `BLOG`.`SUBSCRIBER`;
 
 create table if not exists `BLOG`.`SUBSCRIBER`(
     `Id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,

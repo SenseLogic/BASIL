@@ -24,7 +24,7 @@ Database designer and filler.
 ## Sample SQL schema file
 
 ```cpp
-BLOG | count 5
+BLOG | dropped, count 5
 
     SECTION
 
@@ -90,7 +90,7 @@ BLOG | count 5
 ## Sample CQL schema file
 
 ```cpp
-BLOG | count 5
+BLOG | dropped, count 5
 
     SECTION
 
@@ -257,14 +257,16 @@ func main(
 ### Database properties
 
 <pre>
+[!]dropped
 count <i>row_count</i>
 </pre>
 
 ### Table properties
 
 <pre>
-stored
-sorted
+[!]stored
+[!]sorted
+[!]dropped
 count <i>row_count</i>
 </pre>
 
