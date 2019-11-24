@@ -1,4 +1,4 @@
-func HandleAddSimpleDatabaseRequest(
+func HandleAddSIMPLEDatabaseRequest(
     response_writer http.ResponseWriter,
     request * http.Request
     )
@@ -24,7 +24,7 @@ func HandleAddSimpleDatabaseRequest(
          && GetRequestDateTime( request, &simple.Date, "Date", &error_code )
          && GetRequestDateTime( request, &simple.DateTime, "DateTime", &error_code )
          && GetRequestBlob( request, &simple.Blob, "Blob", &error_code )
-         && AddDatabaseSimple( &simple, &error_code ) )
+         && AddDatabaseSIMPLE( &simple, &error_code ) )
     {
         WriteResponse( response_writer, "{" );
         WriteResponse( response_writer, "\"Uuid\":" );
@@ -39,7 +39,7 @@ func HandleAddSimpleDatabaseRequest(
 
 // ~~
 
-func HandleSetSimpleDatabaseRequest(
+func HandleSetSIMPLEDatabaseRequest(
     response_writer http.ResponseWriter,
     request * http.Request
     )
@@ -66,7 +66,7 @@ func HandleSetSimpleDatabaseRequest(
          && GetRequestDateTime( request, &simple.Date, "Date", &error_code )
          && GetRequestDateTime( request, &simple.DateTime, "DateTime", &error_code )
          && GetRequestBlob( request, &simple.Blob, "Blob", &error_code )
-         && SetDatabaseSimple( &simple, &error_code ) )
+         && SetDatabaseSIMPLE( &simple, &error_code ) )
     {
         WriteResponseSuccess( response_writer );
     }
@@ -78,7 +78,7 @@ func HandleSetSimpleDatabaseRequest(
 
 // ~~
 
-func HandleRemoveSimpleDatabaseRequest(
+func HandleRemoveSIMPLEDatabaseRequest(
     response_writer http.ResponseWriter,
     request * http.Request
     )
@@ -90,7 +90,7 @@ func HandleRemoveSimpleDatabaseRequest(
 
     if ( IsAdministratorSession( request, &error_code )
          && GetRequestUuid( request, &simple.Uuid, "Uuid", &error_code )
-         && RemoveDatabaseSimple( &simple, &error_code ) )
+         && RemoveDatabaseSIMPLE( &simple, &error_code ) )
     {
         WriteResponseSuccess( response_writer );
     }
@@ -102,7 +102,7 @@ func HandleRemoveSimpleDatabaseRequest(
 
 // ~~
 
-func HandleGetSimpleDatabaseRequest(
+func HandleGetSIMPLEDatabaseRequest(
     response_writer http.ResponseWriter,
     request * http.Request
     )
@@ -114,10 +114,10 @@ func HandleGetSimpleDatabaseRequest(
 
     if ( IsAdministratorSession( request, &error_code )
          && GetRequestUuid( request, &simple.Uuid, "Uuid", &error_code )
-         && GetDatabaseSimple( &simple, &error_code ) )
+         && GetDatabaseSIMPLE( &simple, &error_code ) )
     {
-        WriteResponse( response_writer, "{\"Simple\":" );
-        WriteResponseSimple( response_writer, &simple );
+        WriteResponse( response_writer, "{\"SIMPLE\":" );
+        WriteResponseSIMPLE( response_writer, &simple );
         WriteResponse( response_writer, "}" );
     }
     else
@@ -128,7 +128,7 @@ func HandleGetSimpleDatabaseRequest(
 
 // ~~
 
-func HandleGetSimpleListDatabaseRequest(
+func HandleGetSIMPLEListDatabaseRequest(
     response_writer http.ResponseWriter,
     request * http.Request
     )
@@ -139,9 +139,9 @@ func HandleGetSimpleListDatabaseRequest(
         simple_array [] SIMPLE;
 
     if ( IsAdministratorSession( request, &error_code )
-         && GetDatabaseSimpleList( &simple_array, &error_code ) )
+         && GetDatabaseSIMPLEList( &simple_array, &error_code ) )
     {
-        WriteResponse( response_writer, "{\"SimpleList\":[" );
+        WriteResponse( response_writer, "{\"SIMPLEList\":[" );
 
         for simple_index, _ := range simple_array
         {
@@ -150,7 +150,7 @@ func HandleGetSimpleListDatabaseRequest(
                  WriteResponse( response_writer, "," );
             }
 
-            WriteResponseSimple( response_writer, &simple_array[ simple_index ] );
+            WriteResponseSIMPLE( response_writer, &simple_array[ simple_index ] );
         }
 
         WriteResponse( response_writer, "]}" );
@@ -163,7 +163,7 @@ func HandleGetSimpleListDatabaseRequest(
 
 // ~~
 
-func HandleAddCompoundDatabaseRequest(
+func HandleAddCOMPOUNDDatabaseRequest(
     response_writer http.ResponseWriter,
     request * http.Request
     )
@@ -185,7 +185,7 @@ func HandleAddCompoundDatabaseRequest(
          && GetRequestDateTimeSet( request, &compound.SimpleDateSet, "SimpleDateSet", &error_code )
          && GetRequestDateTimeList( request, &compound.SimpleDateList, "SimpleDateList", &error_code )
          && GetRequestDateTimeStringStringTupleSetMap( request, &compound.NameSetMap, "NameSetMap", &error_code )
-         && AddDatabaseCompound( &compound, &error_code ) )
+         && AddDatabaseCOMPOUND( &compound, &error_code ) )
     {
         WriteResponse( response_writer, "{" );
         WriteResponse( response_writer, "\"Id\":" );
@@ -200,7 +200,7 @@ func HandleAddCompoundDatabaseRequest(
 
 // ~~
 
-func HandleSetCompoundDatabaseRequest(
+func HandleSetCOMPOUNDDatabaseRequest(
     response_writer http.ResponseWriter,
     request * http.Request
     )
@@ -223,7 +223,7 @@ func HandleSetCompoundDatabaseRequest(
          && GetRequestDateTimeSet( request, &compound.SimpleDateSet, "SimpleDateSet", &error_code )
          && GetRequestDateTimeList( request, &compound.SimpleDateList, "SimpleDateList", &error_code )
          && GetRequestDateTimeStringStringTupleSetMap( request, &compound.NameSetMap, "NameSetMap", &error_code )
-         && SetDatabaseCompound( &compound, &error_code ) )
+         && SetDatabaseCOMPOUND( &compound, &error_code ) )
     {
         WriteResponseSuccess( response_writer );
     }
@@ -235,7 +235,7 @@ func HandleSetCompoundDatabaseRequest(
 
 // ~~
 
-func HandleRemoveCompoundDatabaseRequest(
+func HandleRemoveCOMPOUNDDatabaseRequest(
     response_writer http.ResponseWriter,
     request * http.Request
     )
@@ -247,7 +247,7 @@ func HandleRemoveCompoundDatabaseRequest(
 
     if ( IsAdministratorSession( request, &error_code )
          && GetRequestInt32( request, &compound.Id, "Id", &error_code )
-         && RemoveDatabaseCompound( &compound, &error_code ) )
+         && RemoveDatabaseCOMPOUND( &compound, &error_code ) )
     {
         WriteResponseSuccess( response_writer );
     }
@@ -259,7 +259,7 @@ func HandleRemoveCompoundDatabaseRequest(
 
 // ~~
 
-func HandleGetCompoundDatabaseRequest(
+func HandleGetCOMPOUNDDatabaseRequest(
     response_writer http.ResponseWriter,
     request * http.Request
     )
@@ -271,10 +271,10 @@ func HandleGetCompoundDatabaseRequest(
 
     if ( IsAdministratorSession( request, &error_code )
          && GetRequestInt32( request, &compound.Id, "Id", &error_code )
-         && GetDatabaseCompound( &compound, &error_code ) )
+         && GetDatabaseCOMPOUND( &compound, &error_code ) )
     {
-        WriteResponse( response_writer, "{\"Compound\":" );
-        WriteResponseCompound( response_writer, &compound );
+        WriteResponse( response_writer, "{\"COMPOUND\":" );
+        WriteResponseCOMPOUND( response_writer, &compound );
         WriteResponse( response_writer, "}" );
     }
     else
@@ -285,7 +285,7 @@ func HandleGetCompoundDatabaseRequest(
 
 // ~~
 
-func HandleGetCompoundListDatabaseRequest(
+func HandleGetCOMPOUNDListDatabaseRequest(
     response_writer http.ResponseWriter,
     request * http.Request
     )
@@ -296,9 +296,9 @@ func HandleGetCompoundListDatabaseRequest(
         compound_array [] COMPOUND;
 
     if ( IsAdministratorSession( request, &error_code )
-         && GetDatabaseCompoundList( &compound_array, &error_code ) )
+         && GetDatabaseCOMPOUNDList( &compound_array, &error_code ) )
     {
-        WriteResponse( response_writer, "{\"CompoundList\":[" );
+        WriteResponse( response_writer, "{\"COMPOUNDList\":[" );
 
         for compound_index, _ := range compound_array
         {
@@ -307,7 +307,7 @@ func HandleGetCompoundListDatabaseRequest(
                  WriteResponse( response_writer, "," );
             }
 
-            WriteResponseCompound( response_writer, &compound_array[ compound_index ] );
+            WriteResponseCOMPOUND( response_writer, &compound_array[ compound_index ] );
         }
 
         WriteResponse( response_writer, "]}" );
@@ -320,7 +320,7 @@ func HandleGetCompoundListDatabaseRequest(
 
 // ~~
 
-func HandleAddValueDatabaseRequest(
+func HandleAddVALUEDatabaseRequest(
     response_writer http.ResponseWriter,
     request * http.Request
     )
@@ -336,7 +336,7 @@ func HandleAddValueDatabaseRequest(
          && GetRequestString( request, &value.Name, "Name", &error_code )
          && GetRequestInt32( request, &value.Integer, "Integer", &error_code )
          && GetRequestString( request, &value.Text, "Text", &error_code )
-         && AddDatabaseValue( &value, &error_code ) )
+         && AddDatabaseVALUE( &value, &error_code ) )
     {
         WriteResponse( response_writer, "{" );
         WriteResponse( response_writer, "\"Id\":" );
@@ -351,7 +351,7 @@ func HandleAddValueDatabaseRequest(
 
 // ~~
 
-func HandleSetValueDatabaseRequest(
+func HandleSetVALUEDatabaseRequest(
     response_writer http.ResponseWriter,
     request * http.Request
     )
@@ -367,7 +367,7 @@ func HandleSetValueDatabaseRequest(
          && GetRequestString( request, &value.Name, "Name", &error_code )
          && GetRequestInt32( request, &value.Integer, "Integer", &error_code )
          && GetRequestString( request, &value.Text, "Text", &error_code )
-         && SetDatabaseValue( &value, &error_code ) )
+         && SetDatabaseVALUE( &value, &error_code ) )
     {
         WriteResponseSuccess( response_writer );
     }
@@ -379,7 +379,7 @@ func HandleSetValueDatabaseRequest(
 
 // ~~
 
-func HandleRemoveValueDatabaseRequest(
+func HandleRemoveVALUEDatabaseRequest(
     response_writer http.ResponseWriter,
     request * http.Request
     )
@@ -391,7 +391,7 @@ func HandleRemoveValueDatabaseRequest(
 
     if ( IsAdministratorSession( request, &error_code )
          && GetRequestInt64( request, &value.Id, "Id", &error_code )
-         && RemoveDatabaseValue( &value, &error_code ) )
+         && RemoveDatabaseVALUE( &value, &error_code ) )
     {
         WriteResponseSuccess( response_writer );
     }
@@ -403,7 +403,7 @@ func HandleRemoveValueDatabaseRequest(
 
 // ~~
 
-func HandleGetValueDatabaseRequest(
+func HandleGetVALUEDatabaseRequest(
     response_writer http.ResponseWriter,
     request * http.Request
     )
@@ -415,10 +415,10 @@ func HandleGetValueDatabaseRequest(
 
     if ( IsAdministratorSession( request, &error_code )
          && GetRequestInt64( request, &value.Id, "Id", &error_code )
-         && GetDatabaseValue( &value, &error_code ) )
+         && GetDatabaseVALUE( &value, &error_code ) )
     {
-        WriteResponse( response_writer, "{\"Value\":" );
-        WriteResponseValue( response_writer, &value );
+        WriteResponse( response_writer, "{\"VALUE\":" );
+        WriteResponseVALUE( response_writer, &value );
         WriteResponse( response_writer, "}" );
     }
     else
@@ -429,7 +429,7 @@ func HandleGetValueDatabaseRequest(
 
 // ~~
 
-func HandleGetValueListDatabaseRequest(
+func HandleGetVALUEListDatabaseRequest(
     response_writer http.ResponseWriter,
     request * http.Request
     )
@@ -440,9 +440,9 @@ func HandleGetValueListDatabaseRequest(
         value_array [] VALUE;
 
     if ( IsAdministratorSession( request, &error_code )
-         && GetDatabaseValueList( &value_array, &error_code ) )
+         && GetDatabaseVALUEList( &value_array, &error_code ) )
     {
-        WriteResponse( response_writer, "{\"ValueList\":[" );
+        WriteResponse( response_writer, "{\"VALUEList\":[" );
 
         for value_index, _ := range value_array
         {
@@ -451,7 +451,7 @@ func HandleGetValueListDatabaseRequest(
                  WriteResponse( response_writer, "," );
             }
 
-            WriteResponseValue( response_writer, &value_array[ value_index ] );
+            WriteResponseVALUE( response_writer, &value_array[ value_index ] );
         }
 
         WriteResponse( response_writer, "]}" );
@@ -464,7 +464,7 @@ func HandleGetValueListDatabaseRequest(
 
 // ~~
 
-func HandleAddDataDatabaseRequest(
+func HandleAddDATADatabaseRequest(
     response_writer http.ResponseWriter,
     request * http.Request
     )
@@ -478,7 +478,7 @@ func HandleAddDataDatabaseRequest(
          && GetRequestUuid( request, &data.Uuid, "Uuid", &error_code )
          && GetRequestInt64( request, &data.ValueId, "ValueId", &error_code )
          && GetRequestUuid( request, &data.ValueUuid, "ValueUuid", &error_code )
-         && AddDatabaseData( &data, &error_code ) )
+         && AddDatabaseDATA( &data, &error_code ) )
     {
         WriteResponse( response_writer, "{" );
         WriteResponse( response_writer, "\"Uuid\":" );
@@ -493,7 +493,7 @@ func HandleAddDataDatabaseRequest(
 
 // ~~
 
-func HandleSetDataDatabaseRequest(
+func HandleSetDATADatabaseRequest(
     response_writer http.ResponseWriter,
     request * http.Request
     )
@@ -507,7 +507,7 @@ func HandleSetDataDatabaseRequest(
          && GetRequestUuid( request, &data.Uuid, "Uuid", &error_code )
          && GetRequestInt64( request, &data.ValueId, "ValueId", &error_code )
          && GetRequestUuid( request, &data.ValueUuid, "ValueUuid", &error_code )
-         && SetDatabaseData( &data, &error_code ) )
+         && SetDatabaseDATA( &data, &error_code ) )
     {
         WriteResponseSuccess( response_writer );
     }
@@ -519,7 +519,7 @@ func HandleSetDataDatabaseRequest(
 
 // ~~
 
-func HandleRemoveDataDatabaseRequest(
+func HandleRemoveDATADatabaseRequest(
     response_writer http.ResponseWriter,
     request * http.Request
     )
@@ -531,7 +531,7 @@ func HandleRemoveDataDatabaseRequest(
 
     if ( IsAdministratorSession( request, &error_code )
          && GetRequestUuid( request, &data.Uuid, "Uuid", &error_code )
-         && RemoveDatabaseData( &data, &error_code ) )
+         && RemoveDatabaseDATA( &data, &error_code ) )
     {
         WriteResponseSuccess( response_writer );
     }
@@ -543,7 +543,7 @@ func HandleRemoveDataDatabaseRequest(
 
 // ~~
 
-func HandleGetDataDatabaseRequest(
+func HandleGetDATADatabaseRequest(
     response_writer http.ResponseWriter,
     request * http.Request
     )
@@ -555,10 +555,10 @@ func HandleGetDataDatabaseRequest(
 
     if ( IsAdministratorSession( request, &error_code )
          && GetRequestUuid( request, &data.Uuid, "Uuid", &error_code )
-         && GetDatabaseData( &data, &error_code ) )
+         && GetDatabaseDATA( &data, &error_code ) )
     {
-        WriteResponse( response_writer, "{\"Data\":" );
-        WriteResponseData( response_writer, &data );
+        WriteResponse( response_writer, "{\"DATA\":" );
+        WriteResponseDATA( response_writer, &data );
         WriteResponse( response_writer, "}" );
     }
     else
@@ -569,7 +569,7 @@ func HandleGetDataDatabaseRequest(
 
 // ~~
 
-func HandleGetDataListDatabaseRequest(
+func HandleGetDATAListDatabaseRequest(
     response_writer http.ResponseWriter,
     request * http.Request
     )
@@ -580,9 +580,9 @@ func HandleGetDataListDatabaseRequest(
         data_array [] DATA;
 
     if ( IsAdministratorSession( request, &error_code )
-         && GetDatabaseDataList( &data_array, &error_code ) )
+         && GetDatabaseDATAList( &data_array, &error_code ) )
     {
-        WriteResponse( response_writer, "{\"DataList\":[" );
+        WriteResponse( response_writer, "{\"DATAList\":[" );
 
         for data_index, _ := range data_array
         {
@@ -591,7 +591,7 @@ func HandleGetDataListDatabaseRequest(
                  WriteResponse( response_writer, "," );
             }
 
-            WriteResponseData( response_writer, &data_array[ data_index ] );
+            WriteResponseDATA( response_writer, &data_array[ data_index ] );
         }
 
         WriteResponse( response_writer, "]}" );

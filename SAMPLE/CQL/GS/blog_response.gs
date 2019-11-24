@@ -1,4 +1,4 @@
-func WriteResponseSection(
+func WriteResponseSECTION(
     writer io.Writer,
     section * SECTION
     )
@@ -18,7 +18,7 @@ func WriteResponseSection(
 
 // ~~
 
-func WriteResponseUser(
+func WriteResponseUSER(
     writer io.Writer,
     user * USER
     )
@@ -56,7 +56,7 @@ func WriteResponseUser(
 
 // ~~
 
-func WriteResponseArticle(
+func WriteResponseARTICLE(
     writer io.Writer,
     article * ARTICLE
     )
@@ -80,7 +80,7 @@ func WriteResponseArticle(
 
 // ~~
 
-func WriteResponseComment(
+func WriteResponseCOMMENT(
     writer io.Writer,
     comment * COMMENT
     )
@@ -100,7 +100,7 @@ func WriteResponseComment(
 
 // ~~
 
-func WriteResponseSubscriber(
+func WriteResponseSUBSCRIBER(
     writer io.Writer,
     subscriber * SUBSCRIBER
     )

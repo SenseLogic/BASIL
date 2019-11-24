@@ -42,18 +42,8 @@ create table if not exists `BLOG`.`ARTICLE`(
     `Image` VARCHAR( 45 ) NULL,
     `Date` DATE NULL,
     primary key( `Id` ),
-    index `fk_article_section_1_idx`( `SectionId` ASC ),
-    index `fk_article_user_2_idx`( `UserId` ASC ),
-    constraint `fk_article_section_1`
-    foreign key( `SectionId` )
-    references `BLOG`.`SECTION`( `Id` )
-        on delete set null
-        on update no action,
-    constraint `fk_article_user_2`
-    foreign key( `UserId` )
-    references `BLOG`.`USER`( `Id` )
-        on delete set null
-        on update no action
+    index `index_article_section_1_idx`( `SectionId` ASC ),
+    index `index_article_user_2_idx`( `UserId` ASC )
     ) engine = InnoDB;
 
 create table if not exists `BLOG`.`COMMENT`(
@@ -63,18 +53,8 @@ create table if not exists `BLOG`.`COMMENT`(
     `Text` TEXT NULL,
     `DateTime` DATETIME NULL,
     primary key( `Id` ),
-    index `fk_comment_article_1_idx`( `ArticleId` ASC ),
-    index `fk_comment_user_2_idx`( `UserId` ASC ),
-    constraint `fk_comment_article_1`
-    foreign key( `ArticleId` )
-    references `BLOG`.`ARTICLE`( `Id` )
-        on delete set null
-        on update no action,
-    constraint `fk_comment_user_2`
-    foreign key( `UserId` )
-    references `BLOG`.`USER`( `Id` )
-        on delete set null
-        on update no action
+    index `index_comment_article_1_idx`( `ArticleId` ASC ),
+    index `index_comment_user_2_idx`( `UserId` ASC )
     ) engine = InnoDB;
 
 create table if not exists `BLOG`.`SUBSCRIBER`(

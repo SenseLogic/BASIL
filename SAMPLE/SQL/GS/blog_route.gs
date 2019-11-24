@@ -2,33 +2,33 @@ func RouteDatabaseRequests(
     router chi.Router
     )
 {
-    router.Post( "/add_section", HandleAddSectionDatabaseRequest );
-    router.Post( "/set_section", HandleSetSectionDatabaseRequest );
-    router.Post( "/remove_section", HandleRemoveSectionDatabaseRequest );
-    router.Post( "/get_section", HandleGetSectionDatabaseRequest );
-    router.Post( "/get_section_list", HandleGetSectionListDatabaseRequest );
+    router.Post( "/add_section", HandleAddSECTIONDatabaseRequest );
+    router.Post( "/set_section", HandleSetSECTIONDatabaseRequest );
+    router.Post( "/remove_section", HandleRemoveSECTIONDatabaseRequest );
+    router.Post( "/get_section", HandleGetSECTIONDatabaseRequest );
+    router.Post( "/get_section_list", HandleGetSECTIONListDatabaseRequest );
 
-    router.Post( "/add_user", HandleAddUserDatabaseRequest );
-    router.Post( "/set_user", HandleSetUserDatabaseRequest );
-    router.Post( "/remove_user", HandleRemoveUserDatabaseRequest );
-    router.Post( "/get_user", HandleGetUserDatabaseRequest );
-    router.Post( "/get_user_list", HandleGetUserListDatabaseRequest );
+    router.Post( "/add_user", HandleAddUSERDatabaseRequest );
+    router.Post( "/set_user", HandleSetUSERDatabaseRequest );
+    router.Post( "/remove_user", HandleRemoveUSERDatabaseRequest );
+    router.Post( "/get_user", HandleGetUSERDatabaseRequest );
+    router.Post( "/get_user_list", HandleGetUSERListDatabaseRequest );
 
-    router.Post( "/add_article", HandleAddArticleDatabaseRequest );
-    router.Post( "/set_article", HandleSetArticleDatabaseRequest );
-    router.Post( "/remove_article", HandleRemoveArticleDatabaseRequest );
-    router.Post( "/get_article", HandleGetArticleDatabaseRequest );
-    router.Post( "/get_article_list", HandleGetArticleListDatabaseRequest );
+    router.Post( "/add_article", HandleAddARTICLEDatabaseRequest );
+    router.Post( "/set_article", HandleSetARTICLEDatabaseRequest );
+    router.Post( "/remove_article", HandleRemoveARTICLEDatabaseRequest );
+    router.Post( "/get_article", HandleGetARTICLEDatabaseRequest );
+    router.Post( "/get_article_list", HandleGetARTICLEListDatabaseRequest );
 
-    router.Post( "/add_comment", HandleAddCommentDatabaseRequest );
-    router.Post( "/set_comment", HandleSetCommentDatabaseRequest );
-    router.Post( "/remove_comment", HandleRemoveCommentDatabaseRequest );
-    router.Post( "/get_comment", HandleGetCommentDatabaseRequest );
-    router.Post( "/get_comment_list", HandleGetCommentListDatabaseRequest );
+    router.Post( "/add_comment", HandleAddCOMMENTDatabaseRequest );
+    router.Post( "/set_comment", HandleSetCOMMENTDatabaseRequest );
+    router.Post( "/remove_comment", HandleRemoveCOMMENTDatabaseRequest );
+    router.Post( "/get_comment", HandleGetCOMMENTDatabaseRequest );
+    router.Post( "/get_comment_list", HandleGetCOMMENTListDatabaseRequest );
 
-    router.Post( "/add_subscriber", HandleAddSubscriberDatabaseRequest );
-    router.Post( "/set_subscriber", HandleSetSubscriberDatabaseRequest );
-    router.Post( "/remove_subscriber", HandleRemoveSubscriberDatabaseRequest );
-    router.Post( "/get_subscriber", HandleGetSubscriberDatabaseRequest );
-    router.Post( "/get_subscriber_list", HandleGetSubscriberListDatabaseRequest );
+    router.Post( "/add_subscriber", HandleAddSUBSCRIBERDatabaseRequest );
+    router.Post( "/set_subscriber", HandleSetSUBSCRIBERDatabaseRequest );
+    router.Post( "/remove_subscriber", HandleRemoveSUBSCRIBERDatabaseRequest );
+    router.Post( "/get_subscriber", HandleGetSUBSCRIBERDatabaseRequest );
+    router.Post( "/get_subscriber_list", HandleGetSUBSCRIBERListDatabaseRequest );
 }

@@ -1,4 +1,4 @@
-func AddDatabaseSimple(
+func AddDatabaseSIMPLE(
     simple * SIMPLE,
     error_code * ERROR_CODE
     ) bool
@@ -38,7 +38,7 @@ func AddDatabaseSimple(
 
 // ~~
 
-func SetDatabaseSimple(
+func SetDatabaseSIMPLE(
     simple * SIMPLE,
     error_code * ERROR_CODE
     ) bool
@@ -76,7 +76,7 @@ func SetDatabaseSimple(
 
 // ~~
 
-func RemoveDatabaseSimple(
+func RemoveDatabaseSIMPLE(
     simple * SIMPLE,
     error_code * ERROR_CODE
     ) bool
@@ -99,7 +99,7 @@ func RemoveDatabaseSimple(
 
 // ~~
 
-func GetDatabaseSimple(
+func GetDatabaseSIMPLE(
     simple * SIMPLE,
     error_code * ERROR_CODE
     ) bool
@@ -140,7 +140,7 @@ func GetDatabaseSimple(
 
 // ~~
 
-func GetDatabaseSimpleList(
+func GetDatabaseSIMPLEList(
     simple_array * [] SIMPLE,
     error_code * ERROR_CODE
     ) bool
@@ -193,7 +193,7 @@ func GetDatabaseSimpleList(
 
 // ~~
 
-func AddDatabaseCompound(
+func AddDatabaseCOMPOUND(
     compound * COMPOUND,
     error_code * ERROR_CODE
     ) bool
@@ -226,7 +226,7 @@ func AddDatabaseCompound(
 
 // ~~
 
-func SetDatabaseCompound(
+func SetDatabaseCOMPOUND(
     compound * COMPOUND,
     error_code * ERROR_CODE
     ) bool
@@ -260,7 +260,7 @@ func SetDatabaseCompound(
 
 // ~~
 
-func RemoveDatabaseCompound(
+func RemoveDatabaseCOMPOUND(
     compound * COMPOUND,
     error_code * ERROR_CODE
     ) bool
@@ -283,7 +283,7 @@ func RemoveDatabaseCompound(
 
 // ~~
 
-func GetDatabaseCompound(
+func GetDatabaseCOMPOUND(
     compound * COMPOUND,
     error_code * ERROR_CODE
     ) bool
@@ -320,7 +320,7 @@ func GetDatabaseCompound(
 
 // ~~
 
-func GetDatabaseCompoundList(
+func GetDatabaseCOMPOUNDList(
     compound_array * [] COMPOUND,
     error_code * ERROR_CODE
     ) bool
@@ -369,7 +369,7 @@ func GetDatabaseCompoundList(
 
 // ~~
 
-func AddDatabaseValue(
+func AddDatabaseVALUE(
     value * VALUE,
     error_code * ERROR_CODE
     ) bool
@@ -396,7 +396,7 @@ func AddDatabaseValue(
 
 // ~~
 
-func SetDatabaseValue(
+func SetDatabaseVALUE(
     value * VALUE,
     error_code * ERROR_CODE
     ) bool
@@ -423,7 +423,7 @@ func SetDatabaseValue(
 
 // ~~
 
-func RemoveDatabaseValue(
+func RemoveDatabaseVALUE(
     value * VALUE,
     error_code * ERROR_CODE
     ) bool
@@ -446,7 +446,7 @@ func RemoveDatabaseValue(
 
 // ~~
 
-func GetDatabaseValue(
+func GetDatabaseVALUE(
     value * VALUE,
     error_code * ERROR_CODE
     ) bool
@@ -476,7 +476,7 @@ func GetDatabaseValue(
 
 // ~~
 
-func GetDatabaseValueList(
+func GetDatabaseVALUEList(
     value_array * [] VALUE,
     error_code * ERROR_CODE
     ) bool
@@ -518,7 +518,7 @@ func GetDatabaseValueList(
 
 // ~~
 
-func AddDatabaseData(
+func AddDatabaseDATA(
     data * DATA,
     error_code * ERROR_CODE
     ) bool
@@ -543,7 +543,7 @@ func AddDatabaseData(
 
 // ~~
 
-func SetDatabaseData(
+func SetDatabaseDATA(
     data * DATA,
     error_code * ERROR_CODE
     ) bool
@@ -568,7 +568,7 @@ func SetDatabaseData(
 
 // ~~
 
-func RemoveDatabaseData(
+func RemoveDatabaseDATA(
     data * DATA,
     error_code * ERROR_CODE
     ) bool
@@ -591,7 +591,7 @@ func RemoveDatabaseData(
 
 // ~~
 
-func GetDatabaseData(
+func GetDatabaseDATA(
     data * DATA,
     error_code * ERROR_CODE
     ) bool
@@ -619,7 +619,7 @@ func GetDatabaseData(
 
 // ~~
 
-func GetDatabaseDataList(
+func GetDatabaseDATAList(
     data_array * [] DATA,
     error_code * ERROR_CODE
     ) bool

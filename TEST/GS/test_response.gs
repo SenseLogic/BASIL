@@ -1,4 +1,4 @@
-func WriteResponseSimple(
+func WriteResponseSIMPLE(
     writer io.Writer,
     simple * SIMPLE
     )
@@ -40,7 +40,7 @@ func WriteResponseSimple(
 
 // ~~
 
-func WriteResponseCompound(
+func WriteResponseCOMPOUND(
     writer io.Writer,
     compound * COMPOUND
     )
@@ -74,7 +74,7 @@ func WriteResponseCompound(
 
 // ~~
 
-func WriteResponseValue(
+func WriteResponseVALUE(
     writer io.Writer,
     value * VALUE
     )
@@ -94,7 +94,7 @@ func WriteResponseValue(
 
 // ~~
 
-func WriteResponseData(
+func WriteResponseDATA(
     writer io.Writer,
     data * DATA
     )

@@ -1,6 +1,6 @@
 // -- FUNCTIONS
 
-function GetDatabaseArticleArray(
+function GetDatabaseARTICLEArray(
     )
 {
     var statement = GetDatabaseStatement( 'select Id, SectionId, UserId, Title, Text, Image, Date from ARTICLE' );
@@ -15,7 +15,7 @@ function GetDatabaseArticleArray(
 
 // ~~
 
-function GetSortedDatabaseArticleArray(
+function GetSortedDatabaseARTICLEArray(
     )
 {
     var statement = GetDatabaseStatement( 'select Id, SectionId, UserId, Title, Text, Image, Date from ARTICLE order by UserId asc, SectionId asc' );
@@ -30,7 +30,7 @@ function GetSortedDatabaseArticleArray(
 
 // ~~
 
-function GetDatabaseArticleById(
+function GetDatabaseARTICLEById(
     int id
     )
 {
@@ -47,7 +47,7 @@ function GetDatabaseArticleById(
 
 // ~~
 
-function AddDatabaseArticle(
+function AddDatabaseARTICLE(
     int section_id,
     int user_id,
     string title,
@@ -72,7 +72,7 @@ function AddDatabaseArticle(
 
 // ~~
 
-function SetDatabaseArticle(
+function SetDatabaseARTICLE(
     int id,
     int section_id,
     int user_id,
@@ -99,7 +99,7 @@ function SetDatabaseArticle(
 
 // ~~
 
-function RemoveDatabaseArticleById(
+function RemoveDatabaseARTICLEById(
     int id
     )
 {

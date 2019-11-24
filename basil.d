@@ -280,21 +280,21 @@ class RANDOM
         string
             text;
         string[]
-            verse_array,
+            line_array,
             word_array;
         VERTEX
             prior_vertex,
             vertex;
 
-        text = GetExecutablePath( "english_text.txt" ).ReadText();
-        verse_array = text.strip().replace( "\r", "" ).split( '\n' );
+        text = GetExecutablePath( "english_text.txt" ).ReadText().strip().replace( "\r", "" );
+        line_array = text.split( '\n' );
 
         VertexArray = null;
         VertexIndexMap = null;
 
-        foreach ( ref verse; verse_array )
+        foreach ( ref line; line_array )
         {
-            word_array = verse.split( ' ' );
+            word_array = line.split( ' ' );
             prior_vertex = null;
 
             foreach ( word_index, ref word; word_array )
@@ -857,6 +857,54 @@ class RANDOM
 
     // ~~
 
+    string MakeCountryCode(
+        )
+    {
+        return
+            PickElement(
+                [
+                    "AD", "AE", "AF", "AG", "AI", "AL", "AM",
+                    "AN", "AO", "AQ", "AR", "AS", "AT", "AU",
+                    "AW", "AX", "AZ", "BA", "BB", "BD", "BE",
+                    "BF", "BG", "BH", "BI", "BJ", "BL", "BM",
+                    "BN", "BO", "BQ", "BR", "BS", "BT", "BV",
+                    "BW", "BY", "BZ", "CA", "CC", "CD", "CF",
+                    "CG", "CH", "CI", "CK", "CL", "CM", "CN",
+                    "CO", "CR", "CS", "CU", "CV", "CW", "CX",
+                    "CY", "CZ", "DE", "DJ", "DK", "DM", "DO",
+                    "DZ", "EC", "EE", "EG", "EH", "ER", "ES",
+                    "ET", "FI", "FJ", "FK", "FM", "FO", "FR",
+                    "GA", "GB", "GD", "GE", "GF", "GG", "GH",
+                    "GI", "GL", "GM", "GN", "GP", "GQ", "GR",
+                    "GS", "GT", "GU", "GW", "GY", "HK", "HM",
+                    "HN", "HR", "HT", "HU", "ID", "IE", "IL",
+                    "IM", "IN", "IO", "IQ", "IR", "IS", "IT",
+                    "JE", "JM", "JO", "JP", "KE", "KG", "KH",
+                    "KI", "KM", "KN", "KP", "KR", "KW", "KY",
+                    "KZ", "LA", "LB", "LC", "LI", "LK", "LR",
+                    "LS", "LT", "LU", "LV", "LY", "MA", "MC",
+                    "MD", "ME", "MF", "MG", "MH", "MK", "ML",
+                    "MM", "MN", "MO", "MP", "MQ", "MR", "MS",
+                    "MT", "MU", "MV", "MW", "MX", "MY", "MZ",
+                    "NA", "NC", "NE", "NF", "NG", "NI", "NL",
+                    "NO", "NP", "NR", "NU", "NZ", "OM", "PA",
+                    "PE", "PF", "PG", "PH", "PK", "PL", "PM",
+                    "PN", "PR", "PS", "PT", "PW", "PY", "QA",
+                    "RE", "RO", "RS", "RU", "RW", "SA", "SB",
+                    "SC", "SD", "SE", "SG", "SH", "SI", "SJ",
+                    "SK", "SL", "SM", "SN", "SO", "SR", "SS",
+                    "ST", "SV", "SX", "SY", "SZ", "TC", "TD",
+                    "TF", "TG", "TH", "TJ", "TK", "TL", "TM",
+                    "TN", "TO", "TR", "TT", "TV", "TW", "TZ",
+                    "UA", "UG", "UM", "US", "UY", "UZ", "VA",
+                    "VC", "VE", "VG", "VI", "VN", "VU", "WF",
+                    "WS", "XK", "YE", "YT", "ZA", "ZM", "ZW"
+                ]
+                );
+    }
+
+    // ~~
+
     string MakeWord(
         )
     {
@@ -1236,6 +1284,22 @@ class TYPE
                 return "TEXT";
             }
         }
+        else if ( type_name == "STRING8" )
+        {
+            return "TINYTEXT";
+        }
+        else if ( type_name == "STRING16" )
+        {
+            return "TEXT";
+        }
+        else if ( type_name == "STRING24" )
+        {
+            return "MEDIUMTEXT";
+        }
+        else if ( type_name == "STRING32" )
+        {
+            return "LONGTEXT";
+        }
         else if ( type_name == "DATETIME" )
         {
             return "DATETIME";
@@ -1355,7 +1419,11 @@ class TYPE
         {
             return "double";
         }
-        else if ( type_name == "STRING" )
+        else if ( type_name == "STRING"
+                  || type_name == "STRING8"
+                  || type_name == "STRING16"
+                  || type_name == "STRING24"
+                  || type_name == "STRING32" )
         {
             return "text";
         }
@@ -1470,7 +1538,11 @@ class TYPE
         {
             return "float64";
         }
-        else if ( type_name == "STRING" )
+        else if ( type_name == "STRING"
+                  || type_name == "STRING8"
+                  || type_name == "STRING16"
+                  || type_name == "STRING24"
+                  || type_name == "STRING32" )
         {
             return "string";
         }
@@ -1588,7 +1660,11 @@ class TYPE
         {
             return "Float64";
         }
-        else if ( type_name == "STRING" )
+        else if ( type_name == "STRING"
+                  || type_name == "STRING8"
+                  || type_name == "STRING16"
+                  || type_name == "STRING24"
+                  || type_name == "STRING32" )
         {
             return "String";
         }
@@ -1667,6 +1743,10 @@ class TYPE
             return "float";
         }
         else if ( type_name == "STRING"
+                  || type_name == "STRING8"
+                  || type_name == "STRING16"
+                  || type_name == "STRING24"
+                  || type_name == "STRING32"
                   || type_name == "DATETIME"
                   || type_name == "DATE"
                   || type_name == "TIME"
@@ -1791,7 +1871,11 @@ class TYPE
         {
             return "Float64";
         }
-        else if ( type_name == "STRING" )
+        else if ( type_name == "STRING"
+                  || type_name == "STRING8"
+                  || type_name == "STRING16"
+                  || type_name == "STRING24"
+                  || type_name == "STRING32" )
         {
             return "String";
         }
@@ -1915,6 +1999,10 @@ class TYPE
             return "Float64";
         }
         else if ( type_name == "STRING"
+                  || type_name == "STRING8"
+                  || type_name == "STRING16"
+                  || type_name == "STRING24"
+                  || type_name == "STRING32"
                   || type_name == "DATETIME"
                   || type_name == "DATE"
                   || type_name == "TIME"
@@ -2028,7 +2116,11 @@ class TYPE
         {
             return "double";
         }
-        else if ( type_name == "STRING" )
+        else if ( type_name == "STRING"
+                  || type_name == "STRING8"
+                  || type_name == "STRING16"
+                  || type_name == "STRING24"
+                  || type_name == "STRING32" )
         {
             return "String";
         }
@@ -2146,7 +2238,11 @@ class TYPE
         {
             return "Float64";
         }
-        else if ( type_name == "STRING" )
+        else if ( type_name == "STRING"
+                  || type_name == "STRING8"
+                  || type_name == "STRING16"
+                  || type_name == "STRING24"
+                  || type_name == "STRING32" )
         {
             return "String";
         }
@@ -2270,6 +2366,10 @@ class TYPE
             return "f64";
         }
         else if ( type_name == "STRING"
+                  || type_name == "STRING8"
+                  || type_name == "STRING16"
+                  || type_name == "STRING24"
+                  || type_name == "STRING32"
                   || type_name == "DATETIME"
                   || type_name == "DATE"
                   || type_name == "TIME"
@@ -3372,7 +3472,11 @@ class VALUE
             {
                 Text = Random.MakeText( "latin", Type.Column.MinimumRandomCount, Type.Column.MaximumRandomCount, Type.Column.MinimumRandomInteger, Type.Column.MaximumRandomInteger );
             }
-            else if ( Type.BaseName == "STRING" )
+            else if ( Type.BaseName == "STRING"
+                      || Type.BaseName == "STRING8"
+                      || Type.BaseName == "STRING16"
+                      || Type.BaseName == "STRING24"
+                      || Type.BaseName == "STRING32" )
             {
                 if ( Type.ColumnName.endsWith( "Title" ) )
                 {
@@ -3494,6 +3598,10 @@ class VALUE
                               "Drive",
                               "Park"
                             ][ Random.MakeIndex( 8 ) ];
+                }
+                else if ( Type.ColumnName.endsWith( "CountryCode" ) )
+                {
+                    Text = Random.MakeCountryCode();
                 }
                 else if ( Type.ColumnName.endsWith( "Code" ) )
                 {
@@ -3789,6 +3897,12 @@ class VALUE
             {
                 Text = Text.toUpper();
             }
+
+            if ( Type.Capacity > 0
+                 && Text.length > Type.Capacity )
+            {
+                Text.length = Type.Capacity;
+            }
         }
         while ( !it_is_sub_value
                 && Type.Column.IsUnique
@@ -3830,6 +3944,7 @@ class COLUMN
         IsIncremented,
         IsLastIncremented,
         IsLastNotIncremented,
+        IsConstrained,
         IsAscending,
         IsDescending,
         IsNow,
@@ -4022,7 +4137,8 @@ class COLUMN
                 .replace( "{{column_is_last_not_key}}", GetBooleanText( IsLastNotKey ) )
                 .replace( "{{column_is_incremented}}", GetBooleanText( IsIncremented ) )
                 .replace( "{{column_is_last_incremented}}", GetBooleanText( IsLastIncremented ) )
-                .replace( "{{column_is_last_not_incremented}}", GetBooleanText( IsLastNotIncremented ) );
+                .replace( "{{column_is_last_not_incremented}}", GetBooleanText( IsLastNotIncremented ) )
+                .replace( "{{column_is_constrained}}", GetBooleanText( IsConstrained ) );
     }
 
     // -- OPERATIONS
@@ -4104,6 +4220,10 @@ class COLUMN
                 else if ( property_name == "incremented" )
                 {
                     IsIncremented = ( value_text_array[ 1 ] != "0" );
+                }
+                else if ( property_name == "constrainde" )
+                {
+                    IsConstrained = ( value_text_array[ 1 ] != "0" );
                 }
                 else if ( property_name == "ascending" )
                 {
@@ -7583,7 +7703,8 @@ class SCHEMA
 
                 foreach ( ref column; table.ColumnArray )
                 {
-                    if ( column.IsStored
+                    if ( column.IsIndexed
+                         && column.IsStored
                          && column.IsForeign
                          && column.ForeignColumn.IsKey
                          && column.ForeignColumn.IsStored
@@ -7592,7 +7713,7 @@ class SCHEMA
                         ++foreign_key_index;
 
                         sql_schema_file_text
-                            ~= "    index `fk_"
+                            ~= "    index `index_"
                                ~ table.Name.toLower()
                                ~ "_"
                                ~ column.ForeignColumn.Table.Name.toLower()
@@ -7608,7 +7729,8 @@ class SCHEMA
 
                 foreach ( ref column; table.ColumnArray )
                 {
-                    if ( column.IsStored
+                    if ( column.IsConstrained
+                         && column.IsStored
                          && column.IsForeign
                          && column.ForeignColumn.IsKey
                          && column.ForeignColumn.IsStored
@@ -7617,7 +7739,7 @@ class SCHEMA
                         ++foreign_key_index;
 
                         sql_schema_file_text
-                            ~= "    constraint `fk_"
+                            ~= "    constraint `constraint_"
                                ~ table.Name.toLower()
                                ~ "_"
                                ~ column.ForeignColumn.Table.Name.toLower()
@@ -8837,7 +8959,7 @@ string GetCapitalizedText(
     string text
     )
 {
-    return text[ 0 .. 1 ].toUpper() ~ text[ 1 .. $ ].toLower();
+    return text[ 0 .. 1 ].toUpper() ~ text[ 1 .. $ ];
 }
 
 // ~~

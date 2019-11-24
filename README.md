@@ -283,6 +283,7 @@ count <i>row_count</i>
 [!]static
 [!]required
 [!]incremented
+[!]constrained
 ascending [<i>order index</i>]
 descending [<i>order index</i>]
 now
@@ -328,6 +329,7 @@ Address
 Code
 City
 Region
+CountryCode
 Country
 Company
 Image
@@ -359,6 +361,10 @@ UINT64
 FLOAT32
 FLOAT64
 STRING
+STRING8
+STRING16
+STRING24
+STRING32
 DATETIME
 DATE
 TIME
