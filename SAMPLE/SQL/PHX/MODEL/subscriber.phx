@@ -1,6 +1,6 @@
 // -- FUNCTIONS
 
-function GetDatabaseSUBSCRIBERArray(
+function GetDatabaseSubscriberArray(
     )
 {
     var statement = GetDatabaseStatement( 'select Id, Name, Email from SUBSCRIBER' );
@@ -15,7 +15,7 @@ function GetDatabaseSUBSCRIBERArray(
 
 // ~~
 
-function GetDatabaseSUBSCRIBERById(
+function GetDatabaseSubscriberById(
     int id
     )
 {
@@ -32,7 +32,7 @@ function GetDatabaseSUBSCRIBERById(
 
 // ~~
 
-function GetDatabaseSUBSCRIBERByEmail(
+function GetDatabaseSubscriberByEmail(
     string email
     )
 {
@@ -49,7 +49,7 @@ function GetDatabaseSUBSCRIBERByEmail(
 
 // ~~
 
-function AddDatabaseSUBSCRIBER(
+function AddDatabaseSubscriber(
     string name,
     string email
     )
@@ -68,7 +68,7 @@ function AddDatabaseSUBSCRIBER(
 
 // ~~
 
-function SetDatabaseSUBSCRIBER(
+function SetDatabaseSubscriber(
     int id,
     string name,
     string email
@@ -87,7 +87,7 @@ function SetDatabaseSUBSCRIBER(
 
 // ~~
 
-function RemoveDatabaseSUBSCRIBERById(
+function RemoveDatabaseSubscriberById(
     int id
     )
 {

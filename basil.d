@@ -1708,7 +1708,7 @@ class TYPE
         }
         else
         {
-            return Name;
+            return Name.GetAttributeText();
         }
     }
 
@@ -1919,7 +1919,7 @@ class TYPE
         }
         else
         {
-            return Name;
+            return Name.GetAttributeText();
         }
     }
 
@@ -2286,7 +2286,7 @@ class TYPE
         }
         else
         {
-            return Name;
+            return Name.GetAttributeText();
         }
     }
 
@@ -7062,7 +7062,7 @@ class SCHEMA
     this(
         )
     {
-        RowCount = 10;
+        RowCount = 0;
     }
 
     // -- INQUIRIES
@@ -9019,7 +9019,7 @@ string GetAttributeText(
     string text
     )
 {
-    return text.GetPascalCaseText();
+    return text.toLower().GetPascalCaseText();
 }
 
 // ~~

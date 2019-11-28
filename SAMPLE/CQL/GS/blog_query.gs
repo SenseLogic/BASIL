@@ -1,4 +1,4 @@
-func AddDatabaseSECTION(
+func AddDatabaseSection(
     section * SECTION,
     error_code * ERROR_CODE
     ) bool
@@ -27,7 +27,7 @@ func AddDatabaseSECTION(
 
 // ~~
 
-func SetDatabaseSECTION(
+func SetDatabaseSection(
     section * SECTION,
     error_code * ERROR_CODE
     ) bool
@@ -54,7 +54,7 @@ func SetDatabaseSECTION(
 
 // ~~
 
-func RemoveDatabaseSECTION(
+func RemoveDatabaseSection(
     section * SECTION,
     error_code * ERROR_CODE
     ) bool
@@ -77,7 +77,7 @@ func RemoveDatabaseSECTION(
 
 // ~~
 
-func GetDatabaseSECTION(
+func GetDatabaseSection(
     section * SECTION,
     error_code * ERROR_CODE
     ) bool
@@ -107,7 +107,7 @@ func GetDatabaseSECTION(
 
 // ~~
 
-func GetDatabaseSECTIONList(
+func GetDatabaseSectionList(
     section_array * [] SECTION,
     error_code * ERROR_CODE
     ) bool
@@ -149,7 +149,7 @@ func GetDatabaseSECTIONList(
 
 // ~~
 
-func AddDatabaseUSER(
+func AddDatabaseUser(
     user * USER,
     error_code * ERROR_CODE
     ) bool
@@ -187,7 +187,7 @@ func AddDatabaseUSER(
 
 // ~~
 
-func SetDatabaseUSER(
+func SetDatabaseUser(
     user * USER,
     error_code * ERROR_CODE
     ) bool
@@ -223,7 +223,7 @@ func SetDatabaseUSER(
 
 // ~~
 
-func RemoveDatabaseUSER(
+func RemoveDatabaseUser(
     user * USER,
     error_code * ERROR_CODE
     ) bool
@@ -246,7 +246,7 @@ func RemoveDatabaseUSER(
 
 // ~~
 
-func GetDatabaseUSER(
+func GetDatabaseUser(
     user * USER,
     error_code * ERROR_CODE
     ) bool
@@ -285,7 +285,7 @@ func GetDatabaseUSER(
 
 // ~~
 
-func GetDatabaseUSERList(
+func GetDatabaseUserList(
     user_array * [] USER,
     error_code * ERROR_CODE
     ) bool
@@ -336,7 +336,7 @@ func GetDatabaseUSERList(
 
 // ~~
 
-func AddDatabaseARTICLE(
+func AddDatabaseArticle(
     article * ARTICLE,
     error_code * ERROR_CODE
     ) bool
@@ -367,7 +367,7 @@ func AddDatabaseARTICLE(
 
 // ~~
 
-func SetDatabaseARTICLE(
+func SetDatabaseArticle(
     article * ARTICLE,
     error_code * ERROR_CODE
     ) bool
@@ -396,7 +396,7 @@ func SetDatabaseARTICLE(
 
 // ~~
 
-func RemoveDatabaseARTICLE(
+func RemoveDatabaseArticle(
     article * ARTICLE,
     error_code * ERROR_CODE
     ) bool
@@ -419,7 +419,7 @@ func RemoveDatabaseARTICLE(
 
 // ~~
 
-func GetDatabaseARTICLE(
+func GetDatabaseArticle(
     article * ARTICLE,
     error_code * ERROR_CODE
     ) bool
@@ -451,7 +451,7 @@ func GetDatabaseARTICLE(
 
 // ~~
 
-func GetDatabaseARTICLEList(
+func GetDatabaseArticleList(
     article_array * [] ARTICLE,
     error_code * ERROR_CODE
     ) bool
@@ -495,7 +495,7 @@ func GetDatabaseARTICLEList(
 
 // ~~
 
-func AddDatabaseCOMMENT(
+func AddDatabaseComment(
     comment * COMMENT,
     error_code * ERROR_CODE
     ) bool
@@ -524,7 +524,7 @@ func AddDatabaseCOMMENT(
 
 // ~~
 
-func SetDatabaseCOMMENT(
+func SetDatabaseComment(
     comment * COMMENT,
     error_code * ERROR_CODE
     ) bool
@@ -551,7 +551,7 @@ func SetDatabaseCOMMENT(
 
 // ~~
 
-func RemoveDatabaseCOMMENT(
+func RemoveDatabaseComment(
     comment * COMMENT,
     error_code * ERROR_CODE
     ) bool
@@ -574,7 +574,7 @@ func RemoveDatabaseCOMMENT(
 
 // ~~
 
-func GetDatabaseCOMMENT(
+func GetDatabaseComment(
     comment * COMMENT,
     error_code * ERROR_CODE
     ) bool
@@ -604,7 +604,7 @@ func GetDatabaseCOMMENT(
 
 // ~~
 
-func GetDatabaseCOMMENTList(
+func GetDatabaseCommentList(
     comment_array * [] COMMENT,
     error_code * ERROR_CODE
     ) bool
@@ -646,7 +646,7 @@ func GetDatabaseCOMMENTList(
 
 // ~~
 
-func AddDatabaseSUBSCRIBER(
+func AddDatabaseSubscriber(
     subscriber * SUBSCRIBER,
     error_code * ERROR_CODE
     ) bool
@@ -673,7 +673,7 @@ func AddDatabaseSUBSCRIBER(
 
 // ~~
 
-func SetDatabaseSUBSCRIBER(
+func SetDatabaseSubscriber(
     subscriber * SUBSCRIBER,
     error_code * ERROR_CODE
     ) bool
@@ -698,7 +698,7 @@ func SetDatabaseSUBSCRIBER(
 
 // ~~
 
-func RemoveDatabaseSUBSCRIBER(
+func RemoveDatabaseSubscriber(
     subscriber * SUBSCRIBER,
     error_code * ERROR_CODE
     ) bool
@@ -721,7 +721,7 @@ func RemoveDatabaseSUBSCRIBER(
 
 // ~~
 
-func GetDatabaseSUBSCRIBER(
+func GetDatabaseSubscriber(
     subscriber * SUBSCRIBER,
     error_code * ERROR_CODE
     ) bool
@@ -749,7 +749,7 @@ func GetDatabaseSUBSCRIBER(
 
 // ~~
 
-func GetDatabaseSUBSCRIBERList(
+func GetDatabaseSubscriberList(
     subscriber_array * [] SUBSCRIBER,
     error_code * ERROR_CODE
     ) bool

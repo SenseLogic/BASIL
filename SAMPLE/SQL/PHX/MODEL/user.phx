@@ -1,6 +1,6 @@
 // -- FUNCTIONS
 
-function GetDatabaseUSERArray(
+function GetDatabaseUserArray(
     )
 {
     var statement = GetDatabaseStatement( 'select Id, FirstName, LastName, Email, Pseudonym, Password, Phone, Street, City, Code, Region, Country, Company, ItIsAdministrator from USER' );
@@ -15,7 +15,7 @@ function GetDatabaseUSERArray(
 
 // ~~
 
-function GetDatabaseUSERByEmailMap(
+function GetDatabaseUserByEmailMap(
     )
 {
     var statement = GetDatabaseStatement( 'select Id, FirstName, LastName, Email, Pseudonym, Password, Phone, Street, City, Code, Region, Country, Company, ItIsAdministrator from USER' );
@@ -37,7 +37,7 @@ function GetDatabaseUSERByEmailMap(
 
 // ~~
 
-function GetDatabaseUSERById(
+function GetDatabaseUserById(
     int id
     )
 {
@@ -54,7 +54,7 @@ function GetDatabaseUSERById(
 
 // ~~
 
-function AddDatabaseUSER(
+function AddDatabaseUser(
     string first_name,
     string last_name,
     string email,
@@ -95,7 +95,7 @@ function AddDatabaseUSER(
 
 // ~~
 
-function SetDatabaseUSER(
+function SetDatabaseUser(
     int id,
     string first_name,
     string last_name,
@@ -136,7 +136,7 @@ function SetDatabaseUSER(
 
 // ~~
 
-function RemoveDatabaseUSERById(
+function RemoveDatabaseUserById(
     int id
     )
 {
