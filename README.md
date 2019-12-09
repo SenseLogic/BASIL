@@ -270,6 +270,44 @@ count <i>row_count</i>
 count <i>row_count</i>
 </pre>
 
+### Column data
+
+#### Functions
+
+Real <i>minimum_value</i> <i>maximum_value</i>
+Integer <i>minimum_value</i> <i>maximum_value</i>
+Natural <i>minimum_value</i> <i>maximum_value</i> [<i>digit_count</i>]
+English <i>minimum_sentence_count</i> <i>maximum_sentence_count</i> <i>minimum_word_count</i> <i>maximum_word_count</i>
+Latin <i>minimum_sentence_count</i> <i>maximum_sentence_count</i> <i>minimum_word_count</i> <i>maximum_word_count</i>
+Name <i>minimum_letter_count</i> <i>maximum_letter_count</i>
+FirstName
+LastName
+FullName
+
+#### Filters
+
+<pre>
+LowerCase
+UpperCase
+MinorCase
+MajorCase
+SnakeCase
+PascalCase
+CamelCase
+RemoveComments
+RemoveBlanks
+PackStrings
+PackIdentifiers
+ReplaceText old_text new_text
+ReplacePrefix old_prefix new_prefix
+ReplaceSuffix old_suffix new_suffix
+ReplaceIdentifier old_identifier new_identifier
+RemoveText text
+RemovePrefix prefix
+RemoveSuffix suffix
+RemoveIdentifier identifier
+</pre>
+
 ### Column properties
 
 <pre>
@@ -294,17 +332,6 @@ goname <i>go_field_name</i>
 crystalname <i>crystal_field_name</i>
 csharpname <i>csharp_field_name</i>
 rustname <i>rust_field_name</i>
-firstname
-lastname
-fullname
-lowercase
-uppercase
-real <i>minimum_value</i> <i>maximum_value</i>
-integer <i>minimum_value</i> <i>maximum_value</i>
-natural <i>minimum_value</i> <i>maximum_value</i> [<i>digit_count</i>]
-name <i>minimum_letter_count</i> <i>maximum_letter_count</i>
-english <i>minimum_sentence_count</i> <i>maximum_sentence_count</i> <i>minimum_word_count</i> <i>maximum_word_count</i>
-latin  <i>minimum_sentence_count</i> <i>maximum_sentence_count</i> <i>minimum_word_count</i> <i>maximum_word_count</i>
 count <i>minimum_element_count</i> <i>maximum_element_count</i>
 count <i>element_count</i>
 </pre>

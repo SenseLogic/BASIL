@@ -15,6 +15,7 @@ TEST | count 10
         Float32 : FLOAT32
         Float64 : FLOAT64
         String : STRING
+        Name : STRING
         Date : DATE | unique
         DateTime : DATETIME
         Blob : BLOB
@@ -22,7 +23,7 @@ TEST | count 10
     COMPOUND
 
         Id : INT32 | key, unique, incremented
-        Location : Country : STRING | uppercase
+        Location : STRING | uppercase
         Name : TUPLE[ FirstName : STRING, LastName : STRING ] | unique
         NameSet : SET[ TUPLE[ FirstName : STRING, LastName : STRING ] ] | count 2
         PhoneList : LIST[ Phone : STRING ] | count 2

@@ -7,7 +7,7 @@ func AddDatabaseSimple(
 
     error_
         := DatabaseSession.Query(
-               "insert into SIMPLE ( Uuid, Bool, Int8, Uint8, Int16, Uint16, Int32, Uint32, Int64, Uint64, Float32, Float64, String, Date, DateTime, Blob ) values ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? )",
+               "insert into SIMPLE ( Uuid, Bool, Int8, Uint8, Int16, Uint16, Int32, Uint32, Int64, Uint64, Float32, Float64, String, Name, Date, DateTime, Blob ) values ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? )",
                simple.Uuid,
                simple.Bool,
                simple.Int8,
@@ -21,6 +21,7 @@ func AddDatabaseSimple(
                simple.Float32,
                simple.Float64,
                simple.String,
+               simple.Name,
                simple.Date,
                simple.DateTime,
                simple.Blob
@@ -45,7 +46,7 @@ func SetDatabaseSimple(
 {
     error_
         := DatabaseSession.Query(
-               "insert into SIMPLE ( Uuid, Bool, Int8, Uint8, Int16, Uint16, Int32, Uint32, Int64, Uint64, Float32, Float64, String, Date, DateTime, Blob ) values ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? )",
+               "insert into SIMPLE ( Uuid, Bool, Int8, Uint8, Int16, Uint16, Int32, Uint32, Int64, Uint64, Float32, Float64, String, Name, Date, DateTime, Blob ) values ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? )",
                simple.Uuid,
                simple.Bool,
                simple.Int8,
@@ -59,6 +60,7 @@ func SetDatabaseSimple(
                simple.Float32,
                simple.Float64,
                simple.String,
+               simple.Name,
                simple.Date,
                simple.DateTime,
                simple.Blob
@@ -106,7 +108,7 @@ func GetDatabaseSimple(
 {
     error_
         := DatabaseSession.Query(
-               "select Bool, Int8, Uint8, Int16, Uint16, Int32, Uint32, Int64, Uint64, Float32, Float64, String, Date, DateTime, Blob from SIMPLE where Uuid = ?",
+               "select Bool, Int8, Uint8, Int16, Uint16, Int32, Uint32, Int64, Uint64, Float32, Float64, String, Name, Date, DateTime, Blob from SIMPLE where Uuid = ?",
                simple.Uuid
                )
                .Consistency( gocql.One )
@@ -123,6 +125,7 @@ func GetDatabaseSimple(
                     &simple.Float32,
                     &simple.Float64,
                     &simple.String,
+                    &simple.Name,
                     &simple.Date,
                     &simple.DateTime,
                     &simple.Blob
@@ -150,7 +153,7 @@ func GetDatabaseSimpleList(
 
     iterator
         := DatabaseSession.Query(
-               "select Uuid, Bool, Int8, Uint8, Int16, Uint16, Int32, Uint32, Int64, Uint64, Float32, Float64, String, Date, DateTime, Blob from SIMPLE"
+               "select Uuid, Bool, Int8, Uint8, Int16, Uint16, Int32, Uint32, Int64, Uint64, Float32, Float64, String, Name, Date, DateTime, Blob from SIMPLE"
                )
                .Consistency( gocql.One )
                .Iter();
@@ -171,6 +174,7 @@ func GetDatabaseSimpleList(
             &simple.Float32,
             &simple.Float64,
             &simple.String,
+            &simple.Name,
             &simple.Date,
             &simple.DateTime,
             &simple.Blob

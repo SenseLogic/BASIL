@@ -16,6 +16,7 @@ class SIMPLE
         this.Float32 = null;
         this.Float64 = null;
         this.String = null;
+        this.Name = null;
         this.Date = null;
         this.DateTime = null;
         this.Blob = null;

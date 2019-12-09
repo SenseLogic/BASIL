@@ -13,6 +13,7 @@ struct SIMPLE
     float32 : f32,
     float64 : f64,
     string : String,
+    name : String,
     date : String,
     date_time : String,
     blob : String

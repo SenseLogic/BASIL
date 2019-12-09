@@ -29,6 +29,8 @@ func WriteResponseSimple(
     WriteResponseFloat64( writer, simple.Float64 );
     WriteResponse( writer, ",\"String\":" );
     WriteResponseString( writer, simple.String );
+    WriteResponse( writer, ",\"Name\":" );
+    WriteResponseString( writer, simple.Name );
     WriteResponse( writer, ",\"Date\":" );
     WriteResponseDateTime( writer, simple.Date );
     WriteResponse( writer, ",\"DateTime\":" );

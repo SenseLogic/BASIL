@@ -32,7 +32,8 @@ public class SIMPLE
     public double
         Float64;
     public String
-        String;
+        String,
+        Name;
     public DateTime
         Date,
         DateTime;

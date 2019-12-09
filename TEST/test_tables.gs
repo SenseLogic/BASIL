@@ -25,6 +25,7 @@ func main(
     fmt.Println( "            Float32," );
     fmt.Println( "            Float64," );
     fmt.Println( "            String," );
+    fmt.Println( "            Name," );
     fmt.Println( "            Date," );
     fmt.Println( "            DateTime," );
     fmt.Println( "            Blob" );
@@ -43,6 +44,7 @@ func main(
     fmt.Println( "            Float32," );
     fmt.Println( "            Float64," );
     fmt.Println( "            String," );
+    fmt.Println( "            Name," );
     fmt.Println( "            Date," );
     fmt.Println( "            DateTime," );
     fmt.Println( "            Blob" );
@@ -60,6 +62,7 @@ func main(
     fmt.Println( "            Float32," );
     fmt.Println( "            Float64," );
     fmt.Println( "            String," );
+    fmt.Println( "            Name," );
     fmt.Println( "            Date," );
     fmt.Println( "            DateTime," );
     fmt.Println( "            Blob" );

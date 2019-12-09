@@ -25,6 +25,7 @@ class SIMPLE {
     Float32 : FLOAT32
     Float64 : FLOAT64
     String : STRING
+    Name : STRING
     Date : DATE
     DateTime : DATETIME
     Blob : BLOB

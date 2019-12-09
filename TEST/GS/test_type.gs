@@ -13,6 +13,7 @@ type SIMPLE struct
     Float32 float32    `db:"Float32"`;
     Float64 float64    `db:"Float64"`;
     String string    `db:"String"`;
+    Name string    `db:"Name"`;
     Date time.Time    `db:"Date"`;
     DateTime time.Time    `db:"DateTime"`;
     Blob [] byte    `db:"Blob"`;

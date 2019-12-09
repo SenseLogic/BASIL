@@ -16,6 +16,7 @@ type SIMPLE struct {
     Float32 float32;
     Float64 float64;
     String string;
+    Name string;
     Date time.Time;
     DateTime time.Time;
     Blob [] byte;

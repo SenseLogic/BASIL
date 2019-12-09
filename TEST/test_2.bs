@@ -1,0 +1,87 @@
+TEST | count 10
+
+    SIMPLE
+
+        Uuid : UUID | key, unique
+        Bool : BOOL | partitioned
+        Int8 : INT8 | clustered
+        Uint8 : UINT8 | indexed
+        Int16 : INT16
+        Uint16 : UINT16
+        Int32 : INT32
+        Uint32 : UINT32
+        Int64 : INT64
+        Uint64 : UINT64
+        Float32 : FLOAT32
+        Float64 : FLOAT64
+        String : STRING
+        Name : STRING
+        Date : DATE | unique
+        DateTime : DATETIME
+        Blob : BLOB
+
+    COMPOUND
+
+        Id : INT32 | key, unique, incremented
+        Location : STRING | uppercase
+        Name : TUPLE[ FirstName : STRING, LastName : STRING ] | unique
+        NameSet : SET[ TUPLE[ FirstName : STRING, LastName : STRING ] ] | count 2
+        PhoneList : LIST[ Phone : STRING ] | count 2
+        EmailSet : SET[ Email : STRING ] | count 2
+        CompanyMap : MAP[ Phone : STRING, Company : STRING ] | count 2
+        SimpleDate : SIMPLE.Date
+        SimpleDateMap : MAP[ COMPOUND.Name, SIMPLE.Date ] | count 2
+        SimpleDateSet : SET[ SIMPLE.Date ] | count 2
+        SimpleDateList : LIST[ SIMPLE.Date ] | count 1 3
+        NameSetMap : MAP[ SIMPLE.Date, COMPOUND.NameSet ] | count 2
+        SimplePointerArray : ARRAY[ POINTER[ SIMPLE ] ] | !stored
+
+    SIMPLE_DATA
+
+        Uuid : UUID = "{Uuid}" | key, unique
+        Bool : BOOL = "{0|1}" | partitioned
+        Int8 : INT8 = "{Integer -100 100}" | clustered
+        Uint8 : UINT8 = "{Natural 0 100}" | indexed
+        Int16 : INT16 = "{Integer -1000 1000}"
+        Uint16 : UINT16 = "{Natural 0 1000}"
+        Int32 : INT32 = "{Integer -1000 1000}"
+        Uint32 : UINT32 = "{Natural 0 1000}"
+        Int64 : INT64 = "{Integer -1000 1000}"
+        Uint64 : UINT64 = "{Natural 1000 1000}"
+        Float32 : FLOAT32 = "{Float 0.0 100.0}"
+        Float64 : FLOAT64 = "{Float 0.0 100.0}"
+        String : STRING = "{FirstName:Uppercase}" {{LastName:}"
+        OtherString : STRING = "{@String|@SIMPLE.String}"
+        Date : DATE = "{date}" | unique
+        DateTime : DATETIME = "{datetime}"
+        Blob : BLOB = "{blob}"
+
+    COMPOUND_DATA
+
+        Id : INT32 | key, unique, incremented
+        Location : STRING = "{country}" | uppercase
+        Name : TUPLE[ FirstName : STRING = "{firstname}", LastName : STRING = "{lastname}" ] | unique
+        NameSet : SET[ TUPLE[ FirstName : STRING = "{firstname}", LastName : STRING = "{lastname}" ] ] | count 2
+        PhoneList : LIST[ Phone : STRING = "{phone}" ] | count 2
+        EmailSet : SET[ Email : STRING = "{email}" ] | count 2
+        CompanyMap : MAP[ Phone : STRING = "{phone}", Company : STRING = "{company}" ] | count 2
+        SimpleDate : SIMPLE_DATA.Date
+        SimpleDateMap : MAP[ COMPOUND_DATA.Name, SIMPLE_DATA.Date ] | count 2
+        SimpleDateSet : SET[ SIMPLE_DATA.Date ] | count 2
+        SimpleDateList : LIST[ SIMPLE_DATA.Date ] | count 1 3
+        NameSetMap : MAP[ SIMPLE_DATA.Date, COMPOUND_DATA.NameSet ] | count 2
+        SimplePointerArray : ARRAY[ POINTER[ SIMPLE_DATA ] ] | !stored
+
+    VALUE | stored
+
+        Id : INT64 | key
+        Uuid : UUID | indexed
+        Name : STRING
+        Integer : INT32
+        Text : STRING
+
+    DATA
+
+        Uuid : UUID | key
+        ValueId : VALUE.Id
+        ValueUuid : VALUE.Uuid

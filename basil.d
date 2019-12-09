@@ -515,6 +515,22 @@ class RANDOM
 
     // ~~
 
+    string MakeDateTime(
+        )
+    {
+        return MakeDate() ~ " " ~ MakeTime();
+    }
+
+    // ~~
+
+    string MakeYear(
+        )
+    {
+        return MakeInteger( 2000, 2020 ).to!string();
+    }
+
+    // ~~
+
     string MakeBlob(
         long hexadecimal_digit_count
         )
@@ -817,6 +833,20 @@ class RANDOM
 
     // ~~
 
+    string MakeSlug(
+        string text
+        )
+    {
+        return
+            text
+                .toLower()
+                .replace( " ", "-" )
+                .replace( "\"", "-" )
+                .replace( ".", "" );
+    }
+
+    // ~~
+
     string MakeFirstName(
         )
     {
@@ -829,6 +859,123 @@ class RANDOM
         )
     {
         return PickElement( LastNameArray );
+    }
+
+    // ~~
+
+    string MakeFullName(
+        )
+    {
+        return PickElement( FirstNameArray ) ~ " " ~ PickElement( LastNameArray );
+    }
+
+    // ~~
+
+    string MakeEmail(
+        string first_name,
+        string last_name
+        )
+    {
+        return
+            ( ( first_name != "" ) ? first_name : MakeFirstName() ).toLower()
+            ~ "."
+            ~ ( ( last_name != "" ) ? last_name : MakeLastName() ).toLower()
+            ~ [
+                  "@gmail.com",
+                  "@yahoo.com",
+                  "@outlook.com",
+                  "@live.com",
+                  "@hotmail.com",
+                  "@mail.com"
+              ][ MakeIndex( 6 ) ];
+    }
+
+    // ~~
+
+    string MakePseudonym(
+        string email
+        )
+    {
+        return email.split( '@' )[ 0 ].replace( ".", "" );
+    }
+
+    // ~~
+
+    string MakePseudonym(
+        string first_name,
+        string last_name
+        )
+    {
+        return
+            ( ( ( first_name != "" ) ? first_name : MakeFirstName() )
+              ~ ( ( last_name != "" ) ? last_name : MakeLastName() ) ).toLower();
+    }
+
+    // ~~
+
+    string MakePassword(
+        )
+    {
+        return
+            MakeName( 4, 8 )
+            .InsertCharacter( MakeUppercaseLetter() )
+            .InsertCharacter( MakeDigit() )
+            .InsertCharacter( MakeSeparator() );
+    }
+
+    // ~~
+
+    string MakePhone(
+        )
+    {
+        return
+            "+"
+            ~ MakeInteger( 10, 99 ).to!string()
+            ~ " "
+            ~ MakeInteger( 100, 999 ).to!string()
+            ~ " "
+            ~ MakeInteger( 100, 999 ).to!string()
+            ~ " "
+            ~ MakeInteger( 100, 999 ).to!string();
+    }
+
+    // ~~
+
+    string MakeStreetName(
+        )
+    {
+        return
+            MakeLastName()
+            ~ " "
+            ~ [
+                  "Street",
+                  "Court",
+                  "Avenue",
+                  "Boulevard",
+                  "Lane",
+                  "Alley",
+                  "Drive",
+                  "Park"
+              ][ Random.MakeIndex( 8 ) ];
+    }
+
+    // ~~
+
+    string MakeAddress(
+        )
+    {
+        return
+            MakeInteger( 1, 100 ).to!string()
+            ~ " "
+            ~ MakeStreetName();
+    }
+
+    // ~~
+
+    string MakeCityCode(
+        )
+    {
+        return MakeInteger( 1000, 9999 ).to!string();
     }
 
     // ~~
@@ -901,6 +1048,125 @@ class RANDOM
                     "WS", "XK", "YE", "YT", "ZA", "ZM", "ZW"
                 ]
                 );
+    }
+
+    // ~~
+
+    string MakeCompanyName(
+        )
+    {
+        return
+            MakeLastName()
+            ~ " "
+            ~ [
+                  "Company",
+                  "Limited",
+                  "Incorporated",
+                  "Corporation",
+                  "Union",
+                  "Trust",
+                  "Cooperative",
+                  "Institute",
+                  "Foundation",
+                  "Association",
+                  "Bank",
+                  "Fund",
+                  "Insurance",
+                  "Security",
+                  "Services",
+                  "Club",
+                  "Society",
+                  "College",
+                  "University",
+                  "Church",
+                  "Media",
+                  "News",
+                  "Magazine",
+                  "Network",
+                  "Channel",
+                  "Group",
+                  "Agency",
+                  "Consulting",
+                  "Team",
+                  "Center",
+                  "Design",
+                  "Studio",
+                  "Central",
+                  "Direct",
+                  "Tech",
+                  "Store",
+                  "Market",
+                  "Online",
+                  "Shop",
+                  "Express",
+                  "Point",
+                  "Labs",
+                  "Software",
+                  "Depot",
+                  "Logic",
+                  "Factory",
+                  "Fx",
+                  "Solutions",
+                  "Dynamics",
+                  "Associates",
+                  "Fashion",
+                  "Vision"
+              ][ MakeIndex( 52 ) ];
+    }
+
+    // ~~
+
+    string MakeImageName(
+        )
+    {
+        return
+            MakeName( 8, 8 )
+            ~ [
+                  ".jpg",
+                  ".png",
+                  ".gif"
+              ][ MakeIndex( 3 ) ];
+    }
+
+    // ~~
+
+    string MakeFileName(
+        )
+    {
+        return
+            MakeName( 8, 8 )
+            ~ [
+                  ".pdf",
+                  ".doc",
+                  ".odt"
+              ][ MakeIndex( 3 ) ];
+    }
+
+    // ~~
+
+    string MakeFolderPath(
+        )
+    {
+        return MakeName( 8, 8 ) ~ "/";
+    }
+
+    // ~~
+
+    string MakeIsbn(
+        )
+    {
+        return
+            MakeInteger( 100, 999 ).to!string()
+            ~ "-"
+            ~ MakeInteger( 1000000000, 9999999999 ).to!string();
+    }
+
+    // ~~
+
+    string MakeTagList(
+        )
+    {
+        return MakeEnglishSentence( 5, 10 ).replace( " ", ", " );
     }
 
     // ~~
@@ -1083,6 +1349,26 @@ class RANDOM
         }
 
         return text;
+    }
+
+    // ~~
+
+    string MakeTitle(
+        string text
+        )
+    {
+        return text.GetCapitalizedText() ~ ".";
+    }
+
+    // ~~
+
+    string MakeTitle(
+        string language,
+        long minimum_word_count,
+        long maximum_word_count
+        )
+    {
+        return MakeTitle( MakeSentence( language, minimum_word_count, maximum_word_count ) );
     }
 }
 
@@ -3459,10 +3745,7 @@ class VALUE
             }
             else if ( Type.Column.IsRandomFullName )
             {
-                Text
-                    = Random.MakeFirstName()
-                      ~ " "
-                      ~ Random.MakeLastName();
+                Text = Random.MakeFullName();
             }
             else if ( Type.Column.IsRandomEnglish )
             {
@@ -3480,7 +3763,7 @@ class VALUE
             {
                 if ( Type.ColumnName.endsWith( "Title" ) )
                 {
-                    Text = Random.MakeSentence( "english", 4, 8 ).GetCapitalizedText() ~ ".";
+                    Text = Random.MakeTitle( "english", 4, 8 );
                 }
                 else if ( Type.ColumnName.endsWith( "Slug" ) )
                 {
@@ -3500,12 +3783,7 @@ class VALUE
                         Text = Random.MakeName( 6, 12 );
                     }
 
-                    Text
-                        = Text
-                               .toLower()
-                               .replace( " ", "-" )
-                               .replace( "\"", "-" )
-                               .replace( ".", "" );
+                    Text = Random.MakeSlug( Text );
                 }
                 else if ( Type.ColumnName.endsWith( "Text" ) )
                 {
@@ -3530,74 +3808,35 @@ class VALUE
 
                     if ( prior_email != "" )
                     {
-                        Text = prior_email.split( '@' )[ 0 ].replace( ".", "" );
+                        Text = Random.MakePseudonym( prior_email );
                     }
                     else
                     {
                         prior_first_name = Type.Column.FindPriorColumnValue( "FirstName", row_index );
                         prior_last_name = Type.Column.FindPriorColumnValue( "LastName", row_index );
 
-                        Text
-                            = ( ( prior_first_name != "" ) ? prior_first_name : Random.MakeFirstName() ).toLower()
-                              ~ ( ( prior_last_name != "" ) ? prior_last_name : Random.MakeLastName() ).toLower();
+                        Text = Random.MakePseudonym( prior_first_name, prior_last_name );
                     }
                 }
                 else if ( Type.ColumnName.endsWith( "Password" ) )
                 {
-                    Text
-                        = Random.MakeName( 4, 8 )
-                                .InsertCharacter( Random.MakeUppercaseLetter() )
-                                .InsertCharacter( Random.MakeDigit() )
-                                .InsertCharacter( Random.MakeSeparator() );
+                    Text = Random.MakePassword();
                 }
                 else if ( Type.ColumnName.endsWith( "Email" ) )
                 {
                     prior_first_name = Type.Column.FindPriorColumnValue( "FirstName", row_index );
                     prior_last_name = Type.Column.FindPriorColumnValue( "LastName", row_index );
 
-                    Text
-                        = ( ( prior_first_name != "" ) ? prior_first_name : Random.MakeFirstName() ).toLower()
-                          ~ "."
-                          ~ ( ( prior_last_name != "" ) ? prior_last_name : Random.MakeLastName() ).toLower()
-                          ~ [
-                              "@gmail.com",
-                              "@yahoo.com",
-                              "@outlook.com",
-                              "@live.com",
-                              "@hotmail.com",
-                              "@mail.com"
-                            ][ Random.MakeIndex( 6 ) ];
+                    Text = Random.MakeEmail( prior_first_name, prior_last_name );
                 }
                 else if ( Type.ColumnName.endsWith( "Phone" ) )
                 {
-                    Text
-                        = "+"
-                          ~ Random.MakeInteger( 10, 99 ).to!string()
-                          ~ " "
-                          ~ Random.MakeInteger( 100, 999 ).to!string()
-                          ~ " "
-                          ~ Random.MakeInteger( 100, 999 ).to!string()
-                          ~ " "
-                          ~ Random.MakeInteger( 100, 999 ).to!string();
+                    Text = Random.MakePhone();
                 }
                 else if ( Type.ColumnName.endsWith( "Street" )
                           || Type.ColumnName.endsWith( "Address" ) )
                 {
-                    Text
-                        = Random.MakeInteger( 1, 100 ).to!string()
-                          ~ " "
-                          ~ Random.MakeLastName()
-                          ~ " "
-                          ~ [
-                              "Street",
-                              "Court",
-                              "Avenue",
-                              "Boulevard",
-                              "Lane",
-                              "Alley",
-                              "Drive",
-                              "Park"
-                            ][ Random.MakeIndex( 8 ) ];
+                    Text = Random.MakeAddress();
                 }
                 else if ( Type.ColumnName.endsWith( "CountryCode" ) )
                 {
@@ -3605,7 +3844,7 @@ class VALUE
                 }
                 else if ( Type.ColumnName.endsWith( "Code" ) )
                 {
-                    Text = Random.MakeInteger( 1000, 9999 ).to!string();
+                    Text = Random.MakeCityCode();
                 }
                 else if ( Type.ColumnName.endsWith( "City" ) )
                 {
@@ -3621,105 +3860,31 @@ class VALUE
                 }
                 else if ( Type.ColumnName.endsWith( "Company" ) )
                 {
-                    Text
-                        = Random.MakeLastName()
-                          ~ " "
-                          ~ [
-                              "Company",
-                              "Limited",
-                              "Incorporated",
-                              "Corporation",
-                              "Union",
-                              "Trust",
-                              "Cooperative",
-                              "Institute",
-                              "Foundation",
-                              "Association",
-                              "Bank",
-                              "Fund",
-                              "Insurance",
-                              "Security",
-                              "Services",
-                              "Club",
-                              "Society",
-                              "College",
-                              "University",
-                              "Church",
-                              "Media",
-                              "News",
-                              "Magazine",
-                              "Network",
-                              "Channel",
-                              "Group",
-                              "Agency",
-                              "Consulting",
-                              "Team",
-                              "Center",
-                              "Design",
-                              "Studio",
-                              "Central",
-                              "Direct",
-                              "Tech",
-                              "Store",
-                              "Market",
-                              "Online",
-                              "Shop",
-                              "Express",
-                              "Point",
-                              "Labs",
-                              "Software",
-                              "Depot",
-                              "Logic",
-                              "Factory",
-                              "Fx",
-                              "Solutions",
-                              "Dynamics",
-                              "Associates",
-                              "Fashion",
-                              "Vision"
-                            ][ Random.MakeIndex( 52 ) ];
+                    Text = Random.MakeCompanyName();
                 }
                 else if ( Type.ColumnName.endsWith( "Image" ) )
                 {
-                    Text
-                        = Random.MakeName( 8, 8 )
-                          ~ [
-                              ".jpg",
-                              ".png",
-                              ".gif"
-                            ][ Random.MakeIndex( 3 ) ];
+                    Text = Random.MakeImageName();
                 }
                 else if ( Type.ColumnName.endsWith( "File" ) )
                 {
-                    Text
-                        = Random.MakeName( 8, 8 )
-                          ~ [
-                              ".pdf",
-                              ".doc",
-                              ".odt"
-                            ][ Random.MakeIndex( 3 ) ];
+                    Text = Random.MakeFileName();
                 }
                 else if ( Type.ColumnName.endsWith( "Folder" ) )
                 {
-                    Text = Random.MakeName( 8, 8 ) ~ "/";
+                    Text = Random.MakeFolderPath();
                 }
                 else if ( Type.ColumnName.endsWith( "Author" ) )
                 {
-                    Text
-                        = Random.MakeFirstName()
-                          ~ " "
-                          ~ Random.MakeLastName();
+                    Text = Random.MakeFullName();
                 }
                 else if ( Type.ColumnName.endsWith( "Isbn" ) )
                 {
-                    Text
-                        = Random.MakeInteger( 100, 999 ).to!string()
-                          ~ "-"
-                          ~ Random.MakeInteger( 1000000000, 9999999999 ).to!string();
+                    Text = Random.MakeIsbn();
                 }
                 else if ( Type.ColumnName.endsWith( "Tags" ) )
                 {
-                    Text = Random.MakeEnglishSentence( 5, 10 ).replace( " ", ", " );
+                    Text = Random.MakeTagList();
                 }
                 else
                 {

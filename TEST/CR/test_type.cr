@@ -12,6 +12,7 @@ class SIMPLE
     @float32 : Float32
     @float64 : Float64
     @string : String
+    @name : String
     @date : String
     @date_time : String
     @blob : String
