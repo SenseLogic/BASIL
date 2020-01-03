@@ -1,0 +1,222 @@
+set TableArray
+    0
+        Name = "PERSON"
+        RowCount = 2
+        ColumnArray
+            0
+                Name = "Name"
+                Type = "STRING"
+                IsLast = false
+                IsKey = true
+                IsLastKey = true
+                IsLastNotKey = false
+                IsStored = true
+                IsLastStored = false
+                IsLastNotStored = false
+                ValueArray
+                    0 = "John"
+                    1 = "Linda"
+            1
+                Name = "Age"
+                Type = "INT32"
+                IsLast = false
+                IsKey = false
+                IsLastKey = false
+                IsLastNotKey = false
+                IsStored = true
+                IsLastStored = true
+                IsLastNotStored = false
+                ValueArray
+                    0 = 32
+                    1 = 25
+            2
+                Name = "Height"
+                Type = "FLOAT32"
+                IsLast = true
+                IsKey = false
+                IsLastKey = false
+                IsLastNotKey = true
+                IsStored = false
+                IsLastStored = false
+                IsLastNotStored = true
+                ValueArray
+                    0 = 182.5
+                    1 = 173.2
+    1
+        Name = "USER"
+        RowCount = 2
+        ColumnArray
+            0
+                Name = "FirstName"
+                Type = "STRING"
+                IsLast = true
+                IsKey = true
+                IsLastKey = false
+                IsLastNotKey = false
+                IsStored = true
+                IsLastStored = false
+                IsLastNotStored = false
+                ValueArray
+                    0 = "John"
+                    1 = "Linda"
+            1
+                Name = "LastName"
+                Type = "STRING"
+                IsLast = false
+                IsKey = true
+                IsLastKey = true
+                IsLastNotKey = false
+                IsStored = true
+                IsLastStored = false
+                IsLastNotStored = false
+                ValueArray
+                    0 = "Spitz"
+                    1 = "Hemler"
+            2
+                Name = "Password"
+                Type = "STRING"
+                IsLast = true
+                IsKey = false
+                IsLastKey = false
+                IsLastNotKey = true
+                IsStored = true
+                IsLastStored = true
+                IsLastNotStored = false
+                ValueArray
+                    0 = "3E9U2EJ"
+                    1 = "L29H282"
+
+// ~~
+
+set TableArray[ 2 - 1 - 1 ].ColumnArray.0.ValueArray[ 1 * 0 ] = "Jason"
+
+// ~~
+
+in "test_types.go"
+
+`package main;
+
+// -- TYPES
+`
+
+foreach table : TableArray
+
+    `type `
+    table.GoType
+    ` struct {`
+
+    foreach column : table.ColumnArray
+
+        column.GoName
+        ` `
+        column.GoType
+        `}`
+
+    if !table.IsLast
+        `
+        // ~~
+        `
+
+// ~~
+
+in "test_types.cs"
+
+`// -- IMPORTS
+
+using System;
+using System.Collections.Generic;
+
+// -- TYPES
+
+`
+
+foreach table : TableArray
+    table.CsharpTypeDeclaration
+    `{
+    `
+    table.CsharpAttributeDeclaration
+    `}
+    `
+    if !table.IsLast
+        `// ~~
+        `
+
+// ~~
+
+in "test_tables.gs"
+
+`package main;
+
+// -- IMPORTS
+
+import "fmt";
+
+// -- FUNCTIONS
+
+func main(
+    )
+{
+    fmt.Println( "Tables :" );
+`
+
+foreach table_index, table : TableArray
+    `    fmt.Println( "    `
+    table.Name
+    `" );
+        fmt.Println( "        Columns :" );`
+
+    foreach column : table.ColumnArray
+        `    fmt.Println( "            `
+        column.Name
+        if !column.IsLast
+            `,`
+        `" );`
+
+    `    fmt.Println( "        Key columns :" );`
+
+    foreach column : table.ColumnArray
+        if column.IsKey
+            `    fmt.Println( "            `
+            column.Name
+            if !column.IsLastKey
+                `,`
+            `" );`
+
+    `    fmt.Println( "        Not key columns :" );`
+
+    foreach column : table.ColumnArray
+        if !column.IsKey
+            `    fmt.Println( "            `
+            column.Name
+            if !column.IsLastNotKey
+                `,`
+            `" );`
+
+    `    fmt.Println( "        Stored columns :" );`
+
+    foreach column : table.ColumnArray
+        if column.IsStored
+            `    fmt.Println( "            `
+            column.Name
+            if !column.IsLastStored
+                `,`
+            `" );`
+
+    `    fmt.Println( "        Not stored columns :" );`
+
+    foreach column : table.ColumnArray
+        if !column.IsStored
+            `    fmt.Println( "            `
+            column.Name
+            if !column.IsLastNotStored
+                `,`
+            `" );`
+
+// ~~
+
+in "test_data.txt"
+
+set x = 0
+
+while x < 10
+    "x = " ~ ( x + 1 )

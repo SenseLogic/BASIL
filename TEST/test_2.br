@@ -1,16 +1,17 @@
-*Title
+STRING
 
-    "{title 4 8}"
+    *Title
 
-*Slug
+        "{title 4 8}"
 
-    "{@Title:slug}"
-    "{@Name:slug}"
-    "{name 6 12:slug}"
+    *Slug
 
+        @Title
 
+            "{@Title:slug}"
 
+        @Name
 
+            "{@Name:slug}"
 
-
-
+        "{name 6 12:slug}"
