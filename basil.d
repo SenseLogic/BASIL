@@ -1994,7 +1994,7 @@ class TYPE
         }
         else
         {
-            return Name.GetAttributeText();
+            return Name.GetAttributeCaseText();
         }
     }
 
@@ -2205,7 +2205,7 @@ class TYPE
         }
         else
         {
-            return Name.GetAttributeText();
+            return Name.GetAttributeCaseText();
         }
     }
 
@@ -2572,7 +2572,7 @@ class TYPE
         }
         else
         {
-            return Name.GetAttributeText();
+            return Name.GetAttributeCaseText();
         }
     }
 
@@ -4159,6 +4159,8 @@ class COLUMN
         CqlType,
         StoredName,
         StoredType,
+        GenericAttribute,
+        GenericVariable,
         GoName,
         GoType,
         GoAttribute,
@@ -4270,6 +4272,8 @@ class COLUMN
         return
             template_text
                 .replace( "{{column_name}}", Name )
+                .replace( "{{column_attribute}}", GenericAttribute )
+                .replace( "{{column_variable}}", GenericVariable )
                 .replace( "{{column_stored_name}}", StoredName )
                 .replace( "{{column_stored_type}}", StoredType )
                 .replace( "{{column_cql_name}}", CqlName )
@@ -4296,13 +4300,13 @@ class COLUMN
                 .replace( "{{column_is_last}}", GetBooleanText( IsLast ) )
                 .replace( "{{column_is_stored}}", GetBooleanText( IsStored ) )
                 .replace( "{{column_is_last_stored}}", GetBooleanText( IsLastStored ) )
-                .replace( "{{column_is_last_not_stored}}", GetBooleanText( IsLastNotStored ) )
+                .replace( "{{column_is_last_non_stored}}", GetBooleanText( IsLastNotStored ) )
                 .replace( "{{column_is_key}}", GetBooleanText( IsKey ) )
                 .replace( "{{column_is_last_key}}", GetBooleanText( IsLastKey ) )
-                .replace( "{{column_is_last_not_key}}", GetBooleanText( IsLastNotKey ) )
+                .replace( "{{column_is_last_non_key}}", GetBooleanText( IsLastNotKey ) )
                 .replace( "{{column_is_incremented}}", GetBooleanText( IsIncremented ) )
                 .replace( "{{column_is_last_incremented}}", GetBooleanText( IsLastIncremented ) )
-                .replace( "{{column_is_last_not_incremented}}", GetBooleanText( IsLastNotIncremented ) )
+                .replace( "{{column_is_last_non_incremented}}", GetBooleanText( IsLastNotIncremented ) )
                 .replace( "{{column_is_constrained}}", GetBooleanText( IsConstrained ) );
     }
 
@@ -4596,7 +4600,7 @@ class COLUMN
 
         if ( CrystalName == "" )
         {
-            CrystalName = GetSnakeCaseText( Name );
+            CrystalName = Name.GetVariableCaseText();
         }
 
         if ( CsharpName == "" )
@@ -4606,7 +4610,7 @@ class COLUMN
 
         if ( RustName == "" )
         {
-            RustName = GetSnakeCaseText( Name );
+            RustName = Name.GetVariableCaseText();
         }
 
         if ( JavascriptName == "" )
@@ -4629,17 +4633,19 @@ class COLUMN
             StoredType = CqlType;
         }
 
+        GenericAttribute = Name.GetAttributeCaseText();
+        GenericVariable = Name.GetVariableCaseText();
         GoType = Type.GetGoText().replace( "GOCQL.UUID", "UUID" );
         GoAttribute = Type.GetGoAttributeText();
-        GoVariable = GoName.GetVariableText();
+        GoVariable = GoName.GetVariableCaseText();
         PhpType = Type.GetPhpText();
         PhpParameterType = Type.GetPhpParameterTypeText();
         PhpAttribute = Type.GetPhpAttributeText();
-        PhpVariable = PhpName.GetVariableText();
+        PhpVariable = PhpName.GetVariableCaseText();
         CrystalType = Type.GetCrystalText();
         CsharpType = Type.GetCsharpText();
         CsharpAttribute = Type.GetCsharpAttributeText();
-        CsharpVariable = CsharpName.GetVariableText();
+        CsharpVariable = CsharpName.GetVariableCaseText();
         RustType = Type.GetRustText();
 
         if ( IsKey || IsRequired )
@@ -4769,6 +4775,9 @@ class TABLE
     string
         SchemaName,
         Name,
+        GenericType,
+        GenericAttribute,
+        GenericVariable,
         GoType,
         GoAttribute,
         GoVariable,
@@ -4820,19 +4829,22 @@ class TABLE
     {
         SchemaName = schema.Name;
         Name = name;
-        GoType = name;
-        GoAttribute = name.GetAttributeText();
-        GoVariable = name.GetVariableText();
-        PhpType = name;
-        PhpAttribute = name.GetAttributeText();
-        PhpVariable = name.GetVariableText();
-        CrystalType = name;
-        CsharpType = name;
-        CsharpAttribute = name.GetAttributeText();
-        CsharpVariable = name.GetVariableText();
-        RustType = name;
-        JavascriptType = name;
-        JavascriptAttribute = name.GetAttributeText();
+        GenericType = Name.GetTypeCaseText();
+        GenericAttribute = Name.GetAttributeCaseText();
+        GenericVariable = Name.GetVariableCaseText();
+        GoType = GenericType;
+        GoAttribute = GenericAttribute;
+        GoVariable = GenericVariable;
+        PhpType = GenericType;
+        PhpAttribute = GenericAttribute;
+        PhpVariable = GenericVariable;
+        CrystalType = GenericType;
+        CsharpType = GenericType;
+        CsharpAttribute = GenericAttribute;
+        CsharpVariable = GenericVariable;
+        RustType = GenericType;
+        JavascriptType = GenericType;
+        JavascriptAttribute = GenericAttribute;
         IsStored = true;
         RowCount = schema.RowCount;
     }
@@ -6998,9 +7010,15 @@ class TABLE
         return
             template_text
                 .replace( "{{table_name}}", Name )
+                .replace( "{{table_type}}", GenericType )
+                .replace( "{{table_attribute}}", GenericAttribute )
+                .replace( "{{table_variable}}", GenericVariable )
                 .replace( "{{table_go_type}}", GoType )
                 .replace( "{{table_go_attribute}}", GoAttribute )
                 .replace( "{{table_go_variable}}", GoVariable )
+                .replace( "{{table_php_type}}", PhpType )
+                .replace( "{{table_php_attribute}}", PhpAttribute )
+                .replace( "{{table_php_variable}}", PhpVariable )
                 .replace( "{{table_crystal_type}}", CrystalType )
                 .replace( "{{table_csharp_type}}", CsharpType )
                 .replace( "{{table_csharp_attribute}}", CsharpAttribute )
@@ -7025,7 +7043,7 @@ class TABLE
                 .replace( "{{table_is_last}}", GetBooleanText( IsLast ) )
                 .replace( "{{table_is_stored}}", GetBooleanText( IsStored ) )
                 .replace( "{{table_is_last_stored}}", GetBooleanText( IsLastStored ) )
-                .replace( "{{table_is_last_not_stored}}", GetBooleanText( IsLastNotStored ) );
+                .replace( "{{table_is_last_non_stored}}", GetBooleanText( IsLastNotStored ) );
     }
 
     // -- OPERATIONS
@@ -8840,7 +8858,7 @@ class SCHEMA
             }
 
             instance_file_path = instance_file_line_array[ 0 ];
-            instance_file_text = instance_file_line_array[ 1 .. $ ].join( '\n' );
+            instance_file_text = instance_file_line_array[ 1 .. $ ].join( '\n' ).ReplaceIgnoredTags();
 
             writeln( "Writing instance file : " ~ instance_file_path );
 
@@ -9124,7 +9142,14 @@ string GetCapitalizedText(
     string text
     )
 {
-    return text[ 0 .. 1 ].toUpper() ~ text[ 1 .. $ ];
+    if ( text.length > 0 )
+    {
+        return text[ 0 .. 1 ].toUpper() ~ text[ 1 .. $ ];
+    }
+    else
+    {
+        return "";
+    }
 }
 
 // ~~
@@ -9175,25 +9200,34 @@ string GetSnakeCaseText(
         prior_character = character;
     }
 
-    return snake_case_text.toLower();
+    return snake_case_text;
 }
 
 // ~~
 
-string GetAttributeText(
+string GetTypeCaseText(
     string text
     )
 {
-    return text.toLower().GetPascalCaseText();
+    return text.GetSnakeCaseText().toUpper();
 }
 
 // ~~
 
-string GetVariableText(
+string GetAttributeCaseText(
     string text
     )
 {
-    return text.GetSnakeCaseText();
+    return text.GetSnakeCaseText().toLower().GetPascalCaseText();
+}
+
+// ~~
+
+string GetVariableCaseText(
+    string text
+    )
+{
+    return text.GetSnakeCaseText().toLower();
 }
 
 // ~~
@@ -9350,6 +9384,76 @@ string ReplaceColumnTags(
 
 // ~~
 
+string ReplaceKeyColumnTags(
+    string template_text,
+    TABLE table
+    )
+{
+    string
+        instance_part;
+    string[]
+        template_part_array;
+
+    template_part_array = template_text.GetSplitText( "<@", "@>" );
+
+    foreach ( template_part_index, ref template_part; template_part_array )
+    {
+        if ( ( template_part_index & 1 ) == 1 )
+        {
+            instance_part = "";
+
+            foreach ( column; table.ColumnArray )
+            {
+                if ( column.IsKey )
+                {
+                    instance_part ~= column.ReplaceTags( template_part );
+                }
+            }
+
+            template_part = instance_part;
+        }
+    }
+
+    return template_part_array.join( "" );
+}
+
+// ~~
+
+string ReplaceNotKeyColumnTags(
+    string template_text,
+    TABLE table
+    )
+{
+    string
+        instance_part;
+    string[]
+        template_part_array;
+
+    template_part_array = template_text.GetSplitText( "<$", "$>" );
+
+    foreach ( template_part_index, ref template_part; template_part_array )
+    {
+        if ( ( template_part_index & 1 ) == 1 )
+        {
+            instance_part = "";
+
+            foreach ( column; table.ColumnArray )
+            {
+                if ( !column.IsKey )
+                {
+                    instance_part ~= column.ReplaceTags( template_part );
+                }
+            }
+
+            template_part = instance_part;
+        }
+    }
+
+    return template_part_array.join( "" );
+}
+
+// ~~
+
 string ReplaceTableTags(
     string template_text,
     TABLE[] table_array
@@ -9372,7 +9476,9 @@ string ReplaceTableTags(
             {
                 instance_part
                     ~= table.ReplaceTags( template_part )
-                           .ReplaceColumnTags( table );
+                           .ReplaceColumnTags( table )
+                           .ReplaceKeyColumnTags( table )
+                           .ReplaceNotKeyColumnTags( table );
             }
 
             template_part = instance_part;
@@ -9502,9 +9608,43 @@ string ReplaceConditionalTags(
                 }
                 else if ( ( argument_array.length == 4
                             || argument_array.length == 5 )
+                          && argument_array[ 0 ] == "!Equals" )
+                {
+                    if ( argument_array[ 1 ] != argument_array[ 2 ] )
+                    {
+                        result_text = argument_array[ 3 ];
+                    }
+                    else if ( argument_array.length == 5 )
+                    {
+                        result_text = argument_array[ 4 ];
+                    }
+                    else
+                    {
+                        result_text = "";
+                    }
+                }
+                else if ( ( argument_array.length == 4
+                            || argument_array.length == 5 )
                           && argument_array[ 0 ] == "HasPrefix" )
                 {
                     if ( argument_array[ 1 ].startsWith( argument_array[ 2 ] ) )
+                    {
+                        result_text = argument_array[ 3 ];
+                    }
+                    else if ( argument_array.length == 5 )
+                    {
+                        result_text = argument_array[ 4 ];
+                    }
+                    else
+                    {
+                        result_text = "";
+                    }
+                }
+                else if ( ( argument_array.length == 4
+                            || argument_array.length == 5 )
+                          && argument_array[ 0 ] == "!HasPrefix" )
+                {
+                    if ( !argument_array[ 1 ].startsWith( argument_array[ 2 ] ) )
                     {
                         result_text = argument_array[ 3 ];
                     }
@@ -9536,9 +9676,43 @@ string ReplaceConditionalTags(
                 }
                 else if ( ( argument_array.length == 4
                             || argument_array.length == 5 )
+                          && argument_array[ 0 ] == "!HasSuffix" )
+                {
+                    if ( !argument_array[ 1 ].endsWith( argument_array[ 2 ] ) )
+                    {
+                        result_text = argument_array[ 3 ];
+                    }
+                    else if ( argument_array.length == 5 )
+                    {
+                        result_text = argument_array[ 4 ];
+                    }
+                    else
+                    {
+                        result_text = "";
+                    }
+                }
+                else if ( ( argument_array.length == 4
+                            || argument_array.length == 5 )
                           && argument_array[ 0 ] == "Contains" )
                 {
                     if ( argument_array[ 1 ].indexOf( argument_array[ 2 ] ) >= 0 )
+                    {
+                        result_text = argument_array[ 3 ];
+                    }
+                    else if ( argument_array.length == 5 )
+                    {
+                        result_text = argument_array[ 4 ];
+                    }
+                    else
+                    {
+                        result_text = "";
+                    }
+                }
+                else if ( ( argument_array.length == 4
+                            || argument_array.length == 5 )
+                          && argument_array[ 0 ] == "!Contains" )
+                {
+                    if ( argument_array[ 1 ].indexOf( argument_array[ 2 ] ) < 0 )
                     {
                         result_text = argument_array[ 3 ];
                     }
@@ -9610,24 +9784,39 @@ string ReplaceConditionalTags(
                     result_text = argument_array[ 1 ].replace( argument_array[ 2 ], argument_array[ 3 ] );
                 }
                 else if ( argument_array.length == 2
-                          && argument_array[ 0 ] == "Snakecase" )
+                          && argument_array[ 0 ] == "SnakeCase" )
                 {
-                    result_text = GetSnakeCaseText( argument_array[ 1 ] );
+                    result_text = argument_array[ 1 ].GetSnakeCaseText();
                 }
                 else if ( argument_array.length == 2
-                          && argument_array[ 0 ] == "Pascalcase" )
+                          && argument_array[ 0 ] == "PascalCase" )
                 {
-                    result_text = GetPascalCaseText( argument_array[ 1 ] );
+                    result_text = argument_array[ 1 ].GetPascalCaseText();
                 }
                 else if ( argument_array.length == 2
-                          && argument_array[ 0 ] == "Lowercase" )
+                          && argument_array[ 0 ] == "LowerCase" )
                 {
                     result_text = argument_array[ 1 ].toLower();
                 }
                 else if ( argument_array.length == 2
-                          && argument_array[ 0 ] == "Uppercase" )
+                          && argument_array[ 0 ] == "UpperCase" )
                 {
                     result_text = argument_array[ 1 ].toUpper();
+                }
+                else if ( argument_array.length == 2
+                          && argument_array[ 0 ] == "TypeCase" )
+                {
+                    result_text = argument_array[ 1 ].GetTypeCaseText();
+                }
+                else if ( argument_array.length == 2
+                          && argument_array[ 0 ] == "AttributeCase" )
+                {
+                    result_text = argument_array[ 1 ].GetAttributeCaseText();
+                }
+                else if ( argument_array.length == 2
+                          && argument_array[ 0 ] == "VariableCase" )
+                {
+                    result_text = argument_array[ 1 ].GetVariableCaseText();
                 }
                 else if ( ( argument_array.length == 2
                             || argument_array.length == 3 ) )
@@ -9671,6 +9860,29 @@ string ReplaceConditionalTags(
     while ( text != old_text );
 
     return text;
+}
+
+// ~~
+
+string ReplaceIgnoredTags(
+    string text
+    )
+{
+    return
+        text
+            .replace( "<\\%", "<%" )
+            .replace( "%\\>", "%>" )
+            .replace( "<\\~", "<~" )
+            .replace( "~\\>", "~>" )
+            .replace( "<\\@", "<@" )
+            .replace( "@\\>", "@>" )
+            .replace( "<\\$", "<$" )
+            .replace( "$\\>", "$>" )
+            .replace( "<\\?", "<?" )
+            .replace( "?\\>", "?>" )
+            .replace( "{\\{", "{{" )
+            .replace( "}\\}", "}}" )
+            .replace( "%\\%", "%%" );
 }
 
 // ~~

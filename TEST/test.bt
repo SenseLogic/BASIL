@@ -1,3 +1,18 @@
+<%%%HTML/show_{{table_variable}}_table_columns.html
+<pre>
+Table :
+    {{table_name}} : {{table_type}} {{table_attribute}} {{table_variable}}
+Columns :<~
+    {{column_name}} : {{column_attribute}} {{column_variable}}
+        Go : {{column_go_type}} {{column_go_name}}
+        PHP : {{column_php_type}} {{column_php_name}}
+        Crystal : {{column_crystal_type}} {{column_crystal_name}}
+        C# : {{column_csharp_type}} {{column_csharp_name}}
+        Rust : {{column_rust_type}} {{column_rust_name}} ~>
+Key columns : <@{{column_name}}<?!{{column_is_last_key}}#, ?>@>
+Non key columns : <${{column_name}}<?!{{column_is_last_non_key}}#, ?>$>
+</pre>
+%>
 %%test_types.go
 package main;
 
@@ -42,11 +57,11 @@ func main(
     fmt.Println( "        Columns :" );
 <~    fmt.Println( "            {{column_name}}<?!{{column_is_last}}#,?>" );
 ~>    fmt.Println( "        Key columns :" );
-<~<?{{column_is_key}}#    fmt.Println( "            {{column_name}}<?!{{column_is_last_key}}#,?>" );
-?>~>    fmt.Println( "        Not key columns :" );
-<~<?!{{column_is_key}}#    fmt.Println( "            {{column_name}}<?!{{column_is_last_not_key}}#,?>" );
-?>~>    fmt.Println( "        Stored columns :" );
+<@    fmt.Println( "            {{column_name}}<?!{{column_is_last_key}}#,?>" );
+@>    fmt.Println( "        Non key columns :" );
+<$    fmt.Println( "            {{column_name}}<?!{{column_is_last_non_key}}#,?>" );
+$>    fmt.Println( "        Stored columns :" );
 <~<?{{column_is_stored}}#    fmt.Println( "            {{column_name}}<?!{{column_is_last_stored}}#,?>" );
-?>~>    fmt.Println( "        Not stored columns :" );
-<~<?!{{column_is_stored}}#    fmt.Println( "            {{column_name}}<?!{{column_is_last_not_stored}}#,?>" );
+?>~>    fmt.Println( "        Non stored columns :" );
+<~<?!{{column_is_stored}}#    fmt.Println( "            {{column_name}}<?!{{column_is_last_non_stored}}#,?>" );
 ?>~>%>}

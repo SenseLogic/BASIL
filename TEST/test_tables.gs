@@ -31,7 +31,7 @@ func main(
     fmt.Println( "            Blob" );
     fmt.Println( "        Key columns :" );
     fmt.Println( "            Uuid" );
-    fmt.Println( "        Not key columns :" );
+    fmt.Println( "        Non key columns :" );
     fmt.Println( "            Bool," );
     fmt.Println( "            Int8," );
     fmt.Println( "            Uint8," );
@@ -66,7 +66,7 @@ func main(
     fmt.Println( "            Date," );
     fmt.Println( "            DateTime," );
     fmt.Println( "            Blob" );
-    fmt.Println( "        Not stored columns :" );
+    fmt.Println( "        Non stored columns :" );
     fmt.Println( "    COMPOUND," );
     fmt.Println( "        Columns :" );
     fmt.Println( "            Id," );
@@ -84,7 +84,7 @@ func main(
     fmt.Println( "            SimplePointerArray" );
     fmt.Println( "        Key columns :" );
     fmt.Println( "            Id" );
-    fmt.Println( "        Not key columns :" );
+    fmt.Println( "        Non key columns :" );
     fmt.Println( "            Location," );
     fmt.Println( "            Name," );
     fmt.Println( "            NameSet," );
@@ -110,7 +110,7 @@ func main(
     fmt.Println( "            SimpleDateSet," );
     fmt.Println( "            SimpleDateList," );
     fmt.Println( "            NameSetMap" );
-    fmt.Println( "        Not stored columns :" );
+    fmt.Println( "        Non stored columns :" );
     fmt.Println( "            SimplePointerArray" );
     fmt.Println( "    VALUE," );
     fmt.Println( "        Columns :" );
@@ -121,7 +121,7 @@ func main(
     fmt.Println( "            Text" );
     fmt.Println( "        Key columns :" );
     fmt.Println( "            Id" );
-    fmt.Println( "        Not key columns :" );
+    fmt.Println( "        Non key columns :" );
     fmt.Println( "            Uuid," );
     fmt.Println( "            Name," );
     fmt.Println( "            Integer," );
@@ -132,7 +132,7 @@ func main(
     fmt.Println( "            Name," );
     fmt.Println( "            Integer," );
     fmt.Println( "            Text" );
-    fmt.Println( "        Not stored columns :" );
+    fmt.Println( "        Non stored columns :" );
     fmt.Println( "    DATA" );
     fmt.Println( "        Columns :" );
     fmt.Println( "            Uuid," );
@@ -140,13 +140,13 @@ func main(
     fmt.Println( "            ValueUuid" );
     fmt.Println( "        Key columns :" );
     fmt.Println( "            Uuid" );
-    fmt.Println( "        Not key columns :" );
+    fmt.Println( "        Non key columns :" );
     fmt.Println( "            ValueId," );
     fmt.Println( "            ValueUuid" );
     fmt.Println( "        Stored columns :" );
     fmt.Println( "            Uuid," );
     fmt.Println( "            ValueId," );
     fmt.Println( "            ValueUuid" );
-    fmt.Println( "        Not stored columns :" );
+    fmt.Println( "        Non stored columns :" );
 }
 

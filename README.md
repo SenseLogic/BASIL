@@ -185,6 +185,21 @@ USER
 ## Sample template file
 
 ```go
+<%%%HTML/show_{{table_variable}}_table_columns.html
+<pre>
+Table :
+    {{table_name}} : {{table_type}} {{table_attribute}} {{table_variable}}
+Columns :<~
+    {{column_name}} : {{column_attribute}} {{column_variable}}
+        Go : {{column_go_type}} {{column_go_name}}
+        PHP : {{column_php_type}} {{column_php_name}}
+        Crystal : {{column_crystal_type}} {{column_crystal_name}}
+        C# : {{column_csharp_type}} {{column_csharp_name}}
+        Rust : {{column_rust_type}} {{column_rust_name}} ~>
+Key columns : <@{{column_name}}<?!{{column_is_last_key}}#, ?>@>
+Non key columns : <${{column_name}}<?!{{column_is_last_non_key}}#, ?>$>
+</pre>
+%>
 %%test_types.go
 package main;
 
@@ -229,13 +244,13 @@ func main(
     fmt.Println( "        Columns :" );
 <~    fmt.Println( "            {{column_name}}<?!{{column_is_last}}#,?>" );
 ~>    fmt.Println( "        Key columns :" );
-<~<?{{column_is_key}}#    fmt.Println( "            {{column_name}}<?!{{column_is_last_key}}#,?>" );
-?>~>    fmt.Println( "        Not key columns :" );
-<~<?!{{column_is_key}}#    fmt.Println( "            {{column_name}}<?!{{column_is_last_not_key}}#,?>" );
-?>~>    fmt.Println( "        Stored columns :" );
+<@    fmt.Println( "            {{column_name}}<?!{{column_is_last_key}}#,?>" );
+@>    fmt.Println( "        Non key columns :" );
+<$    fmt.Println( "            {{column_name}}<?!{{column_is_last_non_key}}#,?>" );
+$>    fmt.Println( "        Stored columns :" );
 <~<?{{column_is_stored}}#    fmt.Println( "            {{column_name}}<?!{{column_is_last_stored}}#,?>" );
-?>~>    fmt.Println( "        Not stored columns :" );
-<~<?!{{column_is_stored}}#    fmt.Println( "            {{column_name}}<?!{{column_is_last_not_stored}}#,?>" );
+?>~>    fmt.Println( "        Non stored columns :" );
+<~<?!{{column_is_stored}}#    fmt.Println( "            {{column_name}}<?!{{column_is_last_non_stored}}#,?>" );
 ?>~>%>}
 ```
 
@@ -443,20 +458,36 @@ POINTER[ <i>ELEMENT_TYPE</i> ] | !stored
 ## Template file syntax
 
 ```
+%%output file path
+
 <%content for each table%>
 <~content for each column~>
+<@content for each key column@>
+<$content for each non key column$>
 
 <?Equals#first text#second text#text if same texts?>
 <?Equals#first text#second text#text if same texts#text if not same texts?>
 
+<?!Equals#first text#second text#text if not same texts?>
+<?!Equals#first text#second text#text if not same texts#text if same texts?>
+
 <?HasPrefix#text#prefix#text if prefix found?>
 <?HasPrefix#text#prefix#text if prefix found#text if prefix not found?>
+
+<?!HasPrefix#text#prefix#text if prefix not found?>
+<?!HasPrefix#text#prefix#text if prefix not found#text if prefix found?>
 
 <?HasSuffix#text#suffix#text if suffix found?>
 <?HasSuffix#text#suffix#text if suffix found#text if suffix not found?>
 
+<?!HasSuffix#text#suffix#text if suffix not found?>
+<?!HasSuffix#text#suffix#text if suffix not found#text if suffix found?>
+
 <?Contains#text#content#text if content found?>
 <?Contains#text#content#text if content found#text if content not found?>
+
+<?!Contains#text#content#text if content not found?>
+<?!Contains#text#content#text if content not found#text if content found?>
 
 <?RemovePrefix#prefix?>
 <?ReplacePrefix#old prefix#new prefix?>
@@ -467,15 +498,20 @@ POINTER[ <i>ELEMENT_TYPE</i> ] | !stored
 <?Remove#content?>
 <?Replace#old content#new content?>
 
-<?Snakecase#text?>
-<?Pascalcase#text?>
-<?Lowercase#text?>
-<?Uppercase#text?>
+<?SnakeCase#text?>
+<?PascalCase#text?>
+<?LowerCase#text?>
+<?UpperCase#text?>
+<?TypeCase#text?>
+<?AttributeCase#text?>
+<?VariableCase#text?>
 
 <?boolean expression#text if condition is true?>
 <?boolean expression#text if condition is true#text if condition is false?>
 
 {{column_name}}
+{{column_attribute}}
+{{column_variable}}
 {{column_stored_name}}
 {{column_stored_type}}
 {{column_cql_name}}
@@ -486,6 +522,10 @@ POINTER[ <i>ELEMENT_TYPE</i> ] | !stored
 {{column_go_type}}
 {{column_go_attribute}}
 {{column_go_variable}}
+{{column_php_name}}
+{{column_php_type}}
+{{column_php_attribute}}
+{{column_php_variable}}
 {{column_crystal_name}}
 {{column_crystal_type}}
 {{column_csharp_name}}
@@ -498,18 +538,23 @@ POINTER[ <i>ELEMENT_TYPE</i> ] | !stored
 {{column_is_last}}
 {{column_is_stored}}
 {{column_is_last_stored}}
-{{column_is_last_not_stored}}
+{{column_is_last_non_stored}}
 {{column_is_key}}
 {{column_is_last_key}}
-{{column_is_last_not_key}}
+{{column_is_last_non_key}}
 {{column_is_incremented}}
 {{column_is_last_incremented}}
-{{column_is_last_not_incremented}}
+{{column_is_last_non_incremented}}
 
 {{table_name}}
+{{table_attribute}}
+{{table_variable}}
 {{table_go_type}}
 {{table_go_attribute}}
 {{table_go_variable}}
+{{table_php_type}}
+{{table_php_attribute}}
+{{table_php_variable}}
 {{table_crystal_type}}
 {{table_csharp_type}}
 {{table_csharp_attribute}}
@@ -534,9 +579,15 @@ POINTER[ <i>ELEMENT_TYPE</i> ] | !stored
 {{table_is_last}}
 {{table_is_stored}}
 {{table_is_last_stored}}
-{{table_is_last_not_stored}}
+{{table_is_last_non_stored}}
 
-%%output file path
+%\%ignored
+<\%ignored%\>
+<\~ignored~\>
+<\@ignored@\>
+<\$ignored$\>
+{\?ignored?\}
+{\{ignored}\}
 ```
 
 ### Boolean expression syntax
