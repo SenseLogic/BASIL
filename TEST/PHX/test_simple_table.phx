@@ -1,0 +1,109 @@
+<pre>
+Table :
+    SIMPLE : SIMPLE / Simple / simple / simple
+Columns :
+    Uuid : Uuid / uuid / uuid
+    Uuid : gocql.UUID (Go)
+    Uuid : string (PHP)
+    uuid : String (Crystal)
+    Uuid : Guid (C#)
+    uuid : String (Rust)
+    Bool : Bool / bool / bool
+    Bool : bool (Go)
+    Bool : bool (PHP)
+    bool : bool (Crystal)
+    Bool : bool (C#)
+    bool : bool (Rust)
+    Int8 : Int8 / int8 / int8
+    Int8 : int8 (Go)
+    Int8 : int (PHP)
+    int8 : Int8 (Crystal)
+    Int8 : sbyte (C#)
+    int8 : i8 (Rust)
+    Uint8 : Uint8 / uint8 / uint8
+    Uint8 : uint8 (Go)
+    Uint8 : int (PHP)
+    uint8 : Uint8 (Crystal)
+    Uint8 : byte (C#)
+    uint8 : u8 (Rust)
+    Int16 : Int16 / int16 / int16
+    Int16 : int16 (Go)
+    Int16 : int (PHP)
+    int16 : Int16 (Crystal)
+    Int16 : int (C#)
+    int16 : i16 (Rust)
+    Uint16 : Uint16 / uint16 / uint16
+    Uint16 : uint16 (Go)
+    Uint16 : int (PHP)
+    uint16 : Uint16 (Crystal)
+    Uint16 : uint (C#)
+    uint16 : u16 (Rust)
+    Int32 : Int32 / int32 / int32
+    Int32 : int32 (Go)
+    Int32 : int (PHP)
+    int32 : Int32 (Crystal)
+    Int32 : int (C#)
+    int32 : i32 (Rust)
+    Uint32 : Uint32 / uint32 / uint32
+    Uint32 : uint32 (Go)
+    Uint32 : int (PHP)
+    uint32 : Uint32 (Crystal)
+    Uint32 : uint (C#)
+    uint32 : u32 (Rust)
+    Int64 : Int64 / int64 / int64
+    Int64 : int64 (Go)
+    Int64 : int (PHP)
+    int64 : Int64 (Crystal)
+    Int64 : long (C#)
+    int64 : i64 (Rust)
+    Uint64 : Uint64 / uint64 / uint64
+    Uint64 : uint64 (Go)
+    Uint64 : int (PHP)
+    uint64 : Uint64 (Crystal)
+    Uint64 : ulong (C#)
+    uint64 : u64 (Rust)
+    Float32 : Float32 / float32 / float32
+    Float32 : float32 (Go)
+    Float32 : float (PHP)
+    float32 : Float32 (Crystal)
+    Float32 : float (C#)
+    float32 : f32 (Rust)
+    Float64 : Float64 / float64 / float64
+    Float64 : float64 (Go)
+    Float64 : float (PHP)
+    float64 : Float64 (Crystal)
+    Float64 : double (C#)
+    float64 : f64 (Rust)
+    String : String / string / string
+    String : string (Go)
+    String : string (PHP)
+    string : String (Crystal)
+    String : String (C#)
+    string : String (Rust)
+    Name : Name / name / name
+    Name : string (Go)
+    Name : string (PHP)
+    name : String (Crystal)
+    Name : String (C#)
+    name : String (Rust)
+    Date : Date / date / date
+    Date : time.Time (Go)
+    Date : string (PHP)
+    date : String (Crystal)
+    Date : DateTime (C#)
+    date : String (Rust)
+    DateTime : DateTime / date_time / date-time
+    DateTime : time.Time (Go)
+    DateTime : string (PHP)
+    date_time : String (Crystal)
+    DateTime : DateTime (C#)
+    date_time : String (Rust)
+    Blob : Blob / blob / blob
+    Blob : [] byte (Go)
+    Blob : string (PHP)
+    blob : String (Crystal)
+    Blob : String (C#)
+    blob : String (Rust)
+Key columns : Uuid
+Non key columns : Bool, Int8, Uint8, Int16, Uint16, Int32, Uint32, Int64, Uint64, Float32, Float64, String, Name, Date, DateTime, Blob
+</pre>

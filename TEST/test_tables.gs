@@ -133,7 +133,7 @@ func main(
     fmt.Println( "            Integer," );
     fmt.Println( "            Text" );
     fmt.Println( "        Non stored columns :" );
-    fmt.Println( "    DATA" );
+    fmt.Println( "    VALUE_DATA" );
     fmt.Println( "        Columns :" );
     fmt.Println( "            Uuid," );
     fmt.Println( "            ValueId," );
@@ -149,4 +149,3 @@ func main(
     fmt.Println( "            ValueUuid" );
     fmt.Println( "        Non stored columns :" );
 }
-

@@ -55,7 +55,7 @@ class VALUE {
     Text : STRING
 }
 
-class DATA {
+class VALUE_DATA {
     Uuid : UUID
     ValueId : VALUE.Id
     ValueUuid : VALUE.Uuid
@@ -63,8 +63,8 @@ class DATA {
 
 SIMPLE <-- COMPOUND : SimpleDate
 
-VALUE <-- DATA : ValueId
+VALUE <-- VALUE_DATA : ValueId
 
-VALUE <-- DATA : ValueUuid
+VALUE <-- VALUE_DATA : ValueUuid
 
 @enduml

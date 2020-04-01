@@ -91,7 +91,7 @@ public class VALUE
 
 // ~~
 
-public class DATA
+public class VALUE_DATA
 {
     public Guid
         Uuid;
@@ -100,3 +100,4 @@ public class DATA
     public Guid
         ValueUuid;
 }
+

@@ -1,0 +1,37 @@
+<pre>
+Table :
+    VALUE : VALUE / Value / value / value
+Columns :
+    Id : Id / id / id
+    Id : int64 (Go)
+    Id : int (PHP)
+    id : Int64 (Crystal)
+    Id : long (C#)
+    id : i64 (Rust)
+    Uuid : Uuid / uuid / uuid
+    Uuid : gocql.UUID (Go)
+    Uuid : string (PHP)
+    uuid : String (Crystal)
+    Uuid : Guid (C#)
+    uuid : String (Rust)
+    Name : Name / name / name
+    Name : string (Go)
+    Name : string (PHP)
+    name : String (Crystal)
+    Name : String (C#)
+    name : String (Rust)
+    Integer : Integer / integer / integer
+    Integer : int32 (Go)
+    Integer : int (PHP)
+    integer : Int32 (Crystal)
+    Integer : int (C#)
+    integer : i32 (Rust)
+    Text : Text / text / text
+    Text : string (Go)
+    Text : string (PHP)
+    text : String (Crystal)
+    Text : String (C#)
+    text : String (Rust)
+Key columns : Id
+Non key columns : Uuid, Name, Integer, Text
+</pre>

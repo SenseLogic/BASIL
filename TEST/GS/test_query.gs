@@ -522,17 +522,17 @@ func GetDatabaseValueList(
 
 // ~~
 
-func AddDatabaseData(
-    data * DATA,
+func AddDatabaseValueData(
+    value_data * VALUE_DATA,
     error_code * ERROR_CODE
     ) bool
 {
     error_
         := DatabaseSession.Query(
-               "insert into DATA ( Uuid, ValueId, ValueUuid ) values ( ?, ?, ? )",
-               data.Uuid,
-               data.ValueId,
-               data.ValueUuid
+               "insert into VALUE_DATA ( Uuid, ValueId, ValueUuid ) values ( ?, ?, ? )",
+               value_data.Uuid,
+               value_data.ValueId,
+               value_data.ValueUuid
                ).Exec();
 
     if ( error_ != nil )
@@ -547,17 +547,17 @@ func AddDatabaseData(
 
 // ~~
 
-func SetDatabaseData(
-    data * DATA,
+func SetDatabaseValueData(
+    value_data * VALUE_DATA,
     error_code * ERROR_CODE
     ) bool
 {
     error_
         := DatabaseSession.Query(
-               "insert into DATA ( Uuid, ValueId, ValueUuid ) values ( ?, ?, ? )",
-               data.Uuid,
-               data.ValueId,
-               data.ValueUuid
+               "insert into VALUE_DATA ( Uuid, ValueId, ValueUuid ) values ( ?, ?, ? )",
+               value_data.Uuid,
+               value_data.ValueId,
+               value_data.ValueUuid
                ).Exec();
 
     if ( error_ != nil )
@@ -572,15 +572,15 @@ func SetDatabaseData(
 
 // ~~
 
-func RemoveDatabaseData(
-    data * DATA,
+func RemoveDatabaseValueData(
+    value_data * VALUE_DATA,
     error_code * ERROR_CODE
     ) bool
 {
     error_
         := DatabaseSession.Query(
-               "delete from DATA where Uuid = ?",
-               data.Uuid
+               "delete from VALUE_DATA where Uuid = ?",
+               value_data.Uuid
                ).Exec();
 
     if ( error_ != nil )
@@ -595,20 +595,20 @@ func RemoveDatabaseData(
 
 // ~~
 
-func GetDatabaseData(
-    data * DATA,
+func GetDatabaseValueData(
+    value_data * VALUE_DATA,
     error_code * ERROR_CODE
     ) bool
 {
     error_
         := DatabaseSession.Query(
-               "select ValueId, ValueUuid from DATA where Uuid = ?",
-               data.Uuid
+               "select ValueId, ValueUuid from VALUE_DATA where Uuid = ?",
+               value_data.Uuid
                )
                .Consistency( gocql.One )
                .Scan(
-                    &data.ValueId,
-                    &data.ValueUuid
+                    &value_data.ValueId,
+                    &value_data.ValueUuid
                     );
 
     if ( error_ != nil )
@@ -623,30 +623,30 @@ func GetDatabaseData(
 
 // ~~
 
-func GetDatabaseDataList(
-    data_array * [] DATA,
+func GetDatabaseValueDataList(
+    value_data_array * [] VALUE_DATA,
     error_code * ERROR_CODE
     ) bool
 {
     var
-        data DATA;
+        value_data VALUE_DATA;
 
     iterator
         := DatabaseSession.Query(
-               "select Uuid, ValueId, ValueUuid from DATA"
+               "select Uuid, ValueId, ValueUuid from VALUE_DATA"
                )
                .Consistency( gocql.One )
                .Iter();
 
-    *data_array = make( [] DATA, 0 );
+    *value_data_array = make( [] VALUE_DATA, 0 );
 
     for iterator.Scan(
-            &data.Uuid,
-            &data.ValueId,
-            &data.ValueUuid
+            &value_data.Uuid,
+            &value_data.ValueId,
+            &value_data.ValueUuid
             )
     {
-        *data_array = append( *data_array, data );
+        *value_data_array = append( *value_data_array, value_data );
     }
 
     error_ := iterator.Close();

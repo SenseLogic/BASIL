@@ -1,0 +1,85 @@
+<pre>
+Table :
+    COMPOUND : COMPOUND / Compound / compound / compound
+Columns :
+    Id : Id / id / id
+    Id : int32 (Go)
+    Id : int (PHP)
+    id : Int32 (Crystal)
+    Id : int (C#)
+    id : i32 (Rust)
+    Location : Location / location / location
+    Location : string (Go)
+    Location : string (PHP)
+    location : String (Crystal)
+    Location : String (C#)
+    location : String (Rust)
+    Name : Name / name / name
+    Name : STRING_STRING_TUPLE (Go)
+    Name : array (PHP)
+    name : Tuple( String, String ) (Crystal)
+    Name : Tuple< String, String > (C#)
+    name : ( String, String ) (Rust)
+    NameSet : NameSet / name_set / name-set
+    NameSet : STRING_STRING_TUPLE_SET (Go)
+    NameSet : array (PHP)
+    name_set : Set( Tuple( String, String ) ) (Crystal)
+    NameSet : HashSet< Tuple< String, String > > (C#)
+    name_set : List< ( String, String ) > (Rust)
+    PhoneList : PhoneList / phone_list / phone-list
+    PhoneList : STRING_LIST (Go)
+    PhoneList : array (PHP)
+    phone_list : List( String ) (Crystal)
+    PhoneList : List< String > (C#)
+    phone_list : List< String > (Rust)
+    EmailSet : EmailSet / email_set / email-set
+    EmailSet : STRING_SET (Go)
+    EmailSet : array (PHP)
+    email_set : Set( String ) (Crystal)
+    EmailSet : HashSet< String > (C#)
+    email_set : List< String > (Rust)
+    CompanyMap : CompanyMap / company_map / company-map
+    CompanyMap : STRING_STRING_MAP (Go)
+    CompanyMap : array (PHP)
+    company_map : Hash( String, String ) (Crystal)
+    CompanyMap : Dictionary< String, String > (C#)
+    company_map : Map< String, String > (Rust)
+    SimpleDate : SimpleDate / simple_date / simple-date
+    SimpleDate : time.Time (Go)
+    SimpleDate : string (PHP)
+    simple_date : String (Crystal)
+    SimpleDate : DateTime (C#)
+    simple_date : String (Rust)
+    SimpleDateMap : SimpleDateMap / simple_date_map / simple-date-map
+    SimpleDateMap : STRING_STRING_TUPLE_TIME.TIME_MAP (Go)
+    SimpleDateMap : array (PHP)
+    simple_date_map : Hash( Tuple( String, String ), String ) (Crystal)
+    SimpleDateMap : Dictionary< Tuple< String, String >, DateTime > (C#)
+    simple_date_map : Map< ( String, String ), String > (Rust)
+    SimpleDateSet : SimpleDateSet / simple_date_set / simple-date-set
+    SimpleDateSet : TIME.TIME_SET (Go)
+    SimpleDateSet : array (PHP)
+    simple_date_set : Set( String ) (Crystal)
+    SimpleDateSet : HashSet< DateTime > (C#)
+    simple_date_set : List< String > (Rust)
+    SimpleDateList : SimpleDateList / simple_date_list / simple-date-list
+    SimpleDateList : TIME.TIME_LIST (Go)
+    SimpleDateList : array (PHP)
+    simple_date_list : List( String ) (Crystal)
+    SimpleDateList : List< DateTime > (C#)
+    simple_date_list : List< String > (Rust)
+    NameSetMap : NameSetMap / name_set_map / name-set-map
+    NameSetMap : TIME.TIME_STRING_STRING_TUPLE_SET_MAP (Go)
+    NameSetMap : array (PHP)
+    name_set_map : Hash( String, Set( Tuple( String, String ) ) ) (Crystal)
+    NameSetMap : Dictionary< DateTime, HashSet< Tuple< String, String > > > (C#)
+    name_set_map : Map< String, List< ( String, String ) > > (Rust)
+    SimplePointerArray : SimplePointerArray / simple_pointer_array / simple-pointer-array
+    SimplePointerArray : [] * SIMPLE (Go)
+    SimplePointerArray : array (PHP)
+    simple_pointer_array : Array( SIMPLE ) (Crystal)
+    SimplePointerArray : List< SIMPLE > (C#)
+    simple_pointer_array : Vec< Weak< SIMPLE > > (Rust)
+Key columns : Id
+Non key columns : Location, Name, NameSet, PhoneList, EmailSet, CompanyMap, SimpleDate, SimpleDateMap, SimpleDateSet, SimpleDateList, NameSetMap, SimplePointerArray
+</pre>

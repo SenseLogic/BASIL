@@ -42,7 +42,7 @@ VALUE
             ~ This is the fourth text§
               also with a new line
 
-DATA
+VALUE_DATA
 
     ValueId ValueUuid
 

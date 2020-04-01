@@ -48,7 +48,7 @@ end
 
 # ~~
 
-class DATA
+class VALUE_DATA
     @uuid : String
     @value_id : Int64
     @value_uuid : String

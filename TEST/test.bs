@@ -44,7 +44,7 @@ TEST | count 10
         Integer : INT32
         Text : STRING
 
-    DATA
+    VALUE_DATA
 
         Uuid : UUID | key
         ValueId : VALUE.Id

@@ -63,7 +63,7 @@ class VALUE
 
 // ~~
 
-class DATA
+class VALUE_DATA
 {
     constructor(
         )

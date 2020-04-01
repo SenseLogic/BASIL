@@ -48,7 +48,7 @@ type VALUE struct {
 
 // ~~
 
-type DATA struct {
+type VALUE_DATA struct {
     Uuid gocql.UUID    `db:"Uuid"`;
     ValueId int64    `db:"ValueId"`;
     ValueUuid gocql.UUID    `db:"ValueUuid"`;

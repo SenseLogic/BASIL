@@ -51,7 +51,7 @@ struct VALUE
 
 // ~~
 
-struct DATA
+struct VALUE_DATA
 {
     uuid : String,
     value_id : i64,

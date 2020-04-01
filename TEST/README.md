@@ -24,7 +24,7 @@ Database designer and filler.
 ## Sample SQL schema file
 
 ```cpp
-BLOG | count 5
+BLOG | dropped, count 5
 
     SECTION
 
@@ -90,7 +90,7 @@ BLOG | count 5
 ## Sample CQL schema file
 
 ```cpp
-BLOG | count 5
+BLOG | dropped, count 5
 
     SECTION
 
@@ -188,14 +188,14 @@ USER
 <%%%PHX/test_{{table_variable}}_table.phx
 <pre>
 Table :
-    {{table_name}} : {{table_type}} / {{table_attribute}} / {{table_variable}} / {{table_style}}
+    {{table_name}} : {{table_type}} {{table_attribute}} {{table_variable}} {{table_style}}
 Columns :<~
-    {{column_name}} : {{column_attribute}} / {{column_variable}} / {{column_style}}
-    {{column_go_name}} : {{column_go_type}} (Go)
-    {{column_php_name}} : {{column_php_type}} (PHP)
-    {{column_crystal_name}} : {{column_crystal_type}} (Crystal)
-    {{column_csharp_name}} : {{column_csharp_type}} (C#)
-    {{column_rust_name}} : {{column_rust_type}} (Rust)~>
+    {{column_name}} : {{column_attribute}} {{column_variable}} {{column_style}}
+        Go : {{column_go_type}} {{column_go_name}}
+        PHP : {{column_php_type}} {{column_php_name}}
+        Crystal : {{column_crystal_type}} {{column_crystal_name}}
+        C# : {{column_csharp_type}} {{column_csharp_name}}
+        Rust : {{column_rust_type}} {{column_rust_name}} ~>
 Key columns : <@{{column_name}}<?!{{column_is_last_key}}#, ?>@>
 Non key columns : <${{column_name}}<?!{{column_is_last_non_key}}#, ?>$>
 </pre>

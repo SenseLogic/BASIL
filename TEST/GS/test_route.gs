@@ -20,9 +20,9 @@ func RouteDatabaseRequests(
     router.Post( "/get_value", HandleGetValueDatabaseRequest );
     router.Post( "/get_value_list", HandleGetValueListDatabaseRequest );
 
-    router.Post( "/add_data", HandleAddDataDatabaseRequest );
-    router.Post( "/set_data", HandleSetDataDatabaseRequest );
-    router.Post( "/remove_data", HandleRemoveDataDatabaseRequest );
-    router.Post( "/get_data", HandleGetDataDatabaseRequest );
-    router.Post( "/get_data_list", HandleGetDataListDatabaseRequest );
+    router.Post( "/add_value_data", HandleAddValueDataDatabaseRequest );
+    router.Post( "/set_value_data", HandleSetValueDataDatabaseRequest );
+    router.Post( "/remove_value_data", HandleRemoveValueDataDatabaseRequest );
+    router.Post( "/get_value_data", HandleGetValueDataDatabaseRequest );
+    router.Post( "/get_value_data_list", HandleGetValueDataListDatabaseRequest );
 }

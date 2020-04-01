@@ -96,16 +96,16 @@ func WriteResponseValue(
 
 // ~~
 
-func WriteResponseData(
+func WriteResponseValueData(
     writer io.Writer,
-    data * DATA
+    value_data * VALUE_DATA
     )
 {
     WriteResponse( writer, "{\"Uuid\":" );
-    WriteResponseUuid( writer, data.Uuid );
+    WriteResponseUuid( writer, value_data.Uuid );
     WriteResponse( writer, ",\"ValueId\":" );
-    WriteResponseInt64( writer, data.ValueId );
+    WriteResponseInt64( writer, value_data.ValueId );
     WriteResponse( writer, ",\"ValueUuid\":" );
-    WriteResponseUuid( writer, data.ValueUuid );
+    WriteResponseUuid( writer, value_data.ValueUuid );
     WriteResponse( writer, "}" );
 }

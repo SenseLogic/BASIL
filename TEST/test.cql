@@ -8,5 +8,5 @@ create table if not exists TEST.COMPOUND( Id int, Location text, Name tuple<text
 drop table if exists TEST.VALUE;
 create table if not exists TEST.VALUE( Id bigint, Uuid uuid, Name text, Integer int, Text text, primary key( Id ) );
 create index on TEST.VALUE ( Uuid );
-drop table if exists TEST.DATA;
-create table if not exists TEST.DATA( Uuid uuid, ValueId bigint, ValueUuid uuid, primary key( Uuid ) );
+drop table if exists TEST.VALUE_DATA;
+create table if not exists TEST.VALUE_DATA( Uuid uuid, ValueId bigint, ValueUuid uuid, primary key( Uuid ) );
