@@ -147,5 +147,5 @@ func main(
     fmt.Println( "            Uuid," );
     fmt.Println( "            ValueId," );
     fmt.Println( "            ValueUuid" );
-    fmt.Println( "        Non stored columns :" );}
+    fmt.Println( "        Non stored columns :" );
 }

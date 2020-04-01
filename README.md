@@ -223,7 +223,7 @@ func main(
     fmt.Println( "        Stored columns :" );<~<?{{column_is_stored}}#
     fmt.Println( "            {{column_name}}<?!{{column_is_last_stored}}#,?>" );?>~>
     fmt.Println( "        Non stored columns :" );<~<?!{{column_is_stored}}#
-    fmt.Println( "            {{column_name}}<?!{{column_is_last_non_stored}}#,?>" );?>~>%>}
+    fmt.Println( "            {{column_name}}<?!{{column_is_last_non_stored}}#,?>" );?>~>%>
 }
 %%test_types.go
 package main;
