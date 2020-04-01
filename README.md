@@ -287,6 +287,7 @@ count <i>row_count</i>
 
 #### Functions
 
+<pre>
 Real <i>minimum_value</i> <i>maximum_value</i>
 Integer <i>minimum_value</i> <i>maximum_value</i>
 Natural <i>minimum_value</i> <i>maximum_value</i> [<i>digit_count</i>]
@@ -296,6 +297,7 @@ Name <i>minimum_letter_count</i> <i>maximum_letter_count</i>
 FirstName
 LastName
 FullName
+</pre>
 
 #### Filters
 
