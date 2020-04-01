@@ -26,7 +26,7 @@ Database designer and filler.
 ```cpp
 BLOG | count 5
 
-    SECTION
+    SECTION | dropped
 
         Id : UINT64 | key, unique, incremented
         Number : UINT64
@@ -36,7 +36,7 @@ BLOG | count 5
 
         ImageIndex : UINT64 | !stored
 
-    USER
+    USER | dropped
 
         Id : UINT64 | key, unique, incremented
         FirstName : STRING | capacity 45
@@ -53,7 +53,7 @@ BLOG | count 5
         Company : STRING | capacity 45
         ItIsAdministrator : BOOL
 
-    ARTICLE | count 15
+    ARTICLE | dropped, count 15
 
         Id : UINT64 | key, unique, incremented
         SectionId : SECTION.Id | indexed, ascending 2
@@ -92,7 +92,7 @@ BLOG | count 5
 ```cpp
 BLOG | count 5
 
-    SECTION
+    SECTION | dropped
 
         Uuid : UUID | key, unique
         Number : UINT64
@@ -102,7 +102,7 @@ BLOG | count 5
 
         ImageIndex : UINT64 | !stored
 
-    USER
+    USER | dropped
 
         Uuid : UUID | key, unique
         FirstName : STRING
@@ -119,7 +119,7 @@ BLOG | count 5
         Company : STRING
         ItIsAdministrator : BOOL
 
-    ARTICLE | count 15
+    ARTICLE | dropped, count 15
 
         Uuid : UUID | key, unique
         SectionUuid : SECTION.Uuid | indexed

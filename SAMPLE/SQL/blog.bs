@@ -1,6 +1,6 @@
 BLOG | count 5
 
-    SECTION
+    SECTION | dropped
 
         Id : UINT64 | key, unique, incremented
         Number : UINT64
@@ -10,7 +10,7 @@ BLOG | count 5
 
         ImageIndex : UINT64 | !stored
 
-    USER
+    USER | dropped
 
         Id : UINT64 | key, unique, incremented
         FirstName : STRING | capacity 45
@@ -27,7 +27,7 @@ BLOG | count 5
         Company : STRING | capacity 45
         ItIsAdministrator : BOOL
 
-    ARTICLE | count 15
+    ARTICLE | dropped, count 15
 
         Id : UINT64 | key, unique, incremented
         SectionId : SECTION.Id | indexed, ascending 2

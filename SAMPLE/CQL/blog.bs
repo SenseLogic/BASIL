@@ -1,6 +1,6 @@
 BLOG | count 5
 
-    SECTION
+    SECTION | dropped
 
         Uuid : UUID | key, unique
         Number : UINT64
@@ -10,7 +10,7 @@ BLOG | count 5
 
         ImageIndex : UINT64 | !stored
 
-    USER
+    USER | dropped
 
         Uuid : UUID | key, unique
         FirstName : STRING
@@ -27,7 +27,7 @@ BLOG | count 5
         Company : STRING
         ItIsAdministrator : BOOL
 
-    ARTICLE | count 15
+    ARTICLE | dropped, count 15
 
         Uuid : UUID | key, unique
         SectionUuid : SECTION.Uuid | indexed
