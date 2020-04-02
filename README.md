@@ -590,7 +590,7 @@ POINTER[ <i>ELEMENT_TYPE</i> ] | !stored
 <\~ignored~\>
 <\@ignored@\>
 <\$ignored$\>
-{\?ignored?\}
+<\?ignored?\>
 {\{ignored}\}
 ```
 
