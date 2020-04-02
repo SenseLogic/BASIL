@@ -1,25 +1,29 @@
 <pre>
 Table :
-    VALUE_DATA : VALUE_DATA / ValueData / value_data / value-data
+    VALUE_DATA
+        VALUE_DATA / ValueData / value_data / value-data / Value Data / Value data / value data
 Columns :
-    Uuid : Uuid / uuid / uuid
-    Uuid : gocql.UUID (Go)
-    Uuid : string (PHP)
-    uuid : String (Crystal)
-    Uuid : Guid (C#)
-    uuid : String (Rust)
-    ValueId : ValueId / value_id / value-id
-    ValueId : int64 (Go)
-    ValueId : int (PHP)
-    value_id : Int64 (Crystal)
-    ValueId : long (C#)
-    value_id : i64 (Rust)
-    ValueUuid : ValueUuid / value_uuid / value-uuid
-    ValueUuid : gocql.UUID (Go)
-    ValueUuid : string (PHP)
-    value_uuid : String (Crystal)
-    ValueUuid : Guid (C#)
-    value_uuid : String (Rust)
+    Uuid
+        Uuid / uuid / uuid / Uuid / Uuid / uuid
+        Uuid : gocql.UUID (Go)
+        Uuid : string (PHP)
+        uuid : String (Crystal)
+        Uuid : Guid (C#)
+        uuid : String (Rust)
+    ValueId
+        ValueId / value_id / value-id / Value Id / Value id / value id
+        ValueId : int64 (Go)
+        ValueId : int (PHP)
+        value_id : Int64 (Crystal)
+        ValueId : long (C#)
+        value_id : i64 (Rust)
+    ValueUuid
+        ValueUuid / value_uuid / value-uuid / Value Uuid / Value uuid / value uuid
+        ValueUuid : gocql.UUID (Go)
+        ValueUuid : string (PHP)
+        value_uuid : String (Crystal)
+        ValueUuid : Guid (C#)
+        value_uuid : String (Rust)
 Key columns : Uuid
 Non key columns : ValueId, ValueUuid
 </pre>

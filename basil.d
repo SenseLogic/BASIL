@@ -4162,6 +4162,9 @@ class COLUMN
         GenericAttribute,
         GenericVariable,
         GenericStyle,
+        GenericTitle,
+        GenericSentence,
+        GenericLocution,
         GoName,
         GoType,
         GoAttribute,
@@ -4276,6 +4279,9 @@ class COLUMN
                 .replace( "{{column_attribute}}", GenericAttribute )
                 .replace( "{{column_variable}}", GenericVariable )
                 .replace( "{{column_style}}", GenericStyle )
+                .replace( "{{column_title}}", GenericTitle )
+                .replace( "{{column_sentence}}", GenericSentence )
+                .replace( "{{column_locution}}", GenericLocution )
                 .replace( "{{column_stored_name}}", StoredName )
                 .replace( "{{column_stored_type}}", StoredType )
                 .replace( "{{column_cql_name}}", CqlName )
@@ -4638,6 +4644,9 @@ class COLUMN
         GenericAttribute = Name.GetAttributeCaseText();
         GenericVariable = Name.GetVariableCaseText();
         GenericStyle = Name.GetStyleCaseText();
+        GenericTitle = Name.GetTitleCaseText();
+        GenericSentence = Name.GetSentenceCaseText();
+        GenericLocution = Name.GetLocutionCaseText();
         GoType = Type.GetGoText().replace( "GOCQL.UUID", "UUID" );
         GoAttribute = Type.GetGoAttributeText();
         GoVariable = GoName.GetVariableCaseText();
@@ -4782,6 +4791,9 @@ class TABLE
         GenericAttribute,
         GenericVariable,
         GenericStyle,
+        GenericTitle,
+        GenericSentence,
+        GenericLocution,
         GoType,
         GoAttribute,
         GoVariable,
@@ -4837,6 +4849,9 @@ class TABLE
         GenericAttribute = Name.GetAttributeCaseText();
         GenericVariable = Name.GetVariableCaseText();
         GenericStyle = Name.GetStyleCaseText();
+        GenericTitle = Name.GetTitleCaseText();
+        GenericSentence = Name.GetSentenceCaseText();
+        GenericLocution = Name.GetLocutionCaseText();
         GoType = GenericType;
         GoAttribute = GenericAttribute;
         GoVariable = GenericVariable;
@@ -7017,8 +7032,11 @@ class TABLE
                 .replace( "{{table_name}}", Name )
                 .replace( "{{table_type}}", GenericType )
                 .replace( "{{table_attribute}}", GenericAttribute )
-                .replace( "{{table_style}}", GenericStyle )
                 .replace( "{{table_variable}}", GenericVariable )
+                .replace( "{{table_style}}", GenericStyle )
+                .replace( "{{table_title}}", GenericTitle )
+                .replace( "{{table_sentence}}", GenericSentence )
+                .replace( "{{table_locution}}", GenericLocution )
                 .replace( "{{table_go_type}}", GoType )
                 .replace( "{{table_go_attribute}}", GoAttribute )
                 .replace( "{{table_go_variable}}", GoVariable )
@@ -9123,8 +9141,6 @@ string GetPascalCaseText(
     string text
     )
 {
-    long
-        word_index;
     string[]
         word_array;
 
@@ -9213,6 +9229,43 @@ string GetStyleCaseText(
     )
 {
     return text.GetKebabCaseText().toLower();
+}
+
+// ~~
+
+string GetTitleCaseText(
+    string text
+    )
+{
+    string[]
+        word_array;
+
+    word_array = text.GetSnakeCaseText().toLower().split( '_' );
+
+    foreach ( ref word; word_array )
+    {
+        word = word.GetCapitalizedText();
+    }
+
+    return word_array.join( " " );
+}
+
+// ~~
+
+string GetSentenceCaseText(
+    string text
+    )
+{
+    return text.GetSnakeCaseText().toLower().replace( '_', ' ' ).GetCapitalizedText();
+}
+
+// ~~
+
+string GetLocutionCaseText(
+    string text
+    )
+{
+    return text.GetSnakeCaseText().toLower().replace( '_', ' ' );
 }
 
 // ~~
@@ -9769,6 +9822,16 @@ string ReplaceConditionalTags(
                     result_text = argument_array[ 1 ].replace( argument_array[ 2 ], argument_array[ 3 ] );
                 }
                 else if ( argument_array.length == 2
+                          && argument_array[ 0 ] == "LowerCase" )
+                {
+                    result_text = argument_array[ 1 ].toLower();
+                }
+                else if ( argument_array.length == 2
+                          && argument_array[ 0 ] == "UpperCase" )
+                {
+                    result_text = argument_array[ 1 ].toUpper();
+                }
+                else if ( argument_array.length == 2
                           && argument_array[ 0 ] == "PascalCase" )
                 {
                     result_text = argument_array[ 1 ].GetPascalCaseText();
@@ -9782,16 +9845,6 @@ string ReplaceConditionalTags(
                           && argument_array[ 0 ] == "KebabCase" )
                 {
                     result_text = argument_array[ 1 ].GetKebabCaseText();
-                }
-                else if ( argument_array.length == 2
-                          && argument_array[ 0 ] == "LowerCase" )
-                {
-                    result_text = argument_array[ 1 ].toLower();
-                }
-                else if ( argument_array.length == 2
-                          && argument_array[ 0 ] == "UpperCase" )
-                {
-                    result_text = argument_array[ 1 ].toUpper();
                 }
                 else if ( argument_array.length == 2
                           && argument_array[ 0 ] == "TypeCase" )
@@ -9812,6 +9865,21 @@ string ReplaceConditionalTags(
                           && argument_array[ 0 ] == "StyleCase" )
                 {
                     result_text = argument_array[ 1 ].GetStyleCaseText();
+                }
+                else if ( argument_array.length == 2
+                          && argument_array[ 0 ] == "TitleCase" )
+                {
+                    result_text = argument_array[ 1 ].GetTitleCaseText();
+                }
+                else if ( argument_array.length == 2
+                          && argument_array[ 0 ] == "SentenceCase" )
+                {
+                    result_text = argument_array[ 1 ].GetSentenceCaseText();
+                }
+                else if ( argument_array.length == 2
+                          && argument_array[ 0 ] == "LocutionCase" )
+                {
+                    result_text = argument_array[ 1 ].GetLocutionCaseText();
                 }
                 else if ( ( argument_array.length == 2
                             || argument_array.length == 3 ) )

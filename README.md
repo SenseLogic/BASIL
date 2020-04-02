@@ -188,14 +188,16 @@ USER
 <%%%PHX/test_{{table_variable}}_table.phx
 <pre>
 Table :
-    {{table_name}} : {{table_type}} / {{table_attribute}} / {{table_variable}} / {{table_style}}
+    {{table_name}}
+        {{table_type}} / {{table_attribute}} / {{table_variable}} / {{table_style}} / {{table_title}} / {{table_sentence}} / {{table_locution}}
 Columns :<~
-    {{column_name}} : {{column_attribute}} / {{column_variable}} / {{column_style}}
-    {{column_go_name}} : {{column_go_type}} (Go)
-    {{column_php_name}} : {{column_php_type}} (PHP)
-    {{column_crystal_name}} : {{column_crystal_type}} (Crystal)
-    {{column_csharp_name}} : {{column_csharp_type}} (C#)
-    {{column_rust_name}} : {{column_rust_type}} (Rust)~>
+    {{column_name}}
+        {{column_attribute}} / {{column_variable}} / {{column_style}} / {{column_title}} / {{column_sentence}} / {{column_locution}}
+        {{column_go_name}} : {{column_go_type}} (Go)
+        {{column_php_name}} : {{column_php_type}} (PHP)
+        {{column_crystal_name}} : {{column_crystal_type}} (Crystal)
+        {{column_csharp_name}} : {{column_csharp_type}} (C#)
+        {{column_rust_name}} : {{column_rust_type}} (Rust)~>
 Key columns : <@{{column_name}}<?!{{column_is_last_key}}#, ?>@>
 Non key columns : <${{column_name}}<?!{{column_is_last_non_key}}#, ?>$>
 </pre>
@@ -498,15 +500,17 @@ POINTER[ <i>ELEMENT_TYPE</i> ] | !stored
 <?Remove#content?>
 <?Replace#old content#new content?>
 
+<?LowerCase#text?>
+<?UpperCase#text?>
 <?PascalCase#text?>
 <?SnakeCase#text?>
 <?KebabCase#text?>
-<?LowerCase#text?>
-<?UpperCase#text?>
 <?TypeCase#text?>
 <?AttributeCase#text?>
 <?VariableCase#text?>
 <?StyleCase#text?>
+<?TitleCase#text?>
+<?SentenceCase#text?>
 
 <?boolean expression#text if condition is true?>
 <?boolean expression#text if condition is true#text if condition is false?>
@@ -515,6 +519,9 @@ POINTER[ <i>ELEMENT_TYPE</i> ] | !stored
 {{column_attribute}}
 {{column_variable}}
 {{column_style}}
+{{column_title}}
+{{column_sentence}}
+{{column_locution}}
 {{column_stored_name}}
 {{column_stored_type}}
 {{column_cql_name}}
@@ -553,6 +560,9 @@ POINTER[ <i>ELEMENT_TYPE</i> ] | !stored
 {{table_attribute}}
 {{table_variable}}
 {{table_style}}
+{{table_title}}
+{{table_sentence}}
+{{table_locution}}
 {{table_go_type}}
 {{table_go_attribute}}
 {{table_go_variable}}
