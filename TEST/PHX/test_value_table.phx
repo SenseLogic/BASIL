@@ -2,6 +2,9 @@
 Table :
     VALUE
         VALUE / Value / value / value / Value / Value / value
+Columns : IdUuid, Name, Integer, Text, 
+Key columns : Id
+Non key columns : Uuid, Name, Integer, Text
 Columns :
     Id
         Id / id / id / Id / Id / id
@@ -38,6 +41,4 @@ Columns :
         text : String (Crystal)
         Text : String (C#)
         text : String (Rust)
-Key columns : Id
-Non key columns : Uuid, Name, Integer, Text
 </pre>

@@ -2,6 +2,9 @@
 Table :
     VALUE_DATA
         VALUE_DATA / ValueData / value_data / value-data / Value Data / Value data / value data
+Columns : UuidValueId, ValueUuid, 
+Key columns : Uuid
+Non key columns : ValueId, ValueUuid
 Columns :
     Uuid
         Uuid / uuid / uuid / Uuid / Uuid / uuid
@@ -24,7 +27,5 @@ Columns :
         value_uuid : String (Crystal)
         ValueUuid : Guid (C#)
         value_uuid : String (Rust)
-Key columns : Uuid
-Non key columns : ValueId, ValueUuid
 </pre>
 

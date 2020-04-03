@@ -2,6 +2,9 @@
 Table :
     COMPOUND
         COMPOUND / Compound / compound / compound / Compound / Compound / compound
+Columns : IdLocation, Name, NameSet, PhoneList, EmailSet, CompanyMap, SimpleDate, SimpleDateMap, SimpleDateSet, SimpleDateList, NameSetMap, SimplePointerArray, 
+Key columns : Id
+Non key columns : Location, Name, NameSet, PhoneList, EmailSet, CompanyMap, SimpleDate, SimpleDateMap, SimpleDateSet, SimpleDateList, NameSetMap, SimplePointerArray
 Columns :
     Id
         Id / id / id / Id / Id / id
@@ -94,6 +97,4 @@ Columns :
         simple_pointer_array : Array( SIMPLE ) (Crystal)
         SimplePointerArray : List< SIMPLE > (C#)
         simple_pointer_array : Vec< Weak< SIMPLE > > (Rust)
-Key columns : Id
-Non key columns : Location, Name, NameSet, PhoneList, EmailSet, CompanyMap, SimpleDate, SimpleDateMap, SimpleDateSet, SimpleDateList, NameSetMap, SimplePointerArray
 </pre>

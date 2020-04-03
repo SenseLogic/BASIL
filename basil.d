@@ -4094,11 +4094,11 @@ class COLUMN
         IsLast,
         IsStored,
         IsLastStored,
-        IsLastNotStored,
+        IsLastNonStored,
         IsUnique,
         IsKey,
         IsLastKey,
-        IsLastNotKey,
+        IsLastNonKey,
         IsPartitioned,
         IsClustered,
         IsIndexed,
@@ -4108,7 +4108,7 @@ class COLUMN
         IsRequired,
         IsIncremented,
         IsLastIncremented,
-        IsLastNotIncremented,
+        IsLastNonIncremented,
         IsConstrained,
         IsAscending,
         IsDescending,
@@ -4308,13 +4308,13 @@ class COLUMN
                 .replace( "{{column_is_last}}", GetBooleanText( IsLast ) )
                 .replace( "{{column_is_stored}}", GetBooleanText( IsStored ) )
                 .replace( "{{column_is_last_stored}}", GetBooleanText( IsLastStored ) )
-                .replace( "{{column_is_last_non_stored}}", GetBooleanText( IsLastNotStored ) )
+                .replace( "{{column_is_last_non_stored}}", GetBooleanText( IsLastNonStored ) )
                 .replace( "{{column_is_key}}", GetBooleanText( IsKey ) )
                 .replace( "{{column_is_last_key}}", GetBooleanText( IsLastKey ) )
-                .replace( "{{column_is_last_non_key}}", GetBooleanText( IsLastNotKey ) )
+                .replace( "{{column_is_last_non_key}}", GetBooleanText( IsLastNonKey ) )
                 .replace( "{{column_is_incremented}}", GetBooleanText( IsIncremented ) )
                 .replace( "{{column_is_last_incremented}}", GetBooleanText( IsLastIncremented ) )
-                .replace( "{{column_is_last_non_incremented}}", GetBooleanText( IsLastNotIncremented ) )
+                .replace( "{{column_is_last_non_incremented}}", GetBooleanText( IsLastNonIncremented ) )
                 .replace( "{{column_is_constrained}}", GetBooleanText( IsConstrained ) );
     }
 
@@ -4815,7 +4815,7 @@ class TABLE
         IsLast,
         IsStored,
         IsLastStored,
-        IsLastNotStored,
+        IsLastNonStored,
         IsSorted,
         IsDropped;
     long
@@ -5218,7 +5218,7 @@ class TABLE
                     generis_code
                         ~= column.StoredName ~ " = ?";
 
-                    if ( !column.IsLastNotKey )
+                    if ( !column.IsLastNonKey )
                     {
                         generis_code
                             ~= ", ";
@@ -5542,7 +5542,7 @@ class TABLE
                         ~= column.StoredName;
 
                     if ( column.IsStored
-                         && !column.IsLastNotKey )
+                         && !column.IsLastNonKey )
                     {
                         generis_code
                             ~= ", ";
@@ -5625,7 +5625,7 @@ class TABLE
                     generis_code
                         ~= "                  &" ~ GoVariable ~ "." ~ column.GoName;
 
-                    if ( !column.IsLastNotKey )
+                    if ( !column.IsLastNonKey )
                     {
                         generis_code
                             ~= ",\n";
@@ -5665,7 +5665,7 @@ class TABLE
                     generis_code
                         ~= column.StoredName;
 
-                    if ( !column.IsLastNotKey )
+                    if ( !column.IsLastNonKey )
                     {
                         generis_code
                             ~= ", ";
@@ -5727,7 +5727,7 @@ class TABLE
                     generis_code
                         ~= "                    &" ~ GoVariable ~ "." ~ column.GoName;
 
-                    if ( !column.IsLastNotKey )
+                    if ( !column.IsLastNonKey )
                     {
                         generis_code
                             ~= ",\n";
@@ -6421,7 +6421,7 @@ class TABLE
                     phoenix_code
                         ~= column.StoredName ~ " = ?";
 
-                    if ( !column.IsLastNotKey )
+                    if ( !column.IsLastNonKey )
                     {
                         phoenix_code
                             ~= ", ";
@@ -7067,7 +7067,7 @@ class TABLE
                 .replace( "{{table_is_last}}", GetBooleanText( IsLast ) )
                 .replace( "{{table_is_stored}}", GetBooleanText( IsStored ) )
                 .replace( "{{table_is_last_stored}}", GetBooleanText( IsLastStored ) )
-                .replace( "{{table_is_last_non_stored}}", GetBooleanText( IsLastNotStored ) );
+                .replace( "{{table_is_last_non_stored}}", GetBooleanText( IsLastNonStored ) );
     }
 
     // -- OPERATIONS
@@ -7206,7 +7206,7 @@ class TABLE
 
         if ( last_not_stored_column !is null )
         {
-            last_not_stored_column.IsLastNotStored = true;
+            last_not_stored_column.IsLastNonStored = true;
         }
 
         if ( last_key_column !is null )
@@ -7216,7 +7216,7 @@ class TABLE
 
         if ( last_not_key_column !is null )
         {
-            last_not_key_column.IsLastNotKey = true;
+            last_not_key_column.IsLastNonKey = true;
         }
 
         if ( last_incremented_column !is null )
@@ -7226,7 +7226,7 @@ class TABLE
 
         if ( last_not_incremented_column !is null )
         {
-            last_not_incremented_column.IsLastNotIncremented = true;
+            last_not_incremented_column.IsLastNonIncremented = true;
         }
     }
 
@@ -7521,7 +7521,7 @@ class SCHEMA
 
         if ( last_not_stored_table !is null )
         {
-            last_not_stored_table.IsLastNotStored = true;
+            last_not_stored_table.IsLastNonStored = true;
         }
     }
 
@@ -9395,99 +9395,57 @@ string ReplaceColumnTags(
     TABLE table
     )
 {
+    bool
+        key_is_checked,
+        stored_is_checked,
+        column_is_any,
+        column_is_key,
+        column_is_stored;
+    long
+        tag_index;
     string
-        instance_part;
+        closing_tag,
+        instance_part,
+        opening_tag;
     string[]
         template_part_array;
 
-    template_part_array = template_text.GetSplitText( "<~", "~>" );
-
-    foreach ( template_part_index, ref template_part; template_part_array )
+    for ( tag_index = 0;
+          tag_index < 9;
+          ++tag_index )
     {
-        if ( ( template_part_index & 1 ) == 1 )
+        opening_tag = [ "<%^", "<@^", "<$^", "<%°", "<@°", "<$°", "<%", "<@", "<$" ][ tag_index ];
+        closing_tag = [ "^%>", "^@>", "^$>", "°%>", "°@>", "°$>", "%>", "@>", "$>" ][ tag_index ];
+        key_is_checked = [ false, true, true, false, true, true, false, true, true ][ tag_index ];
+        column_is_key = [ false, true, false, false, true, false, false, true, false ][ tag_index ];
+        stored_is_checked = [ true, true, true, true, true, true, false, false, false ][ tag_index ];
+        column_is_stored = [ true, true, true, false, false, false, false, false, false ][ tag_index ];
+
+        template_part_array = template_text.GetSplitText( opening_tag, closing_tag );
+
+        foreach ( template_part_index, ref template_part; template_part_array )
         {
-            instance_part = "";
-
-            foreach ( column; table.ColumnArray )
+            if ( ( template_part_index & 1 ) == 1 )
             {
-                instance_part ~= column.ReplaceTags( template_part );
-            }
+                instance_part = "";
 
-            template_part = instance_part;
-        }
-    }
-
-    return template_part_array.join( "" );
-}
-
-// ~~
-
-string ReplaceKeyColumnTags(
-    string template_text,
-    TABLE table
-    )
-{
-    string
-        instance_part;
-    string[]
-        template_part_array;
-
-    template_part_array = template_text.GetSplitText( "<@", "@>" );
-
-    foreach ( template_part_index, ref template_part; template_part_array )
-    {
-        if ( ( template_part_index & 1 ) == 1 )
-        {
-            instance_part = "";
-
-            foreach ( column; table.ColumnArray )
-            {
-                if ( column.IsKey )
+                foreach ( column; table.ColumnArray )
                 {
-                    instance_part ~= column.ReplaceTags( template_part );
+                    if ( ( !key_is_checked || column.IsKey == column_is_key )
+                         && ( !stored_is_checked || column.IsStored == column_is_stored ) )
+                    {
+                        instance_part ~= column.ReplaceTags( template_part );
+                    }
                 }
-            }
 
-            template_part = instance_part;
+                template_part = instance_part;
+            }
         }
+
+        template_text = template_part_array.join( "" );
     }
 
-    return template_part_array.join( "" );
-}
-
-// ~~
-
-string ReplaceNotKeyColumnTags(
-    string template_text,
-    TABLE table
-    )
-{
-    string
-        instance_part;
-    string[]
-        template_part_array;
-
-    template_part_array = template_text.GetSplitText( "<$", "$>" );
-
-    foreach ( template_part_index, ref template_part; template_part_array )
-    {
-        if ( ( template_part_index & 1 ) == 1 )
-        {
-            instance_part = "";
-
-            foreach ( column; table.ColumnArray )
-            {
-                if ( !column.IsKey )
-                {
-                    instance_part ~= column.ReplaceTags( template_part );
-                }
-            }
-
-            template_part = instance_part;
-        }
-    }
-
-    return template_part_array.join( "" );
+    return template_text;
 }
 
 // ~~
@@ -9497,33 +9455,55 @@ string ReplaceTableTags(
     TABLE[] table_array
     )
 {
+
+    bool
+        stored_is_checked,
+        table_is_any,
+        table_is_stored;
+    long
+        tag_index;
     string
-        instance_part;
+        closing_tag,
+        instance_part,
+        opening_tag;
     string[]
         template_part_array;
 
-    template_part_array = template_text.GetSplitText( "<%", "%>" );
-
-    foreach ( template_part_index, ref template_part; template_part_array )
+    for ( tag_index = 0;
+          tag_index < 3;
+          ++tag_index )
     {
-        if ( ( template_part_index & 1 ) == 1 )
+        opening_tag = [ "<#^", "<#°", "<#" ][ tag_index ];
+        closing_tag = [ "^#>", "°#>", "#>" ][ tag_index ];
+        stored_is_checked = [ true, true, false ][ tag_index ];
+        table_is_stored = [ true, false, false ][ tag_index ];
+
+        template_part_array = template_text.GetSplitText( opening_tag, closing_tag );
+
+        foreach ( template_part_index, ref template_part; template_part_array )
         {
-            instance_part = "";
-
-            foreach ( table; table_array )
+            if ( ( template_part_index & 1 ) == 1 )
             {
-                instance_part
-                    ~= table.ReplaceTags( template_part )
-                           .ReplaceColumnTags( table )
-                           .ReplaceKeyColumnTags( table )
-                           .ReplaceNotKeyColumnTags( table );
-            }
+                instance_part = "";
 
-            template_part = instance_part;
+                foreach ( table; table_array )
+                {
+                    if ( !stored_is_checked || table.IsStored == table_is_stored )
+                    {
+                        instance_part
+                            ~= table.ReplaceTags( template_part )
+                                    .ReplaceColumnTags( table );
+                    }
+                }
+
+                template_part = instance_part;
+            }
         }
+
+        template_text = template_part_array.join( "" );
     }
 
-    return template_part_array.join( "" );
+    return template_text;
 }
 
 // ~~
@@ -9610,19 +9590,19 @@ string ReplaceConditionalTags(
             next_character = text[ character_index + 1 ];
 
             if ( character == '<'
-                 && next_character == '?' )
+                 && next_character == '~' )
             {
                 first_character_index = character_index;
                 ++character_index;
             }
-            else if ( character == '?'
+            else if ( character == '~'
                       && next_character == '>' )
             {
                 post_character_index = character_index + 2;
 
                 if ( first_character_index < 0 )
                 {
-                    Abort( "Invalid <? ?> block : " ~ text[ 0 .. post_character_index ] );
+                    Abort( "Invalid <~ ~> block : " ~ text[ 0 .. post_character_index ] );
                 }
 
                 argument_array = text[ first_character_index + 2 .. character_index ].split( '#' );
@@ -9908,7 +9888,7 @@ string ReplaceConditionalTags(
                 }
                 else
                 {
-                    Abort( "Invalid <? ?> block : " ~ text[ first_character_index .. post_character_index ] );
+                    Abort( "Invalid <~ ~> block : " ~ text[ first_character_index .. post_character_index ] );
                 }
 
                 text
@@ -9933,16 +9913,16 @@ string ReplaceIgnoredTags(
 {
     return
         text
+            .replace( "<\\#", "<#" )
+            .replace( "#\\>", "#>" )
             .replace( "<\\%", "<%" )
             .replace( "%\\>", "%>" )
-            .replace( "<\\~", "<~" )
-            .replace( "~\\>", "~>" )
             .replace( "<\\@", "<@" )
             .replace( "@\\>", "@>" )
             .replace( "<\\$", "<$" )
             .replace( "$\\>", "$>" )
-            .replace( "<\\?", "<?" )
-            .replace( "?\\>", "?>" )
+            .replace( "<\\~", "<~" )
+            .replace( "~\\>", "~>" )
             .replace( "{\\{", "{{" )
             .replace( "}\\}", "}}" )
             .replace( "%\\%", "%%" );

@@ -462,58 +462,68 @@ POINTER[ <i>ELEMENT_TYPE</i> ] | !stored
 ```
 %%output file path
 
-<%content for each table%>
-<~content for each column~>
+<#content for each table#>
+<%content for each column%>
 <@content for each key column@>
 <$content for each non key column$>
 
-<?Equals#first text#second text#text if same texts?>
-<?Equals#first text#second text#text if same texts#text if not same texts?>
+<#^content for each stored table^#>
+<%^content for each stored column^%>
+<@^content for each stored key column^@>
+<$^content for each stored non key column^$>
 
-<?!Equals#first text#second text#text if not same texts?>
-<?!Equals#first text#second text#text if not same texts#text if same texts?>
+<#°content for each non stored table°#>
+<%°content for each non stored column°%>
+<@°content for each non stored key column°@>
+<$°content for each non stored non key column°$>
 
-<?HasPrefix#text#prefix#text if prefix found?>
-<?HasPrefix#text#prefix#text if prefix found#text if prefix not found?>
+<~Equals#first text#second text#text if same texts~>
+<~Equals#first text#second text#text if same texts#text if not same texts~>
 
-<?!HasPrefix#text#prefix#text if prefix not found?>
-<?!HasPrefix#text#prefix#text if prefix not found#text if prefix found?>
+<~!Equals#first text#second text#text if not same texts~>
+<~!Equals#first text#second text#text if not same texts#text if same texts~>
 
-<?HasSuffix#text#suffix#text if suffix found?>
-<?HasSuffix#text#suffix#text if suffix found#text if suffix not found?>
+<~HasPrefix#text#prefix#text if prefix found~>
+<~HasPrefix#text#prefix#text if prefix found#text if prefix not found~>
 
-<?!HasSuffix#text#suffix#text if suffix not found?>
-<?!HasSuffix#text#suffix#text if suffix not found#text if suffix found?>
+<~!HasPrefix#text#prefix#text if prefix not found~>
+<~!HasPrefix#text#prefix#text if prefix not found#text if prefix found~>
 
-<?Contains#text#content#text if content found?>
-<?Contains#text#content#text if content found#text if content not found?>
+<~HasSuffix#text#suffix#text if suffix found~>
+<~HasSuffix#text#suffix#text if suffix found#text if suffix not found~>
 
-<?!Contains#text#content#text if content not found?>
-<?!Contains#text#content#text if content not found#text if content found?>
+<~!HasSuffix#text#suffix#text if suffix not found~>
+<~!HasSuffix#text#suffix#text if suffix not found#text if suffix found~>
 
-<?RemovePrefix#prefix?>
-<?ReplacePrefix#old prefix#new prefix?>
+<~Contains#text#content#text if content found~>
+<~Contains#text#content#text if content found#text if content not found~>
 
-<?RemoveSuffix#suffix?>
-<?ReplaceSuffix#old suffix#new suffix?>
+<~!Contains#text#content#text if content not found~>
+<~!Contains#text#content#text if content not found#text if content found~>
 
-<?Remove#content?>
-<?Replace#old content#new content?>
+<~RemovePrefix#prefix~>
+<~ReplacePrefix#old prefix#new prefix~>
 
-<?LowerCase#text?>
-<?UpperCase#text?>
-<?PascalCase#text?>
-<?SnakeCase#text?>
-<?KebabCase#text?>
-<?TypeCase#text?>
-<?AttributeCase#text?>
-<?VariableCase#text?>
-<?StyleCase#text?>
-<?TitleCase#text?>
-<?SentenceCase#text?>
+<~RemoveSuffix#suffix~>
+<~ReplaceSuffix#old suffix#new suffix~>
 
-<?boolean expression#text if condition is true?>
-<?boolean expression#text if condition is true#text if condition is false?>
+<~Remove#content~>
+<~Replace#old content#new content~>
+
+<~LowerCase#text~>
+<~UpperCase#text~>
+<~PascalCase#text~>
+<~SnakeCase#text~>
+<~KebabCase#text~>
+<~TypeCase#text~>
+<~AttributeCase#text~>
+<~VariableCase#text~>
+<~StyleCase#text~>
+<~TitleCase#text~>
+<~SentenceCase#text~>
+
+<~boolean expression#text if condition is true~>
+<~boolean expression#text if condition is true#text if condition is false~>
 
 {{column_name}}
 {{column_attribute}}
@@ -595,13 +605,21 @@ POINTER[ <i>ELEMENT_TYPE</i> ] | !stored
 {{table_is_last_stored}}
 {{table_is_last_non_stored}}
 
-%\%ignored
-<\%ignored%\>
-<\~ignored~\>
-<\@ignored@\>
-<\$ignored$\>
-<\?ignored?\>
-{\{ignored}\}
+%\%ignored tag
+<\#ignored tags#\>
+<\%ignored tags%\>
+<\@ignored tags@\>
+<\$ignored tags$\>
+<\#^ignored tags^#\>
+<\%^ignored tags^%\>
+<\@^ignored tags^@\>
+<\$^ignored tags^$\>
+<\#°ignored tags°#\>
+<\%°ignored tags°%\>
+<\@°ignored tags°@\>
+<\$°ignored tags°$\>
+<\~ignored tags~\>
+{\{ignored tags}\}
 ```
 
 ### Boolean expression syntax

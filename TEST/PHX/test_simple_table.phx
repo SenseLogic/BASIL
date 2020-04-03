@@ -2,6 +2,9 @@
 Table :
     SIMPLE
         SIMPLE / Simple / simple / simple / Simple / Simple / simple
+Columns : UuidBool, Int8, Uint8, Int16, Uint16, Int32, Uint32, Int64, Uint64, Float32, Float64, String, Name, Date, DateTime, Blob, 
+Key columns : Uuid
+Non key columns : Bool, Int8, Uint8, Int16, Uint16, Int32, Uint32, Int64, Uint64, Float32, Float64, String, Name, Date, DateTime, Blob
 Columns :
     Uuid
         Uuid / uuid / uuid / Uuid / Uuid / uuid
@@ -122,6 +125,4 @@ Columns :
         blob : String (Crystal)
         Blob : String (C#)
         blob : String (Rust)
-Key columns : Uuid
-Non key columns : Bool, Int8, Uint8, Int16, Uint16, Int32, Uint32, Int64, Uint64, Float32, Float64, String, Name, Date, DateTime, Blob
 </pre>
