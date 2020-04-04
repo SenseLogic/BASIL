@@ -71,5 +71,25 @@ class VALUE_DATA
         this.Uuid = null;
         this.ValueId = null;
         this.ValueUuid = null;
+        this.InternalId = null;
+        this.InternalUuid = null;
+        this.InternalValueId = null;
+        this.InternalValueUuid = null;
+    }
+}
+
+// ~~
+
+class INTERNAL_DATA
+{
+    constructor(
+        )
+    {
+        this.Id = null;
+        this.Uuid = null;
+        this.ValueId = null;
+        this.ValueUuid = null;
+        this.FirstName = null;
+        this.LastName = null;
     }
 }

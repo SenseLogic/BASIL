@@ -56,4 +56,19 @@ type VALUE_DATA struct {
     Uuid gocql.UUID;
     ValueId int64;
     ValueUuid gocql.UUID;
+    InternalId int64;
+    InternalUuid gocql.UUID;
+    InternalValueId int64;
+    InternalValueUuid gocql.UUID;
+}
+
+// ~~
+
+type INTERNAL_DATA struct {
+    Id int64;
+    Uuid gocql.UUID;
+    ValueId int64;
+    ValueUuid gocql.UUID;
+    FirstName string;
+    LastName string;
 }

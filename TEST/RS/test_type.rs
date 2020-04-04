@@ -55,5 +55,21 @@ struct VALUE_DATA
 {
     uuid : String,
     value_id : i64,
-    value_uuid : String
+    value_uuid : String,
+    internal_id : i64,
+    internal_uuid : String,
+    internal_value_id : i64,
+    internal_value_uuid : String
+}
+
+// ~~
+
+struct INTERNAL_DATA
+{
+    id : i64,
+    uuid : String,
+    value_id : i64,
+    value_uuid : String,
+    first_name : String,
+    last_name : String
 }

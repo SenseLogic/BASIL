@@ -59,6 +59,19 @@ class VALUE_DATA {
     Uuid : UUID
     ValueId : VALUE.Id
     ValueUuid : VALUE.Uuid
+    InternalId : INTERNAL_DATA.Id
+    InternalUuid : INTERNAL_DATA.Uuid
+    InternalValueId : INTERNAL_DATA.Id
+    InternalValueUuid : INTERNAL_DATA.Uuid
+}
+
+class INTERNAL_DATA {
+    Id : INT64
+    Uuid : UUID
+    ValueId : VALUE.Id
+    ValueUuid : VALUE.Uuid
+    FirstName : STRING
+    LastName : STRING
 }
 
 SIMPLE <-- COMPOUND : SimpleDate
@@ -66,5 +79,17 @@ SIMPLE <-- COMPOUND : SimpleDate
 VALUE <-- VALUE_DATA : ValueId
 
 VALUE <-- VALUE_DATA : ValueUuid
+
+INTERNAL_DATA <-- VALUE_DATA : InternalId
+
+INTERNAL_DATA <-- VALUE_DATA : InternalUuid
+
+INTERNAL_DATA <-- VALUE_DATA : InternalValueId
+
+INTERNAL_DATA <-- VALUE_DATA : InternalValueUuid
+
+VALUE <-- INTERNAL_DATA : ValueId
+
+VALUE <-- INTERNAL_DATA : ValueUuid
 
 @enduml

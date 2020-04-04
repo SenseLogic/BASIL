@@ -1,31 +1,56 @@
 <pre>
 Table :
-    VALUE_DATA
-        VALUE_DATA / ValueData / value_data / value-data / Value Data / Value data / value data
-Columns : UuidValueId, ValueUuid, 
-Key columns : Uuid
-Non key columns : ValueId, ValueUuid
-Columns :
-    Uuid
-        Uuid / uuid / uuid / Uuid / Uuid / uuid
-        Uuid : gocql.UUID (Go)
-        Uuid : string (PHP)
-        uuid : String (Crystal)
-        Uuid : Guid (C#)
-        uuid : String (Rust)
-    ValueId
-        ValueId / value_id / value-id / Value Id / Value id / value id
-        ValueId : int64 (Go)
-        ValueId : int (PHP)
-        value_id : Int64 (Crystal)
-        ValueId : long (C#)
-        value_id : i64 (Rust)
-    ValueUuid
-        ValueUuid / value_uuid / value-uuid / Value Uuid / Value uuid / value uuid
-        ValueUuid : gocql.UUID (Go)
-        ValueUuid : string (PHP)
-        value_uuid : String (Crystal)
-        ValueUuid : Guid (C#)
-        value_uuid : String (Rust)
+    VALUE_DATA : VALUE_DATA / ValueData / value_data / value-data / Value Data / Value data / value data
+        Columns : Uuid, ValueId, ValueUuid, InternalId, InternalUuid, InternalValueId, InternalValueUuid
+        Key columns : Uuid
+        Non key columns : ValueId, ValueUuid, InternalId, InternalUuid, InternalValueId, InternalValueUuid
+        Stored columns : Uuid, ValueId, ValueUuid
+        Non Stored columns : InternalId, InternalUuid, InternalValueId, InternalValueUuid
+        Stored key columns : Uuid
+        Non Stored key columns : 
+        Stored non key columns : ValueId, ValueUuid
+        Non Stored non key columns : InternalId, InternalUuid, InternalValueId, InternalValueUuid
+        Columns :
+            Uuid : Uuid / uuid / uuid / Uuid / Uuid / uuid
+                Uuid : gocql.UUID (Go)
+                Uuid : string (PHP)
+                uuid : String (Crystal)
+                Uuid : Guid (C#)
+                uuid : String (Rust)
+            ValueId : ValueId / value_id / value-id / Value Id / Value id / value id
+                ValueId : int64 (Go)
+                ValueId : int (PHP)
+                value_id : Int64 (Crystal)
+                ValueId : long (C#)
+                value_id : i64 (Rust)
+            ValueUuid : ValueUuid / value_uuid / value-uuid / Value Uuid / Value uuid / value uuid
+                ValueUuid : gocql.UUID (Go)
+                ValueUuid : string (PHP)
+                value_uuid : String (Crystal)
+                ValueUuid : Guid (C#)
+                value_uuid : String (Rust)
+            InternalId : InternalId / internal_id / internal-id / Internal Id / Internal id / internal id
+                InternalId : int64 (Go)
+                InternalId : int (PHP)
+                internal_id : Int64 (Crystal)
+                InternalId : long (C#)
+                internal_id : i64 (Rust)
+            InternalUuid : InternalUuid / internal_uuid / internal-uuid / Internal Uuid / Internal uuid / internal uuid
+                InternalUuid : gocql.UUID (Go)
+                InternalUuid : string (PHP)
+                internal_uuid : String (Crystal)
+                InternalUuid : Guid (C#)
+                internal_uuid : String (Rust)
+            InternalValueId : InternalValueId / internal_value_id / internal-value-id / Internal Value Id / Internal value id / internal value id
+                InternalValueId : int64 (Go)
+                InternalValueId : int (PHP)
+                internal_value_id : Int64 (Crystal)
+                InternalValueId : long (C#)
+                internal_value_id : i64 (Rust)
+            InternalValueUuid : InternalValueUuid / internal_value_uuid / internal-value-uuid / Internal Value Uuid / Internal value uuid / internal value uuid
+                InternalValueUuid : gocql.UUID (Go)
+                InternalValueUuid : string (PHP)
+                internal_value_uuid : String (Crystal)
+                InternalValueUuid : Guid (C#)
+                internal_value_uuid : String (Rust)
 </pre>
-

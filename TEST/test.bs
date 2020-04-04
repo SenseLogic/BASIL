@@ -49,3 +49,16 @@ TEST | count 10
         Uuid : UUID | key
         ValueId : VALUE.Id
         ValueUuid : VALUE.Uuid
+        InternalId : INTERNAL_DATA.Id | !stored
+        InternalUuid : INTERNAL_DATA.Uuid | !stored
+        InternalValueId : INTERNAL_DATA.Id | !stored
+        InternalValueUuid : INTERNAL_DATA.Uuid | !stored
+
+    INTERNAL_DATA | !stored
+
+        Id : INT64 | key
+        Uuid : UUID | key, !stored
+        ValueId : VALUE.Id
+        ValueUuid : VALUE.Uuid
+        FirstName : STRING | !stored
+        LastName : STRING | !stored

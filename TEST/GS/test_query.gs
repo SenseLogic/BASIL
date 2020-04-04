@@ -602,13 +602,13 @@ func GetDatabaseValueData(
 {
     error_
         := DatabaseSession.Query(
-               "select ValueId, ValueUuid from VALUE_DATA where Uuid = ?",
+               "select ValueId, ValueUuid,  from VALUE_DATA where Uuid = ?",
                value_data.Uuid
                )
                .Consistency( gocql.One )
                .Scan(
                     &value_data.ValueId,
-                    &value_data.ValueUuid
+                    &value_data.ValueUuid,
                     );
 
     if ( error_ != nil )
@@ -660,3 +660,6 @@ func GetDatabaseValueDataList(
 
     return true;
 }
+
+// ~~
+

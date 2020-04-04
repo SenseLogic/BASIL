@@ -1,0 +1,51 @@
+<pre>
+Table :
+    INTERNAL_DATA : INTERNAL_DATA / InternalData / internal_data / internal-data / Internal Data / Internal data / internal data
+        Columns : Id, Uuid, ValueId, ValueUuid, FirstName, LastName
+        Key columns : Id, Uuid
+        Non key columns : ValueId, ValueUuid, FirstName, LastName
+        Stored columns : Id, ValueId, ValueUuid
+        Non Stored columns : Uuid, FirstName, LastName
+        Stored key columns : Id
+        Non Stored key columns : Uuid
+        Stored non key columns : ValueId, ValueUuid
+        Non Stored non key columns : FirstName, LastName
+        Columns :
+            Id : Id / id / id / Id / Id / id
+                Id : int64 (Go)
+                Id : int (PHP)
+                id : Int64 (Crystal)
+                Id : long (C#)
+                id : i64 (Rust)
+            Uuid : Uuid / uuid / uuid / Uuid / Uuid / uuid
+                Uuid : gocql.UUID (Go)
+                Uuid : string (PHP)
+                uuid : String (Crystal)
+                Uuid : Guid (C#)
+                uuid : String (Rust)
+            ValueId : ValueId / value_id / value-id / Value Id / Value id / value id
+                ValueId : int64 (Go)
+                ValueId : int (PHP)
+                value_id : Int64 (Crystal)
+                ValueId : long (C#)
+                value_id : i64 (Rust)
+            ValueUuid : ValueUuid / value_uuid / value-uuid / Value Uuid / Value uuid / value uuid
+                ValueUuid : gocql.UUID (Go)
+                ValueUuid : string (PHP)
+                value_uuid : String (Crystal)
+                ValueUuid : Guid (C#)
+                value_uuid : String (Rust)
+            FirstName : FirstName / first_name / first-name / First Name / First name / first name
+                FirstName : string (Go)
+                FirstName : string (PHP)
+                first_name : String (Crystal)
+                FirstName : String (C#)
+                first_name : String (Rust)
+            LastName : LastName / last_name / last-name / Last Name / Last name / last name
+                LastName : string (Go)
+                LastName : string (PHP)
+                last_name : String (Crystal)
+                LastName : String (C#)
+                last_name : String (Rust)
+</pre>
+

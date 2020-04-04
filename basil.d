@@ -4095,6 +4095,10 @@ class COLUMN
         IsStored,
         IsLastStored,
         IsLastNonStored,
+        IsLastStoredKey,
+        IsLastNonStoredKey,
+        IsLastStoredNonKey,
+        IsLastNonStoredNonKey,
         IsUnique,
         IsKey,
         IsLastKey,
@@ -4306,12 +4310,16 @@ class COLUMN
                 .replace( "{{column_rust_type}}", RustType )
                 .replace( "{{column_javascript_name}}", JavascriptName )
                 .replace( "{{column_is_last}}", GetBooleanText( IsLast ) )
-                .replace( "{{column_is_stored}}", GetBooleanText( IsStored ) )
-                .replace( "{{column_is_last_stored}}", GetBooleanText( IsLastStored ) )
-                .replace( "{{column_is_last_non_stored}}", GetBooleanText( IsLastNonStored ) )
                 .replace( "{{column_is_key}}", GetBooleanText( IsKey ) )
                 .replace( "{{column_is_last_key}}", GetBooleanText( IsLastKey ) )
                 .replace( "{{column_is_last_non_key}}", GetBooleanText( IsLastNonKey ) )
+                .replace( "{{column_is_stored}}", GetBooleanText( IsStored ) )
+                .replace( "{{column_is_last_stored}}", GetBooleanText( IsLastStored ) )
+                .replace( "{{column_is_last_non_stored}}", GetBooleanText( IsLastNonStored ) )
+                .replace( "{{column_is_last_stored_key}}", GetBooleanText( IsLastStoredKey ) )
+                .replace( "{{column_is_last_non_stored_key}}", GetBooleanText( IsLastNonStoredKey ) )
+                .replace( "{{column_is_last_stored_non_key}}", GetBooleanText( IsLastStoredNonKey ) )
+                .replace( "{{column_is_last_non_stored_non_key}}", GetBooleanText( IsLastNonStoredNonKey ) )
                 .replace( "{{column_is_incremented}}", GetBooleanText( IsIncremented ) )
                 .replace( "{{column_is_last_incremented}}", GetBooleanText( IsLastIncremented ) )
                 .replace( "{{column_is_last_non_incremented}}", GetBooleanText( IsLastNonIncremented ) )
@@ -7137,12 +7145,16 @@ class TABLE
     {
         COLUMN
             last_column,
-            last_not_incremented_column,
-            last_not_key_column,
-            last_not_stored_column,
+            last_non_incremented_column,
+            last_non_key_column,
+            last_non_stored_column,
+            last_non_stored_key_column,
+            last_non_stored_non_key_column,
             last_incremented_column,
             last_key_column,
-            last_stored_column;
+            last_stored_column,
+            last_stored_key_column,
+            last_stored_non_key_column;
 
         writeln( "Processing table : ", Name );
 
@@ -7152,26 +7164,20 @@ class TABLE
         }
 
         last_column = null;
-        last_stored_column = null;
-        last_not_stored_column = null;
         last_key_column = null;
-        last_not_key_column = null;
+        last_non_key_column = null;
+        last_stored_column = null;
+        last_non_stored_column = null;
+        last_stored_key_column = null;
+        last_non_stored_key_column = null;
+        last_stored_non_key_column = null;
+        last_non_stored_non_key_column = null;
         last_incremented_column = null;
-        last_not_incremented_column = null;
+        last_non_incremented_column = null;
 
         foreach ( column; ColumnArray )
         {
             last_column = column;
-
-            if ( column.IsStored )
-            {
-                last_stored_column = column;
-            }
-
-            if ( !column.IsStored )
-            {
-                last_not_stored_column = column;
-            }
 
             if ( column.IsKey )
             {
@@ -7180,7 +7186,41 @@ class TABLE
 
             if ( !column.IsKey )
             {
-                last_not_key_column = column;
+                last_non_key_column = column;
+            }
+
+            if ( column.IsStored )
+            {
+                last_stored_column = column;
+            }
+
+            if ( !column.IsStored )
+            {
+                last_non_stored_column = column;
+            }
+
+            if ( column.IsStored
+                 && column.IsKey )
+            {
+                last_stored_key_column = column;
+            }
+
+            if ( !column.IsStored
+                 && column.IsKey )
+            {
+                last_non_stored_key_column = column;
+            }
+
+            if ( column.IsStored
+                 && !column.IsKey )
+            {
+                last_stored_non_key_column = column;
+            }
+
+            if ( !column.IsStored
+                 && !column.IsKey )
+            {
+                last_non_stored_non_key_column = column;
             }
 
             if ( column.IsIncremented )
@@ -7190,7 +7230,7 @@ class TABLE
 
             if ( !column.IsIncremented )
             {
-                last_not_incremented_column = column;
+                last_non_incremented_column = column;
             }
         }
 
@@ -7199,24 +7239,44 @@ class TABLE
             last_column.IsLast = true;
         }
 
-        if ( last_stored_column !is null )
-        {
-            last_stored_column.IsLastStored = true;
-        }
-
-        if ( last_not_stored_column !is null )
-        {
-            last_not_stored_column.IsLastNonStored = true;
-        }
-
         if ( last_key_column !is null )
         {
             last_key_column.IsLastKey = true;
         }
 
-        if ( last_not_key_column !is null )
+        if ( last_non_key_column !is null )
         {
-            last_not_key_column.IsLastNonKey = true;
+            last_non_key_column.IsLastNonKey = true;
+        }
+
+        if ( last_stored_column !is null )
+        {
+            last_stored_column.IsLastStored = true;
+        }
+
+        if ( last_non_stored_column !is null )
+        {
+            last_non_stored_column.IsLastNonStored = true;
+        }
+
+        if ( last_stored_key_column !is null )
+        {
+            last_stored_key_column.IsLastStoredKey = true;
+        }
+
+        if ( last_non_stored_key_column !is null )
+        {
+            last_non_stored_key_column.IsLastNonStoredKey = true;
+        }
+
+        if ( last_stored_non_key_column !is null )
+        {
+            last_stored_non_key_column.IsLastStoredNonKey = true;
+        }
+
+        if ( last_non_stored_non_key_column !is null )
+        {
+            last_non_stored_non_key_column.IsLastNonStoredNonKey = true;
         }
 
         if ( last_incremented_column !is null )
@@ -7224,9 +7284,9 @@ class TABLE
             last_incremented_column.IsLastIncremented = true;
         }
 
-        if ( last_not_incremented_column !is null )
+        if ( last_non_incremented_column !is null )
         {
-            last_not_incremented_column.IsLastNonIncremented = true;
+            last_non_incremented_column.IsLastNonIncremented = true;
         }
     }
 
@@ -7484,13 +7544,13 @@ class SCHEMA
         )
     {
         TABLE
-            last_not_stored_table,
+            last_non_stored_table,
             last_stored_table,
             last_table;
 
         last_table = null;
         last_stored_table = null;
-        last_not_stored_table = null;
+        last_non_stored_table = null;
 
         foreach ( table; TableArray )
         {
@@ -7505,7 +7565,7 @@ class SCHEMA
 
             if ( !table.IsStored )
             {
-                last_not_stored_table = table;
+                last_non_stored_table = table;
             }
         }
 
@@ -7519,9 +7579,9 @@ class SCHEMA
             last_stored_table.IsLastStored = true;
         }
 
-        if ( last_not_stored_table !is null )
+        if ( last_non_stored_table !is null )
         {
-            last_not_stored_table.IsLastNonStored = true;
+            last_non_stored_table.IsLastNonStored = true;
         }
     }
 

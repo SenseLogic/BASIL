@@ -185,23 +185,28 @@ USER
 ## Sample template file
 
 ```go
-<%%%PHX/test_{{table_variable}}_table.phx
+<#%%PHX/test_{{table_variable}}_table.phx
 <pre>
 Table :
-    {{table_name}}
-        {{table_type}} / {{table_attribute}} / {{table_variable}} / {{table_style}} / {{table_title}} / {{table_sentence}} / {{table_locution}}
-Columns :<~
-    {{column_name}}
-        {{column_attribute}} / {{column_variable}} / {{column_style}} / {{column_title}} / {{column_sentence}} / {{column_locution}}
-        {{column_go_name}} : {{column_go_type}} (Go)
-        {{column_php_name}} : {{column_php_type}} (PHP)
-        {{column_crystal_name}} : {{column_crystal_type}} (Crystal)
-        {{column_csharp_name}} : {{column_csharp_type}} (C#)
-        {{column_rust_name}} : {{column_rust_type}} (Rust)~>
-Key columns : <@{{column_name}}<?!{{column_is_last_key}}#, ?>@>
-Non key columns : <${{column_name}}<?!{{column_is_last_non_key}}#, ?>$>
+    {{table_name}} : {{table_type}} / {{table_attribute}} / {{table_variable}} / {{table_style}} / {{table_title}} / {{table_sentence}} / {{table_locution}}
+        Columns : <%{{column_name}}<~!{{column_is_last}}#, ~>%>
+        Key columns : <@{{column_name}}<~!{{column_is_last_key}}#, ~>@>
+        Non key columns : <${{column_name}}<~!{{column_is_last_non_key}}#, ~>$>
+        Stored columns : <%^{{column_name}}<~!{{column_is_last_stored}}#, ~>^%>
+        Non Stored columns : <%°{{column_name}}<~!{{column_is_last_non_stored}}#, ~>°%>
+        Stored key columns : <@^{{column_name}}<~!{{column_is_last_stored_key}}#, ~>^@>
+        Non Stored key columns : <@°{{column_name}}<~!{{column_is_last_non_stored_key}}#, ~>°@>
+        Stored non key columns : <$^{{column_name}}<~!{{column_is_last_stored_non_key}}#, ~>^$>
+        Non Stored non key columns : <$°{{column_name}}<~!{{column_is_last_non_stored_non_key}}#, ~>°$>
+        Columns :<%
+            {{column_name}} : {{column_attribute}} / {{column_variable}} / {{column_style}} / {{column_title}} / {{column_sentence}} / {{column_locution}}
+                {{column_go_name}} : {{column_go_type}} (Go)
+                {{column_php_name}} : {{column_php_type}} (PHP)
+                {{column_crystal_name}} : {{column_crystal_type}} (Crystal)
+                {{column_csharp_name}} : {{column_csharp_type}} (C#)
+                {{column_rust_name}} : {{column_rust_type}} (Rust)%>
 </pre>
-%>
+#>
 %%test_tables.gs
 package main;
 
@@ -214,30 +219,32 @@ import "fmt";
 func main(
     )
 {
-    fmt.Println( "Tables :" );<%
-    fmt.Println( "    {{table_name}}<?!{{table_is_last}}#,?>" );
-    fmt.Println( "        Columns :" );<~
-    fmt.Println( "            {{column_name}}<?!{{column_is_last}}#,?>" );~>
-    fmt.Println( "        Key columns :" );<@
-    fmt.Println( "            {{column_name}}<?!{{column_is_last_key}}#,?>" );@>
-    fmt.Println( "        Non key columns :" );<$
-    fmt.Println( "            {{column_name}}<?!{{column_is_last_non_key}}#,?>" );$>
-    fmt.Println( "        Stored columns :" );<~<?{{column_is_stored}}#
-    fmt.Println( "            {{column_name}}<?!{{column_is_last_stored}}#,?>" );?>~>
-    fmt.Println( "        Non stored columns :" );<~<?!{{column_is_stored}}#
-    fmt.Println( "            {{column_name}}<?!{{column_is_last_non_stored}}#,?>" );?>~>%>
+    fmt.Println( "Tables : <#{{table_name}}<~!{{table_is_last}}#, ~>#>" );
+    fmt.Println( "Stored tables : <#^{{table_name}}<~!{{table_is_last_stored}}#, ~>^#>" );
+    fmt.Println( "Non stored tables : <#°{{table_name}}<~!{{table_is_last_non_stored}}#, ~>°#>" );
+    fmt.Println( "Tables :" );<#
+    fmt.Println( "    {{table_name}} :" );
+    fmt.Println( "        Columns : <%{{column_name}}<~!{{column_is_last}}#, ~>%>" );
+    fmt.Println( "        Key columns : <@{{column_name}}<~!{{column_is_last_key}}#, ~>@>" );
+    fmt.Println( "        Non key columns : <${{column_name}}<~!{{column_is_last_non_key}}#, ~>$>" );
+    fmt.Println( "        Stored columns : <%^{{column_name}}<~!{{column_is_last_stored}}#, ~>^%>" );
+    fmt.Println( "        Non stored columns : <%°{{column_name}}<~!{{column_is_last_non_stored}}#, ~>°%>" );
+    fmt.Println( "        Stored key columns : <@^{{column_name}}<~!{{column_is_last_stored_key}}#, ~>^@>" );
+    fmt.Println( "        Non stored key columns : <@°{{column_name}}<~!{{column_is_last_non_stored_key}}#, ~>°@>" );
+    fmt.Println( "        Stored non key columns : <$^{{column_name}}<~!{{column_is_last_stored_non_key}}#, ~>^$>" );
+    fmt.Println( "        Non stored kon key columns : <$°{{column_name}}<~!{{column_is_last_non_stored_non_key}}#, ~>°$>" );#>
 }
 %%test_types.go
 package main;
 
 // -- TYPES
-<%
-type {{table_go_type}} struct {<~
-    {{column_go_name}} {{column_go_type}};~>
-}<?!{{table_is_last}}#
+<#
+type {{table_go_type}} struct {<%
+    {{column_go_name}} {{column_go_type}};%>
+}<~!{{table_is_last}}#
 
 // ~~
-?>%>
+~>#>
 %%test_types.cs
 // -- IMPORTS
 
@@ -245,13 +252,13 @@ using System;
 using System.Collections.Generic;
 
 // -- TYPES
-<%
+<#
 {{table_csharp_type_declaration}}
 {
-{{table_csharp_attribute_declaration}}}<?!{{table_is_last}}#
+{{table_csharp_attribute_declaration}}}<~!{{table_is_last}}#
 
 // ~~
-?>%>
+~>#>
 ```
 
 ## Schema file syntax
@@ -556,12 +563,18 @@ POINTER[ <i>ELEMENT_TYPE</i> ] | !stored
 {{column_rust_type}}
 {{column_javascript_name}}
 {{column_is_last}}
-{{column_is_stored}}
-{{column_is_last_stored}}
-{{column_is_last_non_stored}}
 {{column_is_key}}
 {{column_is_last_key}}
 {{column_is_last_non_key}}
+{{column_is_stored}}
+{{column_is_last_stored}}
+{{column_is_last_non_stored}}
+{{column_is_stored_key}}
+{{column_is_last_stored_key}}
+{{column_is_last_non_stored_key}}
+{{column_is_stored_non_key}}
+{{column_is_last_stored_non_key}}
+{{column_is_last_non_stored_non_key}}
 {{column_is_incremented}}
 {{column_is_last_incremented}}
 {{column_is_last_non_incremented}}

@@ -99,5 +99,30 @@ public class VALUE_DATA
         ValueId;
     public Guid
         ValueUuid;
+    public long
+        InternalId;
+    public Guid
+        InternalUuid;
+    public long
+        InternalValueId;
+    public Guid
+        InternalValueUuid;
+}
+
+// ~~
+
+public class INTERNAL_DATA
+{
+    public long
+        Id;
+    public Guid
+        Uuid;
+    public long
+        ValueId;
+    public Guid
+        ValueUuid;
+    public String
+        FirstName,
+        LastName;
 }
 

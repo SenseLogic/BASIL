@@ -56,4 +56,20 @@ type VALUE_DATA struct
     Uuid gocql.UUID    `db:"Uuid"`;
     ValueId int64    `db:"ValueId"`;
     ValueUuid gocql.UUID    `db:"ValueUuid"`;
+    InternalId int64    `db:"-"`;
+    InternalUuid gocql.UUID    `db:"-"`;
+    InternalValueId int64    `db:"-"`;
+    InternalValueUuid gocql.UUID    `db:"-"`;
+}
+
+// ~~
+
+type INTERNAL_DATA struct
+{
+    Id int64    `db:"Id"`;
+    Uuid gocql.UUID    `db:"-"`;
+    ValueId int64    `db:"ValueId"`;
+    ValueUuid gocql.UUID    `db:"ValueUuid"`;
+    FirstName string    `db:"-"`;
+    LastName string    `db:"-"`;
 }

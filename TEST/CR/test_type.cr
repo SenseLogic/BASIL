@@ -52,4 +52,19 @@ class VALUE_DATA
     @uuid : String
     @value_id : Int64
     @value_uuid : String
+    @internal_id : Int64
+    @internal_uuid : String
+    @internal_value_id : Int64
+    @internal_value_uuid : String
+end
+
+# ~~
+
+class INTERNAL_DATA
+    @id : Int64
+    @uuid : String
+    @value_id : Int64
+    @value_uuid : String
+    @first_name : String
+    @last_name : String
 end
