@@ -71,5 +71,6 @@ struct INTERNAL_DATA
     value_id : i64,
     value_uuid : String,
     first_name : String,
-    last_name : String
+    last_name : String,
+    is_awesome : bool
 }

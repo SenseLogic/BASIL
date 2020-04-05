@@ -91,5 +91,6 @@ class INTERNAL_DATA
         this.ValueUuid = null;
         this.FirstName = null;
         this.LastName = null;
+        this.IsAwesome = null;
     }
 }

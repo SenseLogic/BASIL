@@ -1,6 +1,7 @@
 <pre>
 Table :
     COMPOUND : COMPOUND / Compound / compound / compound / Compound / Compound / compound
+        Properties :  
         Columns : Id, Location, Name, NameSet, PhoneList, EmailSet, CompanyMap, SimpleDate, SimpleDateMap, SimpleDateSet, SimpleDateList, NameSetMap, SimplePointerArray
         Key columns : Id
         Non key columns : Location, Name, NameSet, PhoneList, EmailSet, CompanyMap, SimpleDate, SimpleDateMap, SimpleDateSet, SimpleDateList, NameSetMap, SimplePointerArray
@@ -12,81 +13,94 @@ Table :
         Non Stored non key columns : SimplePointerArray
         Columns :
             Id : Id / id / id / Id / Id / id
-                Id : int32 (Go)
-                Id : int (PHP)
-                id : Int32 (Crystal)
-                Id : int (C#)
-                id : i32 (Rust)
+                Properties :  
+                Go : int32 Id
+                PHP : int Id
+                Crystal : Int32 id
+                C# : int Id
+                Rust : i32 id
             Location : Location / location / location / Location / Location / location
-                Location : string (Go)
-                Location : string (PHP)
-                location : String (Crystal)
-                Location : String (C#)
-                location : String (Rust)
+                Properties :  
+                Go : string Location
+                PHP : string Location
+                Crystal : String location
+                C# : String Location
+                Rust : String location
             Name : Name / name / name / Name / Name / name
-                Name : STRING_STRING_TUPLE (Go)
-                Name : array (PHP)
-                name : Tuple( String, String ) (Crystal)
-                Name : Tuple< String, String > (C#)
-                name : ( String, String ) (Rust)
+                Properties :  
+                Go : STRING_STRING_TUPLE Name
+                PHP : array Name
+                Crystal : Tuple( String, String ) name
+                C# : Tuple< String, String > Name
+                Rust : ( String, String ) name
             NameSet : NameSet / name_set / name-set / Name Set / Name set / name set
-                NameSet : STRING_STRING_TUPLE_SET (Go)
-                NameSet : array (PHP)
-                name_set : Set( Tuple( String, String ) ) (Crystal)
-                NameSet : HashSet< Tuple< String, String > > (C#)
-                name_set : List< ( String, String ) > (Rust)
+                Properties :  
+                Go : STRING_STRING_TUPLE_SET NameSet
+                PHP : array NameSet
+                Crystal : Set( Tuple( String, String ) ) name_set
+                C# : HashSet< Tuple< String, String > > NameSet
+                Rust : List< ( String, String ) > name_set
             PhoneList : PhoneList / phone_list / phone-list / Phone List / Phone list / phone list
-                PhoneList : STRING_LIST (Go)
-                PhoneList : array (PHP)
-                phone_list : List( String ) (Crystal)
-                PhoneList : List< String > (C#)
-                phone_list : List< String > (Rust)
+                Properties :  
+                Go : STRING_LIST PhoneList
+                PHP : array PhoneList
+                Crystal : List( String ) phone_list
+                C# : List< String > PhoneList
+                Rust : List< String > phone_list
             EmailSet : EmailSet / email_set / email-set / Email Set / Email set / email set
-                EmailSet : STRING_SET (Go)
-                EmailSet : array (PHP)
-                email_set : Set( String ) (Crystal)
-                EmailSet : HashSet< String > (C#)
-                email_set : List< String > (Rust)
+                Properties :  
+                Go : STRING_SET EmailSet
+                PHP : array EmailSet
+                Crystal : Set( String ) email_set
+                C# : HashSet< String > EmailSet
+                Rust : List< String > email_set
             CompanyMap : CompanyMap / company_map / company-map / Company Map / Company map / company map
-                CompanyMap : STRING_STRING_MAP (Go)
-                CompanyMap : array (PHP)
-                company_map : Hash( String, String ) (Crystal)
-                CompanyMap : Dictionary< String, String > (C#)
-                company_map : Map< String, String > (Rust)
+                Properties :  
+                Go : STRING_STRING_MAP CompanyMap
+                PHP : array CompanyMap
+                Crystal : Hash( String, String ) company_map
+                C# : Dictionary< String, String > CompanyMap
+                Rust : Map< String, String > company_map
             SimpleDate : SimpleDate / simple_date / simple-date / Simple Date / Simple date / simple date
-                SimpleDate : time.Time (Go)
-                SimpleDate : string (PHP)
-                simple_date : String (Crystal)
-                SimpleDate : DateTime (C#)
-                simple_date : String (Rust)
+                Properties :  
+                Go : time.Time SimpleDate
+                PHP : string SimpleDate
+                Crystal : String simple_date
+                C# : DateTime SimpleDate
+                Rust : String simple_date
             SimpleDateMap : SimpleDateMap / simple_date_map / simple-date-map / Simple Date Map / Simple date map / simple date map
-                SimpleDateMap : STRING_STRING_TUPLE_TIME.TIME_MAP (Go)
-                SimpleDateMap : array (PHP)
-                simple_date_map : Hash( Tuple( String, String ), String ) (Crystal)
-                SimpleDateMap : Dictionary< Tuple< String, String >, DateTime > (C#)
-                simple_date_map : Map< ( String, String ), String > (Rust)
+                Properties :  
+                Go : STRING_STRING_TUPLE_TIME.TIME_MAP SimpleDateMap
+                PHP : array SimpleDateMap
+                Crystal : Hash( Tuple( String, String ), String ) simple_date_map
+                C# : Dictionary< Tuple< String, String >, DateTime > SimpleDateMap
+                Rust : Map< ( String, String ), String > simple_date_map
             SimpleDateSet : SimpleDateSet / simple_date_set / simple-date-set / Simple Date Set / Simple date set / simple date set
-                SimpleDateSet : TIME.TIME_SET (Go)
-                SimpleDateSet : array (PHP)
-                simple_date_set : Set( String ) (Crystal)
-                SimpleDateSet : HashSet< DateTime > (C#)
-                simple_date_set : List< String > (Rust)
+                Properties :  
+                Go : TIME.TIME_SET SimpleDateSet
+                PHP : array SimpleDateSet
+                Crystal : Set( String ) simple_date_set
+                C# : HashSet< DateTime > SimpleDateSet
+                Rust : List< String > simple_date_set
             SimpleDateList : SimpleDateList / simple_date_list / simple-date-list / Simple Date List / Simple date list / simple date list
-                SimpleDateList : TIME.TIME_LIST (Go)
-                SimpleDateList : array (PHP)
-                simple_date_list : List( String ) (Crystal)
-                SimpleDateList : List< DateTime > (C#)
-                simple_date_list : List< String > (Rust)
+                Properties :  
+                Go : TIME.TIME_LIST SimpleDateList
+                PHP : array SimpleDateList
+                Crystal : List( String ) simple_date_list
+                C# : List< DateTime > SimpleDateList
+                Rust : List< String > simple_date_list
             NameSetMap : NameSetMap / name_set_map / name-set-map / Name Set Map / Name set map / name set map
-                NameSetMap : TIME.TIME_STRING_STRING_TUPLE_SET_MAP (Go)
-                NameSetMap : array (PHP)
-                name_set_map : Hash( String, Set( Tuple( String, String ) ) ) (Crystal)
-                NameSetMap : Dictionary< DateTime, HashSet< Tuple< String, String > > > (C#)
-                name_set_map : Map< String, List< ( String, String ) > > (Rust)
+                Properties :  
+                Go : TIME.TIME_STRING_STRING_TUPLE_SET_MAP NameSetMap
+                PHP : array NameSetMap
+                Crystal : Hash( String, Set( Tuple( String, String ) ) ) name_set_map
+                C# : Dictionary< DateTime, HashSet< Tuple< String, String > > > NameSetMap
+                Rust : Map< String, List< ( String, String ) > > name_set_map
             SimplePointerArray : SimplePointerArray / simple_pointer_array / simple-pointer-array / Simple Pointer Array / Simple pointer array / simple pointer array
-                SimplePointerArray : [] * SIMPLE (Go)
-                SimplePointerArray : array (PHP)
-                simple_pointer_array : Array( SIMPLE ) (Crystal)
-                SimplePointerArray : List< SIMPLE > (C#)
-                simple_pointer_array : Vec< Weak< SIMPLE > > (Rust)
+                Properties :  
+                Go : [] * SIMPLE SimplePointerArray
+                PHP : array SimplePointerArray
+                Crystal : Array( SIMPLE ) simple_pointer_array
+                C# : List< SIMPLE > SimplePointerArray
+                Rust : Vec< Weak< SIMPLE > > simple_pointer_array
 </pre>

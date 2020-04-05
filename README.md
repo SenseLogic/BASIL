@@ -286,6 +286,8 @@ count <i>row_count</i>
 ### Table properties
 
 <pre>
+[!]@<i>property_name</i>
+@<i>property_name</i> <i>property_value</i>
 [!]stored
 [!]sorted
 [!]dropped
@@ -335,6 +337,8 @@ RemoveIdentifier identifier
 ### Column properties
 
 <pre>
+[!]@<i>property_name</i>
+@<i>property_name</i> <i>property_value</i>
 [!]stored
 [!]key
 [!]partitioned
@@ -532,6 +536,47 @@ POINTER[ <i>ELEMENT_TYPE</i> ] | !stored
 <~boolean expression#text if condition is true~>
 <~boolean expression#text if condition is true#text if condition is false~>
 
+{{table_name}}
+{{table_attribute}}
+{{table_variable}}
+{{table_style}}
+{{table_title}}
+{{table_sentence}}
+{{table_locution}}
+{{table_go_type}}
+{{table_go_attribute}}
+{{table_go_variable}}
+{{table_php_type}}
+{{table_php_attribute}}
+{{table_php_variable}}
+{{table_crystal_type}}
+{{table_csharp_type}}
+{{table_csharp_attribute}}
+{{table_csharp_variable}}
+{{table_rust_type}}
+{{table_javascript_type}}
+{{table_javascript_attribute}}
+{{table_go_attribute_declaration}}
+{{table_go_type_declaration}}
+{{table_generis_attribute_declaration}}
+{{table_generis_type_declaration}}
+{{table_crystal_attribute_declaration}}
+{{table_crystal_type_declaration}}
+{{table_cibyl_attribute_declaration}}
+{{table_cibyl_type_declaration}}
+{{table_csharp_attribute_declaration}}
+{{table_csharp_type_declaration}}
+{{table_javascript_attribute_declaration}}
+{{table_javascript_type_declaration}}
+{{table_rust_attribute_declaration}}
+{{table_rust_type_declaration}}
+{{table_is_last}}
+{{table_is_stored}}
+{{table_is_last_stored}}
+{{table_is_last_non_stored}}
+
+{{@table_property_name@}}
+
 {{column_name}}
 {{column_attribute}}
 {{column_variable}}
@@ -579,44 +624,7 @@ POINTER[ <i>ELEMENT_TYPE</i> ] | !stored
 {{column_is_last_incremented}}
 {{column_is_last_non_incremented}}
 
-{{table_name}}
-{{table_attribute}}
-{{table_variable}}
-{{table_style}}
-{{table_title}}
-{{table_sentence}}
-{{table_locution}}
-{{table_go_type}}
-{{table_go_attribute}}
-{{table_go_variable}}
-{{table_php_type}}
-{{table_php_attribute}}
-{{table_php_variable}}
-{{table_crystal_type}}
-{{table_csharp_type}}
-{{table_csharp_attribute}}
-{{table_csharp_variable}}
-{{table_rust_type}}
-{{table_javascript_type}}
-{{table_javascript_attribute}}
-{{table_go_attribute_declaration}}
-{{table_go_type_declaration}}
-{{table_generis_attribute_declaration}}
-{{table_generis_type_declaration}}
-{{table_crystal_attribute_declaration}}
-{{table_crystal_type_declaration}}
-{{table_cibyl_attribute_declaration}}
-{{table_cibyl_type_declaration}}
-{{table_csharp_attribute_declaration}}
-{{table_csharp_type_declaration}}
-{{table_javascript_attribute_declaration}}
-{{table_javascript_type_declaration}}
-{{table_rust_attribute_declaration}}
-{{table_rust_type_declaration}}
-{{table_is_last}}
-{{table_is_stored}}
-{{table_is_last_stored}}
-{{table_is_last_non_stored}}
+{{@column_property_name@}}
 
 %\%ignored tag
 <\#ignored tags#\>
@@ -633,6 +641,7 @@ POINTER[ <i>ELEMENT_TYPE</i> ] | !stored
 <\$°ignored tags°$\>
 <\~ignored tags~\>
 {\{ignored tags}\}
+{\{@ignored tags@}\}
 ```
 
 ### Boolean expression syntax
@@ -714,7 +723,7 @@ Generates `blog.uml`, `blog.sql`, `blog_data.sql`, `blog_sql_type.go` from `blog
 
 ## Version
 
-4.0
+5.0
 
 ## Author
 

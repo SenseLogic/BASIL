@@ -72,6 +72,7 @@ class INTERNAL_DATA {
     ValueUuid : VALUE.Uuid
     FirstName : STRING
     LastName : STRING
+    IsAwesome : BOOL
 }
 
 SIMPLE <-- COMPOUND : SimpleDate

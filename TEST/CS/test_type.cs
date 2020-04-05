@@ -117,4 +117,6 @@ public class INTERNAL_DATA
     public String
         FirstName,
         LastName;
+    public bool
+        IsAwesome;
 }

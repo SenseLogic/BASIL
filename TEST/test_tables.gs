@@ -54,13 +54,13 @@ func main(
     fmt.Println( "        Stored non key columns : ValueId, ValueUuid" );
     fmt.Println( "        Non stored kon key columns : InternalId, InternalUuid, InternalValueId, InternalValueUuid" );
     fmt.Println( "    INTERNAL_DATA :" );
-    fmt.Println( "        Columns : Id, Uuid, ValueId, ValueUuid, FirstName, LastName" );
+    fmt.Println( "        Columns : Id, Uuid, ValueId, ValueUuid, FirstName, LastName, IsAwesome" );
     fmt.Println( "        Key columns : Id, Uuid" );
-    fmt.Println( "        Non key columns : ValueId, ValueUuid, FirstName, LastName" );
+    fmt.Println( "        Non key columns : ValueId, ValueUuid, FirstName, LastName, IsAwesome" );
     fmt.Println( "        Stored columns : Id, ValueId, ValueUuid" );
-    fmt.Println( "        Non stored columns : Uuid, FirstName, LastName" );
+    fmt.Println( "        Non stored columns : Uuid, FirstName, LastName, IsAwesome" );
     fmt.Println( "        Stored key columns : Id" );
     fmt.Println( "        Non stored key columns : Uuid" );
     fmt.Println( "        Stored non key columns : ValueId, ValueUuid" );
-    fmt.Println( "        Non stored kon key columns : FirstName, LastName" );
+    fmt.Println( "        Non stored kon key columns : FirstName, LastName, IsAwesome" );
 }

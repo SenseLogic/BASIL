@@ -67,4 +67,5 @@ class INTERNAL_DATA
     @value_uuid : String
     @first_name : String
     @last_name : String
+    @is_awesome : bool
 end

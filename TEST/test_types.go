@@ -71,4 +71,5 @@ type INTERNAL_DATA struct {
     ValueUuid gocql.UUID;
     FirstName string;
     LastName string;
+    IsAwesome bool;
 }

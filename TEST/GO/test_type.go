@@ -67,4 +67,5 @@ type INTERNAL_DATA struct {
     ValueUuid gocql.UUID    `db:"ValueUuid"`;
     FirstName string    `db:"-"`;
     LastName string    `db:"-"`;
+    IsAwesome bool    `db:"-"`;
 }

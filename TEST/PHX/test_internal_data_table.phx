@@ -1,51 +1,65 @@
 <pre>
 Table :
     INTERNAL_DATA : INTERNAL_DATA / InternalData / internal_data / internal-data / Internal Data / Internal data / internal data
-        Columns : Id, Uuid, ValueId, ValueUuid, FirstName, LastName
+        Properties : true 10
+        Columns : Id, Uuid, ValueId, ValueUuid, FirstName, LastName, IsAwesome
         Key columns : Id, Uuid
-        Non key columns : ValueId, ValueUuid, FirstName, LastName
+        Non key columns : ValueId, ValueUuid, FirstName, LastName, IsAwesome
         Stored columns : Id, ValueId, ValueUuid
-        Non Stored columns : Uuid, FirstName, LastName
+        Non Stored columns : Uuid, FirstName, LastName, IsAwesome
         Stored key columns : Id
         Non Stored key columns : Uuid
         Stored non key columns : ValueId, ValueUuid
-        Non Stored non key columns : FirstName, LastName
+        Non Stored non key columns : FirstName, LastName, IsAwesome
         Columns :
             Id : Id / id / id / Id / Id / id
-                Id : int64 (Go)
-                Id : int (PHP)
-                id : Int64 (Crystal)
-                Id : long (C#)
-                id : i64 (Rust)
+                Properties :  
+                Go : int64 Id
+                PHP : int Id
+                Crystal : Int64 id
+                C# : long Id
+                Rust : i64 id
             Uuid : Uuid / uuid / uuid / Uuid / Uuid / uuid
-                Uuid : gocql.UUID (Go)
-                Uuid : string (PHP)
-                uuid : String (Crystal)
-                Uuid : Guid (C#)
-                uuid : String (Rust)
+                Properties :  
+                Go : gocql.UUID Uuid
+                PHP : string Uuid
+                Crystal : String uuid
+                C# : Guid Uuid
+                Rust : String uuid
             ValueId : ValueId / value_id / value-id / Value Id / Value id / value id
-                ValueId : int64 (Go)
-                ValueId : int (PHP)
-                value_id : Int64 (Crystal)
-                ValueId : long (C#)
-                value_id : i64 (Rust)
+                Properties :  
+                Go : int64 ValueId
+                PHP : int ValueId
+                Crystal : Int64 value_id
+                C# : long ValueId
+                Rust : i64 value_id
             ValueUuid : ValueUuid / value_uuid / value-uuid / Value Uuid / Value uuid / value uuid
-                ValueUuid : gocql.UUID (Go)
-                ValueUuid : string (PHP)
-                value_uuid : String (Crystal)
-                ValueUuid : Guid (C#)
-                value_uuid : String (Rust)
+                Properties :  
+                Go : gocql.UUID ValueUuid
+                PHP : string ValueUuid
+                Crystal : String value_uuid
+                C# : Guid ValueUuid
+                Rust : String value_uuid
             FirstName : FirstName / first_name / first-name / First Name / First name / first name
-                FirstName : string (Go)
-                FirstName : string (PHP)
-                first_name : String (Crystal)
-                FirstName : String (C#)
-                first_name : String (Rust)
+                Properties : false 
+                Go : string FirstName
+                PHP : string FirstName
+                Crystal : String first_name
+                C# : String FirstName
+                Rust : String first_name
             LastName : LastName / last_name / last-name / Last Name / Last name / last name
-                LastName : string (Go)
-                LastName : string (PHP)
-                last_name : String (Crystal)
-                LastName : String (C#)
-                last_name : String (Rust)
+                Properties : false 
+                Go : string LastName
+                PHP : string LastName
+                Crystal : String last_name
+                C# : String LastName
+                Rust : String last_name
+            IsAwesome : IsAwesome / is_awesome / is-awesome / Is Awesome / Is awesome / is awesome
+                Properties : true 10
+                Go : bool IsAwesome
+                PHP : bool IsAwesome
+                Crystal : bool is_awesome
+                C# : bool IsAwesome
+                Rust : bool is_awesome
 </pre>
 

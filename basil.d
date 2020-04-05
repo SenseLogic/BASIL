@@ -4077,6 +4077,28 @@ class VALUE
 
 // ~~
 
+class PROPERTY
+{
+    // -- ATTRIBUTES
+
+    string
+        Name,
+        Value;
+
+    // -- CONSTRUCTORS
+
+    this(
+        string name,
+        string value
+        )
+    {
+        Name = name;
+        Value = value;
+    }
+}
+
+// ~~
+
 class COLUMN
 {
     // -- ATTRIBUTES
@@ -4153,6 +4175,8 @@ class COLUMN
         ValueCount;
     COLUMN
         ForeignColumn;
+    string[ string ]
+        PropertyValueMap;
     string
         SqlName,
         SqlType;
@@ -4199,7 +4223,7 @@ class COLUMN
         Table = table;
         Name = name.replace( " ", "" );
         Type = new TYPE( table, this, Name, type );
-        IsStored = true;
+        IsStored = table.IsStored;
         MinimumRandomCount = table.RowCount;
         MaximumRandomCount = table.RowCount;
     }
@@ -4273,10 +4297,43 @@ class COLUMN
 
     // ~~
 
-    string ReplaceTags(
+    string ReplaceProperties(
         string template_text
         )
     {
+        string *
+            property_value;
+        string[]
+            template_part_array;
+
+        template_part_array = template_text.GetSplitText( "{{@", "@}}" );
+
+        foreach ( template_part_index, ref template_part; template_part_array )
+        {
+            if ( ( template_part_index & 1 ) == 1 )
+            {
+                if ( template_part.startsWith( "column_" ) )
+                {
+                    property_value = template_part in PropertyValueMap;
+
+                    if ( property_value !is null )
+                    {
+                        template_part = *property_value;
+                    }
+                    else
+                    {
+                        template_part = "";
+                    }
+                }
+                else
+                {
+                    template_part = "{{@" ~ template_part ~ "@}}";
+                }
+            }
+        }
+
+        template_text = template_part_array.join( "" );
+
         return
             template_text
                 .replace( "{{column_name}}", Name )
@@ -4332,10 +4389,10 @@ class COLUMN
         string property_text
         )
     {
-        string[]
-            value_text_array;
         string
             property_name;
+        string[]
+            value_text_array;
 
         value_text_array = property_text.split( ' ' );
 
@@ -4346,17 +4403,22 @@ class COLUMN
                 if ( value_text_array[ 0 ].startsWith( '!' ) )
                 {
                     value_text_array[ 0 ] = value_text_array[ 0 ][ 1 .. $ ];
-                    value_text_array ~= "0";
+                    value_text_array ~= "false";
                 }
                 else
                 {
-                    value_text_array ~= "1";
+                    value_text_array ~= "true";
                 }
             }
 
             property_name = value_text_array[ 0 ];
 
-            if ( value_text_array.length == 2 )
+            if ( property_name.startsWith( '@' ) )
+            {
+                PropertyValueMap[ "column_" ~ value_text_array[ 0 ][ 1 .. $ ] ]
+                    = value_text_array[ 1 .. $ ].join( ' ' );
+            }
+            else if ( value_text_array.length == 2 )
             {
                 if ( property_name == "capacity" )
                 {
@@ -4364,55 +4426,55 @@ class COLUMN
                 }
                 else if ( property_name == "stored" )
                 {
-                    IsStored = ( value_text_array[ 1 ] != "0" );
+                    IsStored = ( value_text_array[ 1 ] != "false" );
                 }
                 else if ( property_name == "unique" )
                 {
-                    IsUnique = ( value_text_array[ 1 ] != "0" );
+                    IsUnique = ( value_text_array[ 1 ] != "false" );
                 }
                 else if ( property_name == "key" )
                 {
-                    IsKey = ( value_text_array[ 1 ] != "0" );
+                    IsKey = ( value_text_array[ 1 ] != "false" );
                 }
                 else if ( property_name == "partitioned" )
                 {
-                    IsPartitioned = ( value_text_array[ 1 ] != "0" );
+                    IsPartitioned = ( value_text_array[ 1 ] != "false" );
                 }
                 else if ( property_name == "clustered" )
                 {
-                    IsClustered = ( value_text_array[ 1 ] != "0" );
+                    IsClustered = ( value_text_array[ 1 ] != "false" );
                 }
                 else if ( property_name == "indexed" )
                 {
-                    IsIndexed = ( value_text_array[ 1 ] != "0" );
+                    IsIndexed = ( value_text_array[ 1 ] != "false" );
                 }
                 else if ( property_name == "mapped" )
                 {
-                    IsMapped = ( value_text_array[ 1 ] != "0" );
+                    IsMapped = ( value_text_array[ 1 ] != "false" );
                 }
                 else if ( property_name == "accessed" )
                 {
-                    IsAccessed = ( value_text_array[ 1 ] != "0" );
+                    IsAccessed = ( value_text_array[ 1 ] != "false" );
                 }
                 else if ( property_name == "static" )
                 {
-                    IsStatic = ( value_text_array[ 1 ] != "0" );
+                    IsStatic = ( value_text_array[ 1 ] != "false" );
                 }
                 else if ( property_name == "required" )
                 {
-                    IsRequired = ( value_text_array[ 1 ] != "0" );
+                    IsRequired = ( value_text_array[ 1 ] != "false" );
                 }
                 else if ( property_name == "incremented" )
                 {
-                    IsIncremented = ( value_text_array[ 1 ] != "0" );
+                    IsIncremented = ( value_text_array[ 1 ] != "false" );
                 }
                 else if ( property_name == "constrainde" )
                 {
-                    IsConstrained = ( value_text_array[ 1 ] != "0" );
+                    IsConstrained = ( value_text_array[ 1 ] != "false" );
                 }
                 else if ( property_name == "ascending" )
                 {
-                    IsAscending = ( value_text_array[ 1 ] != "0" );
+                    IsAscending = ( value_text_array[ 1 ] != "false" );
 
                     if ( property_text == "ascending" )
                     {
@@ -4425,7 +4487,7 @@ class COLUMN
                 }
                 else if ( property_name == "descending" )
                 {
-                    IsDescending = ( value_text_array[ 1 ] != "0" );
+                    IsDescending = ( value_text_array[ 1 ] != "false" );
 
                     if ( property_text == "descending" )
                     {
@@ -4438,7 +4500,7 @@ class COLUMN
                 }
                 else if ( property_name == "now" )
                 {
-                    IsNow = ( value_text_array[ 1 ] != "0" );
+                    IsNow = ( value_text_array[ 1 ] != "false" );
                 }
                 else if ( property_name == "sqlname" )
                 {
@@ -4474,23 +4536,23 @@ class COLUMN
                 }
                 else if ( property_name == "firstname" )
                 {
-                    IsRandomFirstName = ( value_text_array[ 1 ] != "0" );
+                    IsRandomFirstName = ( value_text_array[ 1 ] != "false" );
                 }
                 else if ( property_name == "lastname" )
                 {
-                    IsRandomLastName = ( value_text_array[ 1 ] != "0" );
+                    IsRandomLastName = ( value_text_array[ 1 ] != "false" );
                 }
                 else if ( property_name == "fullname" )
                 {
-                    IsRandomFullName = ( value_text_array[ 1 ] != "0" );
+                    IsRandomFullName = ( value_text_array[ 1 ] != "false" );
                 }
                 else if ( property_name == "lowercase" )
                 {
-                    IsLowercase = ( value_text_array[ 1 ] != "0" );
+                    IsLowercase = ( value_text_array[ 1 ] != "false" );
                 }
                 else if ( property_name == "uppercase" )
                 {
-                    IsUppercase = ( value_text_array[ 1 ] != "0" );
+                    IsUppercase = ( value_text_array[ 1 ] != "false" );
                 }
                 else if ( property_name == "count" )
                 {
@@ -4828,6 +4890,8 @@ class TABLE
         IsDropped;
     long
         RowCount;
+    string[ string ]
+        PropertyValueMap;
     string
         GoAttributeDeclaration,
         GoTypeDeclaration,
@@ -7031,10 +7095,43 @@ class TABLE
 
     // ~~
 
-    string ReplaceTags(
+    string ReplaceProperties(
         string template_text
         )
     {
+        string *
+            property_value;
+        string[]
+            template_part_array;
+
+        template_part_array = template_text.GetSplitText( "{{@", "@}}" );
+
+        foreach ( template_part_index, ref template_part; template_part_array )
+        {
+            if ( ( template_part_index & 1 ) == 1 )
+            {
+                if ( template_part.startsWith( "table_" ) )
+                {
+                    property_value = template_part in PropertyValueMap;
+
+                    if ( property_value !is null )
+                    {
+                        template_part = *property_value;
+                    }
+                    else
+                    {
+                        template_part = "";
+                    }
+                }
+                else
+                {
+                    template_part = "{{@" ~ template_part ~ "@}}";
+                }
+            }
+        }
+
+        template_text = template_part_array.join( "" );
+
         return
             template_text
                 .replace( "{{table_name}}", Name )
@@ -7098,29 +7195,34 @@ class TABLE
                 if ( value_text_array[ 0 ].startsWith( '!' ) )
                 {
                     value_text_array[ 0 ] = value_text_array[ 0 ][ 1 .. $ ];
-                    value_text_array ~= "0";
+                    value_text_array ~= "false";
                 }
                 else
                 {
-                    value_text_array ~= "1";
+                    value_text_array ~= "true";
                 }
             }
 
             property_name = value_text_array[ 0 ];
 
-            if ( value_text_array.length == 2 )
+            if ( property_name.startsWith( '@' ) )
+            {
+                PropertyValueMap[ "table_" ~ value_text_array[ 0 ][ 1 .. $ ] ]
+                    = value_text_array[ 1 .. $ ].join( ' ' );
+            }
+            else if ( value_text_array.length == 2 )
             {
                 if ( property_name == "stored" )
                 {
-                    IsStored = ( value_text_array[ 1 ] != "0" );
+                    IsStored = ( value_text_array[ 1 ] != "false" );
                 }
                 else if ( property_name == "sorted" )
                 {
-                    IsSorted = ( value_text_array[ 1 ] != "0" );
+                    IsSorted = ( value_text_array[ 1 ] != "false" );
                 }
                 else if ( value_text_array[ 0 ] == "dropped" )
                 {
-                    IsDropped = ( value_text_array[ 1 ] != "0" );
+                    IsDropped = ( value_text_array[ 1 ] != "false" );
                 }
                 else if ( value_text_array[ 0 ] == "count" )
                 {
@@ -7395,11 +7497,11 @@ class SCHEMA
                 if ( value_text_array[ 0 ].startsWith( '!' ) )
                 {
                     value_text_array[ 0 ] = value_text_array[ 0 ][ 1 .. $ ];
-                    value_text_array ~= "0";
+                    value_text_array ~= "false";
                 }
                 else
                 {
-                    value_text_array ~= "1";
+                    value_text_array ~= "true";
                 }
             }
 
@@ -7407,7 +7509,7 @@ class SCHEMA
             {
                 if ( value_text_array[ 0 ] == "dropped" )
                 {
-                    IsDropped = ( value_text_array[ 1 ] != "0" );
+                    IsDropped = ( value_text_array[ 1 ] != "false" );
                 }
                 else if ( value_text_array[ 0 ] == "count" )
                 {
@@ -9494,7 +9596,7 @@ string ReplaceColumnTags(
                     if ( ( !key_is_checked || column.IsKey == column_is_key )
                          && ( !stored_is_checked || column.IsStored == column_is_stored ) )
                     {
-                        instance_part ~= column.ReplaceTags( template_part );
+                        instance_part ~= column.ReplaceProperties( template_part );
                     }
                 }
 
@@ -9551,7 +9653,7 @@ string ReplaceTableTags(
                     if ( !stored_is_checked || table.IsStored == table_is_stored )
                     {
                         instance_part
-                            ~= table.ReplaceTags( template_part )
+                            ~= table.ReplaceProperties( template_part )
                                     .ReplaceColumnTags( table );
                     }
                 }
