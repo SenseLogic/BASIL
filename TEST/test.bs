@@ -54,12 +54,12 @@ TEST | count 10
         InternalValueId : INTERNAL_DATA.Id | !stored
         InternalValueUuid : INTERNAL_DATA.Uuid | !stored
 
-    INTERNAL_DATA | !stored, @is_editable, @button_size 10
+    INTERNAL_DATA | !stored, is_editable, button_size 10
 
         Id : INT64 | key, stored
         Uuid : UUID | key
         ValueId : VALUE.Id | stored
         ValueUuid : VALUE.Uuid | stored
-        FirstName : STRING | !@is_editable
-        LastName : STRING | !@is_editable
-        IsAwesome : BOOL | @is_editable, @button_size 10
+        FirstName : STRING | !is_editable
+        LastName : STRING | !is_editable
+        IsAwesome : BOOL | is_editable, button_size 10

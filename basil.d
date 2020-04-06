@@ -4297,90 +4297,63 @@ class COLUMN
 
     // ~~
 
+    void SetProperties(
+        )
+    {
+        PropertyValueMap[ "name" ] = Name;
+        PropertyValueMap[ "attribute" ] = GenericAttribute;
+        PropertyValueMap[ "variable" ] = GenericVariable;
+        PropertyValueMap[ "style" ] = GenericStyle;
+        PropertyValueMap[ "title" ] = GenericTitle;
+        PropertyValueMap[ "sentence" ] = GenericSentence;
+        PropertyValueMap[ "locution" ] = GenericLocution;
+        PropertyValueMap[ "stored_name" ] = StoredName;
+        PropertyValueMap[ "stored_type" ] = StoredType;
+        PropertyValueMap[ "cql_name" ] = CqlName;
+        PropertyValueMap[ "cql_type" ] = CqlType;
+        PropertyValueMap[ "sql_name" ] = SqlName;
+        PropertyValueMap[ "sql_type" ] = SqlType;
+        PropertyValueMap[ "go_name" ] = GoName;
+        PropertyValueMap[ "go_type" ] = GoType;
+        PropertyValueMap[ "go_attribute" ] = GoAttribute;
+        PropertyValueMap[ "go_variable" ] = GoVariable;
+        PropertyValueMap[ "php_name" ] = PhpName;
+        PropertyValueMap[ "php_type" ] = PhpType;
+        PropertyValueMap[ "php_attribute" ] = PhpAttribute;
+        PropertyValueMap[ "php_variable" ] = PhpVariable;
+        PropertyValueMap[ "crystal_name" ] = CrystalName;
+        PropertyValueMap[ "crystal_type" ] = CrystalType;
+        PropertyValueMap[ "csharp_name" ] = CsharpName;
+        PropertyValueMap[ "csharp_type" ] = CsharpType;
+        PropertyValueMap[ "csharp_attribute" ] = CsharpAttribute;
+        PropertyValueMap[ "csharp_variable" ] = CsharpVariable;
+        PropertyValueMap[ "rust_name" ] = RustName;
+        PropertyValueMap[ "rust_type" ] = RustType;
+        PropertyValueMap[ "javascript_name" ] = JavascriptName;
+        PropertyValueMap[ "is_last" ] = GetBooleanText( IsLast );
+        PropertyValueMap[ "is_key" ] = GetBooleanText( IsKey );
+        PropertyValueMap[ "is_last_key" ] = GetBooleanText( IsLastKey );
+        PropertyValueMap[ "is_last_non_key" ] = GetBooleanText( IsLastNonKey );
+        PropertyValueMap[ "is_stored" ] = GetBooleanText( IsStored );
+        PropertyValueMap[ "is_last_stored" ] = GetBooleanText( IsLastStored );
+        PropertyValueMap[ "is_last_non_stored" ] = GetBooleanText( IsLastNonStored );
+        PropertyValueMap[ "is_last_stored_key" ] = GetBooleanText( IsLastStoredKey );
+        PropertyValueMap[ "is_last_non_stored_key" ] = GetBooleanText( IsLastNonStoredKey );
+        PropertyValueMap[ "is_last_stored_non_key" ] = GetBooleanText( IsLastStoredNonKey );
+        PropertyValueMap[ "is_last_non_stored_non_key" ] = GetBooleanText( IsLastNonStoredNonKey );
+        PropertyValueMap[ "is_incremented" ] = GetBooleanText( IsIncremented );
+        PropertyValueMap[ "is_last_incremented" ] = GetBooleanText( IsLastIncremented );
+        PropertyValueMap[ "is_last_non_incremented" ] = GetBooleanText( IsLastNonIncremented );
+        PropertyValueMap[ "is_constrained" ] = GetBooleanText( IsConstrained );
+    }
+
+    // ~~
+
     string ReplaceProperties(
         string template_text
         )
     {
-        string *
-            property_value;
-        string[]
-            template_part_array;
-
-        template_part_array = template_text.GetSplitText( "{{@", "@}}" );
-
-        foreach ( template_part_index, ref template_part; template_part_array )
-        {
-            if ( ( template_part_index & 1 ) == 1 )
-            {
-                if ( template_part.startsWith( "column_" ) )
-                {
-                    property_value = template_part in PropertyValueMap;
-
-                    if ( property_value !is null )
-                    {
-                        template_part = *property_value;
-                    }
-                    else
-                    {
-                        template_part = "";
-                    }
-                }
-                else
-                {
-                    template_part = "{{@" ~ template_part ~ "@}}";
-                }
-            }
-        }
-
-        template_text = template_part_array.join( "" );
-
-        return
-            template_text
-                .replace( "{{column_name}}", Name )
-                .replace( "{{column_attribute}}", GenericAttribute )
-                .replace( "{{column_variable}}", GenericVariable )
-                .replace( "{{column_style}}", GenericStyle )
-                .replace( "{{column_title}}", GenericTitle )
-                .replace( "{{column_sentence}}", GenericSentence )
-                .replace( "{{column_locution}}", GenericLocution )
-                .replace( "{{column_stored_name}}", StoredName )
-                .replace( "{{column_stored_type}}", StoredType )
-                .replace( "{{column_cql_name}}", CqlName )
-                .replace( "{{column_cql_type}}", CqlType )
-                .replace( "{{column_sql_name}}", SqlName )
-                .replace( "{{column_sql_type}}", SqlType )
-                .replace( "{{column_go_name}}", GoName )
-                .replace( "{{column_go_type}}", GoType )
-                .replace( "{{column_go_attribute}}", GoAttribute )
-                .replace( "{{column_go_variable}}", GoVariable )
-                .replace( "{{column_php_name}}", PhpName )
-                .replace( "{{column_php_type}}", PhpType )
-                .replace( "{{column_php_attribute}}", PhpAttribute )
-                .replace( "{{column_php_variable}}", PhpVariable )
-                .replace( "{{column_crystal_name}}", CrystalName )
-                .replace( "{{column_crystal_type}}", CrystalType )
-                .replace( "{{column_csharp_name}}", CsharpName )
-                .replace( "{{column_csharp_type}}", CsharpType )
-                .replace( "{{column_csharp_attribute}}", CsharpAttribute )
-                .replace( "{{column_csharp_variable}}", CsharpVariable )
-                .replace( "{{column_rust_name}}", RustName )
-                .replace( "{{column_rust_type}}", RustType )
-                .replace( "{{column_javascript_name}}", JavascriptName )
-                .replace( "{{column_is_last}}", GetBooleanText( IsLast ) )
-                .replace( "{{column_is_key}}", GetBooleanText( IsKey ) )
-                .replace( "{{column_is_last_key}}", GetBooleanText( IsLastKey ) )
-                .replace( "{{column_is_last_non_key}}", GetBooleanText( IsLastNonKey ) )
-                .replace( "{{column_is_stored}}", GetBooleanText( IsStored ) )
-                .replace( "{{column_is_last_stored}}", GetBooleanText( IsLastStored ) )
-                .replace( "{{column_is_last_non_stored}}", GetBooleanText( IsLastNonStored ) )
-                .replace( "{{column_is_last_stored_key}}", GetBooleanText( IsLastStoredKey ) )
-                .replace( "{{column_is_last_non_stored_key}}", GetBooleanText( IsLastNonStoredKey ) )
-                .replace( "{{column_is_last_stored_non_key}}", GetBooleanText( IsLastStoredNonKey ) )
-                .replace( "{{column_is_last_non_stored_non_key}}", GetBooleanText( IsLastNonStoredNonKey ) )
-                .replace( "{{column_is_incremented}}", GetBooleanText( IsIncremented ) )
-                .replace( "{{column_is_last_incremented}}", GetBooleanText( IsLastIncremented ) )
-                .replace( "{{column_is_last_non_incremented}}", GetBooleanText( IsLastNonIncremented ) )
-                .replace( "{{column_is_constrained}}", GetBooleanText( IsConstrained ) );
+        return template_text.ReplaceProperties( "{%", "%}", PropertyValueMap );
     }
 
     // -- OPERATIONS
@@ -4413,226 +4386,239 @@ class COLUMN
 
             property_name = value_text_array[ 0 ];
 
-            if ( property_name.startsWith( '@' ) )
+            if ( property_name == "capacity"
+                 && value_text_array.length == 2 )
             {
-                PropertyValueMap[ "column_" ~ value_text_array[ 0 ][ 1 .. $ ] ]
-                    = value_text_array[ 1 .. $ ].join( ' ' );
+                Type.Capacity = value_text_array[ 1 ].to!long();
             }
-            else if ( value_text_array.length == 2 )
+            else if ( property_name == "stored"
+                      && value_text_array.length == 2 )
             {
-                if ( property_name == "capacity" )
-                {
-                    Type.Capacity = value_text_array[ 1 ].to!long();
-                }
-                else if ( property_name == "stored" )
-                {
-                    IsStored = ( value_text_array[ 1 ] != "false" );
-                }
-                else if ( property_name == "unique" )
-                {
-                    IsUnique = ( value_text_array[ 1 ] != "false" );
-                }
-                else if ( property_name == "key" )
-                {
-                    IsKey = ( value_text_array[ 1 ] != "false" );
-                }
-                else if ( property_name == "partitioned" )
-                {
-                    IsPartitioned = ( value_text_array[ 1 ] != "false" );
-                }
-                else if ( property_name == "clustered" )
-                {
-                    IsClustered = ( value_text_array[ 1 ] != "false" );
-                }
-                else if ( property_name == "indexed" )
-                {
-                    IsIndexed = ( value_text_array[ 1 ] != "false" );
-                }
-                else if ( property_name == "mapped" )
-                {
-                    IsMapped = ( value_text_array[ 1 ] != "false" );
-                }
-                else if ( property_name == "accessed" )
-                {
-                    IsAccessed = ( value_text_array[ 1 ] != "false" );
-                }
-                else if ( property_name == "static" )
-                {
-                    IsStatic = ( value_text_array[ 1 ] != "false" );
-                }
-                else if ( property_name == "required" )
-                {
-                    IsRequired = ( value_text_array[ 1 ] != "false" );
-                }
-                else if ( property_name == "incremented" )
-                {
-                    IsIncremented = ( value_text_array[ 1 ] != "false" );
-                }
-                else if ( property_name == "constrainde" )
-                {
-                    IsConstrained = ( value_text_array[ 1 ] != "false" );
-                }
-                else if ( property_name == "ascending" )
-                {
-                    IsAscending = ( value_text_array[ 1 ] != "false" );
+                IsStored = ( value_text_array[ 1 ] != "false" );
+            }
+            else if ( property_name == "unique"
+                      && value_text_array.length == 2 )
+            {
+                IsUnique = ( value_text_array[ 1 ] != "false" );
+            }
+            else if ( property_name == "key"
+                      && value_text_array.length == 2 )
+            {
+                IsKey = ( value_text_array[ 1 ] != "false" );
+            }
+            else if ( property_name == "partitioned"
+                      && value_text_array.length == 2 )
+            {
+                IsPartitioned = ( value_text_array[ 1 ] != "false" );
+            }
+            else if ( property_name == "clustered"
+                      && value_text_array.length == 2 )
+            {
+                IsClustered = ( value_text_array[ 1 ] != "false" );
+            }
+            else if ( property_name == "indexed"
+                      && value_text_array.length == 2 )
+            {
+                IsIndexed = ( value_text_array[ 1 ] != "false" );
+            }
+            else if ( property_name == "mapped"
+                      && value_text_array.length == 2 )
+            {
+                IsMapped = ( value_text_array[ 1 ] != "false" );
+            }
+            else if ( property_name == "accessed"
+                      && value_text_array.length == 2 )
+            {
+                IsAccessed = ( value_text_array[ 1 ] != "false" );
+            }
+            else if ( property_name == "static"
+                      && value_text_array.length == 2 )
+            {
+                IsStatic = ( value_text_array[ 1 ] != "false" );
+            }
+            else if ( property_name == "required"
+                      && value_text_array.length == 2 )
+            {
+                IsRequired = ( value_text_array[ 1 ] != "false" );
+            }
+            else if ( property_name == "incremented"
+                      && value_text_array.length == 2 )
+            {
+                IsIncremented = ( value_text_array[ 1 ] != "false" );
+            }
+            else if ( property_name == "constrainde"
+                      && value_text_array.length == 2 )
+            {
+                IsConstrained = ( value_text_array[ 1 ] != "false" );
+            }
+            else if ( property_name == "ascending"
+                      && value_text_array.length == 2 )
+            {
+                IsAscending = ( value_text_array[ 1 ] != "false" );
 
-                    if ( property_text == "ascending" )
-                    {
-                        OrderIndex = Index + 1;
-                    }
-                    else
-                    {
-                        OrderIndex = value_text_array[ 1 ].to!long();
-                    }
-                }
-                else if ( property_name == "descending" )
+                if ( property_text == "ascending" )
                 {
-                    IsDescending = ( value_text_array[ 1 ] != "false" );
-
-                    if ( property_text == "descending" )
-                    {
-                        OrderIndex = Index + 1;
-                    }
-                    else
-                    {
-                        OrderIndex = value_text_array[ 1 ].to!long();
-                    }
-                }
-                else if ( property_name == "now" )
-                {
-                    IsNow = ( value_text_array[ 1 ] != "false" );
-                }
-                else if ( property_name == "sqlname" )
-                {
-                    SqlName = value_text_array[ 1 ];
-                }
-                else if ( property_name == "cqlname" )
-                {
-                    CqlName = value_text_array[ 1 ];
-                }
-                else if ( property_name == "goname" )
-                {
-                    GoName = value_text_array[ 1 ];
-                }
-                else if ( property_name == "phpname" )
-                {
-                    PhpName = value_text_array[ 1 ];
-                }
-                else if ( property_name == "crystalname" )
-                {
-                    CrystalName = value_text_array[ 1 ];
-                }
-                else if ( property_name == "csharpname" )
-                {
-                    CsharpName = value_text_array[ 1 ];
-                }
-                else if ( property_name == "rustname" )
-                {
-                    RustName = value_text_array[ 1 ];
-                }
-                else if ( property_name == "javascriptname" )
-                {
-                    JavascriptName = value_text_array[ 1 ];
-                }
-                else if ( property_name == "firstname" )
-                {
-                    IsRandomFirstName = ( value_text_array[ 1 ] != "false" );
-                }
-                else if ( property_name == "lastname" )
-                {
-                    IsRandomLastName = ( value_text_array[ 1 ] != "false" );
-                }
-                else if ( property_name == "fullname" )
-                {
-                    IsRandomFullName = ( value_text_array[ 1 ] != "false" );
-                }
-                else if ( property_name == "lowercase" )
-                {
-                    IsLowercase = ( value_text_array[ 1 ] != "false" );
-                }
-                else if ( property_name == "uppercase" )
-                {
-                    IsUppercase = ( value_text_array[ 1 ] != "false" );
-                }
-                else if ( property_name == "count" )
-                {
-                    MinimumRandomCount = value_text_array[ 1 ].to!long();
-                    MaximumRandomCount = MinimumRandomCount;
+                    OrderIndex = Index + 1;
                 }
                 else
                 {
-                    Abort( "Invalid column property : " ~ property_text );
+                    OrderIndex = value_text_array[ 1 ].to!long();
                 }
             }
-            else if ( value_text_array.length == 3 )
+            else if ( property_name == "descending"
+                      && value_text_array.length == 2 )
             {
-                if ( property_name == "real" )
+                IsDescending = ( value_text_array[ 1 ] != "false" );
+
+                if ( property_text == "descending" )
                 {
-                    IsRandomReal = true;
-                    MinimumRandomReal = value_text_array[ 1 ].to!double();
-                    MaximumRandomReal = value_text_array[ 2 ].to!double();
-                }
-                else if ( property_name == "integer" )
-                {
-                    IsRandomInteger = true;
-                    MinimumRandomInteger = value_text_array[ 1 ].to!long();
-                    MaximumRandomInteger = value_text_array[ 2 ].to!long();
-                }
-                else if ( property_name == "natural" )
-                {
-                    IsRandomNatural = true;
-                    MinimumRandomNatural = value_text_array[ 1 ].to!ulong();
-                    MaximumRandomNatural = value_text_array[ 2 ].to!ulong();
-                    MinimumRandomCount = 0;
-                }
-                else if ( property_name == "name" )
-                {
-                    IsRandomName = true;
-                    MinimumRandomCount = value_text_array[ 1 ].to!long();
-                    MaximumRandomCount = value_text_array[ 2 ].to!long();
-                }
-                else if ( property_name == "count" )
-                {
-                    MinimumRandomCount = value_text_array[ 1 ].to!long();
-                    MaximumRandomCount = value_text_array[ 2 ].to!long();
+                    OrderIndex = Index + 1;
                 }
                 else
                 {
-                    Abort( "Invalid column property : " ~ property_text );
+                    OrderIndex = value_text_array[ 1 ].to!long();
                 }
             }
-            else if ( value_text_array.length == 4 )
+            else if ( property_name == "now"
+                      && value_text_array.length == 2 )
             {
-                if ( property_name == "natural" )
-                {
-                    IsRandomNatural = true;
-                    MinimumRandomNatural = value_text_array[ 1 ].to!ulong();
-                    MaximumRandomNatural = value_text_array[ 2 ].to!ulong();
-                    MinimumRandomCount = value_text_array[ 3 ].to!long();
-                }
+                IsNow = ( value_text_array[ 1 ] != "false" );
             }
-            else if ( value_text_array.length == 5 )
+            else if ( property_name == "sqlname"
+                      && value_text_array.length == 2 )
             {
-                if ( property_name == "english" )
-                {
-                    IsRandomEnglish = true;
-                    MinimumRandomCount = value_text_array[ 1 ].to!long();
-                    MaximumRandomCount = value_text_array[ 2 ].to!long();
-                    MinimumRandomInteger = value_text_array[ 3 ].to!long();
-                    MaximumRandomInteger = value_text_array[ 4 ].to!long();
-                }
-                else if ( property_name == "latin" )
-                {
-                    IsRandomLatin = true;
-                    MinimumRandomCount = value_text_array[ 1 ].to!long();
-                    MaximumRandomCount = value_text_array[ 2 ].to!long();
-                    MinimumRandomInteger = value_text_array[ 3 ].to!long();
-                    MaximumRandomInteger = value_text_array[ 4 ].to!long();
-                }
+                SqlName = value_text_array[ 1 ];
+            }
+            else if ( property_name == "cqlname"
+                      && value_text_array.length == 2 )
+            {
+                CqlName = value_text_array[ 1 ];
+            }
+            else if ( property_name == "goname"
+                      && value_text_array.length == 2 )
+            {
+                GoName = value_text_array[ 1 ];
+            }
+            else if ( property_name == "phpname"
+                      && value_text_array.length == 2 )
+            {
+                PhpName = value_text_array[ 1 ];
+            }
+            else if ( property_name == "crystalname"
+                      && value_text_array.length == 2 )
+            {
+                CrystalName = value_text_array[ 1 ];
+            }
+            else if ( property_name == "csharpname"
+                      && value_text_array.length == 2 )
+            {
+                CsharpName = value_text_array[ 1 ];
+            }
+            else if ( property_name == "rustname"
+                      && value_text_array.length == 2 )
+            {
+                RustName = value_text_array[ 1 ];
+            }
+            else if ( property_name == "javascriptname"
+                      && value_text_array.length == 2 )
+            {
+                JavascriptName = value_text_array[ 1 ];
+            }
+            else if ( property_name == "firstname"
+                      && value_text_array.length == 2 )
+            {
+                IsRandomFirstName = ( value_text_array[ 1 ] != "false" );
+            }
+            else if ( property_name == "lastname"
+                      && value_text_array.length == 2 )
+            {
+                IsRandomLastName = ( value_text_array[ 1 ] != "false" );
+            }
+            else if ( property_name == "fullname"
+                      && value_text_array.length == 2 )
+            {
+                IsRandomFullName = ( value_text_array[ 1 ] != "false" );
+            }
+            else if ( property_name == "lowercase"
+                      && value_text_array.length == 2 )
+            {
+                IsLowercase = ( value_text_array[ 1 ] != "false" );
+            }
+            else if ( property_name == "uppercase"
+                      && value_text_array.length == 2 )
+            {
+                IsUppercase = ( value_text_array[ 1 ] != "false" );
+            }
+            else if ( property_name == "count"
+                      && value_text_array.length == 2 )
+            {
+                MinimumRandomCount = value_text_array[ 1 ].to!long();
+                MaximumRandomCount = MinimumRandomCount;
+            }
+            else if ( property_name == "real"
+                      && value_text_array.length == 3 )
+            {
+                IsRandomReal = true;
+                MinimumRandomReal = value_text_array[ 1 ].to!double();
+                MaximumRandomReal = value_text_array[ 2 ].to!double();
+            }
+            else if ( property_name == "integer"
+                      && value_text_array.length == 3 )
+            {
+                IsRandomInteger = true;
+                MinimumRandomInteger = value_text_array[ 1 ].to!long();
+                MaximumRandomInteger = value_text_array[ 2 ].to!long();
+            }
+            else if ( property_name == "natural"
+                      && value_text_array.length == 3 )
+            {
+                IsRandomNatural = true;
+                MinimumRandomNatural = value_text_array[ 1 ].to!ulong();
+                MaximumRandomNatural = value_text_array[ 2 ].to!ulong();
+                MinimumRandomCount = 0;
+            }
+            else if ( property_name == "name"
+                      && value_text_array.length == 3 )
+            {
+                IsRandomName = true;
+                MinimumRandomCount = value_text_array[ 1 ].to!long();
+                MaximumRandomCount = value_text_array[ 2 ].to!long();
+            }
+            else if ( property_name == "count"
+                      && value_text_array.length == 3 )
+            {
+                MinimumRandomCount = value_text_array[ 1 ].to!long();
+                MaximumRandomCount = value_text_array[ 2 ].to!long();
+            }
+            else if ( property_name == "natural"
+                      && value_text_array.length == 4 )
+            {
+                IsRandomNatural = true;
+                MinimumRandomNatural = value_text_array[ 1 ].to!ulong();
+                MaximumRandomNatural = value_text_array[ 2 ].to!ulong();
+                MinimumRandomCount = value_text_array[ 3 ].to!long();
+            }
+            else if ( property_name == "english"
+                      && value_text_array.length == 5 )
+            {
+                IsRandomEnglish = true;
+                MinimumRandomCount = value_text_array[ 1 ].to!long();
+                MaximumRandomCount = value_text_array[ 2 ].to!long();
+                MinimumRandomInteger = value_text_array[ 3 ].to!long();
+                MaximumRandomInteger = value_text_array[ 4 ].to!long();
+            }
+            else if ( property_name == "latin"
+                      && value_text_array.length == 5 )
+            {
+                IsRandomLatin = true;
+                MinimumRandomCount = value_text_array[ 1 ].to!long();
+                MaximumRandomCount = value_text_array[ 2 ].to!long();
+                MinimumRandomInteger = value_text_array[ 3 ].to!long();
+                MaximumRandomInteger = value_text_array[ 4 ].to!long();
             }
             else
             {
-                Abort( "Invalid column property : " ~ property_text );
+                PropertyValueMap[ value_text_array[ 0 ] ] = value_text_array[ 1 .. $ ].join( ' ' );
             }
         }
     }
@@ -7095,84 +7081,62 @@ class TABLE
 
     // ~~
 
+    void SetProperties(
+        )
+    {
+        PropertyValueMap[ "name" ] = Name;
+        PropertyValueMap[ "type" ] = GenericType;
+        PropertyValueMap[ "attribute" ] = GenericAttribute;
+        PropertyValueMap[ "variable" ] = GenericVariable;
+        PropertyValueMap[ "style" ] = GenericStyle;
+        PropertyValueMap[ "title" ] = GenericTitle;
+        PropertyValueMap[ "sentence" ] = GenericSentence;
+        PropertyValueMap[ "locution" ] = GenericLocution;
+        PropertyValueMap[ "go_type" ] = GoType;
+        PropertyValueMap[ "go_attribute" ] = GoAttribute;
+        PropertyValueMap[ "go_variable" ] = GoVariable;
+        PropertyValueMap[ "php_type" ] = PhpType;
+        PropertyValueMap[ "php_attribute" ] = PhpAttribute;
+        PropertyValueMap[ "php_variable" ] = PhpVariable;
+        PropertyValueMap[ "crystal_type" ] = CrystalType;
+        PropertyValueMap[ "csharp_type" ] = CsharpType;
+        PropertyValueMap[ "csharp_attribute" ] = CsharpAttribute;
+        PropertyValueMap[ "csharp_variable" ] = CsharpVariable;
+        PropertyValueMap[ "rust_type" ] = RustType;
+        PropertyValueMap[ "javascript_type" ] = JavascriptType;
+        PropertyValueMap[ "javascript_attribute" ] = JavascriptAttribute;
+        PropertyValueMap[ "go_attribute_declaration" ] = GoAttributeDeclaration;
+        PropertyValueMap[ "go_type_declaration" ] = GoTypeDeclaration;
+        PropertyValueMap[ "generis_attribute_declaration" ] = GenerisAttributeDeclaration;
+        PropertyValueMap[ "generis_type_declaration" ] = GenerisTypeDeclaration;
+        PropertyValueMap[ "crystal_attribute_declaration" ] = CrystalAttributeDeclaration;
+        PropertyValueMap[ "crystal_type_declaration" ] = CrystalTypeDeclaration;
+        PropertyValueMap[ "cibyl_attribute_declaration" ] = CybilAttributeDeclaration;
+        PropertyValueMap[ "cibyl_type_declaration" ] = CybilTypeDeclaration;
+        PropertyValueMap[ "csharp_attribute_declaration" ] = CsharpAttributeDeclaration;
+        PropertyValueMap[ "csharp_type_declaration" ] = CsharpTypeDeclaration;
+        PropertyValueMap[ "javascript_attribute_declaration" ] = JavascriptAttributeDeclaration;
+        PropertyValueMap[ "javascript_type_declaration" ] = JavascriptTypeDeclaration;
+        PropertyValueMap[ "rust_attribute_declaration" ] = RustAttributeDeclaration;
+        PropertyValueMap[ "rust_type_declaration" ] = RustTypeDeclaration;
+        PropertyValueMap[ "is_last" ] = GetBooleanText( IsLast );
+        PropertyValueMap[ "is_stored" ] = GetBooleanText( IsStored );
+        PropertyValueMap[ "is_last_stored" ] = GetBooleanText( IsLastStored );
+        PropertyValueMap[ "is_last_non_stored" ] = GetBooleanText( IsLastNonStored );
+
+        foreach ( column; ColumnArray )
+        {
+            column.SetProperties();
+        }
+    }
+
+    // ~~
+
     string ReplaceProperties(
         string template_text
         )
     {
-        string *
-            property_value;
-        string[]
-            template_part_array;
-
-        template_part_array = template_text.GetSplitText( "{{@", "@}}" );
-
-        foreach ( template_part_index, ref template_part; template_part_array )
-        {
-            if ( ( template_part_index & 1 ) == 1 )
-            {
-                if ( template_part.startsWith( "table_" ) )
-                {
-                    property_value = template_part in PropertyValueMap;
-
-                    if ( property_value !is null )
-                    {
-                        template_part = *property_value;
-                    }
-                    else
-                    {
-                        template_part = "";
-                    }
-                }
-                else
-                {
-                    template_part = "{{@" ~ template_part ~ "@}}";
-                }
-            }
-        }
-
-        template_text = template_part_array.join( "" );
-
-        return
-            template_text
-                .replace( "{{table_name}}", Name )
-                .replace( "{{table_type}}", GenericType )
-                .replace( "{{table_attribute}}", GenericAttribute )
-                .replace( "{{table_variable}}", GenericVariable )
-                .replace( "{{table_style}}", GenericStyle )
-                .replace( "{{table_title}}", GenericTitle )
-                .replace( "{{table_sentence}}", GenericSentence )
-                .replace( "{{table_locution}}", GenericLocution )
-                .replace( "{{table_go_type}}", GoType )
-                .replace( "{{table_go_attribute}}", GoAttribute )
-                .replace( "{{table_go_variable}}", GoVariable )
-                .replace( "{{table_php_type}}", PhpType )
-                .replace( "{{table_php_attribute}}", PhpAttribute )
-                .replace( "{{table_php_variable}}", PhpVariable )
-                .replace( "{{table_crystal_type}}", CrystalType )
-                .replace( "{{table_csharp_type}}", CsharpType )
-                .replace( "{{table_csharp_attribute}}", CsharpAttribute )
-                .replace( "{{table_csharp_variable}}", CsharpVariable )
-                .replace( "{{table_rust_type}}", RustType )
-                .replace( "{{table_javascript_type}}", JavascriptType )
-                .replace( "{{table_javascript_attribute}}", JavascriptAttribute )
-                .replace( "{{table_go_attribute_declaration}}", GoAttributeDeclaration )
-                .replace( "{{table_go_type_declaration}}", GoTypeDeclaration )
-                .replace( "{{table_generis_attribute_declaration}}", GenerisAttributeDeclaration )
-                .replace( "{{table_generis_type_declaration}}", GenerisTypeDeclaration )
-                .replace( "{{table_crystal_attribute_declaration}}", CrystalAttributeDeclaration )
-                .replace( "{{table_crystal_type_declaration}}", CrystalTypeDeclaration )
-                .replace( "{{table_cibyl_attribute_declaration}}", CybilAttributeDeclaration )
-                .replace( "{{table_cibyl_type_declaration}}", CybilTypeDeclaration )
-                .replace( "{{table_csharp_attribute_declaration}}", CsharpAttributeDeclaration )
-                .replace( "{{table_csharp_type_declaration}}", CsharpTypeDeclaration )
-                .replace( "{{table_javascript_attribute_declaration}}", JavascriptAttributeDeclaration )
-                .replace( "{{table_javascript_type_declaration}}", JavascriptTypeDeclaration )
-                .replace( "{{table_rust_attribute_declaration}}", RustAttributeDeclaration )
-                .replace( "{{table_rust_type_declaration}}", RustTypeDeclaration )
-                .replace( "{{table_is_last}}", GetBooleanText( IsLast ) )
-                .replace( "{{table_is_stored}}", GetBooleanText( IsStored ) )
-                .replace( "{{table_is_last_stored}}", GetBooleanText( IsLastStored ) )
-                .replace( "{{table_is_last_non_stored}}", GetBooleanText( IsLastNonStored ) );
+        return template_text.ReplaceProperties( "{#", "#}", PropertyValueMap );
     }
 
     // -- OPERATIONS
@@ -7205,37 +7169,29 @@ class TABLE
 
             property_name = value_text_array[ 0 ];
 
-            if ( property_name.startsWith( '@' ) )
+            if ( property_name == "stored"
+                 && value_text_array.length == 2 )
             {
-                PropertyValueMap[ "table_" ~ value_text_array[ 0 ][ 1 .. $ ] ]
-                    = value_text_array[ 1 .. $ ].join( ' ' );
+                IsStored = ( value_text_array[ 1 ] != "false" );
             }
-            else if ( value_text_array.length == 2 )
+            else if ( property_name == "sorted"
+                      && value_text_array.length == 2 )
             {
-                if ( property_name == "stored" )
-                {
-                    IsStored = ( value_text_array[ 1 ] != "false" );
-                }
-                else if ( property_name == "sorted" )
-                {
-                    IsSorted = ( value_text_array[ 1 ] != "false" );
-                }
-                else if ( value_text_array[ 0 ] == "dropped" )
-                {
-                    IsDropped = ( value_text_array[ 1 ] != "false" );
-                }
-                else if ( value_text_array[ 0 ] == "count" )
-                {
-                    RowCount = value_text_array[ 1 ].to!long();
-                }
-                else
-                {
-                    Abort( "Invalid table property : " ~ property_text );
-                }
+                IsSorted = ( value_text_array[ 1 ] != "false" );
+            }
+            else if ( value_text_array[ 0 ] == "dropped"
+                      && value_text_array.length == 2 )
+            {
+                IsDropped = ( value_text_array[ 1 ] != "false" );
+            }
+            else if ( value_text_array[ 0 ] == "count"
+                      && value_text_array.length == 2 )
+            {
+                RowCount = value_text_array[ 1 ].to!long();
             }
             else
             {
-                Abort( "Invalid table property : " ~ property_text );
+                PropertyValueMap[ value_text_array[ 0 ] ] = value_text_array[ 1 .. $ ].join( ' ' );
             }
         }
     }
@@ -7637,6 +7593,17 @@ class SCHEMA
                     Abort( "Invalid schema : " ~ stripped_line );
                 }
             }
+        }
+    }
+
+    // ~~
+
+    void SetProperties(
+        )
+    {
+        foreach ( table; TableArray )
+        {
+            table.SetProperties();
         }
     }
 
@@ -9021,6 +8988,8 @@ class SCHEMA
 
         if ( TemplateFileText != "" )
         {
+            SetProperties();
+
             instance_file_text
                 = TemplateFileText
                       .ReplaceTableTags( TableArray )
@@ -9670,6 +9639,42 @@ string ReplaceTableTags(
 
 // ~~
 
+string ReplaceProperties(
+    string template_text,
+    string opening_tag,
+    string closing_tag,
+    string[ string ] property_value_map
+    )
+{
+    string *
+        property_value;
+    string[]
+        template_part_array;
+
+    template_part_array = template_text.GetSplitText( opening_tag, closing_tag );
+
+    foreach ( template_part_index, ref template_part; template_part_array )
+    {
+        if ( ( template_part_index & 1 ) == 1 )
+        {
+            property_value = template_part in property_value_map;
+
+            if ( property_value !is null )
+            {
+                template_part = *property_value;
+            }
+            else
+            {
+                template_part = "";
+            }
+        }
+    }
+
+    return template_part_array.join( "" );
+}
+
+// ~~
+
 string GetBooleanText(
     bool boolean
     )
@@ -10085,8 +10090,10 @@ string ReplaceIgnoredTags(
             .replace( "$\\>", "$>" )
             .replace( "<\\~", "<~" )
             .replace( "~\\>", "~>" )
-            .replace( "{\\{", "{{" )
-            .replace( "}\\}", "}}" )
+            .replace( "{\\#", "{#" )
+            .replace( "#\\}", "#}" )
+            .replace( "{\\%", "{%" )
+            .replace( "%\\}", "%}" )
             .replace( "%\\%", "%%" );
 }
 

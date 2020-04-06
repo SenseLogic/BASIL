@@ -286,12 +286,13 @@ count <i>row_count</i>
 ### Table properties
 
 <pre>
-[!]@<i>property_name</i>
-@<i>property_name</i> <i>property_value</i>
 [!]stored
 [!]sorted
 [!]dropped
 count <i>row_count</i>
+
+[!]<i>custom property name</i>
+<i>custom property name</i> <i>custom property value</i>
 </pre>
 
 ### Column data
@@ -337,8 +338,6 @@ RemoveIdentifier identifier
 ### Column properties
 
 <pre>
-[!]@<i>property_name</i>
-@<i>property_name</i> <i>property_value</i>
 [!]stored
 [!]key
 [!]partitioned
@@ -362,6 +361,9 @@ csharpname <i>csharp_field_name</i>
 rustname <i>rust_field_name</i>
 count <i>minimum_element_count</i> <i>maximum_element_count</i>
 count <i>element_count</i>
+
+[!]<i>custom property name</i>
+<i>custom property name</i> <i>custom property value</i>
 </pre>
 
 ### Field name suffixes
@@ -536,95 +538,95 @@ POINTER[ <i>ELEMENT_TYPE</i> ] | !stored
 <~boolean expression#text if condition is true~>
 <~boolean expression#text if condition is true#text if condition is false~>
 
-{{table_name}}
-{{table_attribute}}
-{{table_variable}}
-{{table_style}}
-{{table_title}}
-{{table_sentence}}
-{{table_locution}}
-{{table_go_type}}
-{{table_go_attribute}}
-{{table_go_variable}}
-{{table_php_type}}
-{{table_php_attribute}}
-{{table_php_variable}}
-{{table_crystal_type}}
-{{table_csharp_type}}
-{{table_csharp_attribute}}
-{{table_csharp_variable}}
-{{table_rust_type}}
-{{table_javascript_type}}
-{{table_javascript_attribute}}
-{{table_go_attribute_declaration}}
-{{table_go_type_declaration}}
-{{table_generis_attribute_declaration}}
-{{table_generis_type_declaration}}
-{{table_crystal_attribute_declaration}}
-{{table_crystal_type_declaration}}
-{{table_cibyl_attribute_declaration}}
-{{table_cibyl_type_declaration}}
-{{table_csharp_attribute_declaration}}
-{{table_csharp_type_declaration}}
-{{table_javascript_attribute_declaration}}
-{{table_javascript_type_declaration}}
-{{table_rust_attribute_declaration}}
-{{table_rust_type_declaration}}
-{{table_is_last}}
-{{table_is_stored}}
-{{table_is_last_stored}}
-{{table_is_last_non_stored}}
+{#name#}
+{#attribute#}
+{#variable#}
+{#style#}
+{#title#}
+{#sentence#}
+{#locution#}
+{#go_type#}
+{#go_attribute#}
+{#go_variable#}
+{#php_type#}
+{#php_attribute#}
+{#php_variable#}
+{#crystal_type#}
+{#csharp_type#}
+{#csharp_attribute#}
+{#csharp_variable#}
+{#rust_type#}
+{#javascript_type#}
+{#javascript_attribute#}
+{#go_attribute_declaration#}
+{#go_type_declaration#}
+{#generis_attribute_declaration#}
+{#generis_type_declaration#}
+{#crystal_attribute_declaration#}
+{#crystal_type_declaration#}
+{#cibyl_attribute_declaration#}
+{#cibyl_type_declaration#}
+{#csharp_attribute_declaration#}
+{#csharp_type_declaration#}
+{#javascript_attribute_declaration#}
+{#javascript_type_declaration#}
+{#rust_attribute_declaration#}
+{#rust_type_declaration#}
+{#is_last#}
+{#is_stored#}
+{#is_last_stored#}
+{#is_last_non_stored#}
 
-{{@table_property_name@}}
+{#<i>custom property name</i>#}
 
-{{column_name}}
-{{column_attribute}}
-{{column_variable}}
-{{column_style}}
-{{column_title}}
-{{column_sentence}}
-{{column_locution}}
-{{column_stored_name}}
-{{column_stored_type}}
-{{column_cql_name}}
-{{column_cql_type}}
-{{column_sql_name}}
-{{column_sql_type}}
-{{column_go_name}}
-{{column_go_type}}
-{{column_go_attribute}}
-{{column_go_variable}}
-{{column_php_name}}
-{{column_php_type}}
-{{column_php_attribute}}
-{{column_php_variable}}
-{{column_crystal_name}}
-{{column_crystal_type}}
-{{column_csharp_name}}
-{{column_csharp_type}}
-{{column_csharp_attribute}}
-{{column_csharp_variable}}
-{{column_rust_name}}
-{{column_rust_type}}
-{{column_javascript_name}}
-{{column_is_last}}
-{{column_is_key}}
-{{column_is_last_key}}
-{{column_is_last_non_key}}
-{{column_is_stored}}
-{{column_is_last_stored}}
-{{column_is_last_non_stored}}
-{{column_is_stored_key}}
-{{column_is_last_stored_key}}
-{{column_is_last_non_stored_key}}
-{{column_is_stored_non_key}}
-{{column_is_last_stored_non_key}}
-{{column_is_last_non_stored_non_key}}
-{{column_is_incremented}}
-{{column_is_last_incremented}}
-{{column_is_last_non_incremented}}
+{%name%}
+{%attribute%}
+{%variable%}
+{%style%}
+{%title%}
+{%sentence%}
+{%locution%}
+{%stored_name%}
+{%stored_type%}
+{%cql_name%}
+{%cql_type%}
+{%sql_name%}
+{%sql_type%}
+{%go_name%}
+{%go_type%}
+{%go_attribute%}
+{%go_variable%}
+{%php_name%}
+{%php_type%}
+{%php_attribute%}
+{%php_variable%}
+{%crystal_name%}
+{%crystal_type%}
+{%csharp_name%}
+{%csharp_type%}
+{%csharp_attribute%}
+{%csharp_variable%}
+{%rust_name%}
+{%rust_type%}
+{%javascript_name%}
+{%is_last%}
+{%is_key%}
+{%is_last_key%}
+{%is_last_non_key%}
+{%is_stored%}
+{%is_last_stored%}
+{%is_last_non_stored%}
+{%is_stored_key%}
+{%is_last_stored_key%}
+{%is_last_non_stored_key%}
+{%is_stored_non_key%}
+{%is_last_stored_non_key%}
+{%is_last_non_stored_non_key%}
+{%is_incremented%}
+{%is_last_incremented%}
+{%is_last_non_incremented%}
 
-{{@column_property_name@}}
+{%<i>custom property name</i>%}
 
 %\%ignored tag
 <\#ignored tags#\>
@@ -640,8 +642,8 @@ POINTER[ <i>ELEMENT_TYPE</i> ] | !stored
 <\@°ignored tags°@\>
 <\$°ignored tags°$\>
 <\~ignored tags~\>
-{\{ignored tags}\}
-{\{@ignored tags@}\}
+{\#ignored tags#\}
+{\%ignored tags%\}
 ```
 
 ### Boolean expression syntax
