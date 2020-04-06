@@ -9772,7 +9772,7 @@ string ReplaceConditionalTags(
                     Abort( "Invalid <~ ~> block : " ~ text[ 0 .. post_character_index ] );
                 }
 
-                argument_array = text[ first_character_index + 2 .. character_index ].split( '#' );
+                argument_array = text[ first_character_index + 2 .. character_index ].split( "<>" );
 
                 if ( ( argument_array.length == 4
                        || argument_array.length == 5 )
@@ -10090,6 +10090,7 @@ string ReplaceIgnoredTags(
             .replace( "$\\>", "$>" )
             .replace( "<\\~", "<~" )
             .replace( "~\\>", "~>" )
+            .replace( "<\\>", "<>" )
             .replace( "{\\#", "{#" )
             .replace( "#\\}", "#}" )
             .replace( "{\\%", "{%" )

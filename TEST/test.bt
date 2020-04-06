@@ -3,15 +3,15 @@
 Table :
     {#name#} : {#type#} / {#attribute#} / {#variable#} / {#style#} / {#title#} / {#sentence#} / {#locution#}
         Properties : {#is_editable#} {#button_size#}
-        Columns : <%{%name%}<~!{%is_last%}#, ~>%>
-        Key columns : <@{%name%}<~!{%is_last_key%}#, ~>@>
-        Non key columns : <${%name%}<~!{%is_last_non_key%}#, ~>$>
-        Stored columns : <%^{%name%}<~!{%is_last_stored%}#, ~>^%>
-        Non Stored columns : <%°{%name%}<~!{%is_last_non_stored%}#, ~>°%>
-        Stored key columns : <@^{%name%}<~!{%is_last_stored_key%}#, ~>^@>
-        Non Stored key columns : <@°{%name%}<~!{%is_last_non_stored_key%}#, ~>°@>
-        Stored non key columns : <$^{%name%}<~!{%is_last_stored_non_key%}#, ~>^$>
-        Non Stored non key columns : <$°{%name%}<~!{%is_last_non_stored_non_key%}#, ~>°$>
+        Columns : <%{%name%}<~!{%is_last%}<>, ~>%>
+        Key columns : <@{%name%}<~!{%is_last_key%}<>, ~>@>
+        Non key columns : <${%name%}<~!{%is_last_non_key%}<>, ~>$>
+        Stored columns : <%^{%name%}<~!{%is_last_stored%}<>, ~>^%>
+        Non Stored columns : <%°{%name%}<~!{%is_last_non_stored%}<>, ~>°%>
+        Stored key columns : <@^{%name%}<~!{%is_last_stored_key%}<>, ~>^@>
+        Non Stored key columns : <@°{%name%}<~!{%is_last_non_stored_key%}<>, ~>°@>
+        Stored non key columns : <$^{%name%}<~!{%is_last_stored_non_key%}<>, ~>^$>
+        Non Stored non key columns : <$°{%name%}<~!{%is_last_non_stored_non_key%}<>, ~>°$>
         Columns :<%
             {%name%} : {%attribute%} / {%variable%} / {%style%} / {%title%} / {%sentence%} / {%locution%}
                 Properties : {%is_editable%} {%button_size%}
@@ -34,20 +34,20 @@ import "fmt";
 func main(
     )
 {
-    fmt.Println( "Tables : <#{#name#}<~!{#is_last#}#, ~>#>" );
-    fmt.Println( "Stored tables : <#^{#name#}<~!{#is_last_stored#}#, ~>^#>" );
-    fmt.Println( "Non stored tables : <#°{#name#}<~!{#is_last_non_stored#}#, ~>°#>" );
+    fmt.Println( "Tables : <#{#name#}<~!{#is_last#}<>, ~>#>" );
+    fmt.Println( "Stored tables : <#^{#name#}<~!{#is_last_stored#}<>, ~>^#>" );
+    fmt.Println( "Non stored tables : <#°{#name#}<~!{#is_last_non_stored#}<>, ~>°#>" );
     fmt.Println( "Tables :" );<#
     fmt.Println( "    {#name#} :" );
-    fmt.Println( "        Columns : <%{%name%}<~!{%is_last%}#, ~>%>" );
-    fmt.Println( "        Key columns : <@{%name%}<~!{%is_last_key%}#, ~>@>" );
-    fmt.Println( "        Non key columns : <${%name%}<~!{%is_last_non_key%}#, ~>$>" );
-    fmt.Println( "        Stored columns : <%^{%name%}<~!{%is_last_stored%}#, ~>^%>" );
-    fmt.Println( "        Non stored columns : <%°{%name%}<~!{%is_last_non_stored%}#, ~>°%>" );
-    fmt.Println( "        Stored key columns : <@^{%name%}<~!{%is_last_stored_key%}#, ~>^@>" );
-    fmt.Println( "        Non stored key columns : <@°{%name%}<~!{%is_last_non_stored_key%}#, ~>°@>" );
-    fmt.Println( "        Stored non key columns : <$^{%name%}<~!{%is_last_stored_non_key%}#, ~>^$>" );
-    fmt.Println( "        Non stored kon key columns : <$°{%name%}<~!{%is_last_non_stored_non_key%}#, ~>°$>" );#>
+    fmt.Println( "        Columns : <%{%name%}<~!{%is_last%}<>, ~>%>" );
+    fmt.Println( "        Key columns : <@{%name%}<~!{%is_last_key%}<>, ~>@>" );
+    fmt.Println( "        Non key columns : <${%name%}<~!{%is_last_non_key%}<>, ~>$>" );
+    fmt.Println( "        Stored columns : <%^{%name%}<~!{%is_last_stored%}<>, ~>^%>" );
+    fmt.Println( "        Non stored columns : <%°{%name%}<~!{%is_last_non_stored%}<>, ~>°%>" );
+    fmt.Println( "        Stored key columns : <@^{%name%}<~!{%is_last_stored_key%}<>, ~>^@>" );
+    fmt.Println( "        Non stored key columns : <@°{%name%}<~!{%is_last_non_stored_key%}<>, ~>°@>" );
+    fmt.Println( "        Stored non key columns : <$^{%name%}<~!{%is_last_stored_non_key%}<>, ~>^$>" );
+    fmt.Println( "        Non stored kon key columns : <$°{%name%}<~!{%is_last_non_stored_non_key%}<>, ~>°$>" );#>
 }
 %%test_types.go
 package main;
@@ -56,7 +56,7 @@ package main;
 <#
 type {#go_type#} struct {<%
     {%go_name%} {%go_type%};%>
-}<~!{#is_last#}#
+}<~!{#is_last#}<>
 
 // ~~
 ~>#>
@@ -70,7 +70,7 @@ using System.Collections.Generic;
 <#
 {#csharp_type_declaration#}
 {
-{#csharp_attribute_declaration#}}<~!{#is_last#}#
+{#csharp_attribute_declaration#}}<~!{#is_last#}<>
 
 // ~~
 ~>#>

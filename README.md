@@ -156,55 +156,28 @@ BLOG | count 5
 ## Sample data file
 
 ```
-SECTION
-
-    Number Name
-
-        1 ~ Sports
-        2 ~ Gaming
-        3 ~ Entertainment
-        4 ~ Science
-        5 ~ History
-        6 ~ Travel
-        7 ~ Finance
-
-USER
-
-    Uuid FirstName LastName Email Pseudonym Password ItIsAdministrator
-
-        #RickDeckard ~ Rick ~ Deckard
-            ~ rick.deckard@mail.com ~ rick.deckard ~ b-263-54 ~ true
-
-        #RachaelTyrell ~ Rachael ~ Tyrell
-            ~ rachael.tyrell@outlook.com ~ rachael.tyrell ~ nexus-7 ~ false
-
-        #ArthurDent ~ Arthur ~ Dent
-            ~ arthur.dent@gmail.com ~ arthur.dent ~ 42 ~ false
-```
-
-## Sample template file
-
-```go
-<#%%PHX/test_{{table_variable}}_table.phx
+<#%%PHX/test_{#variable#}_table.phx
 <pre>
 Table :
-    {{table_name}} : {{table_type}} / {{table_attribute}} / {{table_variable}} / {{table_style}} / {{table_title}} / {{table_sentence}} / {{table_locution}}
-        Columns : <%{{column_name}}<~!{{column_is_last}}#, ~>%>
-        Key columns : <@{{column_name}}<~!{{column_is_last_key}}#, ~>@>
-        Non key columns : <${{column_name}}<~!{{column_is_last_non_key}}#, ~>$>
-        Stored columns : <%^{{column_name}}<~!{{column_is_last_stored}}#, ~>^%>
-        Non Stored columns : <%°{{column_name}}<~!{{column_is_last_non_stored}}#, ~>°%>
-        Stored key columns : <@^{{column_name}}<~!{{column_is_last_stored_key}}#, ~>^@>
-        Non Stored key columns : <@°{{column_name}}<~!{{column_is_last_non_stored_key}}#, ~>°@>
-        Stored non key columns : <$^{{column_name}}<~!{{column_is_last_stored_non_key}}#, ~>^$>
-        Non Stored non key columns : <$°{{column_name}}<~!{{column_is_last_non_stored_non_key}}#, ~>°$>
+    {#name#} : {#type#} / {#attribute#} / {#variable#} / {#style#} / {#title#} / {#sentence#} / {#locution#}
+        Properties : {#is_editable#} {#button_size#}
+        Columns : <%{%name%}<~!{%is_last%}<>, ~>%>
+        Key columns : <@{%name%}<~!{%is_last_key%}<>, ~>@>
+        Non key columns : <${%name%}<~!{%is_last_non_key%}<>, ~>$>
+        Stored columns : <%^{%name%}<~!{%is_last_stored%}<>, ~>^%>
+        Non Stored columns : <%°{%name%}<~!{%is_last_non_stored%}<>, ~>°%>
+        Stored key columns : <@^{%name%}<~!{%is_last_stored_key%}<>, ~>^@>
+        Non Stored key columns : <@°{%name%}<~!{%is_last_non_stored_key%}<>, ~>°@>
+        Stored non key columns : <$^{%name%}<~!{%is_last_stored_non_key%}<>, ~>^$>
+        Non Stored non key columns : <$°{%name%}<~!{%is_last_non_stored_non_key%}<>, ~>°$>
         Columns :<%
-            {{column_name}} : {{column_attribute}} / {{column_variable}} / {{column_style}} / {{column_title}} / {{column_sentence}} / {{column_locution}}
-                {{column_go_name}} : {{column_go_type}} (Go)
-                {{column_php_name}} : {{column_php_type}} (PHP)
-                {{column_crystal_name}} : {{column_crystal_type}} (Crystal)
-                {{column_csharp_name}} : {{column_csharp_type}} (C#)
-                {{column_rust_name}} : {{column_rust_type}} (Rust)%>
+            {%name%} : {%attribute%} / {%variable%} / {%style%} / {%title%} / {%sentence%} / {%locution%}
+                Properties : {%is_editable%} {%button_size%}
+                Go : {%go_type%} {%go_name%}
+                PHP : {%php_type%} {%php_name%}
+                Crystal : {%crystal_type%} {%crystal_name%}
+                C# : {%csharp_type%} {%csharp_name%}
+                Rust : {%rust_type%} {%rust_name%}%>
 </pre>
 #>
 %%test_tables.gs
@@ -219,29 +192,29 @@ import "fmt";
 func main(
     )
 {
-    fmt.Println( "Tables : <#{{table_name}}<~!{{table_is_last}}#, ~>#>" );
-    fmt.Println( "Stored tables : <#^{{table_name}}<~!{{table_is_last_stored}}#, ~>^#>" );
-    fmt.Println( "Non stored tables : <#°{{table_name}}<~!{{table_is_last_non_stored}}#, ~>°#>" );
+    fmt.Println( "Tables : <#{#name#}<~!{#is_last#}<>, ~>#>" );
+    fmt.Println( "Stored tables : <#^{#name#}<~!{#is_last_stored#}<>, ~>^#>" );
+    fmt.Println( "Non stored tables : <#°{#name#}<~!{#is_last_non_stored#}<>, ~>°#>" );
     fmt.Println( "Tables :" );<#
-    fmt.Println( "    {{table_name}} :" );
-    fmt.Println( "        Columns : <%{{column_name}}<~!{{column_is_last}}#, ~>%>" );
-    fmt.Println( "        Key columns : <@{{column_name}}<~!{{column_is_last_key}}#, ~>@>" );
-    fmt.Println( "        Non key columns : <${{column_name}}<~!{{column_is_last_non_key}}#, ~>$>" );
-    fmt.Println( "        Stored columns : <%^{{column_name}}<~!{{column_is_last_stored}}#, ~>^%>" );
-    fmt.Println( "        Non stored columns : <%°{{column_name}}<~!{{column_is_last_non_stored}}#, ~>°%>" );
-    fmt.Println( "        Stored key columns : <@^{{column_name}}<~!{{column_is_last_stored_key}}#, ~>^@>" );
-    fmt.Println( "        Non stored key columns : <@°{{column_name}}<~!{{column_is_last_non_stored_key}}#, ~>°@>" );
-    fmt.Println( "        Stored non key columns : <$^{{column_name}}<~!{{column_is_last_stored_non_key}}#, ~>^$>" );
-    fmt.Println( "        Non stored kon key columns : <$°{{column_name}}<~!{{column_is_last_non_stored_non_key}}#, ~>°$>" );#>
+    fmt.Println( "    {#name#} :" );
+    fmt.Println( "        Columns : <%{%name%}<~!{%is_last%}<>, ~>%>" );
+    fmt.Println( "        Key columns : <@{%name%}<~!{%is_last_key%}<>, ~>@>" );
+    fmt.Println( "        Non key columns : <${%name%}<~!{%is_last_non_key%}<>, ~>$>" );
+    fmt.Println( "        Stored columns : <%^{%name%}<~!{%is_last_stored%}<>, ~>^%>" );
+    fmt.Println( "        Non stored columns : <%°{%name%}<~!{%is_last_non_stored%}<>, ~>°%>" );
+    fmt.Println( "        Stored key columns : <@^{%name%}<~!{%is_last_stored_key%}<>, ~>^@>" );
+    fmt.Println( "        Non stored key columns : <@°{%name%}<~!{%is_last_non_stored_key%}<>, ~>°@>" );
+    fmt.Println( "        Stored non key columns : <$^{%name%}<~!{%is_last_stored_non_key%}<>, ~>^$>" );
+    fmt.Println( "        Non stored kon key columns : <$°{%name%}<~!{%is_last_non_stored_non_key%}<>, ~>°$>" );#>
 }
 %%test_types.go
 package main;
 
 // -- TYPES
 <#
-type {{table_go_type}} struct {<%
-    {{column_go_name}} {{column_go_type}};%>
-}<~!{{table_is_last}}#
+type {#go_type#} struct {<%
+    {%go_name%} {%go_type%};%>
+}<~!{#is_last#}<>
 
 // ~~
 ~>#>
@@ -253,9 +226,9 @@ using System.Collections.Generic;
 
 // -- TYPES
 <#
-{{table_csharp_type_declaration}}
+{#csharp_type_declaration#}
 {
-{{table_csharp_attribute_declaration}}}<~!{{table_is_last}}#
+{#csharp_attribute_declaration#}}<~!{#is_last#}<>
 
 // ~~
 ~>#>
@@ -490,53 +463,53 @@ POINTER[ <i>ELEMENT_TYPE</i> ] | !stored
 <@°content for each non stored key column°@>
 <$°content for each non stored non key column°$>
 
-<~Equals#first text#second text#text if same texts~>
-<~Equals#first text#second text#text if same texts#text if not same texts~>
+<~Equals<>first text<>second text<>text if same texts~>
+<~Equals<>first text<>second text<>text if same texts<>text if not same texts~>
 
-<~!Equals#first text#second text#text if not same texts~>
-<~!Equals#first text#second text#text if not same texts#text if same texts~>
+<~!Equals<>first text<>second text<>text if not same texts~>
+<~!Equals<>first text<>second text<>text if not same texts<>text if same texts~>
 
-<~HasPrefix#text#prefix#text if prefix found~>
-<~HasPrefix#text#prefix#text if prefix found#text if prefix not found~>
+<~HasPrefix<>text<>prefix<>text if prefix found~>
+<~HasPrefix<>text<>prefix<>text if prefix found<>text if prefix not found~>
 
-<~!HasPrefix#text#prefix#text if prefix not found~>
-<~!HasPrefix#text#prefix#text if prefix not found#text if prefix found~>
+<~!HasPrefix<>text<>prefix<>text if prefix not found~>
+<~!HasPrefix<>text<>prefix<>text if prefix not found<>text if prefix found~>
 
-<~HasSuffix#text#suffix#text if suffix found~>
-<~HasSuffix#text#suffix#text if suffix found#text if suffix not found~>
+<~HasSuffix<>text<>suffix<>text if suffix found~>
+<~HasSuffix<>text<>suffix<>text if suffix found<>text if suffix not found~>
 
-<~!HasSuffix#text#suffix#text if suffix not found~>
-<~!HasSuffix#text#suffix#text if suffix not found#text if suffix found~>
+<~!HasSuffix<>text<>suffix<>text if suffix not found~>
+<~!HasSuffix<>text<>suffix<>text if suffix not found<>text if suffix found~>
 
-<~Contains#text#content#text if content found~>
-<~Contains#text#content#text if content found#text if content not found~>
+<~Contains<>text<>content<>text if content found~>
+<~Contains<>text<>content<>text if content found<>text if content not found~>
 
-<~!Contains#text#content#text if content not found~>
-<~!Contains#text#content#text if content not found#text if content found~>
+<~!Contains<>text<>content<>text if content not found~>
+<~!Contains<>text<>content<>text if content not found<>text if content found~>
 
-<~RemovePrefix#prefix~>
-<~ReplacePrefix#old prefix#new prefix~>
+<~RemovePrefix<>prefix~>
+<~ReplacePrefix<>old prefix<>new prefix~>
 
-<~RemoveSuffix#suffix~>
-<~ReplaceSuffix#old suffix#new suffix~>
+<~RemoveSuffix<>suffix~>
+<~ReplaceSuffix<>old suffix<>new suffix~>
 
-<~Remove#content~>
-<~Replace#old content#new content~>
+<~Remove<>content~>
+<~Replace<>old content<>new content~>
 
-<~LowerCase#text~>
-<~UpperCase#text~>
-<~PascalCase#text~>
-<~SnakeCase#text~>
-<~KebabCase#text~>
-<~TypeCase#text~>
-<~AttributeCase#text~>
-<~VariableCase#text~>
-<~StyleCase#text~>
-<~TitleCase#text~>
-<~SentenceCase#text~>
+<~LowerCase<>text~>
+<~UpperCase<>text~>
+<~PascalCase<>text~>
+<~SnakeCase<>text~>
+<~KebabCase<>text~>
+<~TypeCase<>text~>
+<~AttributeCase<>text~>
+<~VariableCase<>text~>
+<~StyleCase<>text~>
+<~TitleCase<>text~>
+<~SentenceCase<>text~>
 
-<~boolean expression#text if condition is true~>
-<~boolean expression#text if condition is true#text if condition is false~>
+<~boolean expression<>text if condition is true~>
+<~boolean expression<>text if condition is true<>text if condition is false~>
 
 {#name#}
 {#attribute#}
@@ -641,7 +614,7 @@ POINTER[ <i>ELEMENT_TYPE</i> ] | !stored
 <\%°ignored tags°%\>
 <\@°ignored tags°@\>
 <\$°ignored tags°$\>
-<\~ignored tags~\>
+<\~ignored<\>tags~\>
 {\#ignored tags#\}
 {\%ignored tags%\}
 ```
