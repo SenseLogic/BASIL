@@ -156,6 +156,35 @@ BLOG | count 5
 ## Sample data file
 
 ```
+SECTION
+
+    Number Name
+
+        1 ~ Sports
+        2 ~ Gaming
+        3 ~ Entertainment
+        4 ~ Science
+        5 ~ History
+        6 ~ Travel
+        7 ~ Finance
+
+USER
+
+    Uuid FirstName LastName Email Pseudonym Password ItIsAdministrator
+
+        #RickDeckard ~ Rick ~ Deckard
+            ~ rick.deckard@mail.com ~ rick.deckard ~ b-263-54 ~ true
+
+        #RachaelTyrell ~ Rachael ~ Tyrell
+            ~ rachael.tyrell@outlook.com ~ rachael.tyrell ~ nexus-7 ~ false
+
+        #ArthurDent ~ Arthur ~ Dent
+            ~ arthur.dent@gmail.com ~ arthur.dent ~ 42 ~ false
+```
+
+## Sample template file
+
+```go
 <#%%PHX/test_{#variable#}_table.phx
 <pre>
 Table :
