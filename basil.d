@@ -477,7 +477,7 @@ class RANDOM
 
     char MakeHexadecimalDigit()
     {
-        return "0123456789abcdef"[ MakeIndex( 10 ) ];
+        return "0123456789abcdef"[ MakeIndex( 16 ) ];
     }
 
     // ~~
