@@ -4113,18 +4113,9 @@ class COLUMN
         Index,
         OrderIndex;
     bool
-        IsLast,
         IsStored,
-        IsLastStored,
-        IsLastNonStored,
-        IsLastStoredKey,
-        IsLastNonStoredKey,
-        IsLastStoredNonKey,
-        IsLastNonStoredNonKey,
         IsUnique,
         IsKey,
-        IsLastKey,
-        IsLastNonKey,
         IsPartitioned,
         IsClustered,
         IsIndexed,
@@ -4133,14 +4124,34 @@ class COLUMN
         IsStatic,
         IsRequired,
         IsIncremented,
-        IsLastIncremented,
-        IsLastNonIncremented,
         IsConstrained,
         IsAscending,
         IsDescending,
         IsNow,
         IsForeign,
-        IsProcessed;
+        IsProcessed,
+        IsFirst,
+        IsFirstKey,
+        IsFirstNonKey,
+        IsFirstStored,
+        IsFirstNonStored,
+        IsFirstStoredKey,
+        IsFirstNonStoredKey,
+        IsFirstStoredNonKey,
+        IsFirstNonStoredNonKey,
+        IsFirstIncremented,
+        IsFirstNonIncremented,
+        IsLast,
+        IsLastKey,
+        IsLastNonKey,
+        IsLastStored,
+        IsLastNonStored,
+        IsLastStoredKey,
+        IsLastNonStoredKey,
+        IsLastStoredNonKey,
+        IsLastNonStoredNonKey,
+        IsLastIncremented,
+        IsLastNonIncremented;
     bool
         IsRandomReal;
     double
@@ -4330,21 +4341,37 @@ class COLUMN
         PropertyValueMap[ "rust_name" ] = RustName;
         PropertyValueMap[ "rust_type" ] = RustType;
         PropertyValueMap[ "javascript_name" ] = JavascriptName;
-        PropertyValueMap[ "is_last" ] = GetBooleanText( IsLast );
         PropertyValueMap[ "is_key" ] = GetBooleanText( IsKey );
+        PropertyValueMap[ "is_stored" ] = GetBooleanText( IsStored );
+        PropertyValueMap[ "is_non_stored" ] = GetBooleanText( !IsStored );
+        PropertyValueMap[ "is_stored_key" ] = GetBooleanText( IsStored && IsKey );
+        PropertyValueMap[ "is_non_stored_key" ] = GetBooleanText( !IsStored && IsKey );
+        PropertyValueMap[ "is_stored_non_key" ] = GetBooleanText( IsStored && !IsKey );
+        PropertyValueMap[ "is_non_stored_non_key" ] = GetBooleanText( !IsStored && !IsKey );
+        PropertyValueMap[ "is_incremented" ] = GetBooleanText( IsIncremented );
+        PropertyValueMap[ "is_constrained" ] = GetBooleanText( IsConstrained );
+        PropertyValueMap[ "is_first" ] = GetBooleanText( IsFirst );
+        PropertyValueMap[ "is_first_key" ] = GetBooleanText( IsFirstKey );
+        PropertyValueMap[ "is_first_non_key" ] = GetBooleanText( IsFirstNonKey );
+        PropertyValueMap[ "is_first_stored" ] = GetBooleanText( IsFirstStored );
+        PropertyValueMap[ "is_first_non_stored" ] = GetBooleanText( IsFirstNonStored );
+        PropertyValueMap[ "is_first_stored_key" ] = GetBooleanText( IsFirstStoredKey );
+        PropertyValueMap[ "is_first_non_stored_key" ] = GetBooleanText( IsFirstNonStoredKey );
+        PropertyValueMap[ "is_first_stored_non_key" ] = GetBooleanText( IsFirstStoredNonKey );
+        PropertyValueMap[ "is_first_non_stored_non_key" ] = GetBooleanText( IsFirstNonStoredNonKey );
+        PropertyValueMap[ "is_first_incremented" ] = GetBooleanText( IsFirstIncremented );
+        PropertyValueMap[ "is_first_non_incremented" ] = GetBooleanText( IsFirstNonIncremented );
+        PropertyValueMap[ "is_last" ] = GetBooleanText( IsLast );
         PropertyValueMap[ "is_last_key" ] = GetBooleanText( IsLastKey );
         PropertyValueMap[ "is_last_non_key" ] = GetBooleanText( IsLastNonKey );
-        PropertyValueMap[ "is_stored" ] = GetBooleanText( IsStored );
         PropertyValueMap[ "is_last_stored" ] = GetBooleanText( IsLastStored );
         PropertyValueMap[ "is_last_non_stored" ] = GetBooleanText( IsLastNonStored );
         PropertyValueMap[ "is_last_stored_key" ] = GetBooleanText( IsLastStoredKey );
         PropertyValueMap[ "is_last_non_stored_key" ] = GetBooleanText( IsLastNonStoredKey );
         PropertyValueMap[ "is_last_stored_non_key" ] = GetBooleanText( IsLastStoredNonKey );
         PropertyValueMap[ "is_last_non_stored_non_key" ] = GetBooleanText( IsLastNonStoredNonKey );
-        PropertyValueMap[ "is_incremented" ] = GetBooleanText( IsIncremented );
         PropertyValueMap[ "is_last_incremented" ] = GetBooleanText( IsLastIncremented );
         PropertyValueMap[ "is_last_non_incremented" ] = GetBooleanText( IsLastNonIncremented );
-        PropertyValueMap[ "is_constrained" ] = GetBooleanText( IsConstrained );
     }
 
     // ~~
@@ -4868,12 +4895,15 @@ class TABLE
     COLUMN[]
         ColumnArray;
     bool
-        IsLast,
         IsStored,
-        IsLastStored,
-        IsLastNonStored,
         IsSorted,
-        IsDropped;
+        IsDropped,
+        IsFirst,
+        IsFirstStored,
+        IsFirstNonStored,
+        IsLast,
+        IsLastStored,
+        IsLastNonStored;
     long
         RowCount;
     string[ string ]
@@ -7119,8 +7149,12 @@ class TABLE
         PropertyValueMap[ "javascript_type_declaration" ] = JavascriptTypeDeclaration;
         PropertyValueMap[ "rust_attribute_declaration" ] = RustAttributeDeclaration;
         PropertyValueMap[ "rust_type_declaration" ] = RustTypeDeclaration;
-        PropertyValueMap[ "is_last" ] = GetBooleanText( IsLast );
         PropertyValueMap[ "is_stored" ] = GetBooleanText( IsStored );
+        PropertyValueMap[ "is_non_stored" ] = GetBooleanText( !IsStored );
+        PropertyValueMap[ "is_first" ] = GetBooleanText( IsFirst );
+        PropertyValueMap[ "is_first_stored" ] = GetBooleanText( IsFirstStored );
+        PropertyValueMap[ "is_first_non_stored" ] = GetBooleanText( IsFirstNonStored );
+        PropertyValueMap[ "is_last" ] = GetBooleanText( IsLast );
         PropertyValueMap[ "is_last_stored" ] = GetBooleanText( IsLastStored );
         PropertyValueMap[ "is_last_non_stored" ] = GetBooleanText( IsLastNonStored );
 
@@ -7202,6 +7236,17 @@ class TABLE
         )
     {
         COLUMN
+            first_column,
+            first_non_incremented_column,
+            first_non_key_column,
+            first_non_stored_column,
+            first_non_stored_key_column,
+            first_non_stored_non_key_column,
+            first_incremented_column,
+            first_key_column,
+            first_stored_column,
+            first_stored_key_column,
+            first_stored_non_key_column,
             last_column,
             last_non_incremented_column,
             last_non_key_column,
@@ -7221,6 +7266,18 @@ class TABLE
             column.MakeType();
         }
 
+        first_column = null;
+        first_key_column = null;
+        first_non_key_column = null;
+        first_stored_column = null;
+        first_non_stored_column = null;
+        first_stored_key_column = null;
+        first_non_stored_key_column = null;
+        first_stored_non_key_column = null;
+        first_non_stored_non_key_column = null;
+        first_incremented_column = null;
+        first_non_incremented_column = null;
+
         last_column = null;
         last_key_column = null;
         last_non_key_column = null;
@@ -7232,6 +7289,65 @@ class TABLE
         last_non_stored_non_key_column = null;
         last_incremented_column = null;
         last_non_incremented_column = null;
+
+        foreach_reverse ( column; ColumnArray )
+        {
+            first_column = column;
+
+            if ( column.IsKey )
+            {
+                first_key_column = column;
+            }
+
+            if ( !column.IsKey )
+            {
+                first_non_key_column = column;
+            }
+
+            if ( column.IsStored )
+            {
+                first_stored_column = column;
+            }
+
+            if ( !column.IsStored )
+            {
+                first_non_stored_column = column;
+            }
+
+            if ( column.IsStored
+                 && column.IsKey )
+            {
+                first_stored_key_column = column;
+            }
+
+            if ( !column.IsStored
+                 && column.IsKey )
+            {
+                first_non_stored_key_column = column;
+            }
+
+            if ( column.IsStored
+                 && !column.IsKey )
+            {
+                first_stored_non_key_column = column;
+            }
+
+            if ( !column.IsStored
+                 && !column.IsKey )
+            {
+                first_non_stored_non_key_column = column;
+            }
+
+            if ( column.IsIncremented )
+            {
+                first_incremented_column = column;
+            }
+
+            if ( !column.IsIncremented )
+            {
+                first_non_incremented_column = column;
+            }
+        }
 
         foreach ( column; ColumnArray )
         {
@@ -7290,6 +7406,61 @@ class TABLE
             {
                 last_non_incremented_column = column;
             }
+        }
+
+        if ( first_column !is null )
+        {
+            first_column.IsFirst = true;
+        }
+
+        if ( first_key_column !is null )
+        {
+            first_key_column.IsFirstKey = true;
+        }
+
+        if ( first_non_key_column !is null )
+        {
+            first_non_key_column.IsFirstNonKey = true;
+        }
+
+        if ( first_stored_column !is null )
+        {
+            first_stored_column.IsFirstStored = true;
+        }
+
+        if ( first_non_stored_column !is null )
+        {
+            first_non_stored_column.IsFirstNonStored = true;
+        }
+
+        if ( first_stored_key_column !is null )
+        {
+            first_stored_key_column.IsFirstStoredKey = true;
+        }
+
+        if ( first_non_stored_key_column !is null )
+        {
+            first_non_stored_key_column.IsFirstNonStoredKey = true;
+        }
+
+        if ( first_stored_non_key_column !is null )
+        {
+            first_stored_non_key_column.IsFirstStoredNonKey = true;
+        }
+
+        if ( first_non_stored_non_key_column !is null )
+        {
+            first_non_stored_non_key_column.IsFirstNonStoredNonKey = true;
+        }
+
+        if ( first_incremented_column !is null )
+        {
+            first_incremented_column.IsFirstIncremented = true;
+        }
+
+        if ( first_non_incremented_column !is null )
+        {
+            first_non_incremented_column.IsFirstNonIncremented = true;
         }
 
         if ( last_column !is null )
@@ -7613,18 +7784,43 @@ class SCHEMA
         )
     {
         TABLE
+            first_non_stored_table,
+            first_stored_table,
+            first_table,
             last_non_stored_table,
             last_stored_table,
             last_table;
+
+        foreach ( table; TableArray )
+        {
+            table.MakeTypes();
+        }
+
+        first_table = null;
+        first_stored_table = null;
+        first_non_stored_table = null;
 
         last_table = null;
         last_stored_table = null;
         last_non_stored_table = null;
 
+        foreach_reverse ( table; TableArray )
+        {
+            first_table = table;
+
+            if ( table.IsStored )
+            {
+                first_stored_table = table;
+            }
+
+            if ( !table.IsStored )
+            {
+                first_non_stored_table = table;
+            }
+        }
+
         foreach ( table; TableArray )
         {
-            table.MakeTypes();
-
             last_table = table;
 
             if ( table.IsStored )
@@ -7636,6 +7832,21 @@ class SCHEMA
             {
                 last_non_stored_table = table;
             }
+        }
+
+        if ( first_table !is null )
+        {
+            first_table.IsFirst = true;
+        }
+
+        if ( first_stored_table !is null )
+        {
+            first_stored_table.IsFirstStored = true;
+        }
+
+        if ( first_non_stored_table !is null )
+        {
+            first_non_stored_table.IsFirstNonStored = true;
         }
 
         if ( last_table !is null )
