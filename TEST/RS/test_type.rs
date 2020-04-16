@@ -35,6 +35,7 @@ struct COMPOUND
     simple_date_set : List< String >,
     simple_date_list : List< String >,
     name_set_map : Map< String, List< ( String, String ) > >,
+    text : String,
     simple_pointer_array : Vec< Weak< SIMPLE > >
 }
 

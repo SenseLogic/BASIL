@@ -33,6 +33,7 @@ class COMPOUND
     @simple_date_set : Set( String )
     @simple_date_list : List( String )
     @name_set_map : Hash( String, Set( Tuple( String, String ) ) )
+    @text : String
     @simple_pointer_array : Array( SIMPLE )
 end
 

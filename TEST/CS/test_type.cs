@@ -62,6 +62,8 @@ public class COMPOUND
         SimpleDateList;
     public Dictionary< DateTime, HashSet< Tuple< String, String > > >
         NameSetMap;
+    public String
+        Text;
     public List< SIMPLE >
         SimplePointerArray;
 }

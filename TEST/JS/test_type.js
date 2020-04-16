@@ -42,6 +42,7 @@ class COMPOUND
         this.SimpleDateSet = null;
         this.SimpleDateList = null;
         this.NameSetMap = null;
+        this.Text = null;
         this.SimplePointerArray = null;
     }
 }

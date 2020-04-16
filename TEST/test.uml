@@ -44,6 +44,7 @@ class COMPOUND {
     SimpleDateSet : SET[SIMPLE.Date]
     SimpleDateList : LIST[SIMPLE.Date]
     NameSetMap : MAP[SIMPLE.Date,COMPOUND.NameSet]
+    Text : STRING
     SimplePointerArray : ARRAY[POINTER[SIMPLE]]
 }
 

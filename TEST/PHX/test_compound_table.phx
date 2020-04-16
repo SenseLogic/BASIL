@@ -2,14 +2,14 @@
 Table :
     COMPOUND : COMPOUND / Compound / compound / compound / Compound / Compound / compound
         Properties :  
-        Columns : Id, Location, Name, NameSet, PhoneList, EmailSet, CompanyMap, SimpleDate, SimpleDateMap, SimpleDateSet, SimpleDateList, NameSetMap, SimplePointerArray
+        Columns : Id, Location, Name, NameSet, PhoneList, EmailSet, CompanyMap, SimpleDate, SimpleDateMap, SimpleDateSet, SimpleDateList, NameSetMap, Text, SimplePointerArray
         Key columns : Id
-        Non key columns : Location, Name, NameSet, PhoneList, EmailSet, CompanyMap, SimpleDate, SimpleDateMap, SimpleDateSet, SimpleDateList, NameSetMap, SimplePointerArray
-        Stored columns : Id, Location, Name, NameSet, PhoneList, EmailSet, CompanyMap, SimpleDate, SimpleDateMap, SimpleDateSet, SimpleDateList, NameSetMap
+        Non key columns : Location, Name, NameSet, PhoneList, EmailSet, CompanyMap, SimpleDate, SimpleDateMap, SimpleDateSet, SimpleDateList, NameSetMap, Text, SimplePointerArray
+        Stored columns : Id, Location, Name, NameSet, PhoneList, EmailSet, CompanyMap, SimpleDate, SimpleDateMap, SimpleDateSet, SimpleDateList, NameSetMap, Text
         Non Stored columns : SimplePointerArray
         Stored key columns : Id
         Non Stored key columns : 
-        Stored non key columns : Location, Name, NameSet, PhoneList, EmailSet, CompanyMap, SimpleDate, SimpleDateMap, SimpleDateSet, SimpleDateList, NameSetMap
+        Stored non key columns : Location, Name, NameSet, PhoneList, EmailSet, CompanyMap, SimpleDate, SimpleDateMap, SimpleDateSet, SimpleDateList, NameSetMap, Text
         Non Stored non key columns : SimplePointerArray
         Columns :
             Id : Id / id / id / Id / Id / id
@@ -96,6 +96,13 @@ Table :
                 Crystal : Hash( String, Set( Tuple( String, String ) ) ) name_set_map
                 C# : Dictionary< DateTime, HashSet< Tuple< String, String > > > NameSetMap
                 Rust : Map< String, List< ( String, String ) > > name_set_map
+            Text : Text / text / text / Text / Text / text
+                Properties :  
+                Go : string Text
+                PHP : string Text
+                Crystal : String text
+                C# : String Text
+                Rust : String text
             SimplePointerArray : SimplePointerArray / simple_pointer_array / simple-pointer-array / Simple Pointer Array / Simple pointer array / simple pointer array
                 Properties :  
                 Go : [] * SIMPLE SimplePointerArray

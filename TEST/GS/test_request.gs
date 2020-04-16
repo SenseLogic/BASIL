@@ -187,6 +187,7 @@ func HandleAddCompoundDatabaseRequest(
          && GetRequestDateTimeSet( request, &compound.SimpleDateSet, "SimpleDateSet", &error_code )
          && GetRequestDateTimeList( request, &compound.SimpleDateList, "SimpleDateList", &error_code )
          && GetRequestDateTimeStringStringTupleSetMap( request, &compound.NameSetMap, "NameSetMap", &error_code )
+         && GetRequestString( request, &compound.Text, "Text", &error_code )
          && AddDatabaseCompound( &compound, &error_code ) )
     {
         WriteResponse( response_writer, "{" );
@@ -225,6 +226,7 @@ func HandleSetCompoundDatabaseRequest(
          && GetRequestDateTimeSet( request, &compound.SimpleDateSet, "SimpleDateSet", &error_code )
          && GetRequestDateTimeList( request, &compound.SimpleDateList, "SimpleDateList", &error_code )
          && GetRequestDateTimeStringStringTupleSetMap( request, &compound.NameSetMap, "NameSetMap", &error_code )
+         && GetRequestString( request, &compound.Text, "Text", &error_code )
          && SetDatabaseCompound( &compound, &error_code ) )
     {
         WriteResponseSuccess( response_writer );

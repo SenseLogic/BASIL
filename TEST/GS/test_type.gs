@@ -35,6 +35,7 @@ type COMPOUND struct
     SimpleDateSet TIME.TIME_SET    `db:"SimpleDateSet"`;
     SimpleDateList TIME.TIME_LIST    `db:"SimpleDateList"`;
     NameSetMap TIME.TIME_STRING_STRING_TUPLE_SET_MAP    `db:"NameSetMap"`;
+    Text string    `db:"Text"`;
     SimplePointerArray [] * SIMPLE    `db:"-"`;
 }
 

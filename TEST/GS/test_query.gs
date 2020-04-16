@@ -204,7 +204,7 @@ func AddDatabaseCompound(
 {
     error_
         := DatabaseSession.Query(
-               "insert into COMPOUND ( Location, Name, NameSet, PhoneList, EmailSet, CompanyMap, SimpleDate, SimpleDateMap, SimpleDateSet, SimpleDateList, NameSetMap ) values ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? )",
+               "insert into COMPOUND ( Location, Name, NameSet, PhoneList, EmailSet, CompanyMap, SimpleDate, SimpleDateMap, SimpleDateSet, SimpleDateList, NameSetMap, Text ) values ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? )",
                compound.Location,
                compound.Name,
                compound.NameSet,
@@ -215,7 +215,8 @@ func AddDatabaseCompound(
                compound.SimpleDateMap,
                compound.SimpleDateSet,
                compound.SimpleDateList,
-               compound.NameSetMap
+               compound.NameSetMap,
+               compound.Text
                ).Exec();
 
     if ( error_ != nil )
@@ -237,7 +238,7 @@ func SetDatabaseCompound(
 {
     error_
         := DatabaseSession.Query(
-               "insert into COMPOUND ( Id, Location, Name, NameSet, PhoneList, EmailSet, CompanyMap, SimpleDate, SimpleDateMap, SimpleDateSet, SimpleDateList, NameSetMap ) values ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? )",
+               "insert into COMPOUND ( Id, Location, Name, NameSet, PhoneList, EmailSet, CompanyMap, SimpleDate, SimpleDateMap, SimpleDateSet, SimpleDateList, NameSetMap, Text ) values ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? )",
                compound.Id,
                compound.Location,
                compound.Name,
@@ -249,7 +250,8 @@ func SetDatabaseCompound(
                compound.SimpleDateMap,
                compound.SimpleDateSet,
                compound.SimpleDateList,
-               compound.NameSetMap
+               compound.NameSetMap,
+               compound.Text
                ).Exec();
 
     if ( error_ != nil )
@@ -294,7 +296,7 @@ func GetDatabaseCompound(
 {
     error_
         := DatabaseSession.Query(
-               "select Location, Name, NameSet, PhoneList, EmailSet, CompanyMap, SimpleDate, SimpleDateMap, SimpleDateSet, SimpleDateList, NameSetMap,  from COMPOUND where Id = ?",
+               "select Location, Name, NameSet, PhoneList, EmailSet, CompanyMap, SimpleDate, SimpleDateMap, SimpleDateSet, SimpleDateList, NameSetMap, Text,  from COMPOUND where Id = ?",
                compound.Id
                )
                .Consistency( gocql.One )
@@ -310,6 +312,7 @@ func GetDatabaseCompound(
                     &compound.SimpleDateSet,
                     &compound.SimpleDateList,
                     &compound.NameSetMap,
+                    &compound.Text,
                     );
 
     if ( error_ != nil )
@@ -334,7 +337,7 @@ func GetDatabaseCompoundList(
 
     iterator
         := DatabaseSession.Query(
-               "select Id, Location, Name, NameSet, PhoneList, EmailSet, CompanyMap, SimpleDate, SimpleDateMap, SimpleDateSet, SimpleDateList, NameSetMap from COMPOUND"
+               "select Id, Location, Name, NameSet, PhoneList, EmailSet, CompanyMap, SimpleDate, SimpleDateMap, SimpleDateSet, SimpleDateList, NameSetMap, Text from COMPOUND"
                )
                .Consistency( gocql.One )
                .Iter();
@@ -353,7 +356,8 @@ func GetDatabaseCompoundList(
             &compound.SimpleDateMap,
             &compound.SimpleDateSet,
             &compound.SimpleDateList,
-            &compound.NameSetMap
+            &compound.NameSetMap,
+            &compound.Text
             )
     {
         *compound_array = append( *compound_array, compound );

@@ -37,6 +37,7 @@ type COMPOUND struct {
     SimpleDateSet TIME.TIME_SET;
     SimpleDateList TIME.TIME_LIST;
     NameSetMap TIME.TIME_STRING_STRING_TUPLE_SET_MAP;
+    Text string;
     SimplePointerArray [] * SIMPLE;
 }
 

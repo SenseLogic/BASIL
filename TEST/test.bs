@@ -34,6 +34,7 @@ TEST | count 10
         SimpleDateSet : SET[ SIMPLE.Date ] | count 2
         SimpleDateList : LIST[ SIMPLE.Date ] | count 1 3
         NameSetMap : MAP[ SIMPLE.Date, COMPOUND.NameSet ] | count 2
+        Text : STRING
         SimplePointerArray : ARRAY[ POINTER[ SIMPLE ] ] | !stored
 
     VALUE | stored

@@ -468,7 +468,8 @@ POINTER[ <i>ELEMENT_TYPE</i> ] | !stored
 { <i>value</i> ~ <i>value</i> ~ ...} : set
 { { <i>key</i> ~ <i>value</i> } ~ { <i>key</i> ~ <i>value</i> } ~ ... } : map
 ^ : unremovable space
-§ : unreplaced new line symbol
+× : empty string
+§ : new line placeholder
 \ : escape character
 </pre>
 

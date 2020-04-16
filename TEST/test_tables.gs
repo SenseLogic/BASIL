@@ -24,14 +24,14 @@ func main(
     fmt.Println( "        Stored non key columns : Bool, Int8, Uint8, Int16, Uint16, Int32, Uint32, Int64, Uint64, Float32, Float64, String, Name, Date, DateTime, Blob" );
     fmt.Println( "        Non stored kon key columns : " );
     fmt.Println( "    COMPOUND :" );
-    fmt.Println( "        Columns : Id, Location, Name, NameSet, PhoneList, EmailSet, CompanyMap, SimpleDate, SimpleDateMap, SimpleDateSet, SimpleDateList, NameSetMap, SimplePointerArray" );
+    fmt.Println( "        Columns : Id, Location, Name, NameSet, PhoneList, EmailSet, CompanyMap, SimpleDate, SimpleDateMap, SimpleDateSet, SimpleDateList, NameSetMap, Text, SimplePointerArray" );
     fmt.Println( "        Key columns : Id" );
-    fmt.Println( "        Non key columns : Location, Name, NameSet, PhoneList, EmailSet, CompanyMap, SimpleDate, SimpleDateMap, SimpleDateSet, SimpleDateList, NameSetMap, SimplePointerArray" );
-    fmt.Println( "        Stored columns : Id, Location, Name, NameSet, PhoneList, EmailSet, CompanyMap, SimpleDate, SimpleDateMap, SimpleDateSet, SimpleDateList, NameSetMap" );
+    fmt.Println( "        Non key columns : Location, Name, NameSet, PhoneList, EmailSet, CompanyMap, SimpleDate, SimpleDateMap, SimpleDateSet, SimpleDateList, NameSetMap, Text, SimplePointerArray" );
+    fmt.Println( "        Stored columns : Id, Location, Name, NameSet, PhoneList, EmailSet, CompanyMap, SimpleDate, SimpleDateMap, SimpleDateSet, SimpleDateList, NameSetMap, Text" );
     fmt.Println( "        Non stored columns : SimplePointerArray" );
     fmt.Println( "        Stored key columns : Id" );
     fmt.Println( "        Non stored key columns : " );
-    fmt.Println( "        Stored non key columns : Location, Name, NameSet, PhoneList, EmailSet, CompanyMap, SimpleDate, SimpleDateMap, SimpleDateSet, SimpleDateList, NameSetMap" );
+    fmt.Println( "        Stored non key columns : Location, Name, NameSet, PhoneList, EmailSet, CompanyMap, SimpleDate, SimpleDateMap, SimpleDateSet, SimpleDateList, NameSetMap, Text" );
     fmt.Println( "        Non stored kon key columns : SimplePointerArray" );
     fmt.Println( "    VALUE :" );
     fmt.Println( "        Columns : Id, Uuid, Name, Integer, Text" );

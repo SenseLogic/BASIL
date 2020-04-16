@@ -3028,6 +3028,8 @@ class DATA_VALUE
         DATA_TOKEN[] data_token_array
         )
     {
+        bool
+            it_is_last_data_token;
         long
             data_token_index,
             level,
@@ -3054,6 +3056,8 @@ class DATA_VALUE
                       data_token_index < data_token_array.length;
                       ++data_token_index )
                 {
+                    it_is_last_data_token = false;
+
                     for ( next_data_token_index = data_token_index;
                           next_data_token_index < data_token_array.length;
                           ++next_data_token_index )
@@ -3064,6 +3068,8 @@ class DATA_VALUE
                              && next_data_token.Text == "~"
                              && next_data_token.Level == level + 1 )
                         {
+                            it_is_last_data_token = ( next_data_token_index + 1 == data_token_array.length );
+
                             break;
                         }
                     }
@@ -3071,7 +3077,13 @@ class DATA_VALUE
                     SubValueArray ~= new DATA_VALUE( data_token_array[ data_token_index .. next_data_token_index ] );
 
                     data_token_index = next_data_token_index;
+
+                    if ( it_is_last_data_token )
+                    {
+                        SubValueArray ~= new DATA_VALUE( data_token_array[ $ .. $ ] );
+                    }
                 }
+
             }
             else
             {
@@ -3677,6 +3689,11 @@ class VALUE
                   && data_value.Text.startsWith( '#' ) )
         {
             Text = Random.MakeUuid( data_value.Text[ 1 .. $ ] );
+        }
+        else if ( type_name == "STRING"
+                  && data_value.Text == "×" )
+        {
+            Text = "";
         }
         else
         {

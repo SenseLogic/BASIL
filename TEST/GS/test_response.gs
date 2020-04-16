@@ -71,6 +71,8 @@ func WriteResponseCompound(
     WriteResponseDateTimeList( writer, compound.SimpleDateList );
     WriteResponse( writer, ",\"NameSetMap\":" );
     WriteResponseDateTimeStringStringTupleSetMap( writer, compound.NameSetMap );
+    WriteResponse( writer, ",\"Text\":" );
+    WriteResponseString( writer, compound.Text );
     WriteResponse( writer, "}" );
 }
 
