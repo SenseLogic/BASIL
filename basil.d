@@ -1488,6 +1488,18 @@ class TYPE
 
     // -- INQUIRIES
 
+    bool IsEncoded(
+        )
+    {
+        return
+            BaseName == "TUPLE"
+            || BaseName == "LIST"
+            || BaseName == "SET"
+            || BaseName == "MAP";
+    }
+
+    // ~~
+
     long GetElementValueCount(
         )
     {
@@ -3266,13 +3278,13 @@ class VALUE
             {
                 if ( sub_value_index > 0 )
                 {
-                    sql_text ~= ", ";
+                    sql_text ~= ",";
                 }
 
                 sql_text ~= sub_value.GetSqlText( true );
             }
 
-            sql_text = "( " ~ sql_text ~ " )";
+            sql_text = "[" ~ sql_text ~ "]";
         }
         else if ( type_name == "LIST" )
         {
@@ -3280,13 +3292,13 @@ class VALUE
             {
                 if ( element_value_index > 0 )
                 {
-                    sql_text ~= ", ";
+                    sql_text ~= ",";
                 }
 
                 sql_text ~= element_value.GetSqlText( true );
             }
 
-            sql_text = "[ " ~ sql_text ~ " ]";
+            sql_text = "[" ~ sql_text ~ "]";
         }
         else if ( type_name == "SET" )
         {
@@ -3294,13 +3306,13 @@ class VALUE
             {
                 if ( element_value_index > 0 )
                 {
-                    sql_text ~= ", ";
+                    sql_text ~= ",";
                 }
 
                 sql_text ~= element_value.GetSqlText( true );
             }
 
-            sql_text = "{ " ~ sql_text ~ " }";
+            sql_text = "[" ~ sql_text ~ "]";
         }
         else if ( type_name == "MAP" )
         {
@@ -3308,13 +3320,13 @@ class VALUE
             {
                 if ( element_value_index > 0 )
                 {
-                    sql_text ~= ", ";
+                    sql_text ~= ",";
                 }
 
-                sql_text ~= KeyValueArray[ element_value_index ].GetSqlText( true ) ~ " : " ~ element_value.GetSqlText( true );
+                sql_text ~= KeyValueArray[ element_value_index ].GetSqlText( true ) ~ ":" ~ element_value.GetSqlText( true );
             }
 
-            sql_text = "{ " ~ sql_text ~ " }";
+            sql_text = "{" ~ sql_text ~ "}";
         }
         else
         {
@@ -5012,7 +5024,7 @@ class TABLE
 
     // ~~
 
-    string GetAddDatabaseGenerisCode(
+    string GetAddDatabaseObjectGenerisCode(
         )
     {
         long
@@ -5295,7 +5307,7 @@ class TABLE
 
     // ~~
 
-    string GetSetDatabaseGenerisCode(
+    string GetSetDatabaseObjectGenerisCode(
         )
     {
         string
@@ -5478,7 +5490,7 @@ class TABLE
 
     // ~~
 
-    string GetRemoveDatabaseGenerisCode(
+    string GetRemoveDatabaseObjectGenerisCode(
         )
     {
         string
@@ -5618,7 +5630,7 @@ class TABLE
 
     // ~~
 
-    string GetGetDatabaseGenerisCode(
+    string GetGetDatabaseObjectGenerisCode(
         )
     {
         string
@@ -5866,7 +5878,7 @@ class TABLE
 
     // ~~
 
-    string GetGetDatabaseArrayGenerisCode(
+    string GetGetDatabaseObjectArrayGenerisCode(
         )
     {
         string
@@ -6334,7 +6346,141 @@ class TABLE
 
     // ~~
 
-    string GetAddDatabasePhoenixCode(
+    string GetBindDatabaseColumnPhoenixCode(
+        COLUMN column,
+        long column_index
+        )
+    {
+        if ( column.Type.IsEncoded() )
+        {
+            return
+                "    statement.bindParam( "
+                ~ ( column_index + 1 ).to!string()
+                ~ ", json_encode( "
+                ~ column.PhpVariable
+                ~ " ), "
+                ~ column.PhpParameterType
+                ~ " );\n";
+        }
+        else
+        {
+            return
+                "    statement.bindParam( "
+                ~ ( column_index + 1 ).to!string()
+                ~ ", "
+                ~ column.PhpVariable
+                ~ ", "
+                ~ column.PhpParameterType
+                ~ " );\n";
+        }
+    }
+
+    // ~~
+
+    string GetEncodeDatabaseColumnPhoenixCode(
+        string indentation
+        )
+    {
+        string
+            phoenix_code;
+
+        foreach ( column; ColumnArray )
+        {
+            if ( column.IsStored
+                 && column.Type.IsEncoded() )
+            {
+                phoenix_code
+                    ~= indentation
+                       ~ PhpVariable
+                       ~ "."
+                       ~ column.PhpName
+                       ~ " = json_decode( "
+                       ~ PhpVariable
+                       ~ "."
+                       ~ column.PhpName
+                       ~ " );\n";
+            }
+        }
+
+        return phoenix_code;
+    }
+
+    // ~~
+
+    string GetReturnDatabaseObjectPhoenixCode(
+        )
+    {
+        string
+            phoenix_code;
+
+        phoenix_code = GetEncodeDatabaseColumnPhoenixCode( "    " );
+
+        if ( phoenix_code == "" )
+        {
+            phoenix_code
+                = "    return statement.fetchObject();\n";
+        }
+        else
+        {
+            phoenix_code
+                = "    var "
+                  ~ PhpVariable
+                  ~ " = statement.fetchObject();\n"
+                  ~ phoenix_code
+                  ~ "\n"
+                  ~ "    return "
+                  ~ PhpVariable
+                  ~ ";\n";
+        }
+
+        return phoenix_code;
+    }
+
+    // ~~
+
+    string GetReturnDatabaseObjectArrayPhoenixCode(
+        )
+    {
+        string
+            phoenix_code;
+
+        phoenix_code = GetEncodeDatabaseColumnPhoenixCode( "        " );
+
+        if ( phoenix_code == "" )
+        {
+            phoenix_code
+                = "    return GetDatabaseObjectArray( statement );\n";
+        }
+        else
+        {
+            phoenix_code
+                = "    var "
+                  ~ PhpVariable
+                  ~ "_array = [];\n"
+                  ~ "\n"
+                  ~ "    while ( var "
+                  ~ PhpVariable
+                  ~ " = statement.fetchObject() )\n"
+                  ~ "    {\n"
+                  ~ phoenix_code
+                  ~ "        array_push( "
+                  ~ PhpVariable
+                  ~ "_array, "
+                  ~ PhpVariable
+                  ~ " );\n"
+                  ~ "    }\n"
+                  ~ "\n"
+                  ~ "    return "
+                  ~ PhpVariable
+                  ~ "_array;\n";
+        }
+
+        return phoenix_code;
+    }
+
+    // ~~
+
+    string GetAddDatabaseObjectPhoenixCode(
         )
     {
         long
@@ -6448,13 +6594,7 @@ class TABLE
                      && !column.IsNow )
                 {
                     phoenix_code
-                        ~= "    statement.bindParam( "
-                           ~ ( column_index + 1 ).to!string()
-                           ~ ", "
-                           ~ column.PhpVariable
-                           ~ ", "
-                           ~ column.PhpParameterType
-                           ~ " );\n";
+                        ~= GetBindDatabaseColumnPhoenixCode( column, column_index );
 
                     ++column_index;
                 }
@@ -6478,7 +6618,7 @@ class TABLE
 
     // ~~
 
-    string GetSetDatabasePhoenixCode(
+    string GetSetDatabaseObjectPhoenixCode(
         )
     {
         long
@@ -6564,13 +6704,7 @@ class TABLE
                      && !column.IsKey )
                 {
                     phoenix_code
-                        ~= "    statement.bindParam( "
-                           ~ ( column_index + 1 ).to!string()
-                           ~ ", "
-                           ~ column.PhpVariable
-                           ~ ", "
-                           ~ column.PhpParameterType
-                           ~ " );\n";
+                        ~= GetBindDatabaseColumnPhoenixCode( column, column_index );
 
                     ++column_index;
                 }
@@ -6582,13 +6716,7 @@ class TABLE
                      && column.IsKey )
                 {
                     phoenix_code
-                        ~= "    statement.bindParam( "
-                           ~ ( column_index + 1 ).to!string()
-                           ~ ", "
-                           ~ column.PhpVariable
-                           ~ ", "
-                           ~ column.PhpParameterType
-                           ~ " );\n";
+                        ~= GetBindDatabaseColumnPhoenixCode( column, column_index );
 
                     ++column_index;
                 }
@@ -6610,7 +6738,7 @@ class TABLE
 
     // ~~
 
-    string GetRemoveDatabasePhoenixCode(
+    string GetRemoveDatabaseObjectPhoenixCode(
         )
     {
         long
@@ -6701,13 +6829,7 @@ class TABLE
                      && column.IsKey )
                 {
                     phoenix_code
-                        ~= "    statement.bindParam( "
-                           ~ ( column_index + 1 ).to!string()
-                           ~ ", "
-                           ~ column.PhpVariable
-                           ~ ", "
-                           ~ column.PhpParameterType
-                           ~ " );\n";
+                        ~= GetBindDatabaseColumnPhoenixCode( column, column_index );
 
                     ++column_index;
                 }
@@ -6729,7 +6851,7 @@ class TABLE
 
     // ~~
 
-    string GetGetDatabasePhoenixCode(
+    string GetGetDatabaseObjectPhoenixCode(
         )
     {
         long
@@ -6838,13 +6960,7 @@ class TABLE
                      && column.IsKey )
                 {
                     phoenix_code
-                        ~= "    statement.bindParam( "
-                           ~ ( column_index + 1 ).to!string()
-                           ~ ", "
-                           ~ column.PhpVariable
-                           ~ ", "
-                           ~ column.PhpParameterType
-                           ~ " );\n";
+                        ~= GetBindDatabaseColumnPhoenixCode( column, column_index );
 
                     ++column_index;
                 }
@@ -6857,7 +6973,7 @@ class TABLE
                    ~ "        var_dump( statement.errorInfo() );\n"
                    ~ "    }\n"
                    ~ "\n"
-                   ~ "    return GetDatabaseObject( statement );\n";
+                   ~ GetReturnDatabaseObjectPhoenixCode();
         }
 
         phoenix_code
@@ -6868,7 +6984,7 @@ class TABLE
 
     // ~~
 
-    string GetGetDatabaseByPhoenixCode(
+    string GetGetDatabaseObjectByKeyPhoenixCode(
         )
     {
         long
@@ -6916,7 +7032,7 @@ class TABLE
                            ~ "        var_dump( statement.errorInfo() );\n"
                            ~ "    }\n"
                            ~ "\n"
-                           ~ "    return GetDatabaseObject( statement );\n";
+                           ~ GetReturnDatabaseObjectPhoenixCode();
                 }
 
                 phoenix_code
@@ -6929,7 +7045,7 @@ class TABLE
 
     // ~~
 
-    string GetGetDatabaseArrayPhoenixCode(
+    string GetGetDatabaseObjectArrayPhoenixCode(
         string function_prefix,
         bool table_is_sorted
         )
@@ -7022,7 +7138,7 @@ class TABLE
                    ~ "        var_dump( statement.errorInfo() );\n"
                    ~ "    }\n"
                    ~ "\n"
-                   ~ "    return GetDatabaseObjectArray( statement );\n";
+                   ~ GetReturnDatabaseObjectArrayPhoenixCode();
         }
 
         phoenix_code
@@ -7033,7 +7149,7 @@ class TABLE
 
     // ~~
 
-    string GetGetDatabaseArrayPhoenixCode(
+    string GetGetDatabaseObjectArrayPhoenixCode(
         )
     {
         bool
@@ -7051,20 +7167,20 @@ class TABLE
 
         if ( IsSorted || !table_is_sorted )
         {
-            return GetGetDatabaseArrayPhoenixCode( "", true );
+            return GetGetDatabaseObjectArrayPhoenixCode( "", true );
         }
         else
         {
             return
-                GetGetDatabaseArrayPhoenixCode( "", false )
+                GetGetDatabaseObjectArrayPhoenixCode( "", false )
                 ~ "\n// ~~\n\n"
-                ~ GetGetDatabaseArrayPhoenixCode( "Sorted", true );
+                ~ GetGetDatabaseObjectArrayPhoenixCode( "Sorted", true );
         }
     }
 
     // ~~
 
-    string GetGetDatabaseMapPhoenixCode(
+    string GetGetDatabaseObjectMapPhoenixCode(
         )
     {
         string
@@ -7110,9 +7226,19 @@ class TABLE
                            ~ "\n"
                            ~ "    var " ~ PhpVariable ~ "_map = [];\n"
                            ~ "\n"
-                           ~ "    while ( var " ~ PhpVariable ~ " = statement.fetchObject() )\n"
+                           ~ "    while ( var "
+                           ~ PhpVariable
+                           ~ " = statement.fetchObject() )\n"
                            ~ "    {\n"
-                           ~ "        " ~ PhpVariable ~ "_map[ " ~ PhpVariable ~ "." ~ key_column.PhpName ~ " ] = " ~ PhpVariable ~ ";\n"
+                           ~ GetEncodeDatabaseColumnPhoenixCode( "        " )
+                           ~ "        "
+                           ~ PhpVariable
+                           ~ "_map[ "
+                           ~ PhpVariable
+                           ~ "." ~ key_column.PhpName
+                           ~ " ] = "
+                           ~ PhpVariable
+                           ~ ";\n"
                            ~ "    }\n"
                            ~ "\n"
                            ~ "    return " ~ PhpVariable ~ "_map;\n";
@@ -8724,15 +8850,15 @@ class SCHEMA
             if ( table.IsStored )
             {
                 generis_query_file_text
-                    ~= table.GetAddDatabaseGenerisCode()
+                    ~= table.GetAddDatabaseObjectGenerisCode()
                        ~ "\n// ~~\n\n"
-                       ~ table.GetSetDatabaseGenerisCode()
+                       ~ table.GetSetDatabaseObjectGenerisCode()
                        ~ "\n// ~~\n\n"
-                       ~ table.GetRemoveDatabaseGenerisCode()
+                       ~ table.GetRemoveDatabaseObjectGenerisCode()
                        ~ "\n// ~~\n\n"
-                       ~ table.GetGetDatabaseGenerisCode()
+                       ~ table.GetGetDatabaseObjectGenerisCode()
                        ~ "\n// ~~\n\n"
-                       ~ table.GetGetDatabaseArrayGenerisCode();
+                       ~ table.GetGetDatabaseObjectArrayGenerisCode();
 
                 if ( table_index + 1 < TableArray.length )
                 {
@@ -8914,13 +9040,13 @@ class SCHEMA
 
                 phoenix_model_file_text
                     = "// -- FUNCTIONS\n\n"
-                      ~ table.GetGetDatabaseArrayPhoenixCode()
-                      ~ table.GetGetDatabaseMapPhoenixCode()
-                      ~ table.GetGetDatabasePhoenixCode()
-                      ~ table.GetGetDatabaseByPhoenixCode()
-                      ~ table.GetAddDatabasePhoenixCode()
-                      ~ table.GetSetDatabasePhoenixCode()
-                      ~ table.GetRemoveDatabasePhoenixCode();
+                      ~ table.GetGetDatabaseObjectArrayPhoenixCode()
+                      ~ table.GetGetDatabaseObjectMapPhoenixCode()
+                      ~ table.GetGetDatabaseObjectPhoenixCode()
+                      ~ table.GetGetDatabaseObjectByKeyPhoenixCode()
+                      ~ table.GetAddDatabaseObjectPhoenixCode()
+                      ~ table.GetSetDatabaseObjectPhoenixCode()
+                      ~ table.GetRemoveDatabaseObjectPhoenixCode();
 
                 phoenix_model_file_path.WriteText( phoenix_model_file_text );
             }
