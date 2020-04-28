@@ -1488,7 +1488,33 @@ class TYPE
 
     // -- INQUIRIES
 
-    bool IsEncoded(
+    bool IsInteger(
+        )
+    {
+        return
+            BaseName == "INT8"
+            || BaseName == "UINT8"
+            || BaseName == "INT16"
+            || BaseName == "UINT16"
+            || BaseName == "INT32"
+            || BaseName == "UINT32"
+            || BaseName == "INT64"
+            || BaseName == "UINT64";
+    }
+
+    // ~~
+
+    bool IsReal(
+        )
+    {
+        return
+            BaseName == "FLOAT32"
+            || BaseName == "FLOAT64";
+    }
+
+    // ~~
+
+    bool IsCollection(
         )
     {
         return
@@ -6351,28 +6377,29 @@ class TABLE
         long column_index
         )
     {
-        if ( column.Type.IsEncoded() )
+        string
+            phoenix_code;
+
+        if ( column.Type.IsCollection() )
         {
-            return
-                "    statement.bindParam( "
-                ~ ( column_index + 1 ).to!string()
-                ~ ", json_encode( "
-                ~ column.PhpVariable
-                ~ " ), "
-                ~ column.PhpParameterType
-                ~ " );\n";
+            phoenix_code
+                = "    "
+                  ~ column.PhpVariable
+                  ~ " = json_encode( "
+                  ~ column.PhpVariable
+                  ~ " );\n";
         }
-        else
-        {
-            return
-                "    statement.bindParam( "
-                ~ ( column_index + 1 ).to!string()
-                ~ ", "
-                ~ column.PhpVariable
-                ~ ", "
-                ~ column.PhpParameterType
-                ~ " );\n";
-        }
+
+        phoenix_code
+            ~= "    statement.bindParam( "
+               ~ ( column_index + 1 ).to!string()
+               ~ ", "
+               ~ column.PhpVariable
+               ~ ", "
+               ~ column.PhpParameterType
+               ~ " );\n";
+
+        return phoenix_code;
     }
 
     // ~~
@@ -6387,7 +6414,35 @@ class TABLE
         foreach ( column; ColumnArray )
         {
             if ( column.IsStored
-                 && column.Type.IsEncoded() )
+                 && column.Type.IsInteger() )
+            {
+                phoenix_code
+                    ~= indentation
+                       ~ PhpVariable
+                       ~ "."
+                       ~ column.PhpName
+                       ~ " = ( int )( "
+                       ~ PhpVariable
+                       ~ "."
+                       ~ column.PhpName
+                       ~ " );\n";
+            }
+            else if ( column.IsStored
+                      && column.Type.IsReal() )
+            {
+                phoenix_code
+                    ~= indentation
+                       ~ PhpVariable
+                       ~ "."
+                       ~ column.PhpName
+                       ~ " = ( float )( "
+                       ~ PhpVariable
+                       ~ "."
+                       ~ column.PhpName
+                       ~ " );\n";
+            }
+            else if ( column.IsStored
+                      && column.Type.IsCollection() )
             {
                 phoenix_code
                     ~= indentation

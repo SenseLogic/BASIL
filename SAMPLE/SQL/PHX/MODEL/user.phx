@@ -10,7 +10,15 @@ function GetDatabaseUserArray(
         var_dump( statement.errorInfo() );
     }
 
-    return GetDatabaseObjectArray( statement );
+    var user_array = [];
+
+    while ( var user = statement.fetchObject() )
+    {
+        user.Id = ( int )( user.Id );
+        array_push( user_array, user );
+    }
+
+    return user_array;
 }
 
 // ~~
@@ -29,6 +37,7 @@ function GetDatabaseUserByEmailMap(
 
     while ( var user = statement.fetchObject() )
     {
+        user.Id = ( int )( user.Id );
         user_map[ user.Email ] = user;
     }
 
@@ -49,7 +58,10 @@ function GetDatabaseUserById(
         var_dump( statement.errorInfo() );
     }
 
-    return GetDatabaseObject( statement );
+    var user = statement.fetchObject();
+    user.Id = ( int )( user.Id );
+
+    return user;
 }
 
 // ~~

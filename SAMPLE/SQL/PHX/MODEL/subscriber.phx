@@ -10,7 +10,15 @@ function GetDatabaseSubscriberArray(
         var_dump( statement.errorInfo() );
     }
 
-    return GetDatabaseObjectArray( statement );
+    var subscriber_array = [];
+
+    while ( var subscriber = statement.fetchObject() )
+    {
+        subscriber.Id = ( int )( subscriber.Id );
+        array_push( subscriber_array, subscriber );
+    }
+
+    return subscriber_array;
 }
 
 // ~~
@@ -27,7 +35,10 @@ function GetDatabaseSubscriberById(
         var_dump( statement.errorInfo() );
     }
 
-    return GetDatabaseObject( statement );
+    var subscriber = statement.fetchObject();
+    subscriber.Id = ( int )( subscriber.Id );
+
+    return subscriber;
 }
 
 // ~~
@@ -44,7 +55,10 @@ function GetDatabaseSubscriberByEmail(
         var_dump( statement.errorInfo() );
     }
 
-    return GetDatabaseObject( statement );
+    var subscriber = statement.fetchObject();
+    subscriber.Id = ( int )( subscriber.Id );
+
+    return subscriber;
 }
 
 // ~~
