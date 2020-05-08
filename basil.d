@@ -2341,23 +2341,23 @@ class TYPE
         }
         else if ( type_name == "ARRAY" )
         {
-            return "Array( " ~ GetSubTypeCrystalText() ~ " )";
+            return "Array(" ~ GetSubTypeCrystalText() ~ ")";
         }
         else if ( type_name == "TUPLE" )
         {
-            return "Tuple( " ~ GetSubTypeCrystalText() ~ " )";
+            return "Tuple(" ~ GetSubTypeCrystalText() ~ ")";
         }
         else if ( type_name == "LIST" )
         {
-            return "List( " ~ GetSubTypeCrystalText() ~ " )";
+            return "List(" ~ GetSubTypeCrystalText() ~ ")";
         }
         else if ( type_name == "SET" )
         {
-            return "Set( " ~ GetSubTypeCrystalText() ~ " )";
+            return "Set(" ~ GetSubTypeCrystalText() ~ ")";
         }
         else if ( type_name == "MAP" )
         {
-            return "Hash( " ~ GetSubTypeCrystalText() ~ " )";
+            return "Hash(" ~ GetSubTypeCrystalText() ~ ")";
         }
         else
         {
@@ -2446,7 +2446,7 @@ class TYPE
                   || type_name == "STRING24"
                   || type_name == "STRING32" )
         {
-            return "String";
+            return "string";
         }
         else if ( type_name == "DATETIME"
                   || type_name == "DATE"
@@ -2468,23 +2468,23 @@ class TYPE
         }
         else if ( type_name == "ARRAY" )
         {
-            return "List< " ~ GetSubTypeCsharpText() ~ " >";
+            return "List<" ~ GetSubTypeCsharpText() ~ ">";
         }
         else if ( type_name == "TUPLE" )
         {
-            return "Tuple< " ~ GetSubTypeCsharpText() ~ " >";
+            return "Tuple<" ~ GetSubTypeCsharpText() ~ ">";
         }
         else if ( type_name == "LIST" )
         {
-            return "List< " ~ GetSubTypeCsharpText() ~ " >";
+            return "List<" ~ GetSubTypeCsharpText() ~ ">";
         }
         else if ( type_name == "SET" )
         {
-            return "HashSet< " ~ GetSubTypeCsharpText() ~ " >";
+            return "HashSet<" ~ GetSubTypeCsharpText() ~ ">";
         }
         else if ( type_name == "MAP" )
         {
-            return "Dictionary< " ~ GetSubTypeCsharpText() ~ " >";
+            return "Dictionary<" ~ GetSubTypeCsharpText() ~ ">";
         }
         else
         {
@@ -2704,27 +2704,27 @@ class TYPE
         }
         else if ( type_name == "POINTER" )
         {
-            return "Weak< " ~ GetSubTypeRustText() ~ " >";
+            return "Weak<" ~ GetSubTypeRustText() ~ ">";
         }
         else if ( type_name == "ARRAY" )
         {
-            return "Vec< " ~ GetSubTypeRustText() ~ " >";
+            return "Vec<" ~ GetSubTypeRustText() ~ ">";
         }
         else if ( type_name == "TUPLE" )
         {
-            return "( " ~ GetSubTypeRustText() ~ " )";
+            return "(" ~ GetSubTypeRustText() ~ ")";
         }
         else if ( type_name == "LIST" )
         {
-            return "List< " ~ GetSubTypeRustText() ~ " >";
+            return "List<" ~ GetSubTypeRustText() ~ ">";
         }
         else if ( type_name == "SET" )
         {
-            return "List< " ~ GetSubTypeRustText() ~ " >";
+            return "List<" ~ GetSubTypeRustText() ~ ">";
         }
         else if ( type_name == "MAP" )
         {
-            return "Map< " ~ GetSubTypeRustText() ~ " >";
+            return "Map<" ~ GetSubTypeRustText() ~ ">";
         }
         else
         {

@@ -517,14 +517,14 @@ POINTER[ <i>ELEMENT_TYPE</i> ] | !stored
 <~!Contains<>text<>content<>text if content not found~>
 <~!Contains<>text<>content<>text if content not found<>text if content found~>
 
-<~RemovePrefix<>prefix~>
-<~ReplacePrefix<>old prefix<>new prefix~>
+<~RemovePrefix<>text<>prefix~>
+<~ReplacePrefix<>text<>old prefix<>new prefix~>
 
-<~RemoveSuffix<>suffix~>
-<~ReplaceSuffix<>old suffix<>new suffix~>
+<~RemoveSuffix<>text<>suffix~>
+<~ReplaceSuffix<>text<>old suffix<>new suffix~>
 
-<~Remove<>content~>
-<~Replace<>old content<>new content~>
+<~Remove<>text<>content~>
+<~Replace<>text<>old content<>new content~>
 
 <~LowerCase<>text~>
 <~UpperCase<>text~>
