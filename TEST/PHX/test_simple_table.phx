@@ -101,14 +101,14 @@ Table :
                 Go : string String
                 PHP : string String
                 Crystal : String string
-                C# : String String
+                C# : string String
                 Rust : String string
             Name : Name / name / name / Name / Name / name
                 Properties :  
                 Go : string Name
                 PHP : string Name
                 Crystal : String name
-                C# : String Name
+                C# : string Name
                 Rust : String name
             Date : Date / date / date / Date / Date / date
                 Properties :  

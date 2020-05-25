@@ -45,14 +45,14 @@ Table :
                 Go : string FirstName
                 PHP : string FirstName
                 Crystal : String first_name
-                C# : String FirstName
+                C# : string FirstName
                 Rust : String first_name
             LastName : LastName / last_name / last-name / Last Name / Last name / last name
                 Properties : false 
                 Go : string LastName
                 PHP : string LastName
                 Crystal : String last_name
-                C# : String LastName
+                C# : string LastName
                 Rust : String last_name
             IsAwesome : IsAwesome / is_awesome / is-awesome / Is Awesome / Is awesome / is awesome
                 Properties : true 10

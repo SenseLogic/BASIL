@@ -31,7 +31,7 @@ Table :
                 Go : string Name
                 PHP : string Name
                 Crystal : String name
-                C# : String Name
+                C# : string Name
                 Rust : String name
             Integer : Integer / integer / integer / Integer / Integer / integer
                 Properties :  
@@ -45,6 +45,6 @@ Table :
                 Go : string Text
                 PHP : string Text
                 Crystal : String text
-                C# : String Text
+                C# : string Text
                 Rust : String text
 </pre>

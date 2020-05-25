@@ -39,8 +39,8 @@ struct ARTICLE
     text : String,
     image : String,
     date : String,
-    section : Weak< SECTION >,
-    user : Weak< USER >,
+    section : Weak<SECTION>,
+    user : Weak<USER>,
     image_index : u64
 }
 
@@ -53,8 +53,8 @@ struct COMMENT
     user_id : u64,
     text : String,
     date_time : String,
-    article : Weak< ARTICLE >,
-    user : Weak< USER >
+    article : Weak<ARTICLE>,
+    user : Weak<USER>
 }
 
 // ~~

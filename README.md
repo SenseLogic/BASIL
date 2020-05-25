@@ -607,6 +607,7 @@ POINTER[ <i>ELEMENT_TYPE</i> ] | !stored
 {%php_type%}
 {%php_attribute%}
 {%php_variable%}
+{%php_default%}
 {%crystal_name%}
 {%crystal_type%}
 {%csharp_name%}

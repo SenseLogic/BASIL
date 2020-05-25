@@ -4,7 +4,7 @@ public class SECTION
         Uuid;
     public ulong
         Number;
-    public String
+    public string
         Name,
         Text,
         Image;
@@ -18,7 +18,7 @@ public class USER
 {
     public Guid
         Uuid;
-    public String
+    public string
         FirstName,
         LastName,
         Email,
@@ -43,7 +43,7 @@ public class ARTICLE
         Uuid,
         SectionUuid,
         UserUuid;
-    public String
+    public string
         Title,
         Text,
         Image;
@@ -65,7 +65,7 @@ public class COMMENT
         Uuid,
         ArticleUuid,
         UserUuid;
-    public String
+    public string
         Text;
     public DateTime
         DateTime;
@@ -81,7 +81,7 @@ public class SUBSCRIBER
 {
     public Guid
         Uuid;
-    public String
+    public string
         Name,
         Email;
 }

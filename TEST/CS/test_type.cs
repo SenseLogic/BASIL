@@ -24,7 +24,7 @@ public class SIMPLE
         Float32;
     public double
         Float64;
-    public String
+    public string
         String,
         Name;
     public DateTime
@@ -40,31 +40,31 @@ public class COMPOUND
 {
     public int
         Id;
-    public String
+    public string
         Location;
-    public Tuple< String, String >
+    public Tuple<string, string>
         Name;
-    public HashSet< Tuple< String, String > >
+    public HashSet<Tuple<string, string>>
         NameSet;
-    public List< String >
+    public List<string>
         PhoneList;
-    public HashSet< String >
+    public HashSet<string>
         EmailSet;
-    public Dictionary< String, String >
+    public Dictionary<string, string>
         CompanyMap;
     public DateTime
         SimpleDate;
-    public Dictionary< Tuple< String, String >, DateTime >
+    public Dictionary<Tuple<string, string>, DateTime>
         SimpleDateMap;
-    public HashSet< DateTime >
+    public HashSet<DateTime>
         SimpleDateSet;
-    public List< DateTime >
+    public List<DateTime>
         SimpleDateList;
-    public Dictionary< DateTime, HashSet< Tuple< String, String > > >
+    public Dictionary<DateTime, HashSet<Tuple<string, string>>>
         NameSetMap;
-    public String
+    public string
         Text;
-    public List< SIMPLE >
+    public List<SIMPLE>
         SimplePointerArray;
 }
 
@@ -76,11 +76,11 @@ public class VALUE
         Id;
     public Guid
         Uuid;
-    public String
+    public string
         Name;
     public int
         Integer;
-    public String
+    public string
         Text;
 }
 
@@ -116,7 +116,7 @@ public class INTERNAL_DATA
         ValueId;
     public Guid
         ValueUuid;
-    public String
+    public string
         FirstName,
         LastName;
     public bool

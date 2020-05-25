@@ -3578,6 +3578,210 @@ class VALUE
 
     // ~~
 
+    string GetPhpText(
+        )
+    {
+        string
+            php_text,
+            type_name;
+
+        type_name = Type.ActualType.BaseName;
+
+        if ( type_name == "BOOL" )
+        {
+            if ( Text == "1"
+                 || Text == "true" )
+            {
+                php_text = "true";
+            }
+            else
+            {
+                php_text = "false";
+            }
+        }
+        else if ( type_name == "INT8"
+                  || type_name == "UINT8"
+                  || type_name == "INT16"
+                  || type_name == "UINT16"
+                  || type_name == "INT32"
+                  || type_name == "UINT32"
+                  || type_name == "INT64"
+                  || type_name == "UINT64"
+                  || type_name == "FLOAT32"
+                  || type_name == "FLOAT64" )
+        {
+            php_text = Text;
+        }
+        else if ( type_name == "DATETIME"
+                  || type_name == "DATE"
+                  || type_name == "TIME"
+                  || type_name == "UUID"
+                  || type_name == "BLOB" )
+        {
+            php_text = "\"" ~ Text ~ "\"";
+        }
+        else if ( type_name == "TUPLE" )
+        {
+            foreach ( sub_value_index, ref sub_value; SubValueArray )
+            {
+                if ( sub_value_index > 0 )
+                {
+                    php_text ~= ", ";
+                }
+
+                php_text ~= sub_value.GetPhpText();
+            }
+
+            php_text = "array( " ~ php_text ~ " )";
+        }
+        else if ( type_name == "LIST"
+                  || type_name == "SET" )
+        {
+            foreach ( element_value_index, ref element_value; ElementValueArray )
+            {
+                if ( element_value_index > 0 )
+                {
+                    php_text ~= ", ";
+                }
+
+                php_text ~= element_value.GetPhpText();
+            }
+
+            php_text = "array( " ~ php_text ~ " )";
+        }
+        else if ( type_name == "MAP" )
+        {
+            foreach ( element_value_index, ref element_value; ElementValueArray )
+            {
+                if ( element_value_index > 0 )
+                {
+                    php_text ~= ", ";
+                }
+
+                php_text ~= KeyValueArray[ element_value_index ].GetPhpText() ~ " => " ~ element_value.GetPhpText();
+            }
+
+            php_text = "array( " ~ php_text ~ " )";
+        }
+        else
+        {
+            php_text = "\"" ~ Text.replace( "\"", "\\\"" ) ~ "\"";
+        }
+
+        if ( php_text == "array(  )" )
+        {
+            php_text = "array()";
+        }
+
+        return php_text;
+    }
+
+    // ~~
+
+    string GetJavascriptText(
+        )
+    {
+        string
+            javascript_text,
+            type_name;
+
+        type_name = Type.ActualType.BaseName;
+
+        if ( type_name == "BOOL" )
+        {
+            if ( Text == "1"
+                 || Text == "true" )
+            {
+                javascript_text = "true";
+            }
+            else
+            {
+                javascript_text = "false";
+            }
+        }
+        else if ( type_name == "INT8"
+                  || type_name == "UINT8"
+                  || type_name == "INT16"
+                  || type_name == "UINT16"
+                  || type_name == "INT32"
+                  || type_name == "UINT32"
+                  || type_name == "INT64"
+                  || type_name == "UINT64"
+                  || type_name == "FLOAT32"
+                  || type_name == "FLOAT64" )
+        {
+            javascript_text = Text;
+        }
+        else if ( type_name == "DATETIME"
+                  || type_name == "DATE"
+                  || type_name == "TIME"
+                  || type_name == "UUID"
+                  || type_name == "BLOB" )
+        {
+            javascript_text = "\"" ~ Text ~ "\"";
+        }
+        else if ( type_name == "TUPLE" )
+        {
+            foreach ( sub_value_index, ref sub_value; SubValueArray )
+            {
+                if ( sub_value_index > 0 )
+                {
+                    javascript_text ~= ", ";
+                }
+
+                javascript_text ~= sub_value.GetJavascriptText();
+            }
+
+            javascript_text = "[ " ~ javascript_text ~ " ]";
+        }
+        else if ( type_name == "LIST"
+                  || type_name == "SET" )
+        {
+            foreach ( element_value_index, ref element_value; ElementValueArray )
+            {
+                if ( element_value_index > 0 )
+                {
+                    javascript_text ~= ", ";
+                }
+
+                javascript_text ~= element_value.GetJavascriptText();
+            }
+
+            javascript_text = "[ " ~ javascript_text ~ " ]";
+        }
+        else if ( type_name == "MAP" )
+        {
+            foreach ( element_value_index, ref element_value; ElementValueArray )
+            {
+                if ( element_value_index > 0 )
+                {
+                    javascript_text ~= ", ";
+                }
+
+                javascript_text ~= KeyValueArray[ element_value_index ].GetJavascriptText() ~ " : " ~ element_value.GetJavascriptText();
+            }
+
+            javascript_text = "{ " ~ javascript_text ~ " }";
+        }
+        else
+        {
+            javascript_text = "\"" ~ Text.replace( "\"", "\\\"" ) ~ "\"";
+        }
+
+        if ( javascript_text == "[  ]" )
+        {
+            javascript_text = "[]";
+        }
+        else if ( javascript_text == "{  }" )
+        {
+            javascript_text = "{}";
+        }
+
+        return javascript_text;
+    }
+
+    // ~~
+
     string GetText(
         )
     {
@@ -3736,6 +3940,59 @@ class VALUE
         else
         {
             Text = data_value.Text;
+        }
+    }
+
+    // ~~
+
+    void SetDefault(
+        )
+    {
+        string
+            type_name;
+
+        type_name = Type.ActualType.BaseName;
+
+        Text = "";
+        SubValueArray = null;
+        KeyValueArray = null;
+        ElementValueArray = null;
+
+        if ( type_name == "BOOL" )
+        {
+            Text = "false";
+        }
+        else if ( type_name == "INT8"
+                  || type_name == "UINT8"
+                  || type_name == "INT16"
+                  || type_name == "UINT16"
+                  || type_name == "INT32"
+                  || type_name == "UINT32"
+                  || type_name == "INT64"
+                  || type_name == "UINT64" )
+        {
+            Text = "0";
+        }
+        else if ( type_name == "FLOAT32"
+                  || type_name == "FLOAT64" )
+        {
+            Text = "0.0";
+        }
+        else if ( type_name == "DATETIME" )
+        {
+            Text = "1970-01-01 00:00:00";
+        }
+        else if ( type_name == "DATE" )
+        {
+            Text = "1970-01-01";
+        }
+        else if ( type_name == "UUID" )
+        {
+            Text = "00000000-0000-0000-0000-000000000000";
+        }
+        else if ( type_name == "POINTER" )
+        {
+            Text = "null";
         }
     }
 
@@ -4164,6 +4421,8 @@ class COLUMN
         Name;
     TYPE
         Type;
+    VALUE
+        DefaultValue;
     long
         Index,
         OrderIndex;
@@ -4207,6 +4466,8 @@ class COLUMN
         IsLastNonStoredNonKey,
         IsLastIncremented,
         IsLastNonIncremented;
+    string
+        DefaultValueText;
     bool
         IsRandomReal;
     double
@@ -4268,6 +4529,7 @@ class COLUMN
         PhpParameterType,
         PhpAttribute,
         PhpVariable,
+        PhpDefault,
         CrystalName,
         CrystalType,
         CsharpName,
@@ -4276,7 +4538,10 @@ class COLUMN
         CsharpVariable,
         RustName,
         RustType,
-        JavascriptName;
+        JavascriptName,
+        JavascriptAttribute,
+        JavascriptVariable,
+        JavascriptDefault;
 
     // -- CONSTRUCTORS
 
@@ -4387,6 +4652,7 @@ class COLUMN
         PropertyValueMap[ "php_type" ] = PhpType;
         PropertyValueMap[ "php_attribute" ] = PhpAttribute;
         PropertyValueMap[ "php_variable" ] = PhpVariable;
+        PropertyValueMap[ "php_default" ] = PhpDefault;
         PropertyValueMap[ "crystal_name" ] = CrystalName;
         PropertyValueMap[ "crystal_type" ] = CrystalType;
         PropertyValueMap[ "csharp_name" ] = CsharpName;
@@ -4396,6 +4662,9 @@ class COLUMN
         PropertyValueMap[ "rust_name" ] = RustName;
         PropertyValueMap[ "rust_type" ] = RustType;
         PropertyValueMap[ "javascript_name" ] = JavascriptName;
+        PropertyValueMap[ "javascript_attribute" ] = JavascriptAttribute;
+        PropertyValueMap[ "javascript_variable" ] = JavascriptVariable;
+        PropertyValueMap[ "javascript_default" ] = JavascriptDefault;
         PropertyValueMap[ "is_key" ] = GetBooleanText( IsKey );
         PropertyValueMap[ "is_stored" ] = GetBooleanText( IsStored );
         PropertyValueMap[ "is_non_stored" ] = GetBooleanText( !IsStored );
@@ -4698,6 +4967,10 @@ class COLUMN
                 MinimumRandomInteger = value_text_array[ 3 ].to!long();
                 MaximumRandomInteger = value_text_array[ 4 ].to!long();
             }
+            else if ( property_name == "default" )
+            {
+                DefaultValueText = value_text_array[ 1 .. $ ].join( ' ' );
+            }
             else
             {
                 PropertyValueMap[ value_text_array[ 0 ] ] = value_text_array[ 1 .. $ ].join( ' ' );
@@ -4717,12 +4990,30 @@ class COLUMN
 
     // ~~
 
+    void SetDefaultValue(
+        )
+    {
+        DefaultValue = new VALUE( Type );
+
+        if ( DefaultValueText == "" )
+        {
+            DefaultValue.SetDefault();
+        }
+        else
+        {
+            DefaultValue.Set( DefaultValueText );
+        }
+    }
+
+    // ~~
+
     void MakeType(
         )
     {
         writeln( "Processing column : ", Table.Name, ".", Name );
 
         SetForeignColumn();
+        SetDefaultValue();
 
         if ( SqlName == "" )
         {
@@ -4792,11 +5083,15 @@ class COLUMN
         PhpParameterType = Type.GetPhpParameterTypeText();
         PhpAttribute = Type.GetPhpAttributeText();
         PhpVariable = PhpName.GetVariableCaseText();
+        PhpDefault = DefaultValue.GetPhpText();
         CrystalType = Type.GetCrystalText();
         CsharpType = Type.GetCsharpText();
         CsharpAttribute = Type.GetCsharpAttributeText();
         CsharpVariable = CsharpName.GetVariableCaseText();
         RustType = Type.GetRustText();
+        JavascriptAttribute = JavascriptName.GetAttributeCaseText();
+        JavascriptVariable = JavascriptName.GetVariableCaseText();
+        JavascriptDefault = DefaultValue.GetJavascriptText();
 
         if ( IsKey || IsRequired )
         {

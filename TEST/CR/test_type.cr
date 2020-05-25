@@ -23,18 +23,18 @@ end
 class COMPOUND
     @id : Int32
     @location : String
-    @name : Tuple( String, String )
-    @name_set : Set( Tuple( String, String ) )
-    @phone_list : List( String )
-    @email_set : Set( String )
-    @company_map : Hash( String, String )
+    @name : Tuple(String, String)
+    @name_set : Set(Tuple(String, String))
+    @phone_list : List(String)
+    @email_set : Set(String)
+    @company_map : Hash(String, String)
     @simple_date : String
-    @simple_date_map : Hash( Tuple( String, String ), String )
-    @simple_date_set : Set( String )
-    @simple_date_list : List( String )
-    @name_set_map : Hash( String, Set( Tuple( String, String ) ) )
+    @simple_date_map : Hash(Tuple(String, String), String)
+    @simple_date_set : Set(String)
+    @simple_date_list : List(String)
+    @name_set_map : Hash(String, Set(Tuple(String, String)))
     @text : String
-    @simple_pointer_array : Array( SIMPLE )
+    @simple_pointer_array : Array(SIMPLE)
 end
 
 # ~~
