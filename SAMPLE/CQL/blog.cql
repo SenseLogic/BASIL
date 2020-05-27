@@ -1,4 +1,3 @@
-drop keyspace if exists BLOG;
 create keyspace if not exists BLOG with replication = { 'class' : 'SimpleStrategy', 'replication_factor' : 1 };
 drop table if exists BLOG.SECTION;
 create table if not exists BLOG.SECTION( Uuid uuid, Number bigint, Name text, Text text, Image text, primary key( Uuid ) );
@@ -8,9 +7,7 @@ drop table if exists BLOG.ARTICLE;
 create table if not exists BLOG.ARTICLE( Uuid uuid, SectionUuid uuid, UserUuid uuid, Title text, Text text, Image text, Date timestamp, primary key( Uuid ) );
 create index on BLOG.ARTICLE ( SectionUuid );
 create index on BLOG.ARTICLE ( UserUuid );
-drop table if exists BLOG.COMMENT;
 create table if not exists BLOG.COMMENT( Uuid uuid, ArticleUuid uuid, UserUuid uuid, Text text, DateTime timestamp, primary key( Uuid ) );
 create index on BLOG.COMMENT ( ArticleUuid );
 create index on BLOG.COMMENT ( UserUuid );
-drop table if exists BLOG.SUBSCRIBER;
 create table if not exists BLOG.SUBSCRIBER( Uuid uuid, Name text, Email text, primary key( Uuid ) );

@@ -8686,7 +8686,8 @@ class SCHEMA
               ~ "set @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;\n"
               ~ "set @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='TRADITIONAL,ALLOW_INVALID_DATES';\n\n";
 
-        if ( IsDropped )
+        if ( ( IsDropped && !DropIsIgnored )
+             || DropIsForced )
         {
             sql_schema_file_text
                 ~= "drop schema if exists `" ~ Name ~ "`;\n\n";
@@ -8700,7 +8701,8 @@ class SCHEMA
         {
             if ( table.IsStored )
             {
-                if ( table.IsDropped )
+                if ( ( table.IsDropped && !DropIsIgnored )
+                     || DropIsForced )
                 {
                     sql_schema_file_text
                         ~= "drop table if exists `" ~ Name ~ "`.`" ~ table.Name ~ "`;\n\n";
@@ -8879,17 +8881,29 @@ class SCHEMA
             cluster_key,
             partition_key;
 
+        if ( ( IsDropped && !DropIsIgnored )
+             || DropIsForced )
+        {
+            cql_schema_file_text
+                = "drop keyspace if exists " ~ Name ~ ";\n";
+        }
+
         cql_schema_file_text
-            = "drop keyspace if exists " ~ Name ~ ";\n"
-              ~ "create keyspace if not exists " ~ Name ~ " with replication = { 'class' : 'SimpleStrategy', 'replication_factor' : 1 };\n";
+            ~= "create keyspace if not exists " ~ Name ~ " with replication = { 'class' : 'SimpleStrategy', 'replication_factor' : 1 };\n";
 
         foreach ( table; TableArray )
         {
             if ( table.IsStored )
             {
+                if ( ( table.IsDropped && !DropIsIgnored )
+                     || DropIsForced )
+                {
+                    cql_schema_file_text
+                        ~= "drop table if exists " ~ Name ~ "." ~ table.Name ~ ";\n";
+                }
+
                 cql_schema_file_text
-                    ~= "drop table if exists " ~ Name ~ "." ~ table.Name ~ ";\n"
-                       ~ "create table if not exists " ~ Name ~ "." ~ table.Name ~ "(";
+                    ~= "create table if not exists " ~ Name ~ "." ~ table.Name ~ "(";
 
                 foreach ( ref column; table.ColumnArray )
                 {
@@ -9708,6 +9722,8 @@ class SCHEMA
 
 bool
     CqlOptionIsEnabled,
+    DropIsForced,
+    DropIsIgnored,
     SqlOptionIsEnabled;
 string
     DatabaseFormat;
@@ -10892,6 +10908,8 @@ void main(
     CqlOptionIsEnabled = false;
     OutputFormatArray = null;
     DatabaseFormat = "";
+    DropIsIgnored = false;
+    DropIsForced = false;
 
     while ( argument_array.length >= 1
             && argument_array[ 0 ].startsWith( "--" ) )
@@ -10960,6 +10978,14 @@ void main(
         {
             OutputFormatArray ~= "javascript";
         }
+        else if ( option == "--ignore-drop" )
+        {
+            DropIsIgnored = true;
+        }
+        else if ( option == "--force-drop" )
+        {
+            DropIsForced = true;
+        }
         else if ( option == "--exclude_command"
                   && argument_array.length >= 1 )
         {
@@ -10980,7 +11006,7 @@ void main(
     else
     {
         writeln( "Usage :" );
-        writeln( "    basil [options] script_file.bs [script_file.bs|bsd|bst ...]" );
+        writeln( "    basil [options] script_file.bs [script_file.bs|bd|bt ...]" );
         writeln( "Options :" );
         writeln( "    --uml" );
         writeln( "    --sql" );
@@ -10992,8 +11018,10 @@ void main(
         writeln( "    --csharp" );
         writeln( "    --rust" );
         writeln( "    --javascript" );
-        writeln( "    --template {template_file_path}" );
-        writeln( "    --exclude_command {command_name}" );
+        writeln( "    --template <template_file_path>" );
+        writeln( "    --ignore-drop" );
+        writeln( "    --force-drop" );
+        writeln( "    --exclude_command <command_name>" );
         writeln( "Examples :" );
         writeln( "    basil --uml script_file.bs" );
         writeln( "    basil --uml --sql --go script_file.bs" );

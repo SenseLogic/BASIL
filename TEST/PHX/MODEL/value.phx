@@ -1,0 +1,107 @@
+// -- FUNCTIONS
+
+function GetDatabaseValueArray(
+    )
+{
+    var statement = GetDatabaseStatement( 'select Id, Uuid, Name, Integer, Text from VALUE' );
+
+    if ( !statement.execute() )
+    {
+        var_dump( statement.errorInfo() );
+    }
+
+    var value_array = [];
+
+    while ( var value = statement.fetchObject() )
+    {
+        value.Id = ( int )( value.Id );
+        value.Integer = ( int )( value.Integer );
+        array_push( value_array, value );
+    }
+
+    return value_array;
+}
+
+// ~~
+
+function GetDatabaseValueById(
+    int id
+    )
+{
+    var statement = GetDatabaseStatement( 'select Id, Uuid, Name, Integer, Text from VALUE where Id = ? limit 1' );
+    statement.bindParam( 1, id, PDO::PARAM_INT );
+
+    if ( !statement.execute() )
+    {
+        var_dump( statement.errorInfo() );
+    }
+
+    var value = statement.fetchObject();
+    value.Id = ( int )( value.Id );
+    value.Integer = ( int )( value.Integer );
+
+    return value;
+}
+
+// ~~
+
+function AddDatabaseValue(
+    int id,
+    string uuid,
+    string name,
+    int integer,
+    string text
+    )
+{
+    var statement = GetDatabaseStatement( 'insert into VALUE ( Id, Uuid, Name, Integer, Text ) values ( ?, ?, ?, ?, ? )' );
+    statement.bindParam( 1, id, PDO::PARAM_INT );
+    statement.bindParam( 2, uuid, PDO::PARAM_STR );
+    statement.bindParam( 3, name, PDO::PARAM_STR );
+    statement.bindParam( 4, integer, PDO::PARAM_INT );
+    statement.bindParam( 5, text, PDO::PARAM_STR );
+
+    if ( !statement.execute() )
+    {
+        var_dump( statement.errorInfo() );
+    }
+
+    return GetDatabaseAddedId( statement );
+}
+
+// ~~
+
+function SetDatabaseValue(
+    int id,
+    string uuid,
+    string name,
+    int integer,
+    string text
+    )
+{
+    var statement = GetDatabaseStatement( 'update VALUE set Uuid = ?, Name = ?, Integer = ?, Text = ? where Id = ?' );
+    statement.bindParam( 1, uuid, PDO::PARAM_STR );
+    statement.bindParam( 2, name, PDO::PARAM_STR );
+    statement.bindParam( 3, integer, PDO::PARAM_INT );
+    statement.bindParam( 4, text, PDO::PARAM_STR );
+    statement.bindParam( 5, id, PDO::PARAM_INT );
+
+    if ( !statement.execute() )
+    {
+        var_dump( statement.errorInfo() );
+    }
+}
+
+// ~~
+
+function RemoveDatabaseValueById(
+    int id
+    )
+{
+    var statement = GetDatabaseStatement( 'delete from VALUE where Id = ?' );
+    statement.bindParam( 1, id, PDO::PARAM_INT );
+
+    if ( !statement.execute() )
+    {
+        var_dump( statement.errorInfo() );
+    }
+}

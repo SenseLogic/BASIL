@@ -1,0 +1,86 @@
+// -- FUNCTIONS
+
+function GetDatabaseValueDataArray(
+    )
+{
+    var statement = GetDatabaseStatement( 'select Uuid, ValueId, ValueUuid from VALUE_DATA' );
+
+    if ( !statement.execute() )
+    {
+        var_dump( statement.errorInfo() );
+    }
+
+    return GetDatabaseObjectArray( statement );
+}
+
+// ~~
+
+function GetDatabaseValueDataByUuid(
+    string uuid
+    )
+{
+    var statement = GetDatabaseStatement( 'select Uuid, ValueId, ValueUuid from VALUE_DATA where Uuid = ? limit 1' );
+    statement.bindParam( 1, uuid, PDO::PARAM_STR );
+
+    if ( !statement.execute() )
+    {
+        var_dump( statement.errorInfo() );
+    }
+
+    return statement.fetchObject();
+}
+
+// ~~
+
+function AddDatabaseValueData(
+    string uuid,
+    int value_id,
+    string value_uuid
+    )
+{
+    var statement = GetDatabaseStatement( 'insert into VALUE_DATA ( Uuid, ValueId, ValueUuid ) values ( ?, ?, ? )' );
+    statement.bindParam( 1, uuid, PDO::PARAM_STR );
+    statement.bindParam( 2, value_id, PDO::PARAM_INT );
+    statement.bindParam( 3, value_uuid, PDO::PARAM_STR );
+
+    if ( !statement.execute() )
+    {
+        var_dump( statement.errorInfo() );
+    }
+
+    return GetDatabaseAddedId( statement );
+}
+
+// ~~
+
+function SetDatabaseValueData(
+    string uuid,
+    int value_id,
+    string value_uuid
+    )
+{
+    var statement = GetDatabaseStatement( 'update VALUE_DATA set ValueId = ?, ValueUuid = ?,  where Uuid = ?' );
+    statement.bindParam( 1, value_id, PDO::PARAM_INT );
+    statement.bindParam( 2, value_uuid, PDO::PARAM_STR );
+    statement.bindParam( 3, uuid, PDO::PARAM_STR );
+
+    if ( !statement.execute() )
+    {
+        var_dump( statement.errorInfo() );
+    }
+}
+
+// ~~
+
+function RemoveDatabaseValueDataByUuid(
+    string uuid
+    )
+{
+    var statement = GetDatabaseStatement( 'delete from VALUE_DATA where Uuid = ?' );
+    statement.bindParam( 1, uuid, PDO::PARAM_STR );
+
+    if ( !statement.execute() )
+    {
+        var_dump( statement.errorInfo() );
+    }
+}
