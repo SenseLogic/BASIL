@@ -578,8 +578,8 @@ class RANDOM
             MakeBlob( 8 )
             ~ "-"
             ~ MakeBlob( 4 )
-            ~ "-"
-            ~ MakeBlob( 4 )
+            ~ "-4"
+            ~ MakeBlob( 4 )[ 1 .. $ ]
             ~ "-"
             ~ MakeBlob( 4 )
             ~ "-"
