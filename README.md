@@ -722,7 +722,7 @@ basil [options] script_file.bs [script_file.bs|bd|bt ...]
 --javascript : generate the Javascript type file
 --ignore-drop : ignore drop command
 --force-drop : force drop command
---exclude_command <command_name>
+--exclude-command <command_name>
 ```
 
 The `--sql` and `--cql` options are mutually exclusive.

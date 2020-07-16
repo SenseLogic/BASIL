@@ -10986,7 +10986,7 @@ void main(
         {
             DropIsForced = true;
         }
-        else if ( option == "--exclude_command"
+        else if ( option == "--exclude-command"
                   && argument_array.length >= 1 )
         {
             ExcludedCommandArray ~= argument_array[ 0 ] ~ ' ';
@@ -11021,7 +11021,7 @@ void main(
         writeln( "    --template <template_file_path>" );
         writeln( "    --ignore-drop" );
         writeln( "    --force-drop" );
-        writeln( "    --exclude_command <command_name>" );
+        writeln( "    --exclude-command <command_name>" );
         writeln( "Examples :" );
         writeln( "    basil --uml script_file.bs" );
         writeln( "    basil --uml --sql --go script_file.bs" );
