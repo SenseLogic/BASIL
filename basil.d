@@ -21,7 +21,7 @@
 // -- IMPORTS
 
 import core.stdc.stdlib : exit;
-import std.algorithm : countUntil;
+import std.algorithm : countUntil, sort;
 import std.ascii : isDigit, isLower, isUpper;
 import std.conv : to;
 import std.file : dirEntries, exists, mkdirRecurse, readText, thisExePath, write, FileException, SpanMode;
@@ -3277,7 +3277,8 @@ class VALUE
     // ~~
 
     string GetSqlText(
-        bool it_is_sub_value = false
+        bool it_is_sub_value = false,
+        bool it_is_dump_value = false
         )
     {
         string
@@ -3291,12 +3292,25 @@ class VALUE
             if ( Text == "1"
                  || Text == "true" )
             {
-                sql_text = "1";
+                return "1";
             }
             else
             {
-                sql_text = "0";
+                return "0";
             }
+        }
+        else if ( type_name == "INT8"
+                  || type_name == "UINT8"
+                  || type_name == "INT16"
+                  || type_name == "UINT16"
+                  || type_name == "INT32"
+                  || type_name == "UINT32"
+                  || type_name == "INT64"
+                  || type_name == "UINT64"
+                  || type_name == "FLOAT32"
+                  || type_name == "FLOAT64" )
+        {
+            return Text;
         }
         else if ( type_name == "TUPLE" )
         {
@@ -3307,7 +3321,7 @@ class VALUE
                     sql_text ~= ",";
                 }
 
-                sql_text ~= sub_value.GetSqlText( true );
+                sql_text ~= sub_value.GetSqlText( true, it_is_dump_value );
             }
 
             sql_text = "[" ~ sql_text ~ "]";
@@ -3321,7 +3335,7 @@ class VALUE
                     sql_text ~= ",";
                 }
 
-                sql_text ~= element_value.GetSqlText( true );
+                sql_text ~= element_value.GetSqlText( true, it_is_dump_value );
             }
 
             sql_text = "[" ~ sql_text ~ "]";
@@ -3335,7 +3349,7 @@ class VALUE
                     sql_text ~= ",";
                 }
 
-                sql_text ~= element_value.GetSqlText( true );
+                sql_text ~= element_value.GetSqlText( true, it_is_dump_value );
             }
 
             sql_text = "[" ~ sql_text ~ "]";
@@ -3349,7 +3363,7 @@ class VALUE
                     sql_text ~= ",";
                 }
 
-                sql_text ~= KeyValueArray[ element_value_index ].GetSqlText( true ) ~ ":" ~ element_value.GetSqlText( true );
+                sql_text ~= KeyValueArray[ element_value_index ].GetSqlText( true, it_is_dump_value ) ~ ":" ~ element_value.GetSqlText( true, it_is_dump_value );
             }
 
             sql_text = "{" ~ sql_text ~ "}";
@@ -3359,12 +3373,24 @@ class VALUE
             sql_text = Text;
         }
 
-        if ( !it_is_sub_value )
+        if ( it_is_dump_value )
         {
-            sql_text = sql_text.replace( "\"", "\\\"" );
-        }
+            if ( !it_is_sub_value )
+            {
+                sql_text = sql_text.replace( "'", "\\'" ).replace( "\"", "\\\"" );
+            }
 
-        return "\"" ~ sql_text ~ "\"";
+            return "'" ~ sql_text ~ "'";
+        }
+        else
+        {
+            if ( !it_is_sub_value )
+            {
+                sql_text = sql_text.replace( "\"", "\\\"" );
+            }
+
+            return "\"" ~ sql_text ~ "\"";
+        }
     }
 
     // ~~
@@ -8872,6 +8898,133 @@ class SCHEMA
 
     // ~~
 
+    void WriteSqlDumpFile(
+        string sql_dump_file_path
+        )
+    {
+        string
+            sql_dump_file_text;
+        TABLE[]
+            sorted_table_array;
+
+        sorted_table_array = TableArray.dup();
+        sorted_table_array.sort!( ( first_table, second_table ) => first_table.Name < second_table.Name )();
+
+        foreach ( table; sorted_table_array )
+        {
+            if ( table.IsStored )
+            {
+                sql_dump_file_text
+                    ~= "CREATE TABLE `" ~ table.Name ~ "` (\n";
+
+                foreach ( ref column; table.ColumnArray )
+                {
+                    if ( column.IsStored )
+                    {
+                        sql_dump_file_text
+                            ~= "  `"
+                               ~ column.SqlName
+                               ~ "` "
+                               ~ column.SqlType
+                               ~ " "
+                               ~ column.SqlPropertyArray.join( ' ' );
+
+                            if ( !column.IsLastStored )
+                            {
+                                sql_dump_file_text ~= ", ";
+                            }
+
+                        sql_dump_file_text ~= "\n";
+                    }
+                }
+
+                sql_dump_file_text
+                    ~= ") ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;\n";
+
+                if ( table.RowCount > 0 )
+                {
+                    sql_dump_file_text
+                        ~= "\n"
+                           ~ "INSERT INTO `" ~ table.Name ~ "` (";
+
+                    foreach ( ref column; table.ColumnArray )
+                    {
+                        if ( column.IsStored )
+                        {
+                            sql_dump_file_text
+                                ~= "`"
+                                   ~ column.SqlName
+                                   ~ "`";
+
+                            if ( !column.IsLastStored )
+                            {
+                                sql_dump_file_text ~= ", ";
+                            }
+                        }
+                    }
+
+                    sql_dump_file_text
+                        ~= ") VALUES\n";
+
+                    foreach ( row_index; 0 .. table.RowCount )
+                    {
+                        sql_dump_file_text ~= "(";
+
+                        foreach ( ref column; table.ColumnArray )
+                        {
+                            if ( column.IsStored )
+                            {
+                                sql_dump_file_text ~= column.ValueArray[ row_index ].GetSqlText( false, true );
+
+                                if ( !column.IsLastStored )
+                                {
+                                    sql_dump_file_text ~= ", ";
+                                }
+                            }
+                        }
+
+                        sql_dump_file_text ~= ")";
+
+                        if ( row_index < table.RowCount - 1 )
+                        {
+                            sql_dump_file_text ~= ",";
+                        }
+                        else
+                        {
+                            sql_dump_file_text ~= ";";
+                        }
+
+                        sql_dump_file_text ~= "\n";
+                    }
+                }
+
+                sql_dump_file_text
+                    ~= "\n";
+            }
+        }
+
+        foreach ( table; sorted_table_array )
+        {
+            if ( table.IsStored )
+            {
+                foreach ( ref column; table.ColumnArray )
+                {
+                    if ( column.IsStored
+                         && column.IsKey )
+                    {
+                        sql_dump_file_text
+                            ~= "ALTER TABLE `" ~ table.Name ~ "`\n"
+                               ~ "  ADD PRIMARY KEY (`" ~ column.SqlName ~ "`);\n\n";
+                    }
+                }
+            }
+        }
+
+        sql_dump_file_path.WriteText( sql_dump_file_text );
+    }
+
+    // ~~
+
     void WriteCqlSchemaFile(
         string cql_schema_file_path
         )
@@ -10844,6 +10997,7 @@ void ProcessFiles(
         {
             Schema.WriteSqlSchemaFile( base_file_path ~ ".sql" );
             Schema.WriteSqlDataFile( base_file_path ~ "_data.sql" );
+            Schema.WriteSqlDumpFile( base_file_path ~ "_dump.sql" );
         }
         else if ( output_format == "cql" )
         {
