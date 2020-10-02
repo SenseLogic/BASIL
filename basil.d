@@ -10009,7 +10009,11 @@ void WriteText(
 
     try
     {
-        file_path.write( file_text );
+        if ( !file_path.exists()
+             || file_path.readText() != file_text )
+        {
+            file_path.write( file_text );
+        }
     }
     catch ( FileException file_exception )
     {
