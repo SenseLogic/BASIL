@@ -828,7 +828,7 @@ class RANDOM
         while ( !name.EndsByVowel()
                 && !name[ 0 .. $ - 1 ].EndsByVowel() );
 
-        return name;
+        return name.toLower();
     }
 
     // ~~
@@ -1125,6 +1125,34 @@ class RANDOM
                   ".jpg",
                   ".png",
                   ".gif"
+              ][ MakeIndex( 3 ) ];
+    }
+
+    // ~~
+
+    string MakeAudioName(
+        )
+    {
+        return
+            MakeName( 8, 8 )
+            ~ [
+                  ".mp3",
+                  ".wav",
+                  ".flac"
+              ][ MakeIndex( 3 ) ];
+    }
+
+    // ~~
+
+    string MakeVideoName(
+        )
+    {
+        return
+            MakeName( 8, 8 )
+            ~ [
+                  ".mp4",
+                  ".webm",
+                  ".ogv"
               ][ MakeIndex( 3 ) ];
     }
 
@@ -4125,22 +4153,11 @@ class VALUE
                 }
                 else if ( Type.ColumnName.endsWith( "Text" ) )
                 {
-                    Text = Random.MakeText( "english", 5, 10 );
-                }
-                else if ( Type.ColumnName.endsWith( "FirstName" ) )
-                {
-                    Text = Random.MakeFirstName();
-                }
-                else if ( Type.ColumnName.endsWith( "LastName" ) )
-                {
-                    Text = Random.MakeLastName();
-                }
-                else if ( Type.ColumnName.endsWith( "Name" ) )
-                {
-                    Text = Random.MakeLastName();
+                    Text = Random.MakeText( "english", 3, 5, 7, 9 );
                 }
                 else if ( Type.ColumnName.endsWith( "Login" )
-                          || Type.ColumnName.endsWith( "Pseudonym" ) )
+                          || Type.ColumnName.endsWith( "Pseudonym" )
+                          || Type.ColumnName.endsWith( "Account" ) )
                 {
                     prior_email = Type.Column.FindPriorColumnValue( "Email", row_index );
 
@@ -4167,12 +4184,17 @@ class VALUE
 
                     Text = Random.MakeEmail( prior_first_name, prior_last_name );
                 }
-                else if ( Type.ColumnName.endsWith( "Phone" ) )
+                else if ( Type.ColumnName.endsWith( "Phone" ) 
+                          || Type.ColumnName.endsWith( "PhoneNumber" ) )
                 {
                     Text = Random.MakePhone();
                 }
                 else if ( Type.ColumnName.endsWith( "Street" )
-                          || Type.ColumnName.endsWith( "Address" ) )
+                          || Type.ColumnName.endsWith( "StreetName" ) )
+                {
+                    Text = Random.MakeStreetName();
+                }
+                else if ( Type.ColumnName.endsWith( "Address" ) )
                 {
                     Text = Random.MakeAddress();
                 }
@@ -4184,35 +4206,65 @@ class VALUE
                 {
                     Text = Random.MakeCityCode();
                 }
-                else if ( Type.ColumnName.endsWith( "City" ) )
+                else if ( Type.ColumnName.endsWith( "City" )
+                          || Type.ColumnName.endsWith( "CityName" ) )
                 {
                     Text = Random.MakeCityName();
                 }
-                else if ( Type.ColumnName.endsWith( "Region" ) )
+                else if ( Type.ColumnName.endsWith( "Region" )
+                          || Type.ColumnName.endsWith( "RegionName" ) )
                 {
                     Text = Random.MakeRegionName();
                 }
-                else if ( Type.ColumnName.endsWith( "Country" ) )
+                else if ( Type.ColumnName.endsWith( "Country" )
+                          || Type.ColumnName.endsWith( "CountryName" ) )
                 {
                     Text = Random.MakeCountryName();
                 }
-                else if ( Type.ColumnName.endsWith( "Company" ) )
+                else if ( Type.ColumnName.endsWith( "Company" )
+                          || Type.ColumnName.endsWith( "CompanyName" ) )
                 {
                     Text = Random.MakeCompanyName();
                 }
-                else if ( Type.ColumnName.endsWith( "Image" ) )
+                else if ( Type.ColumnName.endsWith( "Image" )
+                          || Type.ColumnName.endsWith( "Picture" )
+                          || Type.ColumnName.endsWith( "Background" )
+                          || Type.ColumnName.endsWith( "ImageName" )
+                          || Type.ColumnName.endsWith( "PictureName" )
+                          || Type.ColumnName.endsWith( "BackgroundName" ) )
                 {
                     Text = Random.MakeImageName();
                 }
-                else if ( Type.ColumnName.endsWith( "File" ) )
+                else if ( Type.ColumnName.endsWith( "Audio" )
+                          || Type.ColumnName.endsWith( "Sound" )
+                          || Type.ColumnName.endsWith( "Music" )
+                          || Type.ColumnName.endsWith( "Clip" )
+                          || Type.ColumnName.endsWith( "AudioName" )
+                          || Type.ColumnName.endsWith( "SoundName" )
+                          || Type.ColumnName.endsWith( "MusicName" )
+                          || Type.ColumnName.endsWith( "ClipName" ) )
+                {
+                    Text = Random.MakeAudioName();
+                }
+                else if ( Type.ColumnName.endsWith( "Video" )
+                          || Type.ColumnName.endsWith( "Movie" )
+                          || Type.ColumnName.endsWith( "VideoName" )
+                          || Type.ColumnName.endsWith( "MovieName" ) )
+                {
+                    Text = Random.MakeVideoName();
+                }
+                else if ( Type.ColumnName.endsWith( "File" )
+                          || Type.ColumnName.endsWith( "FilePath" ) )
                 {
                     Text = Random.MakeFileName();
                 }
-                else if ( Type.ColumnName.endsWith( "Folder" ) )
+                else if ( Type.ColumnName.endsWith( "Folder" )
+                          || Type.ColumnName.endsWith( "FolderPath" ) )
                 {
                     Text = Random.MakeFolderPath();
                 }
-                else if ( Type.ColumnName.endsWith( "Author" ) )
+                else if ( Type.ColumnName.endsWith( "Author" )
+                          || Type.ColumnName.endsWith( "AuthorName" ) )
                 {
                     Text = Random.MakeFullName();
                 }
@@ -4223,6 +4275,18 @@ class VALUE
                 else if ( Type.ColumnName.endsWith( "Tags" ) )
                 {
                     Text = Random.MakeTagList();
+                }
+                else if ( Type.ColumnName.endsWith( "FirstName" ) )
+                {
+                    Text = Random.MakeFirstName();
+                }
+                else if ( Type.ColumnName.endsWith( "LastName" ) )
+                {
+                    Text = Random.MakeLastName();
+                }
+                else if ( Type.ColumnName.endsWith( "Name" ) )
+                {
+                    Text = Random.MakeLastName();
                 }
                 else
                 {
