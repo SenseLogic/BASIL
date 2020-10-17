@@ -1,7 +1,7 @@
 <pre>
 Table :
     VALUE_DATA : VALUE_DATA / ValueData / value_data / value-data / Value Data / Value data / value data
-        Properties :  
+        Properties : false false
         Columns : Uuid, ValueId, ValueUuid, InternalId, InternalUuid, InternalValueId, InternalValueUuid
         Key columns : Uuid
         Non key columns : ValueId, ValueUuid, InternalId, InternalUuid, InternalValueId, InternalValueUuid
@@ -13,49 +13,49 @@ Table :
         Non Stored non key columns : InternalId, InternalUuid, InternalValueId, InternalValueUuid
         Columns :
             Uuid : Uuid / uuid / uuid / Uuid / Uuid / uuid
-                Properties :  
+                Properties : false false
                 Go : gocql.UUID Uuid
                 PHP : string Uuid
                 Crystal : String uuid
                 C# : Guid Uuid
                 Rust : String uuid
             ValueId : ValueId / value_id / value-id / Value Id / Value id / value id
-                Properties :  
+                Properties : false false
                 Go : int64 ValueId
                 PHP : int ValueId
                 Crystal : Int64 value_id
                 C# : long ValueId
                 Rust : i64 value_id
             ValueUuid : ValueUuid / value_uuid / value-uuid / Value Uuid / Value uuid / value uuid
-                Properties :  
+                Properties : false false
                 Go : gocql.UUID ValueUuid
                 PHP : string ValueUuid
                 Crystal : String value_uuid
                 C# : Guid ValueUuid
                 Rust : String value_uuid
             InternalId : InternalId / internal_id / internal-id / Internal Id / Internal id / internal id
-                Properties :  
+                Properties : false false
                 Go : int64 InternalId
                 PHP : int InternalId
                 Crystal : Int64 internal_id
                 C# : long InternalId
                 Rust : i64 internal_id
             InternalUuid : InternalUuid / internal_uuid / internal-uuid / Internal Uuid / Internal uuid / internal uuid
-                Properties :  
+                Properties : false false
                 Go : gocql.UUID InternalUuid
                 PHP : string InternalUuid
                 Crystal : String internal_uuid
                 C# : Guid InternalUuid
                 Rust : String internal_uuid
             InternalValueId : InternalValueId / internal_value_id / internal-value-id / Internal Value Id / Internal value id / internal value id
-                Properties :  
+                Properties : false false
                 Go : int64 InternalValueId
                 PHP : int InternalValueId
                 Crystal : Int64 internal_value_id
                 C# : long InternalValueId
                 Rust : i64 internal_value_id
             InternalValueUuid : InternalValueUuid / internal_value_uuid / internal-value-uuid / Internal Value Uuid / Internal value uuid / internal value uuid
-                Properties :  
+                Properties : false false
                 Go : gocql.UUID InternalValueUuid
                 PHP : string InternalValueUuid
                 Crystal : String internal_value_uuid

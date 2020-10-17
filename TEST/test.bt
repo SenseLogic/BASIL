@@ -2,7 +2,7 @@
 <pre>
 Table :
     {#name#} : {#type#} / {#attribute#} / {#variable#} / {#style#} / {#title#} / {#sentence#} / {#locution#}
-        Properties : {#is_editable#} {#button_size#}
+        Properties : {#has_button#} {#button_size#}
         Columns : <%{%name%}<~!{%is_last%}<>, ~>%>
         Key columns : <@{%name%}<~!{%is_last_key%}<>, ~>@>
         Non key columns : <${%name%}<~!{%is_last_non_key%}<>, ~>$>
@@ -14,7 +14,7 @@ Table :
         Non Stored non key columns : <$°{%name%}<~!{%is_last_non_stored_non_key%}<>, ~>°$>
         Columns :<%
             {%name%} : {%attribute%} / {%variable%} / {%style%} / {%title%} / {%sentence%} / {%locution%}
-                Properties : {%is_editable%} {%button_size%}
+                Properties : {%has_button%} {%button_size%}
                 Go : {%go_type%} {%go_name%}
                 PHP : {%php_type%} {%php_name%}
                 Crystal : {%crystal_type%} {%crystal_name%}

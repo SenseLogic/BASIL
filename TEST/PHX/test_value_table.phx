@@ -1,7 +1,7 @@
 <pre>
 Table :
     VALUE : VALUE / Value / value / value / Value / Value / value
-        Properties :  
+        Properties : false false
         Columns : Id, Uuid, Name, Integer, Text
         Key columns : Id
         Non key columns : Uuid, Name, Integer, Text
@@ -13,35 +13,35 @@ Table :
         Non Stored non key columns : 
         Columns :
             Id : Id / id / id / Id / Id / id
-                Properties :  
+                Properties : false false
                 Go : int64 Id
                 PHP : int Id
                 Crystal : Int64 id
                 C# : long Id
                 Rust : i64 id
             Uuid : Uuid / uuid / uuid / Uuid / Uuid / uuid
-                Properties :  
+                Properties : false false
                 Go : gocql.UUID Uuid
                 PHP : string Uuid
                 Crystal : String uuid
                 C# : Guid Uuid
                 Rust : String uuid
             Name : Name / name / name / Name / Name / name
-                Properties :  
+                Properties : false false
                 Go : string Name
                 PHP : string Name
                 Crystal : String name
                 C# : string Name
                 Rust : String name
             Integer : Integer / integer / integer / Integer / Integer / integer
-                Properties :  
+                Properties : false false
                 Go : int32 Integer
                 PHP : int Integer
                 Crystal : Int32 integer
                 C# : int Integer
                 Rust : i32 integer
             Text : Text / text / text / Text / Text / text
-                Properties :  
+                Properties : false false
                 Go : string Text
                 PHP : string Text
                 Crystal : String text

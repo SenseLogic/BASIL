@@ -189,7 +189,7 @@ USER
 <pre>
 Table :
     {#name#} : {#type#} / {#attribute#} / {#variable#} / {#style#} / {#title#} / {#sentence#} / {#locution#}
-        Properties : {#is_editable#} {#button_size#}
+        Properties : {#has_button#} {#button_size#}
         Columns : <%{%name%}<~!{%is_last%}<>, ~>%>
         Key columns : <@{%name%}<~!{%is_last_key%}<>, ~>@>
         Non key columns : <${%name%}<~!{%is_last_non_key%}<>, ~>$>
@@ -201,7 +201,7 @@ Table :
         Non Stored non key columns : <$°{%name%}<~!{%is_last_non_stored_non_key%}<>, ~>°$>
         Columns :<%
             {%name%} : {%attribute%} / {%variable%} / {%style%} / {%title%} / {%sentence%} / {%locution%}
-                Properties : {%is_editable%} {%button_size%}
+                Properties : {%has_button%} {%button_size%}
                 Go : {%go_type%} {%go_name%}
                 PHP : {%php_type%} {%php_name%}
                 Crystal : {%crystal_type%} {%crystal_name%}
@@ -289,12 +289,13 @@ count <i>row_count</i>
 
 <pre>
 [!]stored
+[!]edited
 [!]sorted
 [!]dropped
 count <i>row_count</i>
 
-[!]<i>custom property name</i>
-<i>custom property name</i> <i>custom property value</i>
+[!]<i>custom_property_name</i>
+<i>custom_property_name</i> <i>custom_property_value</i>
 </pre>
 
 ### Column data
@@ -341,6 +342,7 @@ RemoveIdentifier identifier
 
 <pre>
 [!]stored
+[!]edited
 [!]key
 [!]partitioned
 [!]clustered
@@ -364,8 +366,8 @@ rustname <i>rust_field_name</i>
 count <i>minimum_element_count</i> <i>maximum_element_count</i>
 count <i>element_count</i>
 
-[!]<i>custom property name</i>
-<i>custom property name</i> <i>custom property value</i>
+[!]<i>custom_property_name</i>
+<i>custom_property_name</i> <i>custom_property_value</i>
 </pre>
 
 ### Field name suffixes
@@ -493,6 +495,11 @@ POINTER[ <i>ELEMENT_TYPE</i> ] | !stored
 <@°content for each non stored key column°@>
 <$°content for each non stored non key column°$>
 
+<#§content for each edited table^#>
+<%§content for each edited column^%>
+<@§content for each edited key column^@>
+<$§content for each edited non key column^$>
+
 <~Equals<>first text<>second text<>text if same texts~>
 <~Equals<>first text<>second text<>text if same texts<>text if not same texts~>
 
@@ -577,14 +584,20 @@ POINTER[ <i>ELEMENT_TYPE</i> ] | !stored
 {#rust_type_declaration#}
 {#is_stored#}
 {#is_non_stored#}
+{#is_edited#}
+{#is_non_edited#}
 {#is_first#}
 {#is_first_stored#}
 {#is_first_non_stored#}
+{#is_first_edited#}
+{#is_first_non_edited#}
 {#is_last#}
 {#is_last_stored#}
 {#is_last_non_stored#}
+{#is_last_edited#}
+{#is_last_non_edited#}
 
-{#<i>custom property name</i>#}
+{#<i>custom_property_name</i>#}
 
 {%name%}
 {%attribute%}
@@ -625,6 +638,12 @@ POINTER[ <i>ELEMENT_TYPE</i> ] | !stored
 {%is_non_stored_key%}
 {%is_stored_non_key%}
 {%is_non_stored_non_key%}
+{%is_edited%}
+{%is_non_edited%}
+{%is_edited_key%}
+{%is_non_edited_key%}
+{%is_edited_non_key%}
+{%is_non_edited_non_key%}
 {%is_incremented%}
 {%is_first%}
 {%is_first_key%}
@@ -635,6 +654,12 @@ POINTER[ <i>ELEMENT_TYPE</i> ] | !stored
 {%is_first_non_stored_key%}
 {%is_first_stored_non_key%}
 {%is_first_non_stored_non_key%}
+{%is_first_edited%}
+{%is_first_non_edited%}
+{%is_first_edited_key%}
+{%is_first_non_edited_key%}
+{%is_first_edited_non_key%}
+{%is_first_non_edited_non_key%}
 {%is_first_incremented%}
 {%is_first_non_incremented%}
 {%is_last%}
@@ -646,10 +671,16 @@ POINTER[ <i>ELEMENT_TYPE</i> ] | !stored
 {%is_last_non_stored_key%}
 {%is_last_stored_non_key%}
 {%is_last_non_stored_non_key%}
+{%is_last_edited%}
+{%is_last_non_edited%}
+{%is_last_edited_key%}
+{%is_last_non_edited_key%}
+{%is_last_edited_non_key%}
+{%is_last_non_edited_non_key%}
 {%is_last_incremented%}
 {%is_last_non_incremented%}
 
-{%<i>custom property name</i>%}
+{%<i>custom_property_name</i>%}
 
 %\%ignored tag
 <\#ignored tags#\>
