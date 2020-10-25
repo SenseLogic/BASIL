@@ -2823,8 +2823,8 @@ class TYPE
                         {
                             template_part
                                 = Random.MakeReal(
-                                      ( filter_argument_count > 0 ) ? filter_argument_array[ 1 ].to!double() : 0.0,
-                                      ( filter_argument_count > 1 ) ? filter_argument_array[ 0 ].to!double() : 1.0
+                                      ( filter_argument_count > 0 ) ? filter_argument_array[ 0 ].to!double() : 0.0,
+                                      ( filter_argument_count > 1 ) ? filter_argument_array[ 1 ].to!double() : 1.0
                                       ).to!string();
                         }
                         else if ( filter_name == "integer" )
@@ -2832,7 +2832,7 @@ class TYPE
                             template_part
                                 = Random.MakeInteger(
                                       ( filter_argument_count > 0 ) ? filter_argument_array[ 0 ].to!long() : 1,
-                                      ( filter_argument_count > 1 ) ? filter_argument_array[ 0 ].to!long() : 100
+                                      ( filter_argument_count > 1 ) ? filter_argument_array[ 1 ].to!long() : 100
                                       ).to!string();
                         }
                         else if ( filter_name == "natural" )
@@ -2851,8 +2851,8 @@ class TYPE
                                       "english",
                                       ( filter_argument_count > 0 ) ? filter_argument_array[ 0 ].to!long() : 3,
                                       ( filter_argument_count > 1 ) ? filter_argument_array[ 1 ].to!long() : 5,
-                                      ( filter_argument_count > 2 ) ? filter_argument_array[ 0 ].to!long() : 7,
-                                      ( filter_argument_count > 3 ) ? filter_argument_array[ 1 ].to!long() : 9
+                                      ( filter_argument_count > 2 ) ? filter_argument_array[ 2 ].to!long() : 7,
+                                      ( filter_argument_count > 3 ) ? filter_argument_array[ 3 ].to!long() : 9
                                       );
                         }
                         else if ( filter_name == "latin" )
@@ -2862,8 +2862,8 @@ class TYPE
                                       "latin",
                                       ( filter_argument_count > 0 ) ? filter_argument_array[ 0 ].to!long() : 3,
                                       ( filter_argument_count > 1 ) ? filter_argument_array[ 1 ].to!long() : 5,
-                                      ( filter_argument_count > 2 ) ? filter_argument_array[ 0 ].to!long() : 7,
-                                      ( filter_argument_count > 3 ) ? filter_argument_array[ 1 ].to!long() : 9
+                                      ( filter_argument_count > 2 ) ? filter_argument_array[ 2 ].to!long() : 7,
+                                      ( filter_argument_count > 3 ) ? filter_argument_array[ 3 ].to!long() : 9
                                       );
                         }
                         else if ( filter_name == "name" )
