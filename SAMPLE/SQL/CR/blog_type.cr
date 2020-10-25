@@ -1,6 +1,7 @@
 class SECTION
     @id : Uint64
     @number : Uint64
+    @slug : String
     @name : String
     @text : String
     @image : String
@@ -32,6 +33,7 @@ class ARTICLE
     @id : Uint64
     @section_id : Uint64
     @user_id : Uint64
+    @slug : String
     @title : String
     @text : String
     @image : String

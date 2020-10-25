@@ -1421,6 +1421,10 @@ class TYPE
         ActualType;
     TYPE[]
         SubTypeArray;
+    bool
+        HasTemplateText;
+    string
+        TemplateText;
 
     // -- CONSTRUCTORS
 
@@ -1445,11 +1449,13 @@ class TYPE
             character_index;
         string
             sub_type;
+        string[]
+            name_part_array;
 
         Table = table;
         Column = column;
         ColumnName = column.Name;
-        Name = type_name.replace( " ", "" );
+        Name = type_name.GetPartArray( " " ).join( "" );
         BaseName = Name;
 
         bracket_level = 0;
@@ -1510,6 +1516,26 @@ class TYPE
             else
             {
                 sub_type ~= character;
+            }
+        }
+
+        name_part_array = Name.GetPartArray( "=" );
+
+        if ( name_part_array.length >= 2 )
+        {
+            if ( name_part_array.length == 2
+                 && name_part_array[ 1 ].length >= 2
+                 && name_part_array[ 1 ].startsWith( '"' )
+                 && name_part_array[ 1 ].endsWith( '"' ) )
+            {
+                Name = name_part_array[ 0 ];
+                BaseName = Name;
+                TemplateText = name_part_array[ 1 ][ 1 .. $ - 1 ];
+                HasTemplateText = true;
+            }
+            else
+            {
+                Abort( "Invalid type : " ~ type_name );
             }
         }
     }
@@ -2758,6 +2784,170 @@ class TYPE
         {
             return Name;
         }
+    }
+
+    // ~~
+
+    string GetTemplateValue(
+        long row_index
+        )
+    {
+        long
+            filter_argument_count;
+        string
+            filter_name;
+        string[]
+            filter_argument_array,
+            filter_array,
+            template_part_array;
+
+        template_part_array = TemplateText.GetPartArray( "{{", "}}" );
+
+        foreach ( template_part_index, ref template_part; template_part_array )
+        {
+            if ( ( template_part_index & 1 ) == 1 )
+            {
+                filter_array = template_part.split( '|' );
+
+                foreach ( filter_index, filter; filter_array )
+                {
+                    filter_argument_array = filter.split( ' ' );
+
+                    if ( filter_argument_array.length >= 1 )
+                    {
+                        filter_name = filter_argument_array[ 0 ];
+                        filter_argument_array = filter_argument_array[ 1 .. $ ];
+                        filter_argument_count = filter_argument_array.length;
+
+                        if ( filter_name == "real" )
+                        {
+                            template_part
+                                = Random.MakeReal(
+                                      ( filter_argument_count > 0 ) ? filter_argument_array[ 1 ].to!double() : 0.0,
+                                      ( filter_argument_count > 1 ) ? filter_argument_array[ 0 ].to!double() : 1.0
+                                      ).to!string();
+                        }
+                        else if ( filter_name == "integer" )
+                        {
+                            template_part
+                                = Random.MakeInteger(
+                                      ( filter_argument_count > 0 ) ? filter_argument_array[ 0 ].to!long() : 1,
+                                      ( filter_argument_count > 1 ) ? filter_argument_array[ 0 ].to!long() : 100
+                                      ).to!string();
+                        }
+                        else if ( filter_name == "natural" )
+                        {
+                            template_part
+                                = Random.MakeNatural(
+                                      ( filter_argument_count > 0 ) ? filter_argument_array[ 0 ].to!ulong() : 1,
+                                      ( filter_argument_count > 1 ) ? filter_argument_array[ 1 ].to!ulong() : 100,
+                                      ( filter_argument_count > 2 ) ? filter_argument_array[ 2 ].to!long() : 0
+                                      ).to!string();
+                        }
+                        else if ( filter_name == "english" )
+                        {
+                            template_part
+                                = Random.MakeText(
+                                      "english",
+                                      ( filter_argument_count > 0 ) ? filter_argument_array[ 0 ].to!long() : 3,
+                                      ( filter_argument_count > 1 ) ? filter_argument_array[ 1 ].to!long() : 5,
+                                      ( filter_argument_count > 2 ) ? filter_argument_array[ 0 ].to!long() : 7,
+                                      ( filter_argument_count > 3 ) ? filter_argument_array[ 1 ].to!long() : 9
+                                      );
+                        }
+                        else if ( filter_name == "latin" )
+                        {
+                            template_part
+                                = Random.MakeText(
+                                      "latin",
+                                      ( filter_argument_count > 0 ) ? filter_argument_array[ 0 ].to!long() : 3,
+                                      ( filter_argument_count > 1 ) ? filter_argument_array[ 1 ].to!long() : 5,
+                                      ( filter_argument_count > 2 ) ? filter_argument_array[ 0 ].to!long() : 7,
+                                      ( filter_argument_count > 3 ) ? filter_argument_array[ 1 ].to!long() : 9
+                                      );
+                        }
+                        else if ( filter_name == "name" )
+                        {
+                            template_part
+                                = Random.MakeName(
+                                      ( filter_argument_count > 0 ) ? filter_argument_array[ 0 ].to!long() : 4,
+                                      ( filter_argument_count > 1 ) ? filter_argument_array[ 1 ].to!long() : 8
+                                      ).to!string();
+                        }
+                        else if ( filter_name == "firstname" )
+                        {
+                            template_part = Random.MakeFirstName();
+                        }
+                        else if ( filter_name == "lastname" )
+                        {
+                            template_part = Random.MakeLastName();
+                        }
+                        else if ( filter_name == "fullname" )
+                        {
+                            template_part = Random.MakeFullName();
+                        }
+                        else if ( filter_name == "uppercase" )
+                        {
+                            template_part = template_part.toUpper();
+                        }
+                        else if ( filter_name == "lowercase" )
+                        {
+                            template_part = template_part.toLower();
+                        }
+                        else if ( filter_name == "pascalcase" )
+                        {
+                            template_part = template_part.GetPascalCaseText();
+                        }
+                        else if ( filter_name == "snakecase" )
+                        {
+                            template_part = template_part.GetSnakeCaseText();
+                        }
+                        else if ( filter_name == "kebabcase" )
+                        {
+                            template_part = template_part.GetKebabCaseText();
+                        }
+                        else if ( filter_name == "typecase" )
+                        {
+                            template_part = template_part.GetTypeCaseText();
+                        }
+                        else if ( filter_name == "attributecase" )
+                        {
+                            template_part = template_part.GetAttributeCaseText();
+                        }
+                        else if ( filter_name == "variablecase" )
+                        {
+                            template_part = template_part.GetVariableCaseText();
+                        }
+                        else if ( filter_name == "stylecase" )
+                        {
+                            template_part = template_part.GetStyleCaseText();
+                        }
+                        else if ( filter_name == "sentencecase" )
+                        {
+                            template_part = template_part.GetSentenceCaseText();
+                        }
+                        else if ( filter_name == "locutioncase" )
+                        {
+                            template_part = template_part.GetLocutionCaseText();
+                        }
+                        else if ( filter_name == "slugcase" )
+                        {
+                            template_part = template_part.GetSlugCaseText();
+                        }
+                        else if ( Column.HasColumnValue( filter_name ) )
+                        {
+                            template_part = Column.GetColumnValue( filter_name, row_index );
+                        }
+                        else
+                        {
+                            Abort( "Invalid filter : " ~ filter );
+                        }
+                    }
+                }
+            }
+        }
+
+        return template_part_array.join( "" );
     }
 
     // -- OPERATIONS
@@ -4085,41 +4275,9 @@ class VALUE
 
                 Set( Random.PickElement( Type.ForeignColumn.ValueArray ) );
             }
-            else if ( Type.Column.IsRandomReal )
+            else if ( Type.HasTemplateText )
             {
-                Text = Random.MakeReal( Type.Column.MinimumRandomReal, Type.Column.MaximumRandomReal ).to!string();
-            }
-            else if ( Type.Column.IsRandomInteger )
-            {
-                Text = Random.MakeInteger( Type.Column.MinimumRandomInteger, Type.Column.MaximumRandomInteger ).to!string();
-            }
-            else if ( Type.Column.IsRandomNatural )
-            {
-                Text = Random.MakeNatural( Type.Column.MinimumRandomNatural, Type.Column.MaximumRandomNatural, Type.Column.MinimumRandomCount ).to!string();
-            }
-            else if ( Type.Column.IsRandomName )
-            {
-                Text = Random.MakeName( Type.Column.MinimumRandomCount, Type.Column.MaximumRandomCount );
-            }
-            else if ( Type.Column.IsRandomFirstName )
-            {
-                Text = Random.MakeFirstName();
-            }
-            else if ( Type.Column.IsRandomLastName )
-            {
-                Text = Random.MakeLastName();
-            }
-            else if ( Type.Column.IsRandomFullName )
-            {
-                Text = Random.MakeFullName();
-            }
-            else if ( Type.Column.IsRandomEnglish )
-            {
-                Text = Random.MakeText( "english", Type.Column.MinimumRandomCount, Type.Column.MaximumRandomCount, Type.Column.MinimumRandomInteger, Type.Column.MaximumRandomInteger );
-            }
-            else if ( Type.Column.IsRandomLatin )
-            {
-                Text = Random.MakeText( "latin", Type.Column.MinimumRandomCount, Type.Column.MaximumRandomCount, Type.Column.MinimumRandomInteger, Type.Column.MaximumRandomInteger );
+                Text = Type.GetTemplateValue( row_index );
             }
             else if ( Type.BaseName == "STRING"
                       || Type.BaseName == "STRING8"
@@ -4184,7 +4342,7 @@ class VALUE
 
                     Text = Random.MakeEmail( prior_first_name, prior_last_name );
                 }
-                else if ( Type.ColumnName.endsWith( "Phone" ) 
+                else if ( Type.ColumnName.endsWith( "Phone" )
                           || Type.ColumnName.endsWith( "PhoneNumber" ) )
                 {
                     Text = Random.MakePhone();
@@ -4455,16 +4613,6 @@ class VALUE
                 Abort( "Unknown type : " ~ Type.BaseName );
             }
 
-            if ( Type.Column.IsLowercase )
-            {
-                Text = Text.toLower();
-            }
-
-            if ( Type.Column.IsUppercase )
-            {
-                Text = Text.toUpper();
-            }
-
             if ( Type.Capacity > 0
                  && Text.length > Type.Capacity )
             {
@@ -4571,34 +4719,9 @@ class COLUMN
         IsLastNonIncremented;
     string
         DefaultValueText;
-    bool
-        IsRandomReal;
-    double
-        MinimumRandomReal,
-        MaximumRandomReal;
-    bool
-        IsRandomInteger;
-    long
-        MinimumRandomInteger,
-        MaximumRandomInteger;
-    bool
-        IsRandomNatural;
-    ulong
-        MinimumRandomNatural,
-        MaximumRandomNatural;
     long
         MinimumRandomCount,
         MaximumRandomCount;
-    bool
-        IsRandomName,
-        IsRandomFirstName,
-        IsRandomLastName,
-        IsRandomFullName,
-        IsRandomEnglish,
-        IsRandomLatin;
-    bool
-        IsLowercase,
-        IsUppercase;
     VALUE[]
         ValueArray;
     long
@@ -4703,6 +4826,45 @@ class COLUMN
         }
 
         return false;
+    }
+
+    // ~~
+
+    bool HasColumnValue(
+        string column_name
+        )
+    {
+        foreach ( column; Table.ColumnArray )
+        {
+            if ( column.IsStored
+                 && column.Name == column_name )
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    // ~~
+
+    string GetColumnValue(
+        string column_name,
+        long row_index
+        )
+    {
+        foreach ( column; Table.ColumnArray )
+        {
+            if ( column.IsStored
+                 && column.Name == column_name )
+            {
+                column.MakeValues();
+
+                return column.ValueArray[ row_index ].Text;
+            }
+        }
+
+        return "";
     }
 
     // ~~
@@ -5002,97 +5164,11 @@ class COLUMN
             {
                 JavascriptName = value_text_array[ 1 ];
             }
-            else if ( property_name == "firstname"
-                      && value_text_array.length == 2 )
-            {
-                IsRandomFirstName = ( value_text_array[ 1 ] != "false" );
-            }
-            else if ( property_name == "lastname"
-                      && value_text_array.length == 2 )
-            {
-                IsRandomLastName = ( value_text_array[ 1 ] != "false" );
-            }
-            else if ( property_name == "fullname"
-                      && value_text_array.length == 2 )
-            {
-                IsRandomFullName = ( value_text_array[ 1 ] != "false" );
-            }
-            else if ( property_name == "lowercase"
-                      && value_text_array.length == 2 )
-            {
-                IsLowercase = ( value_text_array[ 1 ] != "false" );
-            }
-            else if ( property_name == "uppercase"
-                      && value_text_array.length == 2 )
-            {
-                IsUppercase = ( value_text_array[ 1 ] != "false" );
-            }
-            else if ( property_name == "count"
-                      && value_text_array.length == 2 )
-            {
-                MinimumRandomCount = value_text_array[ 1 ].to!long();
-                MaximumRandomCount = MinimumRandomCount;
-            }
-            else if ( property_name == "real"
-                      && value_text_array.length == 3 )
-            {
-                IsRandomReal = true;
-                MinimumRandomReal = value_text_array[ 1 ].to!double();
-                MaximumRandomReal = value_text_array[ 2 ].to!double();
-            }
-            else if ( property_name == "integer"
-                      && value_text_array.length == 3 )
-            {
-                IsRandomInteger = true;
-                MinimumRandomInteger = value_text_array[ 1 ].to!long();
-                MaximumRandomInteger = value_text_array[ 2 ].to!long();
-            }
-            else if ( property_name == "natural"
-                      && value_text_array.length == 3 )
-            {
-                IsRandomNatural = true;
-                MinimumRandomNatural = value_text_array[ 1 ].to!ulong();
-                MaximumRandomNatural = value_text_array[ 2 ].to!ulong();
-                MinimumRandomCount = 0;
-            }
-            else if ( property_name == "name"
-                      && value_text_array.length == 3 )
-            {
-                IsRandomName = true;
-                MinimumRandomCount = value_text_array[ 1 ].to!long();
-                MaximumRandomCount = value_text_array[ 2 ].to!long();
-            }
             else if ( property_name == "count"
                       && value_text_array.length == 3 )
             {
                 MinimumRandomCount = value_text_array[ 1 ].to!long();
                 MaximumRandomCount = value_text_array[ 2 ].to!long();
-            }
-            else if ( property_name == "natural"
-                      && value_text_array.length == 4 )
-            {
-                IsRandomNatural = true;
-                MinimumRandomNatural = value_text_array[ 1 ].to!ulong();
-                MaximumRandomNatural = value_text_array[ 2 ].to!ulong();
-                MinimumRandomCount = value_text_array[ 3 ].to!long();
-            }
-            else if ( property_name == "english"
-                      && value_text_array.length == 5 )
-            {
-                IsRandomEnglish = true;
-                MinimumRandomCount = value_text_array[ 1 ].to!long();
-                MaximumRandomCount = value_text_array[ 2 ].to!long();
-                MinimumRandomInteger = value_text_array[ 3 ].to!long();
-                MaximumRandomInteger = value_text_array[ 4 ].to!long();
-            }
-            else if ( property_name == "latin"
-                      && value_text_array.length == 5 )
-            {
-                IsRandomLatin = true;
-                MinimumRandomCount = value_text_array[ 1 ].to!long();
-                MaximumRandomCount = value_text_array[ 2 ].to!long();
-                MinimumRandomInteger = value_text_array[ 3 ].to!long();
-                MaximumRandomInteger = value_text_array[ 4 ].to!long();
             }
             else if ( property_name == "default" )
             {
@@ -7998,7 +8074,7 @@ class TABLE
             {
                 first_non_stored_non_key_column = column;
             }
-            
+
             if ( column.IsEdited )
             {
                 first_edited_column = column;
@@ -8032,7 +8108,7 @@ class TABLE
             {
                 first_non_edited_non_key_column = column;
             }
-            
+
             if ( column.IsIncremented )
             {
                 first_incremented_column = column;
@@ -8091,7 +8167,7 @@ class TABLE
             {
                 last_non_stored_non_key_column = column;
             }
-            
+
             if ( column.IsEdited )
             {
                 last_edited_column = column;
@@ -8125,7 +8201,7 @@ class TABLE
             {
                 last_non_edited_non_key_column = column;
             }
-            
+
             if ( column.IsIncremented )
             {
                 last_incremented_column = column;
@@ -8181,7 +8257,7 @@ class TABLE
         {
             first_non_stored_non_key_column.IsFirstNonStoredNonKey = true;
         }
-        
+
         if ( first_edited_column !is null )
         {
             first_edited_column.IsFirstEdited = true;
@@ -8211,7 +8287,7 @@ class TABLE
         {
             first_non_edited_non_key_column.IsFirstNonEditedNonKey = true;
         }
-        
+
         if ( first_incremented_column !is null )
         {
             first_incremented_column.IsFirstIncremented = true;
@@ -8296,7 +8372,7 @@ class TABLE
         {
             last_non_edited_non_key_column.IsLastNonEditedNonKey = true;
         }
-        
+
         if ( last_incremented_column !is null )
         {
             last_incremented_column.IsLastIncremented = true;
@@ -8472,8 +8548,8 @@ class SCHEMA
 
             if ( line.startsWith( "        " ) )
             {
-                line_part_array = stripped_line.split( '|' );
-                column_part_array = line_part_array[ 0 ].split( ':' );
+                line_part_array = stripped_line.GetPartArray( "|" );
+                column_part_array = line_part_array[ 0 ].GetPartArray( ":" );
 
                 if ( column_part_array.length >= 2 )
                 {
@@ -8487,7 +8563,7 @@ class SCHEMA
 
                     if ( line_part_array.length == 2 )
                     {
-                        property_part_array = line_part_array[ 1 ].split( ',' );
+                        property_part_array = line_part_array[ 1 ].GetPartArray( "," );
 
                         foreach ( ref property_text; property_part_array )
                         {
@@ -8512,7 +8588,7 @@ class SCHEMA
             }
             else if ( line.startsWith( "    " ) )
             {
-                line_part_array = stripped_line.split( '|' );
+                line_part_array = stripped_line.GetPartArray( "|" );
 
                 table_name = line_part_array[ 0 ].strip();
 
@@ -8521,7 +8597,7 @@ class SCHEMA
 
                 if ( line_part_array.length == 2 )
                 {
-                    property_part_array = line_part_array[ 1 ].split( ',' );
+                    property_part_array = line_part_array[ 1 ].GetPartArray( "," );
 
                     foreach ( ref property_text; property_part_array )
                     {
@@ -8535,13 +8611,13 @@ class SCHEMA
             }
             else
             {
-                line_part_array = stripped_line.split( '|' );
+                line_part_array = stripped_line.GetPartArray( "|" );
 
                 Name = line_part_array[ 0 ].strip();
 
                 if ( line_part_array.length == 2 )
                 {
-                    property_part_array = line_part_array[ 1 ].split( ',' );
+                    property_part_array = line_part_array[ 1 ].GetPartArray( "," );
 
                     foreach ( ref property_text; property_part_array )
                     {
@@ -10316,6 +10392,17 @@ string ReadText(
 
 // ~~
 
+bool IsLetterCharacter(
+    char character
+    )
+{
+    return
+        ( character >= 'a' && character <= 'z' )
+        || ( character >= 'A' && character <= 'Z' );
+}
+
+// ~~
+
 bool IsVowelCharacter(
     char character
     )
@@ -10548,6 +10635,38 @@ string GetLocutionCaseText(
 
 // ~~
 
+string GetSlugCaseText(
+    string text
+    )
+{
+    string
+        slug_case_text;
+
+    foreach ( character; text )
+    {
+        if ( IsLetterCharacter( character ) )
+        {
+            slug_case_text ~= character.toLower();
+        }
+        else
+        {
+            if ( !slug_case_text.endsWith( '-' ) )
+            {
+                slug_case_text ~= '-';
+            }
+        }
+    }
+
+    if ( slug_case_text.endsWith( '-' ) )
+    {
+        slug_case_text = slug_case_text[ 0 .. $ - 1 ];
+    }
+
+    return slug_case_text;
+}
+
+// ~~
+
 bool HasCommand(
     string line,
     string[] command_array
@@ -10630,7 +10749,7 @@ string InsertCharacter(
 
 // ~~
 
-string[] GetSplitText(
+string[] GetPartArray(
     string text,
     string opening_tag,
     string closing_tag
@@ -10660,6 +10779,70 @@ string[] GetSplitText(
 
             part_array ~= closing_part_array[ 0 ];
             part_array ~= closing_part_array[ 1 ];
+        }
+    }
+
+    return part_array;
+}
+
+// ~~
+
+string[] GetPartArray(
+    string text,
+    string separator
+    )
+{
+    char
+        character,
+        closing_character;
+    long
+        character_index;
+    string[]
+        part_array;
+
+    if ( text != "" )
+    {
+        part_array = [ "" ];
+        closing_character = 0;
+
+        for ( character_index = 0;
+              character_index < text.length;
+              ++character_index )
+        {
+            character = text[ character_index ];
+
+            if ( closing_character != 0 )
+            {
+                part_array[ part_array.length.to!long() - 1 ] ~= character;
+
+                if ( character == '\\'
+                     && character_index + 1 < text.length )
+                {
+                    ++character_index;
+
+                    part_array[ part_array.length.to!long() - 1 ] ~= text[ character_index ];
+                }
+                else if ( character == closing_character )
+                {
+                    closing_character = 0;
+                }
+            }
+            else if ( character == separator[ 0 ]
+                      && character_index + separator.length <= text.length
+                      && ( separator.length == 1
+                           || text[ character_index .. character_index + separator.length ] == separator ) )
+            {
+                part_array ~= "";
+            }
+            else
+            {
+                part_array[ part_array.length.to!long() - 1 ] ~= character;
+
+                if ( character == '"' )
+                {
+                    closing_character = character;
+                }
+            }
         }
     }
 
@@ -10701,7 +10884,7 @@ string ReplaceColumnTags(
         column_is_stored = [ true, true, true, false, false, false, false, false, false, false, false, false ][ tag_index ];
         edited_is_checked = [ false, false, false, false, false, false, true, true, true, false, false, false ][ tag_index ];
 
-        template_part_array = template_text.GetSplitText( opening_tag, closing_tag );
+        template_part_array = template_text.GetPartArray( opening_tag, closing_tag );
 
         foreach ( template_part_index, ref template_part; template_part_array )
         {
@@ -10761,7 +10944,7 @@ string ReplaceTableTags(
         table_is_stored = [ true, false, false, false ][ tag_index ];
         edited_is_checked = [ false, false, true, false ][ tag_index ];
 
-        template_part_array = template_text.GetSplitText( opening_tag, closing_tag );
+        template_part_array = template_text.GetPartArray( opening_tag, closing_tag );
 
         foreach ( template_part_index, ref template_part; template_part_array )
         {
@@ -10804,7 +10987,7 @@ string ReplaceProperties(
     string[]
         template_part_array;
 
-    template_part_array = template_text.GetSplitText( opening_tag, closing_tag );
+    template_part_array = template_text.GetPartArray( opening_tag, closing_tag );
 
     foreach ( template_part_index, ref template_part; template_part_array )
     {

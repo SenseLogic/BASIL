@@ -2,6 +2,7 @@ struct SECTION
 {
     id : u64,
     number : u64,
+    slug : String,
     name : String,
     text : String,
     image : String,
@@ -35,6 +36,7 @@ struct ARTICLE
     id : u64,
     section_id : u64,
     user_id : u64,
+    slug : String,
     title : String,
     text : String,
     image : String,

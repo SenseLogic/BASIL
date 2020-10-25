@@ -14,6 +14,7 @@ left to right direction
 class SECTION {
     Uuid : UUID
     Number : UINT64
+    Slug : STRING
     Name : STRING
     Text : STRING
     Image : STRING
@@ -41,6 +42,7 @@ class ARTICLE {
     Uuid : UUID
     SectionUuid : SECTION.Uuid
     UserUuid : USER.Uuid
+    Slug : STRING
     Title : STRING
     Text : STRING
     Image : STRING

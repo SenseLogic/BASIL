@@ -1,6 +1,7 @@
 type SECTION struct {
     Uuid gocql.UUID    `db:"Uuid"`;
     Number uint64    `db:"Number"`;
+    Slug string    `db:"Slug"`;
     Name string    `db:"Name"`;
     Text string    `db:"Text"`;
     Image string    `db:"Image"`;
@@ -32,6 +33,7 @@ type ARTICLE struct {
     Uuid gocql.UUID    `db:"Uuid"`;
     SectionUuid gocql.UUID    `db:"SectionUuid"`;
     UserUuid gocql.UUID    `db:"UserUuid"`;
+    Slug string    `db:"Slug"`;
     Title string    `db:"Title"`;
     Text string    `db:"Text"`;
     Image string    `db:"Image"`;

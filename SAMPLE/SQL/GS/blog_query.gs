@@ -5,7 +5,7 @@ func AddDatabaseSection(
 {
     statement, error_
         := DatabaseSession.Prepare(
-               "insert into SECTION ( Number, Name, Text, Image ) values ( ?, ?, ?, ? )"
+               "insert into SECTION ( Number, Slug, Name, Text, Image ) values ( ?, ?, ?, ?, ? )"
                );
 
     if ( error_ != nil )
@@ -18,6 +18,7 @@ func AddDatabaseSection(
     result, error_
         := statement.Exec(
                section.Number,
+               section.Slug,
                section.Name,
                section.Text,
                section.Image
@@ -51,7 +52,7 @@ func SetDatabaseSection(
 {
     statement, error_
         := DatabaseSession.Prepare(
-               "update SECTION set Number = ?, Name = ?, Text = ?, Image = ?,  where Id = ?"
+               "update SECTION set Number = ?, Slug = ?, Name = ?, Text = ?, Image = ?,  where Id = ?"
                );
 
     if ( error_ != nil )
@@ -64,6 +65,7 @@ func SetDatabaseSection(
     result, error_
         := statement.Exec(
                section.Number,
+               section.Slug,
                section.Name,
                section.Text,
                section.Image,
@@ -123,7 +125,7 @@ func GetDatabaseSection(
 {
     statement, error_
         := DatabaseSession.Prepare(
-               "select Number, Name, Text, Image,  from SECTION where Id = ? limit 1"
+               "select Number, Slug, Name, Text, Image,  from SECTION where Id = ? limit 1"
                );
 
     if ( error_ != nil )
@@ -149,6 +151,7 @@ func GetDatabaseSection(
     {
         error_
             = rows.Scan(                  &section.Number,
+                  &section.Slug,
                   &section.Name,
                   &section.Text,
                   &section.Image,
@@ -185,7 +188,7 @@ func GetDatabaseSectionList(
 
     statement, error_
         := DatabaseSession.Prepare(
-               "select Id, Number, Name, Text, Image from SECTION"
+               "select Id, Number, Slug, Name, Text, Image from SECTION"
                );
 
     if ( error_ != nil )
@@ -212,6 +215,7 @@ func GetDatabaseSectionList(
             = rows.Scan(
                   &section.Id,
                   &section.Number,
+                  &section.Slug,
                   &section.Name,
                   &section.Text,
                   &section.Image
@@ -509,7 +513,7 @@ func AddDatabaseArticle(
 {
     statement, error_
         := DatabaseSession.Prepare(
-               "insert into ARTICLE ( SectionId, UserId, Title, Text, Image, Date ) values ( ?, ?, ?, ?, ?, date( now() ) )"
+               "insert into ARTICLE ( SectionId, UserId, Slug, Title, Text, Image, Date ) values ( ?, ?, ?, ?, ?, ?, date( now() ) )"
                );
 
     if ( error_ != nil )
@@ -523,6 +527,7 @@ func AddDatabaseArticle(
         := statement.Exec(
                article.SectionId,
                article.UserId,
+               article.Slug,
                article.Title,
                article.Text,
                article.Image
@@ -556,7 +561,7 @@ func SetDatabaseArticle(
 {
     statement, error_
         := DatabaseSession.Prepare(
-               "update ARTICLE set SectionId = ?, UserId = ?, Title = ?, Text = ?, Image = ?, Date = ?,  where Id = ?"
+               "update ARTICLE set SectionId = ?, UserId = ?, Slug = ?, Title = ?, Text = ?, Image = ?, Date = ?,  where Id = ?"
                );
 
     if ( error_ != nil )
@@ -570,6 +575,7 @@ func SetDatabaseArticle(
         := statement.Exec(
                article.SectionId,
                article.UserId,
+               article.Slug,
                article.Title,
                article.Text,
                article.Image,
@@ -630,7 +636,7 @@ func GetDatabaseArticle(
 {
     statement, error_
         := DatabaseSession.Prepare(
-               "select SectionId, UserId, Title, Text, Image, Date,  from ARTICLE where Id = ? limit 1"
+               "select SectionId, UserId, Slug, Title, Text, Image, Date,  from ARTICLE where Id = ? limit 1"
                );
 
     if ( error_ != nil )
@@ -657,6 +663,7 @@ func GetDatabaseArticle(
         error_
             = rows.Scan(                  &article.SectionId,
                   &article.UserId,
+                  &article.Slug,
                   &article.Title,
                   &article.Text,
                   &article.Image,
@@ -694,7 +701,7 @@ func GetDatabaseArticleList(
 
     statement, error_
         := DatabaseSession.Prepare(
-               "select Id, SectionId, UserId, Title, Text, Image, Date from ARTICLE"
+               "select Id, SectionId, UserId, Slug, Title, Text, Image, Date from ARTICLE"
                );
 
     if ( error_ != nil )
@@ -722,6 +729,7 @@ func GetDatabaseArticleList(
                   &article.Id,
                   &article.SectionId,
                   &article.UserId,
+                  &article.Slug,
                   &article.Title,
                   &article.Text,
                   &article.Image,

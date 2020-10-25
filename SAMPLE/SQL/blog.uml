@@ -14,6 +14,7 @@ left to right direction
 class SECTION {
     Id : UINT64
     Number : UINT64
+    Slug : STRING
     Name : STRING
     Text : STRING
     Image : STRING
@@ -41,6 +42,7 @@ class ARTICLE {
     Id : UINT64
     SectionId : SECTION.Id
     UserId : USER.Id
+    Slug : STRING
     Title : STRING
     Text : STRING
     Image : STRING

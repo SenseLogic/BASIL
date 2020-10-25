@@ -4,6 +4,7 @@ BLOG | count 5
 
         Uuid : UUID | key, unique
         Number : UINT64
+        Slug : STRING = "{{Name|slugcase}}"
         Name : STRING
         Text : STRING
         Image : STRING
@@ -32,6 +33,7 @@ BLOG | count 5
         Uuid : UUID | key, unique
         SectionUuid : SECTION.Uuid | indexed
         UserUuid : USER.Uuid | indexed
+        Slug : STRING = "{{Title|slugcase}}"
         Title : STRING
         Text : STRING
         Image : STRING
@@ -46,7 +48,7 @@ BLOG | count 5
         Uuid : UUID | key, unique
         ArticleUuid : ARTICLE.Uuid | indexed
         UserUuid : USER.Uuid | indexed
-        Text : STRING | english 2 4 5 7
+        Text : STRING = "{{english 2 4 5 7}}"
         DateTime : DATETIME
 
         Article : POINTER[ ARTICLE ] | !stored

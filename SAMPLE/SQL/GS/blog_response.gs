@@ -7,6 +7,8 @@ func WriteResponseSection(
     WriteResponseUint64( writer, section.Id );
     WriteResponse( writer, ",\"Number\":" );
     WriteResponseUint64( writer, section.Number );
+    WriteResponse( writer, ",\"Slug\":" );
+    WriteResponseString( writer, section.Slug );
     WriteResponse( writer, ",\"Name\":" );
     WriteResponseString( writer, section.Name );
     WriteResponse( writer, ",\"Text\":" );
@@ -67,6 +69,8 @@ func WriteResponseArticle(
     WriteResponseUint64( writer, article.SectionId );
     WriteResponse( writer, ",\"UserId\":" );
     WriteResponseUint64( writer, article.UserId );
+    WriteResponse( writer, ",\"Slug\":" );
+    WriteResponseString( writer, article.Slug );
     WriteResponse( writer, ",\"Title\":" );
     WriteResponseString( writer, article.Title );
     WriteResponse( writer, ",\"Text\":" );

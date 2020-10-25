@@ -5,6 +5,7 @@ class SECTION
     {
         this.Uuid = null;
         this.Number = null;
+        this.Slug = null;
         this.Name = null;
         this.Text = null;
         this.Image = null;
@@ -46,6 +47,7 @@ class ARTICLE
         this.Uuid = null;
         this.SectionUuid = null;
         this.UserUuid = null;
+        this.Slug = null;
         this.Title = null;
         this.Text = null;
         this.Image = null;

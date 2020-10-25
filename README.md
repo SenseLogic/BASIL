@@ -30,6 +30,7 @@ BLOG | count 5
 
         Id : UINT64 | key, unique, incremented
         Number : UINT64
+        Slug : STRING = "{{Name|slugcase}}"
         Name : STRING | capacity 45
         Text : STRING
         Image : STRING | capacity 45
@@ -58,6 +59,7 @@ BLOG | count 5
         Id : UINT64 | key, unique, incremented
         SectionId : SECTION.Id | indexed, ascending 2
         UserId : USER.Id | indexed, ascending 1
+        Slug : STRING = "{{Title|slugcase}}"
         Title : STRING
         Text : STRING
         Image : STRING | capacity 45
@@ -72,7 +74,7 @@ BLOG | count 5
         Id : UINT64 | key, unique, incremented
         ArticleId : ARTICLE.Id | indexed
         UserId : USER.Id | indexed
-        Text : STRING | english 2 4 5 7
+        Text : STRING = "{{english 2 4 5 7}}"
         DateTime : DATETIME | now, descending
 
         Article : POINTER[ ARTICLE ] | !stored
@@ -96,6 +98,7 @@ BLOG | count 5
 
         Uuid : UUID | key, unique
         Number : UINT64
+        Slug : STRING = "{{Name|slugcase}}"
         Name : STRING
         Text : STRING
         Image : STRING
@@ -124,6 +127,7 @@ BLOG | count 5
         Uuid : UUID | key, unique
         SectionUuid : SECTION.Uuid | indexed
         UserUuid : USER.Uuid | indexed
+        Slug : STRING = "{{Title|slugcase}}"
         Title : STRING
         Text : STRING
         Image : STRING
@@ -138,7 +142,7 @@ BLOG | count 5
         Uuid : UUID | key, unique
         ArticleUuid : ARTICLE.Uuid | indexed
         UserUuid : USER.Uuid | indexed
-        Text : STRING | english 2 4 5 7
+        Text : STRING = "{{english 2 4 5 7}}"
         DateTime : DATETIME
 
         Article : POINTER[ ARTICLE ] | !stored
@@ -272,7 +276,7 @@ using System.Collections.Generic;
 
 &nbsp;&nbsp;&nbsp;&nbsp;<i>table_name</i> [| <i>table_property</i>, <i>table_property</i>, ...]
 
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i>column_name</i> : <i>column_type</i> [| <i>column_property</i>, <i>column_property</i>, ...]
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i>column_name</i> : <i>column_type</i> [= "<i>column_template</i>"] [| <i>column_property</i>, <i>column_property</i>, ...]
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;..
 
 &nbsp;&nbsp;&nbsp;&nbsp;...
@@ -298,44 +302,36 @@ count <i>row_count</i>
 <i>custom_property_name</i> <i>custom_property_value</i>
 </pre>
 
-### Column data
-
-#### Functions
+### Column functions
 
 <pre>
-Real <i>minimum_value</i> <i>maximum_value</i>
-Integer <i>minimum_value</i> <i>maximum_value</i>
-Natural <i>minimum_value</i> <i>maximum_value</i> [<i>digit_count</i>]
-English <i>minimum_sentence_count</i> <i>maximum_sentence_count</i> <i>minimum_word_count</i> <i>maximum_word_count</i>
-Latin <i>minimum_sentence_count</i> <i>maximum_sentence_count</i> <i>minimum_word_count</i> <i>maximum_word_count</i>
-Name <i>minimum_letter_count</i> <i>maximum_letter_count</i>
-FirstName
-LastName
-FullName
+real <i>minimum_value</i> <i>maximum_value</i>
+integer <i>minimum_value</i> <i>maximum_value</i>
+natural <i>minimum_value</i> <i>maximum_value</i> <i>digit_count</i>
+english <i>minimum_sentence_count</i> <i>maximum_sentence_count</i> <i>minimum_word_count</i> <i>maximum_word_count</i>
+latin <i>minimum_sentence_count</i> <i>maximum_sentence_count</i> <i>minimum_word_count</i> <i>maximum_word_count</i>
+name <i>minimum_letter_count</i> <i>maximum_letter_count</i>
+firstname
+lastname
+fullname
+<i>column_name<i>
 </pre>
 
-#### Filters
+### Column filters
 
 <pre>
-LowerCase
-UpperCase
-MinorCase
-MajorCase
-SnakeCase
-PascalCase
-CamelCase
-RemoveComments
-RemoveBlanks
-PackStrings
-PackIdentifiers
-ReplaceText old_text new_text
-ReplacePrefix old_prefix new_prefix
-ReplaceSuffix old_suffix new_suffix
-ReplaceIdentifier old_identifier new_identifier
-RemoveText text
-RemovePrefix prefix
-RemoveSuffix suffix
-RemoveIdentifier identifier
+uppercase
+lowercase
+pascalcase
+snakecase
+kebabcase
+typecase
+attributecase
+variablecase
+stylecase
+sentensecase
+locutioncase
+slugcase
 </pre>
 
 ### Column properties
@@ -782,7 +778,7 @@ Generates `blog.uml`, `blog.sql`, `blog_data.sql`, `blog_sql_type.go` from `blog
 
 ## Version
 
-5.0
+6.0
 
 ## Author
 

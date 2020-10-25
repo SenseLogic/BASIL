@@ -5,6 +5,7 @@ public class SECTION
     public ulong
         Number;
     public string
+        Slug,
         Name,
         Text,
         Image;
@@ -44,6 +45,7 @@ public class ARTICLE
         SectionUuid,
         UserUuid;
     public string
+        Slug,
         Title,
         Text,
         Image;

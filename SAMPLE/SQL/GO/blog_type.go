@@ -1,6 +1,7 @@
 type SECTION struct {
     Id uint64    `db:"Id"`;
     Number uint64    `db:"Number"`;
+    Slug string    `db:"Slug"`;
     Name string    `db:"Name"`;
     Text string    `db:"Text"`;
     Image string    `db:"Image"`;
@@ -32,6 +33,7 @@ type ARTICLE struct {
     Id uint64    `db:"Id"`;
     SectionId uint64    `db:"SectionId"`;
     UserId uint64    `db:"UserId"`;
+    Slug string    `db:"Slug"`;
     Title string    `db:"Title"`;
     Text string    `db:"Text"`;
     Image string    `db:"Image"`;

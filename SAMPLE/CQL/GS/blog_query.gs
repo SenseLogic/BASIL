@@ -7,9 +7,10 @@ func AddDatabaseSection(
 
     error_
         := DatabaseSession.Query(
-               "insert into SECTION ( Uuid, Number, Name, Text, Image ) values ( ?, ?, ?, ?, ? )",
+               "insert into SECTION ( Uuid, Number, Slug, Name, Text, Image ) values ( ?, ?, ?, ?, ?, ? )",
                section.Uuid,
                section.Number,
+               section.Slug,
                section.Name,
                section.Text,
                section.Image
@@ -34,9 +35,10 @@ func SetDatabaseSection(
 {
     error_
         := DatabaseSession.Query(
-               "insert into SECTION ( Uuid, Number, Name, Text, Image ) values ( ?, ?, ?, ?, ? )",
+               "insert into SECTION ( Uuid, Number, Slug, Name, Text, Image ) values ( ?, ?, ?, ?, ?, ? )",
                section.Uuid,
                section.Number,
+               section.Slug,
                section.Name,
                section.Text,
                section.Image
@@ -84,12 +86,13 @@ func GetDatabaseSection(
 {
     error_
         := DatabaseSession.Query(
-               "select Number, Name, Text, Image,  from SECTION where Uuid = ?",
+               "select Number, Slug, Name, Text, Image,  from SECTION where Uuid = ?",
                section.Uuid
                )
                .Consistency( gocql.One )
                .Scan(
                     &section.Number,
+                    &section.Slug,
                     &section.Name,
                     &section.Text,
                     &section.Image,
@@ -117,7 +120,7 @@ func GetDatabaseSectionList(
 
     iterator
         := DatabaseSession.Query(
-               "select Uuid, Number, Name, Text, Image from SECTION"
+               "select Uuid, Number, Slug, Name, Text, Image from SECTION"
                )
                .Consistency( gocql.One )
                .Iter();
@@ -127,6 +130,7 @@ func GetDatabaseSectionList(
     for iterator.Scan(
             &section.Uuid,
             &section.Number,
+            &section.Slug,
             &section.Name,
             &section.Text,
             &section.Image
@@ -345,10 +349,11 @@ func AddDatabaseArticle(
 
     error_
         := DatabaseSession.Query(
-               "insert into ARTICLE ( Uuid, SectionUuid, UserUuid, Title, Text, Image, Date ) values ( ?, ?, ?, ?, ?, ?, ? )",
+               "insert into ARTICLE ( Uuid, SectionUuid, UserUuid, Slug, Title, Text, Image, Date ) values ( ?, ?, ?, ?, ?, ?, ?, ? )",
                article.Uuid,
                article.SectionUuid,
                article.UserUuid,
+               article.Slug,
                article.Title,
                article.Text,
                article.Image,
@@ -374,10 +379,11 @@ func SetDatabaseArticle(
 {
     error_
         := DatabaseSession.Query(
-               "insert into ARTICLE ( Uuid, SectionUuid, UserUuid, Title, Text, Image, Date ) values ( ?, ?, ?, ?, ?, ?, ? )",
+               "insert into ARTICLE ( Uuid, SectionUuid, UserUuid, Slug, Title, Text, Image, Date ) values ( ?, ?, ?, ?, ?, ?, ?, ? )",
                article.Uuid,
                article.SectionUuid,
                article.UserUuid,
+               article.Slug,
                article.Title,
                article.Text,
                article.Image,
@@ -426,13 +432,14 @@ func GetDatabaseArticle(
 {
     error_
         := DatabaseSession.Query(
-               "select SectionUuid, UserUuid, Title, Text, Image, Date,  from ARTICLE where Uuid = ?",
+               "select SectionUuid, UserUuid, Slug, Title, Text, Image, Date,  from ARTICLE where Uuid = ?",
                article.Uuid
                )
                .Consistency( gocql.One )
                .Scan(
                     &article.SectionUuid,
                     &article.UserUuid,
+                    &article.Slug,
                     &article.Title,
                     &article.Text,
                     &article.Image,
@@ -461,7 +468,7 @@ func GetDatabaseArticleList(
 
     iterator
         := DatabaseSession.Query(
-               "select Uuid, SectionUuid, UserUuid, Title, Text, Image, Date from ARTICLE"
+               "select Uuid, SectionUuid, UserUuid, Slug, Title, Text, Image, Date from ARTICLE"
                )
                .Consistency( gocql.One )
                .Iter();
@@ -472,6 +479,7 @@ func GetDatabaseArticleList(
             &article.Uuid,
             &article.SectionUuid,
             &article.UserUuid,
+            &article.Slug,
             &article.Title,
             &article.Text,
             &article.Image,

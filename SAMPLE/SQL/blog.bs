@@ -4,6 +4,7 @@ BLOG | count 5
 
         Id : UINT64 | key, unique, incremented
         Number : UINT64
+        Slug : STRING = "{{Name|slugcase}}"
         Name : STRING | capacity 45
         Text : STRING
         Image : STRING | capacity 45
@@ -32,6 +33,7 @@ BLOG | count 5
         Id : UINT64 | key, unique, incremented
         SectionId : SECTION.Id | indexed, ascending 2
         UserId : USER.Id | indexed, ascending 1
+        Slug : STRING = "{{Title|slugcase}}"
         Title : STRING
         Text : STRING
         Image : STRING | capacity 45
@@ -46,7 +48,7 @@ BLOG | count 5
         Id : UINT64 | key, unique, incremented
         ArticleId : ARTICLE.Id | indexed
         UserId : USER.Id | indexed
-        Text : STRING | english 2 4 5 7
+        Text : STRING = "{{english 2 4 5 7}}"
         DateTime : DATETIME | now, descending
 
         Article : POINTER[ ARTICLE ] | !stored

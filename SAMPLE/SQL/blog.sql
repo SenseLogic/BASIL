@@ -11,6 +11,7 @@ drop table if exists `BLOG`.`SECTION`;
 create table if not exists `BLOG`.`SECTION`(
     `Id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
     `Number` BIGINT UNSIGNED NULL,
+    `Slug` TEXT NULL,
     `Name` VARCHAR( 45 ) NULL,
     `Text` TEXT NULL,
     `Image` VARCHAR( 45 ) NULL,
@@ -43,6 +44,7 @@ create table if not exists `BLOG`.`ARTICLE`(
     `Id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
     `SectionId` BIGINT UNSIGNED NULL,
     `UserId` BIGINT UNSIGNED NULL,
+    `Slug` TEXT NULL,
     `Title` TEXT NULL,
     `Text` TEXT NULL,
     `Image` VARCHAR( 45 ) NULL,

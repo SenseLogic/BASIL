@@ -4,6 +4,7 @@ public class SECTION
         Id,
         Number;
     public string
+        Slug,
         Name,
         Text,
         Image;
@@ -43,6 +44,7 @@ public class ARTICLE
         SectionId,
         UserId;
     public string
+        Slug,
         Title,
         Text,
         Image;
