@@ -20,6 +20,7 @@ type SIMPLE struct {
     Date time.Time;
     DateTime time.Time;
     Blob [] byte;
+    Option string;
 }
 
 // ~~

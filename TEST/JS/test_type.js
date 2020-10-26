@@ -20,6 +20,7 @@ class SIMPLE
         this.Date = null;
         this.DateTime = null;
         this.Blob = null;
+        this.Option = null;
     }
 }
 

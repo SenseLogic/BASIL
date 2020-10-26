@@ -16,7 +16,8 @@ struct SIMPLE
     name : String,
     date : String,
     date_time : String,
-    blob : String
+    blob : String,
+    option : String
 }
 
 // ~~

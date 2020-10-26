@@ -17,6 +17,7 @@ type SIMPLE struct
     Date time.Time    `db:"Date"`;
     DateTime time.Time    `db:"DateTime"`;
     Blob [] byte    `db:"Blob"`;
+    Option string    `db:"Option"`;
 }
 
 // ~~

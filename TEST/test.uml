@@ -29,6 +29,7 @@ class SIMPLE {
     Date : DATE
     DateTime : DATETIME
     Blob : BLOB
+    Option : STRING
 }
 
 class COMPOUND {

@@ -25,6 +25,7 @@ func HandleAddSimpleDatabaseRequest(
          && GetRequestDateTime( request, &simple.Date, "Date", &error_code )
          && GetRequestDateTime( request, &simple.DateTime, "DateTime", &error_code )
          && GetRequestBlob( request, &simple.Blob, "Blob", &error_code )
+         && GetRequestString( request, &simple.Option, "Option", &error_code )
          && AddDatabaseSimple( &simple, &error_code ) )
     {
         WriteResponse( response_writer, "{" );
@@ -68,6 +69,7 @@ func HandleSetSimpleDatabaseRequest(
          && GetRequestDateTime( request, &simple.Date, "Date", &error_code )
          && GetRequestDateTime( request, &simple.DateTime, "DateTime", &error_code )
          && GetRequestBlob( request, &simple.Blob, "Blob", &error_code )
+         && GetRequestString( request, &simple.Option, "Option", &error_code )
          && SetDatabaseSimple( &simple, &error_code ) )
     {
         WriteResponseSuccess( response_writer );

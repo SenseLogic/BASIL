@@ -30,7 +30,7 @@ BLOG | count 5
 
         Id : UINT64 | key, unique, incremented
         Number : UINT64
-        Slug : STRING = "{{Name|slugcase}}"
+        Slug : STRING = "{{Name:slugcase}}"
         Name : STRING | capacity 45
         Text : STRING
         Image : STRING | capacity 45
@@ -59,7 +59,7 @@ BLOG | count 5
         Id : UINT64 | key, unique, incremented
         SectionId : SECTION.Id | indexed, ascending 2
         UserId : USER.Id | indexed, ascending 1
-        Slug : STRING = "{{Title|slugcase}}"
+        Slug : STRING = "{{Title:slugcase}}"
         Title : STRING
         Text : STRING
         Image : STRING | capacity 45
@@ -98,7 +98,7 @@ BLOG | count 5
 
         Uuid : UUID | key, unique
         Number : UINT64
-        Slug : STRING = "{{Name|slugcase}}"
+        Slug : STRING = "{{Name:slugcase}}"
         Name : STRING
         Text : STRING
         Image : STRING
@@ -127,7 +127,7 @@ BLOG | count 5
         Uuid : UUID | key, unique
         SectionUuid : SECTION.Uuid | indexed
         UserUuid : USER.Uuid | indexed
-        Slug : STRING = "{{Title|slugcase}}"
+        Slug : STRING = "{{Title:slugcase}}"
         Title : STRING
         Text : STRING
         Image : STRING
@@ -276,7 +276,7 @@ using System.Collections.Generic;
 
 &nbsp;&nbsp;&nbsp;&nbsp;<i>table_name</i> [| <i>table_property</i>, <i>table_property</i>, ...]
 
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i>column_name</i> : <i>column_type</i> [= "<i>column_template</i>"] [| <i>column_property</i>, <i>column_property</i>, ...]
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i>column_name</i> : <i>column_type</i> [= "<i>column_template:filter:...|...</i>"] [| <i>column_property</i>, <i>column_property</i>, ...]
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;..
 
 &nbsp;&nbsp;&nbsp;&nbsp;...
@@ -302,7 +302,7 @@ count <i>row_count</i>
 <i>custom_property_name</i> <i>custom_property_value</i>
 </pre>
 
-### Column functions
+### Column template functions
 
 <pre>
 real <i>minimum_value</i> <i>maximum_value</i>
@@ -317,7 +317,7 @@ fullname
 <i>column_name<i>
 </pre>
 
-### Column filters
+### Column template filters
 
 <pre>
 uppercase

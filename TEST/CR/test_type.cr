@@ -16,6 +16,7 @@ class SIMPLE
     @date : String
     @date_time : String
     @blob : String
+    @option : String
 end
 
 # ~~

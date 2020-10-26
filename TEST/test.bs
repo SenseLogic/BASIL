@@ -19,6 +19,7 @@ TEST | count 10
         Date : DATE | unique
         DateTime : DATETIME
         Blob : BLOB
+        Option : STRING = "first_{{String}}|second_{{Name}}|third_{{Date}}|fourth_{{DateTime}}"
 
     COMPOUND
 

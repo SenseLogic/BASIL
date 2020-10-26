@@ -37,6 +37,8 @@ func WriteResponseSimple(
     WriteResponseDateTime( writer, simple.DateTime );
     WriteResponse( writer, ",\"Blob\":" );
     WriteResponseBlob( writer, simple.Blob );
+    WriteResponse( writer, ",\"Option\":" );
+    WriteResponseString( writer, simple.Option );
     WriteResponse( writer, "}" );
 }
 

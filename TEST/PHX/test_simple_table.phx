@@ -2,14 +2,14 @@
 Table :
     SIMPLE : SIMPLE / Simple / simple / simple / Simple / Simple / simple
         Properties : false false
-        Columns : Uuid, Bool, Int8, Uint8, Int16, Uint16, Int32, Uint32, Int64, Uint64, Float32, Float64, String, Name, Date, DateTime, Blob
+        Columns : Uuid, Bool, Int8, Uint8, Int16, Uint16, Int32, Uint32, Int64, Uint64, Float32, Float64, String, Name, Date, DateTime, Blob, Option
         Key columns : Uuid
-        Non key columns : Bool, Int8, Uint8, Int16, Uint16, Int32, Uint32, Int64, Uint64, Float32, Float64, String, Name, Date, DateTime, Blob
-        Stored columns : Uuid, Bool, Int8, Uint8, Int16, Uint16, Int32, Uint32, Int64, Uint64, Float32, Float64, String, Name, Date, DateTime, Blob
+        Non key columns : Bool, Int8, Uint8, Int16, Uint16, Int32, Uint32, Int64, Uint64, Float32, Float64, String, Name, Date, DateTime, Blob, Option
+        Stored columns : Uuid, Bool, Int8, Uint8, Int16, Uint16, Int32, Uint32, Int64, Uint64, Float32, Float64, String, Name, Date, DateTime, Blob, Option
         Non Stored columns : 
         Stored key columns : Uuid
         Non Stored key columns : 
-        Stored non key columns : Bool, Int8, Uint8, Int16, Uint16, Int32, Uint32, Int64, Uint64, Float32, Float64, String, Name, Date, DateTime, Blob
+        Stored non key columns : Bool, Int8, Uint8, Int16, Uint16, Int32, Uint32, Int64, Uint64, Float32, Float64, String, Name, Date, DateTime, Blob, Option
         Non Stored non key columns : 
         Columns :
             Uuid : Uuid / uuid / uuid / Uuid / Uuid / uuid
@@ -131,4 +131,11 @@ Table :
                 Crystal : String blob
                 C# : String Blob
                 Rust : String blob
+            Option : Option / option / option / Option / Option / option
+                Properties : false false
+                Go : string Option
+                PHP : string Option
+                Crystal : String option
+                C# : string Option
+                Rust : String option
 </pre>

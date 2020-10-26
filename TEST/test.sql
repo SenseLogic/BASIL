@@ -24,6 +24,7 @@ create table if not exists `TEST`.`SIMPLE`(
     `Date` DATE NULL,
     `DateTime` DATETIME NULL,
     `Blob` BLOB NULL,
+    `Option` TEXT NULL,
     primary key( `Uuid` )
     ) engine = InnoDB;
 

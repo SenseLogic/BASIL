@@ -1442,6 +1442,8 @@ class TYPE
         string type_name
         )
     {
+        bool
+            character_is_in_string;
         char
             character;
         long
@@ -1459,6 +1461,7 @@ class TYPE
         BaseName = Name;
 
         bracket_level = 0;
+        character_is_in_string = false;
 
         for ( character_index = 0;
               character_index < Name.length;
@@ -1466,7 +1469,23 @@ class TYPE
         {
             character = Name[ character_index ];
 
-            if ( character == ':' )
+            if ( character_is_in_string )
+            {
+                sub_type ~= character;
+
+                if ( character == '\\'
+                     && character_index + 1 < Name.length )
+                {
+                    ++character_index;
+
+                    sub_type ~= Name[ character_index ];
+                }
+                else if ( character == '"' )
+                {
+                    character_is_in_string = false;
+                }
+            }
+            else if ( character == ':' )
             {
                 if ( bracket_level == 0 )
                 {
@@ -1516,6 +1535,11 @@ class TYPE
             else
             {
                 sub_type ~= character;
+
+                if ( character == '"' )
+                {
+                    character_is_in_string = true;
+                }
             }
         }
 
@@ -2801,153 +2825,160 @@ class TYPE
             filter_array,
             template_part_array;
 
-        template_part_array = TemplateText.GetPartArray( "{{", "}}" );
-
-        foreach ( template_part_index, ref template_part; template_part_array )
+        if ( TemplateText == "" )
         {
-            if ( ( template_part_index & 1 ) == 1 )
+            return "";
+        }
+        else
+        {
+            template_part_array = Random.PickElement( TemplateText.GetPartArray( "|" ) ).GetPartArray( "{{", "}}" );
+
+            foreach ( template_part_index, ref template_part; template_part_array )
             {
-                filter_array = template_part.split( '|' );
-
-                foreach ( filter_index, filter; filter_array )
+                if ( ( template_part_index & 1 ) == 1 )
                 {
-                    filter_argument_array = filter.split( ' ' );
+                    filter_array = template_part.split( ':' );
 
-                    if ( filter_argument_array.length >= 1 )
+                    foreach ( filter_index, filter; filter_array )
                     {
-                        filter_name = filter_argument_array[ 0 ];
-                        filter_argument_array = filter_argument_array[ 1 .. $ ];
-                        filter_argument_count = filter_argument_array.length;
+                        filter_argument_array = filter.split( ' ' );
 
-                        if ( filter_name == "real" )
+                        if ( filter_argument_array.length >= 1 )
                         {
-                            template_part
-                                = Random.MakeReal(
-                                      ( filter_argument_count > 0 ) ? filter_argument_array[ 0 ].to!double() : 0.0,
-                                      ( filter_argument_count > 1 ) ? filter_argument_array[ 1 ].to!double() : 1.0
-                                      ).to!string();
-                        }
-                        else if ( filter_name == "integer" )
-                        {
-                            template_part
-                                = Random.MakeInteger(
-                                      ( filter_argument_count > 0 ) ? filter_argument_array[ 0 ].to!long() : 1,
-                                      ( filter_argument_count > 1 ) ? filter_argument_array[ 1 ].to!long() : 100
-                                      ).to!string();
-                        }
-                        else if ( filter_name == "natural" )
-                        {
-                            template_part
-                                = Random.MakeNatural(
-                                      ( filter_argument_count > 0 ) ? filter_argument_array[ 0 ].to!ulong() : 1,
-                                      ( filter_argument_count > 1 ) ? filter_argument_array[ 1 ].to!ulong() : 100,
-                                      ( filter_argument_count > 2 ) ? filter_argument_array[ 2 ].to!long() : 0
-                                      ).to!string();
-                        }
-                        else if ( filter_name == "english" )
-                        {
-                            template_part
-                                = Random.MakeText(
-                                      "english",
-                                      ( filter_argument_count > 0 ) ? filter_argument_array[ 0 ].to!long() : 3,
-                                      ( filter_argument_count > 1 ) ? filter_argument_array[ 1 ].to!long() : 5,
-                                      ( filter_argument_count > 2 ) ? filter_argument_array[ 2 ].to!long() : 7,
-                                      ( filter_argument_count > 3 ) ? filter_argument_array[ 3 ].to!long() : 9
-                                      );
-                        }
-                        else if ( filter_name == "latin" )
-                        {
-                            template_part
-                                = Random.MakeText(
-                                      "latin",
-                                      ( filter_argument_count > 0 ) ? filter_argument_array[ 0 ].to!long() : 3,
-                                      ( filter_argument_count > 1 ) ? filter_argument_array[ 1 ].to!long() : 5,
-                                      ( filter_argument_count > 2 ) ? filter_argument_array[ 2 ].to!long() : 7,
-                                      ( filter_argument_count > 3 ) ? filter_argument_array[ 3 ].to!long() : 9
-                                      );
-                        }
-                        else if ( filter_name == "name" )
-                        {
-                            template_part
-                                = Random.MakeName(
-                                      ( filter_argument_count > 0 ) ? filter_argument_array[ 0 ].to!long() : 4,
-                                      ( filter_argument_count > 1 ) ? filter_argument_array[ 1 ].to!long() : 8
-                                      ).to!string();
-                        }
-                        else if ( filter_name == "firstname" )
-                        {
-                            template_part = Random.MakeFirstName();
-                        }
-                        else if ( filter_name == "lastname" )
-                        {
-                            template_part = Random.MakeLastName();
-                        }
-                        else if ( filter_name == "fullname" )
-                        {
-                            template_part = Random.MakeFullName();
-                        }
-                        else if ( filter_name == "uppercase" )
-                        {
-                            template_part = template_part.toUpper();
-                        }
-                        else if ( filter_name == "lowercase" )
-                        {
-                            template_part = template_part.toLower();
-                        }
-                        else if ( filter_name == "pascalcase" )
-                        {
-                            template_part = template_part.GetPascalCaseText();
-                        }
-                        else if ( filter_name == "snakecase" )
-                        {
-                            template_part = template_part.GetSnakeCaseText();
-                        }
-                        else if ( filter_name == "kebabcase" )
-                        {
-                            template_part = template_part.GetKebabCaseText();
-                        }
-                        else if ( filter_name == "typecase" )
-                        {
-                            template_part = template_part.GetTypeCaseText();
-                        }
-                        else if ( filter_name == "attributecase" )
-                        {
-                            template_part = template_part.GetAttributeCaseText();
-                        }
-                        else if ( filter_name == "variablecase" )
-                        {
-                            template_part = template_part.GetVariableCaseText();
-                        }
-                        else if ( filter_name == "stylecase" )
-                        {
-                            template_part = template_part.GetStyleCaseText();
-                        }
-                        else if ( filter_name == "sentencecase" )
-                        {
-                            template_part = template_part.GetSentenceCaseText();
-                        }
-                        else if ( filter_name == "locutioncase" )
-                        {
-                            template_part = template_part.GetLocutionCaseText();
-                        }
-                        else if ( filter_name == "slugcase" )
-                        {
-                            template_part = template_part.GetSlugCaseText();
-                        }
-                        else if ( Column.HasColumnValue( filter_name ) )
-                        {
-                            template_part = Column.GetColumnValue( filter_name, row_index );
-                        }
-                        else
-                        {
-                            Abort( "Invalid filter : " ~ filter );
+                            filter_name = filter_argument_array[ 0 ];
+                            filter_argument_array = filter_argument_array[ 1 .. $ ];
+                            filter_argument_count = filter_argument_array.length;
+
+                            if ( filter_name == "real" )
+                            {
+                                template_part
+                                    = Random.MakeReal(
+                                          ( filter_argument_count > 0 ) ? filter_argument_array[ 0 ].to!double() : 0.0,
+                                          ( filter_argument_count > 1 ) ? filter_argument_array[ 1 ].to!double() : 1.0
+                                          ).to!string();
+                            }
+                            else if ( filter_name == "integer" )
+                            {
+                                template_part
+                                    = Random.MakeInteger(
+                                          ( filter_argument_count > 0 ) ? filter_argument_array[ 0 ].to!long() : 1,
+                                          ( filter_argument_count > 1 ) ? filter_argument_array[ 1 ].to!long() : 100
+                                          ).to!string();
+                            }
+                            else if ( filter_name == "natural" )
+                            {
+                                template_part
+                                    = Random.MakeNatural(
+                                          ( filter_argument_count > 0 ) ? filter_argument_array[ 0 ].to!ulong() : 1,
+                                          ( filter_argument_count > 1 ) ? filter_argument_array[ 1 ].to!ulong() : 100,
+                                          ( filter_argument_count > 2 ) ? filter_argument_array[ 2 ].to!long() : 0
+                                          ).to!string();
+                            }
+                            else if ( filter_name == "english" )
+                            {
+                                template_part
+                                    = Random.MakeText(
+                                          "english",
+                                          ( filter_argument_count > 0 ) ? filter_argument_array[ 0 ].to!long() : 3,
+                                          ( filter_argument_count > 1 ) ? filter_argument_array[ 1 ].to!long() : 5,
+                                          ( filter_argument_count > 2 ) ? filter_argument_array[ 2 ].to!long() : 7,
+                                          ( filter_argument_count > 3 ) ? filter_argument_array[ 3 ].to!long() : 9
+                                          );
+                            }
+                            else if ( filter_name == "latin" )
+                            {
+                                template_part
+                                    = Random.MakeText(
+                                          "latin",
+                                          ( filter_argument_count > 0 ) ? filter_argument_array[ 0 ].to!long() : 3,
+                                          ( filter_argument_count > 1 ) ? filter_argument_array[ 1 ].to!long() : 5,
+                                          ( filter_argument_count > 2 ) ? filter_argument_array[ 2 ].to!long() : 7,
+                                          ( filter_argument_count > 3 ) ? filter_argument_array[ 3 ].to!long() : 9
+                                          );
+                            }
+                            else if ( filter_name == "name" )
+                            {
+                                template_part
+                                    = Random.MakeName(
+                                          ( filter_argument_count > 0 ) ? filter_argument_array[ 0 ].to!long() : 4,
+                                          ( filter_argument_count > 1 ) ? filter_argument_array[ 1 ].to!long() : 8
+                                          ).to!string();
+                            }
+                            else if ( filter_name == "firstname" )
+                            {
+                                template_part = Random.MakeFirstName();
+                            }
+                            else if ( filter_name == "lastname" )
+                            {
+                                template_part = Random.MakeLastName();
+                            }
+                            else if ( filter_name == "fullname" )
+                            {
+                                template_part = Random.MakeFullName();
+                            }
+                            else if ( filter_name == "uppercase" )
+                            {
+                                template_part = template_part.toUpper();
+                            }
+                            else if ( filter_name == "lowercase" )
+                            {
+                                template_part = template_part.toLower();
+                            }
+                            else if ( filter_name == "pascalcase" )
+                            {
+                                template_part = template_part.GetPascalCaseText();
+                            }
+                            else if ( filter_name == "snakecase" )
+                            {
+                                template_part = template_part.GetSnakeCaseText();
+                            }
+                            else if ( filter_name == "kebabcase" )
+                            {
+                                template_part = template_part.GetKebabCaseText();
+                            }
+                            else if ( filter_name == "typecase" )
+                            {
+                                template_part = template_part.GetTypeCaseText();
+                            }
+                            else if ( filter_name == "attributecase" )
+                            {
+                                template_part = template_part.GetAttributeCaseText();
+                            }
+                            else if ( filter_name == "variablecase" )
+                            {
+                                template_part = template_part.GetVariableCaseText();
+                            }
+                            else if ( filter_name == "stylecase" )
+                            {
+                                template_part = template_part.GetStyleCaseText();
+                            }
+                            else if ( filter_name == "sentencecase" )
+                            {
+                                template_part = template_part.GetSentenceCaseText();
+                            }
+                            else if ( filter_name == "locutioncase" )
+                            {
+                                template_part = template_part.GetLocutionCaseText();
+                            }
+                            else if ( filter_name == "slugcase" )
+                            {
+                                template_part = template_part.GetSlugCaseText();
+                            }
+                            else if ( Column.HasColumnValue( filter_name ) )
+                            {
+                                template_part = Column.GetColumnValue( filter_name, row_index );
+                            }
+                            else
+                            {
+                                Abort( "Invalid filter : " ~ filter );
+                            }
                         }
                     }
                 }
             }
-        }
 
-        return template_part_array.join( "" );
+            return template_part_array.join( "" );
+        }
     }
 
     // -- OPERATIONS
@@ -10792,9 +10823,10 @@ string[] GetPartArray(
     string separator
     )
 {
+    bool
+        character_is_in_string;
     char
-        character,
-        closing_character;
+        character;
     long
         character_index;
     string[]
@@ -10803,7 +10835,7 @@ string[] GetPartArray(
     if ( text != "" )
     {
         part_array = [ "" ];
-        closing_character = 0;
+        character_is_in_string = false;
 
         for ( character_index = 0;
               character_index < text.length;
@@ -10811,7 +10843,7 @@ string[] GetPartArray(
         {
             character = text[ character_index ];
 
-            if ( closing_character != 0 )
+            if ( character_is_in_string )
             {
                 part_array[ part_array.length.to!long() - 1 ] ~= character;
 
@@ -10822,9 +10854,9 @@ string[] GetPartArray(
 
                     part_array[ part_array.length.to!long() - 1 ] ~= text[ character_index ];
                 }
-                else if ( character == closing_character )
+                else if ( character == '"' )
                 {
-                    closing_character = 0;
+                    character_is_in_string = false;
                 }
             }
             else if ( character == separator[ 0 ]
@@ -10840,7 +10872,7 @@ string[] GetPartArray(
 
                 if ( character == '"' )
                 {
-                    closing_character = character;
+                    character_is_in_string = true;
                 }
             }
         }

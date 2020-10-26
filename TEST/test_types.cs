@@ -39,6 +39,8 @@ public class SIMPLE
         DateTime;
     public String
         Blob;
+    public string
+        Option;
 }
 
 // ~~
