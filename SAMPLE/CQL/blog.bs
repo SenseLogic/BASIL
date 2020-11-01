@@ -4,7 +4,7 @@ BLOG | count 5
 
         Uuid : UUID | key, unique
         Number : UINT64
-        Slug : STRING = "{{Name:slugcase}}"
+        Slug : STRING = "{{Name:slug_case}}"
         Name : STRING
         Text : STRING
         Image : STRING
@@ -33,7 +33,7 @@ BLOG | count 5
         Uuid : UUID | key, unique
         SectionUuid : SECTION.Uuid | indexed
         UserUuid : USER.Uuid | indexed
-        Slug : STRING = "{{Title:slugcase}}"
+        Slug : STRING = "{{Title:slug_case}}"
         Title : STRING
         Text : STRING
         Image : STRING

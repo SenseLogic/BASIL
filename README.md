@@ -30,7 +30,7 @@ BLOG | count 5
 
         Id : UINT64 | key, unique, incremented
         Number : UINT64
-        Slug : STRING = "{{Name:slugcase}}"
+        Slug : STRING = "{{Name:slug_case}}"
         Name : STRING | capacity 45
         Text : STRING
         Image : STRING | capacity 45
@@ -59,7 +59,7 @@ BLOG | count 5
         Id : UINT64 | key, unique, incremented
         SectionId : SECTION.Id | indexed, ascending 2
         UserId : USER.Id | indexed, ascending 1
-        Slug : STRING = "{{Title:slugcase}}"
+        Slug : STRING = "{{Title:slug_case}}"
         Title : STRING
         Text : STRING
         Image : STRING | capacity 45
@@ -98,7 +98,7 @@ BLOG | count 5
 
         Uuid : UUID | key, unique
         Number : UINT64
-        Slug : STRING = "{{Name:slugcase}}"
+        Slug : STRING = "{{Name:slug_case}}"
         Name : STRING
         Text : STRING
         Image : STRING
@@ -127,7 +127,7 @@ BLOG | count 5
         Uuid : UUID | key, unique
         SectionUuid : SECTION.Uuid | indexed
         UserUuid : USER.Uuid | indexed
-        Slug : STRING = "{{Title:slugcase}}"
+        Slug : STRING = "{{Title:slug_case}}"
         Title : STRING
         Text : STRING
         Image : STRING
@@ -311,27 +311,33 @@ natural <i>minimum_value</i> <i>maximum_value</i> <i>digit_count</i>
 english <i>minimum_sentence_count</i> <i>maximum_sentence_count</i> <i>minimum_word_count</i> <i>maximum_word_count</i>
 latin <i>minimum_sentence_count</i> <i>maximum_sentence_count</i> <i>minimum_word_count</i> <i>maximum_word_count</i>
 name <i>minimum_letter_count</i> <i>maximum_letter_count</i>
-firstname
-lastname
-fullname
+first_name
+last_name
+full_name
 <i>column_name<i>
 </pre>
 
 ### Column template filters
 
 <pre>
-uppercase
-lowercase
-pascalcase
-snakecase
-kebabcase
-typecase
-attributecase
-variablecase
-stylecase
-sentensecase
-locutioncase
-slugcase
+remove_prefix <i>prefix<i>
+replace_prefix <i>old_prefix<i> <i>new_content<i>
+remove_suffix <i>suffix<i>
+replace_suffix <i>old_suffix<i> <i>new_suffix<i>
+remove <i>content<i>
+replace <i>old_content<i> <i>new_content<i>
+upper_case
+lower_case
+pascal_case
+snake_case
+kebab_case
+type_case
+attribute_case
+variable_case
+style_case
+sentense_case
+locution_case
+slug_case
 </pre>
 
 ### Column properties

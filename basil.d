@@ -2904,63 +2904,120 @@ class TYPE
                                           ( filter_argument_count > 1 ) ? filter_argument_array[ 1 ].to!long() : 8
                                           ).to!string();
                             }
-                            else if ( filter_name == "firstname" )
+                            else if ( filter_name == "first_name"
+                                      && filter_argument_count == 0 )
                             {
                                 template_part = Random.MakeFirstName();
                             }
-                            else if ( filter_name == "lastname" )
+                            else if ( filter_name == "last_name"
+                                      && filter_argument_count == 0 )
                             {
                                 template_part = Random.MakeLastName();
                             }
-                            else if ( filter_name == "fullname" )
+                            else if ( filter_name == "full_name"
+                                      && filter_argument_count == 0 )
                             {
                                 template_part = Random.MakeFullName();
                             }
-                            else if ( filter_name == "uppercase" )
+                            else if ( filter_name == "remove_prefix"
+                                      && filter_argument_count == 1 )
+                            {
+                                if ( template_part.startsWith( filter_argument_array[ 0 ] ) )
+                                {
+                                    template_part = template_part[ filter_argument_array[ 0 ].length .. $ ];
+                                }
+                            }
+                            else if ( filter_name == "replace_prefix"
+                                      && filter_argument_count == 2)
+                            {
+                                if ( template_part.startsWith( filter_argument_array[ 0 ] ) )
+                                {
+                                    template_part = filter_argument_array[ 1 ] ~ template_part[ filter_argument_array[ 0 ].length .. $ ];
+                                }
+                            }
+                            else if ( filter_name == "remove_suffix"
+                                      && filter_argument_count == 1 )
+                            {
+                                if ( template_part.endsWith( filter_argument_array[ 0 ] ) )
+                                {
+                                    template_part = template_part[ 0 .. filter_argument_array[ 0 ].length ];
+                                }
+                            }
+                            else if ( filter_name == "replace_suffix"
+                                      && filter_argument_count == 2)
+                            {
+                                if ( template_part.endsWith( filter_argument_array[ 0 ] ) )
+                                {
+                                    template_part = template_part[ 0 .. filter_argument_array[ 0 ].length ] ~ filter_argument_array[ 1 ];
+                                }
+                            }
+                            else if ( filter_name == "remove"
+                                      && filter_argument_count == 1 )
+                            {
+                                template_part = template_part.replace( filter_argument_array[ 0 ], "" );
+                            }
+                            else if ( filter_name == "replace"
+                                      && filter_argument_count == 2 )
+                            {
+                                template_part = template_part.replace( filter_argument_array[ 0 ], filter_argument_array[ 1 ] );
+                            }
+                            else if ( filter_name == "upper_case"
+                                      && filter_argument_count == 0 )
                             {
                                 template_part = template_part.toUpper();
                             }
-                            else if ( filter_name == "lowercase" )
+                            else if ( filter_name == "lower_case"
+                                      && filter_argument_count == 0 )
                             {
                                 template_part = template_part.toLower();
                             }
-                            else if ( filter_name == "pascalcase" )
+                            else if ( filter_name == "pascal_case"
+                                      && filter_argument_count == 0 )
                             {
                                 template_part = template_part.GetPascalCaseText();
                             }
-                            else if ( filter_name == "snakecase" )
+                            else if ( filter_name == "snake_case"
+                                      && filter_argument_count == 0 )
                             {
                                 template_part = template_part.GetSnakeCaseText();
                             }
-                            else if ( filter_name == "kebabcase" )
+                            else if ( filter_name == "kebab_case"
+                                      && filter_argument_count == 0 )
                             {
                                 template_part = template_part.GetKebabCaseText();
                             }
-                            else if ( filter_name == "typecase" )
+                            else if ( filter_name == "type_case"
+                                      && filter_argument_count == 0 )
                             {
                                 template_part = template_part.GetTypeCaseText();
                             }
-                            else if ( filter_name == "attributecase" )
+                            else if ( filter_name == "attribute_case"
+                                      && filter_argument_count == 0 )
                             {
                                 template_part = template_part.GetAttributeCaseText();
                             }
-                            else if ( filter_name == "variablecase" )
+                            else if ( filter_name == "variable_case"
+                                      && filter_argument_count == 0 )
                             {
                                 template_part = template_part.GetVariableCaseText();
                             }
-                            else if ( filter_name == "stylecase" )
+                            else if ( filter_name == "style_case"
+                                      && filter_argument_count == 0 )
                             {
                                 template_part = template_part.GetStyleCaseText();
                             }
-                            else if ( filter_name == "sentencecase" )
+                            else if ( filter_name == "sentence_case"
+                                      && filter_argument_count == 0 )
                             {
                                 template_part = template_part.GetSentenceCaseText();
                             }
-                            else if ( filter_name == "locutioncase" )
+                            else if ( filter_name == "locution_case"
+                                      && filter_argument_count == 0 )
                             {
                                 template_part = template_part.GetLocutionCaseText();
                             }
-                            else if ( filter_name == "slugcase" )
+                            else if ( filter_name == "slug_case"
+                                      && filter_argument_count == 0 )
                             {
                                 template_part = template_part.GetSlugCaseText();
                             }
