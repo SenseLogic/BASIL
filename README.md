@@ -314,18 +314,18 @@ name <i>minimum_letter_count</i> <i>maximum_letter_count</i>
 first_name
 last_name
 full_name
-<i>column_name<i>
+<i>column_name</i>
 </pre>
 
 ### Column template filters
 
 <pre>
-remove_prefix <i>prefix<i>
-replace_prefix <i>old_prefix<i> <i>new_content<i>
-remove_suffix <i>suffix<i>
-replace_suffix <i>old_suffix<i> <i>new_suffix<i>
+remove_prefix <i>prefix</i>
+replace_prefix <i>old_prefix</i> <i>new_content</i>
+remove_suffix <i>suffix</i>
+replace_suffix <i>old_suffix</i> <i>new_suffix</i>
 remove <i>content<i>
-replace <i>old_content<i> <i>new_content<i>
+replace <i>old_content</i> <i>new_content</i>
 upper_case
 lower_case
 pascal_case
