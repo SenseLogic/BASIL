@@ -324,7 +324,7 @@ remove_prefix <i>prefix</i>
 replace_prefix <i>old_prefix</i> <i>new_content</i>
 remove_suffix <i>suffix</i>
 replace_suffix <i>old_suffix</i> <i>new_suffix</i>
-remove <i>content<i>
+remove <i>content</i>
 replace <i>old_content</i> <i>new_content</i>
 upper_case
 lower_case
