@@ -338,6 +338,7 @@ style_case
 sentense_case
 locution_case
 slug_case
+plural
 </pre>
 
 ### Column properties
@@ -546,6 +547,10 @@ POINTER[ <i>ELEMENT_TYPE</i> ] | !stored
 <~StyleCase<>text~>
 <~TitleCase<>text~>
 <~SentenceCase<>text~>
+<~LocutionCase<>text~>
+<~SlugCase<>text~>
+
+<~Plural<>text~>
 
 <~boolean expression<>text if condition is true~>
 <~boolean expression<>text if condition is true<>text if condition is false~>

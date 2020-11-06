@@ -2922,34 +2922,22 @@ class TYPE
                             else if ( filter_name == "remove_prefix"
                                       && filter_argument_count == 1 )
                             {
-                                if ( template_part.startsWith( filter_argument_array[ 0 ] ) )
-                                {
-                                    template_part = template_part[ filter_argument_array[ 0 ].length .. $ ];
-                                }
+                                template_part = template_part.RemovePrefix( filter_argument_array[ 0 ] );
                             }
                             else if ( filter_name == "replace_prefix"
                                       && filter_argument_count == 2)
                             {
-                                if ( template_part.startsWith( filter_argument_array[ 0 ] ) )
-                                {
-                                    template_part = filter_argument_array[ 1 ] ~ template_part[ filter_argument_array[ 0 ].length .. $ ];
-                                }
+                                template_part = template_part.ReplacePrefix( filter_argument_array[ 0 ], filter_argument_array[ 1 ] );
                             }
                             else if ( filter_name == "remove_suffix"
                                       && filter_argument_count == 1 )
                             {
-                                if ( template_part.endsWith( filter_argument_array[ 0 ] ) )
-                                {
-                                    template_part = template_part[ 0 .. filter_argument_array[ 0 ].length ];
-                                }
+                                template_part = template_part.RemoveSuffix( filter_argument_array[ 0 ] );
                             }
                             else if ( filter_name == "replace_suffix"
                                       && filter_argument_count == 2)
                             {
-                                if ( template_part.endsWith( filter_argument_array[ 0 ] ) )
-                                {
-                                    template_part = template_part[ 0 .. filter_argument_array[ 0 ].length ] ~ filter_argument_array[ 1 ];
-                                }
+                                template_part = template_part.ReplaceSuffix( filter_argument_array[ 0 ], filter_argument_array[ 1 ] );
                             }
                             else if ( filter_name == "remove"
                                       && filter_argument_count == 1 )
@@ -3020,6 +3008,11 @@ class TYPE
                                       && filter_argument_count == 0 )
                             {
                                 template_part = template_part.GetSlugCaseText();
+                            }
+                            else if ( filter_name == "plural"
+                                      && filter_argument_count == 0 )
+                            {
+                                template_part = template_part.GetPluralText();
                             }
                             else if ( Column.HasColumnValue( filter_name ) )
                             {
@@ -10553,6 +10546,76 @@ bool EndsByConsonant(
 
 // ~~
 
+string RemovePrefix(
+    string text,
+    string prefix
+    )
+{
+    if ( text.startsWith( prefix ) )
+    {
+        return text[ prefix.length .. $ ];
+    }
+    else
+    {
+        return text;
+    }
+}
+
+// ~~
+
+string ReplacePrefix(
+    string text,
+    string old_prefix,
+    string new_prefix
+    )
+{
+    if ( text.startsWith( old_prefix ) )
+    {
+        return new_prefix ~ text[ old_prefix.length .. $ ];
+    }
+    else
+    {
+        return text;
+    }
+}
+
+// ~~
+
+string RemoveSuffix(
+    string text,
+    string suffix
+    )
+{
+    if ( text.endsWith( suffix ) )
+    {
+        return text[ 0 .. $ - suffix.length ];
+    }
+    else
+    {
+        return text;
+    }
+}
+
+// ~~
+
+string ReplaceSuffix(
+    string text,
+    string old_suffix,
+    string new_suffix
+    )
+{
+    if ( text.endsWith( old_suffix ) )
+    {
+        return text[ 0 .. $ - old_suffix.length ] ~ new_suffix;
+    }
+    else
+    {
+        return text;
+    }
+}
+
+// ~~
+
 string GetStrippedText(
     string text
     )
@@ -10751,6 +10814,78 @@ string GetSlugCaseText(
     }
 
     return slug_case_text;
+}
+
+// ~~
+
+string GetPluralText(
+    string text
+    )
+{
+    char
+        last_character;
+
+    if ( text == "" )
+    {
+        return "";
+    }
+    else
+    {
+        last_character = text[ $ - 1 ];
+
+        if ( last_character >= 'a' && last_character <= 'z' )
+        {
+            text = text ~ 's';
+
+            if ( text.endsWith( "ays" )
+                 || text.endsWith( "eys" )
+                 || text.endsWith( "oys" ) )
+            {
+                return text;
+            }
+            else
+            {
+                return
+                    text
+                        .ReplaceSuffix( "fs", "ves" )
+                        .ReplaceSuffix( "hs", "hes" )
+                        .ReplaceSuffix( "iss", "es" )
+                        .ReplaceSuffix( "os", "oes" )
+                        .ReplaceSuffix( "ss", "ses" )
+                        .ReplaceSuffix( "xs", "xes" )
+                        .ReplaceSuffix( "ys", "ies" )
+                        .ReplaceSuffix( "zs", "zes" );
+            }
+        }
+        else if ( last_character >= 'A' && last_character <= 'Z' )
+        {
+            text = text ~ 'S';
+
+            if ( text.endsWith( "AYS" )
+                 || text.endsWith( "EYS" )
+                 || text.endsWith( "OYS" ) )
+            {
+                return text;
+            }
+            else
+            {
+                return
+                    text
+                        .ReplaceSuffix( "FS", "VES" )
+                        .ReplaceSuffix( "HS", "HES" )
+                        .ReplaceSuffix( "ISS", "ES" )
+                        .ReplaceSuffix( "OS", "OES" )
+                        .ReplaceSuffix( "SS", "SES" )
+                        .ReplaceSuffix( "XS", "XES" )
+                        .ReplaceSuffix( "YS", "IES" )
+                        .ReplaceSuffix( "ZS", "ZES" );
+            }
+        }
+        else
+        {
+            return text;
+        }
+    }
 }
 
 // ~~
@@ -11338,50 +11473,22 @@ string ReplaceConditionalTags(
                 else if ( argument_array.length == 3
                           && argument_array[ 0 ] == "RemovePrefix" )
                 {
-                    if ( argument_array[ 1 ].startsWith( argument_array[ 2 ] ) )
-                    {
-                        result_text = argument_array[ 1 ][ argument_array[ 2 ].length .. $ ];
-                    }
-                    else
-                    {
-                        result_text = argument_array[ 1 ];
-                    }
+                    result_text = argument_array[ 1 ].RemovePrefix( argument_array[ 2 ] );
                 }
                 else if ( argument_array.length == 4
                           && argument_array[ 0 ] == "ReplacePrefix" )
                 {
-                    if ( argument_array[ 1 ].startsWith( argument_array[ 2 ] ) )
-                    {
-                        result_text = argument_array[ 3 ] ~ argument_array[ 1 ][ argument_array[ 2 ].length .. $ ];
-                    }
-                    else
-                    {
-                        result_text = argument_array[ 1 ];
-                    }
+                    result_text = argument_array[ 1 ].ReplacePrefix( argument_array[ 2 ],  argument_array[ 3 ] );
                 }
                 else if ( argument_array.length == 3
                           && argument_array[ 0 ] == "RemoveSuffix" )
                 {
-                    if ( argument_array[ 1 ].endsWith( argument_array[ 2 ] ) )
-                    {
-                        result_text = argument_array[ 1 ][ 0 .. $ - argument_array[ 2 ].length ];
-                    }
-                    else
-                    {
-                        result_text = argument_array[ 1 ];
-                    }
+                    result_text = argument_array[ 1 ].RemoveSuffix( argument_array[ 2 ] );
                 }
                 else if ( argument_array.length == 4
                           && argument_array[ 0 ] == "ReplaceSuffix" )
                 {
-                    if ( argument_array[ 1 ].endsWith( argument_array[ 2 ] ) )
-                    {
-                        result_text = argument_array[ 1 ][ 0 .. $ - argument_array[ 2 ].length ] ~ argument_array[ 3 ];
-                    }
-                    else
-                    {
-                        result_text = argument_array[ 1 ];
-                    }
+                    result_text = argument_array[ 1 ].ReplaceSuffix( argument_array[ 2 ],  argument_array[ 3 ] );
                 }
                 else if ( argument_array.length == 3
                           && argument_array[ 0 ] == "Remove" )
@@ -11452,6 +11559,16 @@ string ReplaceConditionalTags(
                           && argument_array[ 0 ] == "LocutionCase" )
                 {
                     result_text = argument_array[ 1 ].GetLocutionCaseText();
+                }
+                else if ( argument_array.length == 2
+                          && argument_array[ 0 ] == "SlugCase" )
+                {
+                    result_text = argument_array[ 1 ].GetSlugCaseText();
+                }
+                else if ( argument_array.length == 2
+                          && argument_array[ 0 ] == "Plural" )
+                {
+                    result_text = argument_array[ 1 ].GetPluralText();
                 }
                 else if ( ( argument_array.length == 2
                             || argument_array.length == 3 ) )
