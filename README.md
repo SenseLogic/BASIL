@@ -527,6 +527,15 @@ POINTER[ <i>ELEMENT_TYPE</i> ] | !stored
 <~!Contains<>text<>content<>text if content not found~>
 <~!Contains<>text<>content<>text if content not found<>text if content found~>
 
+<~IsLinux<>text for Linux platform~>
+<~IsLinux<>text for Linux platform<>text for other platforms~>
+
+<~IsMacOS<>text for MacOS platform~>
+<~IsMacOS<>text for MacOS platform<>text for other platforms~>
+
+<~IsWindows<>text for Windows platform~>
+<~IsWindows<>text for Windows platform<>text for other platforms~>
+
 <~RemovePrefix<>text<>prefix~>
 <~ReplacePrefix<>text<>old prefix<>new prefix~>
 

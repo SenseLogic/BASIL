@@ -10360,6 +10360,51 @@ void Abort(
 
 // ~~
 
+bool IsLinux(
+    )
+{
+    version ( linux )
+    {
+        return true;
+    }
+    else
+    {
+        return false;
+    }
+}
+
+// ~~
+
+bool IsMacOs(
+    )
+{
+    version ( OSX )
+    {
+        return true;
+    }
+    else
+    {
+        return false;
+    }
+}
+
+// ~~
+
+bool IsWindows(
+    )
+{
+    version ( Windows )
+    {
+        return true;
+    }
+    else
+    {
+        return false;
+    }
+}
+
+// ~~
+
 string GetFolderPath(
     string file_path
     )
@@ -11464,6 +11509,60 @@ string ReplaceConditionalTags(
                     else if ( argument_array.length == 5 )
                     {
                         result_text = argument_array[ 4 ];
+                    }
+                    else
+                    {
+                        result_text = "";
+                    }
+                }
+                else if ( ( argument_array.length == 2
+                            || argument_array.length == 3 )
+                          && argument_array[ 0 ] == "IsLinux" )
+                {
+
+                    if ( IsLinux() )
+                    {
+                        result_text = argument_array[ 1 ];
+                    }
+                    else if ( argument_array.length == 3 )
+                    {
+                        result_text = argument_array[ 2 ];
+                    }
+                    else
+                    {
+                        result_text = "";
+                    }
+                }
+                else if ( ( argument_array.length == 2
+                            || argument_array.length == 3 )
+                          && argument_array[ 0 ] == "IsMacOS" )
+                {
+
+                    if ( IsMacOs() )
+                    {
+                        result_text = argument_array[ 1 ];
+                    }
+                    else if ( argument_array.length == 3 )
+                    {
+                        result_text = argument_array[ 2 ];
+                    }
+                    else
+                    {
+                        result_text = "";
+                    }
+                }
+                else if ( ( argument_array.length == 2
+                            || argument_array.length == 3 )
+                          && argument_array[ 0 ] == "IsWindows" )
+                {
+
+                    if ( IsWindows() )
+                    {
+                        result_text = argument_array[ 1 ];
+                    }
+                    else if ( argument_array.length == 3 )
+                    {
+                        result_text = argument_array[ 2 ];
                     }
                     else
                     {
