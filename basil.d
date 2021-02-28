@@ -24,7 +24,7 @@ import core.stdc.stdlib : exit;
 import std.algorithm : countUntil, sort;
 import std.ascii : isDigit, isLower, isUpper;
 import std.conv : to;
-import std.file : dirEntries, exists, mkdirRecurse, readText, thisExePath, write, FileException, SpanMode;
+import std.file : dirEntries, exists, mkdirRecurse, readText, thisExePath, write, SpanMode;
 import std.random : uniform;
 import std.path : dirName;
 import std.regex : regex, replaceAll, Regex;
@@ -10349,11 +10349,11 @@ void Abort(
 
 void Abort(
     string message,
-    FileException file_exception
+    Exception exception
     )
 {
     PrintError( message );
-    PrintError( file_exception.msg );
+    PrintError( exception.msg );
 
     exit( -1 );
 }
@@ -10461,9 +10461,9 @@ void CreateFolder(
         {
             folder_path.mkdirRecurse();
         }
-        catch ( FileException file_exception )
+        catch ( Exception exception )
         {
-            Abort( "Can't create folder : " ~ folder_path, file_exception );
+            Abort( "Can't create folder : " ~ folder_path, exception );
         }
     }
 }
@@ -10487,9 +10487,9 @@ void WriteText(
             file_path.write( file_text );
         }
     }
-    catch ( FileException file_exception )
+    catch ( Exception exception )
     {
-        Abort( "Can't write file : " ~ file_path, file_exception );
+        Abort( "Can't write file : " ~ file_path, exception );
     }
 }
 
@@ -10508,9 +10508,9 @@ string ReadText(
     {
         file_text = file_path.readText();
     }
-    catch ( FileException file_exception )
+    catch ( Exception exception )
     {
-        Abort( "Can't read file : " ~ file_path, file_exception );
+        Abort( "Can't read file : " ~ file_path, exception );
     }
 
     return file_text;
