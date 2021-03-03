@@ -70,6 +70,31 @@ function AddDatabaseValue(
 
 // ~~
 
+function PutDatabaseValue(
+    int id,
+    string uuid,
+    string name,
+    int integer,
+    string text
+    )
+{
+    var statement = GetDatabaseStatement( 'replace into VALUE ( Id, Uuid, Name, Integer, Text ) values ( ?, ?, ?, ?, ? )' );
+    statement.bindParam( 1, id, PDO::PARAM_INT );
+    statement.bindParam( 2, uuid, PDO::PARAM_STR );
+    statement.bindParam( 3, name, PDO::PARAM_STR );
+    statement.bindParam( 4, integer, PDO::PARAM_INT );
+    statement.bindParam( 5, text, PDO::PARAM_STR );
+
+    if ( !statement.execute() )
+    {
+        var_dump( statement.errorInfo() );
+    }
+
+    return GetDatabaseAddedId( statement );
+}
+
+// ~~
+
 function SetDatabaseValue(
     int id,
     string uuid,

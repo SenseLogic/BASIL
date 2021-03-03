@@ -82,6 +82,25 @@ function AddDatabaseSubscriber(
 
 // ~~
 
+function PutDatabaseSubscriber(
+    string name,
+    string email
+    )
+{
+    var statement = GetDatabaseStatement( 'replace into SUBSCRIBER ( Name, Email ) values ( ?, ? )' );
+    statement.bindParam( 1, name, PDO::PARAM_STR );
+    statement.bindParam( 2, email, PDO::PARAM_STR );
+
+    if ( !statement.execute() )
+    {
+        var_dump( statement.errorInfo() );
+    }
+
+    return GetDatabaseAddedId( statement );
+}
+
+// ~~
+
 function SetDatabaseSubscriber(
     int id,
     string name,

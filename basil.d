@@ -5918,6 +5918,17 @@ class TABLE
 
     // ~~
 
+    string GetPutDatabaseObjectGenerisCode(
+        )
+    {
+        return
+            GetAddDatabaseObjectPhoenixCode()
+                .replace( "func AddDatabase", "func PutDatabase" )
+                .replace( "insert into", "replace into" );
+    }
+
+    // ~~
+
     string GetSetDatabaseObjectGenerisCode(
         )
     {
@@ -7254,6 +7265,17 @@ class TABLE
             ~= "}\n";
 
         return phoenix_code;
+    }
+
+    // ~~
+
+    string GetPutDatabaseObjectPhoenixCode(
+        )
+    {
+        return
+            GetAddDatabaseObjectPhoenixCode()
+                .replace( "function AddDatabase", "function PutDatabase" )
+                .replace( "insert into", "replace into" );
     }
 
     // ~~
@@ -9796,6 +9818,8 @@ class SCHEMA
                 generis_query_file_text
                     ~= table.GetAddDatabaseObjectGenerisCode()
                        ~ "\n// ~~\n\n"
+                       ~ table.GetPutDatabaseObjectGenerisCode()
+                       ~ "\n// ~~\n\n"
                        ~ table.GetSetDatabaseObjectGenerisCode()
                        ~ "\n// ~~\n\n"
                        ~ table.GetRemoveDatabaseObjectGenerisCode()
@@ -9989,6 +10013,7 @@ class SCHEMA
                       ~ table.GetGetDatabaseObjectPhoenixCode()
                       ~ table.GetGetDatabaseObjectByKeyPhoenixCode()
                       ~ table.GetAddDatabaseObjectPhoenixCode()
+                      ~ table.GetPutDatabaseObjectPhoenixCode()
                       ~ table.GetSetDatabaseObjectPhoenixCode()
                       ~ table.GetRemoveDatabaseObjectPhoenixCode();
 

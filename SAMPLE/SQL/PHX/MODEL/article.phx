@@ -93,6 +93,33 @@ function AddDatabaseArticle(
 
 // ~~
 
+function PutDatabaseArticle(
+    int section_id,
+    int user_id,
+    string slug,
+    string title,
+    string text,
+    string image
+    )
+{
+    var statement = GetDatabaseStatement( 'replace into ARTICLE ( SectionId, UserId, Slug, Title, Text, Image, Date ) values ( ?, ?, ?, ?, ?, ?, date( now() ) )' );
+    statement.bindParam( 1, section_id, PDO::PARAM_INT );
+    statement.bindParam( 2, user_id, PDO::PARAM_INT );
+    statement.bindParam( 3, slug, PDO::PARAM_STR );
+    statement.bindParam( 4, title, PDO::PARAM_STR );
+    statement.bindParam( 5, text, PDO::PARAM_STR );
+    statement.bindParam( 6, image, PDO::PARAM_STR );
+
+    if ( !statement.execute() )
+    {
+        var_dump( statement.errorInfo() );
+    }
+
+    return GetDatabaseAddedId( statement );
+}
+
+// ~~
+
 function SetDatabaseArticle(
     int id,
     int section_id,

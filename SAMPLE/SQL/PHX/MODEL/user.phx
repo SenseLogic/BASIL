@@ -107,6 +107,47 @@ function AddDatabaseUser(
 
 // ~~
 
+function PutDatabaseUser(
+    string first_name,
+    string last_name,
+    string email,
+    string pseudonym,
+    string password,
+    string phone,
+    string street,
+    string city,
+    string code,
+    string region,
+    string country,
+    string company,
+    bool it_is_administrator
+    )
+{
+    var statement = GetDatabaseStatement( 'replace into USER ( FirstName, LastName, Email, Pseudonym, Password, Phone, Street, City, Code, Region, Country, Company, ItIsAdministrator ) values ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? )' );
+    statement.bindParam( 1, first_name, PDO::PARAM_STR );
+    statement.bindParam( 2, last_name, PDO::PARAM_STR );
+    statement.bindParam( 3, email, PDO::PARAM_STR );
+    statement.bindParam( 4, pseudonym, PDO::PARAM_STR );
+    statement.bindParam( 5, password, PDO::PARAM_STR );
+    statement.bindParam( 6, phone, PDO::PARAM_STR );
+    statement.bindParam( 7, street, PDO::PARAM_STR );
+    statement.bindParam( 8, city, PDO::PARAM_STR );
+    statement.bindParam( 9, code, PDO::PARAM_STR );
+    statement.bindParam( 10, region, PDO::PARAM_STR );
+    statement.bindParam( 11, country, PDO::PARAM_STR );
+    statement.bindParam( 12, company, PDO::PARAM_STR );
+    statement.bindParam( 13, it_is_administrator, PDO::PARAM_BOOL );
+
+    if ( !statement.execute() )
+    {
+        var_dump( statement.errorInfo() );
+    }
+
+    return GetDatabaseAddedId( statement );
+}
+
+// ~~
+
 function SetDatabaseUser(
     int id,
     string first_name,

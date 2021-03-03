@@ -40,6 +40,34 @@ func AddDatabaseSimple(
 
 // ~~
 
+
+// ~~
+
+function AddDatabaseSimple(
+    string uuid,
+    bool bool,
+    int int8,
+    int uint8,
+    int int16,
+    int uint16,
+    int int32,
+    int uint32,
+    int int64,
+    int uint64,
+    float float32,
+    float float64,
+    string string,
+    string name,
+    string date,
+    string date_time,
+    string blob,
+    string option
+    )
+{
+}
+
+// ~~
+
 func SetDatabaseSimple(
     simple * SIMPLE,
     error_code * ERROR_CODE
@@ -235,6 +263,28 @@ func AddDatabaseCompound(
 
 // ~~
 
+
+// ~~
+
+function AddDatabaseCompound(
+    string location,
+    array name,
+    array name_set,
+    array phone_list,
+    array email_set,
+    array company_map,
+    string simple_date,
+    array simple_date_map,
+    array simple_date_set,
+    array simple_date_list,
+    array name_set_map,
+    string text
+    )
+{
+}
+
+// ~~
+
 func SetDatabaseCompound(
     compound * COMPOUND,
     error_code * ERROR_CODE
@@ -408,6 +458,21 @@ func AddDatabaseValue(
 
 // ~~
 
+
+// ~~
+
+function AddDatabaseValue(
+    int id,
+    string uuid,
+    string name,
+    int integer,
+    string text
+    )
+{
+}
+
+// ~~
+
 func SetDatabaseValue(
     value * VALUE,
     error_code * ERROR_CODE
@@ -551,6 +616,19 @@ func AddDatabaseValueData(
     }
 
     return true;
+}
+
+// ~~
+
+
+// ~~
+
+function AddDatabaseValueData(
+    string uuid,
+    int value_id,
+    string value_uuid
+    )
+{
 }
 
 // ~~

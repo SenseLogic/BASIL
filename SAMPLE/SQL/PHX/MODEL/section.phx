@@ -70,6 +70,31 @@ function AddDatabaseSection(
 
 // ~~
 
+function PutDatabaseSection(
+    int number,
+    string slug,
+    string name,
+    string text,
+    string image
+    )
+{
+    var statement = GetDatabaseStatement( 'replace into SECTION ( Number, Slug, Name, Text, Image ) values ( ?, ?, ?, ?, ? )' );
+    statement.bindParam( 1, number, PDO::PARAM_INT );
+    statement.bindParam( 2, slug, PDO::PARAM_STR );
+    statement.bindParam( 3, name, PDO::PARAM_STR );
+    statement.bindParam( 4, text, PDO::PARAM_STR );
+    statement.bindParam( 5, image, PDO::PARAM_STR );
+
+    if ( !statement.execute() )
+    {
+        var_dump( statement.errorInfo() );
+    }
+
+    return GetDatabaseAddedId( statement );
+}
+
+// ~~
+
 function SetDatabaseSection(
     int id,
     int number,

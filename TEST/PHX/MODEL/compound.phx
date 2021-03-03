@@ -109,6 +109,54 @@ function AddDatabaseCompound(
 
 // ~~
 
+function PutDatabaseCompound(
+    string location,
+    array name,
+    array name_set,
+    array phone_list,
+    array email_set,
+    array company_map,
+    string simple_date,
+    array simple_date_map,
+    array simple_date_set,
+    array simple_date_list,
+    array name_set_map,
+    string text
+    )
+{
+    var statement = GetDatabaseStatement( 'replace into COMPOUND ( Location, Name, NameSet, PhoneList, EmailSet, CompanyMap, SimpleDate, SimpleDateMap, SimpleDateSet, SimpleDateList, NameSetMap, Text ) values ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? )' );
+    statement.bindParam( 1, location, PDO::PARAM_STR );
+    name = json_encode( name );
+    statement.bindParam( 2, name, PDO::PARAM_STR );
+    name_set = json_encode( name_set );
+    statement.bindParam( 3, name_set, PDO::PARAM_STR );
+    phone_list = json_encode( phone_list );
+    statement.bindParam( 4, phone_list, PDO::PARAM_STR );
+    email_set = json_encode( email_set );
+    statement.bindParam( 5, email_set, PDO::PARAM_STR );
+    company_map = json_encode( company_map );
+    statement.bindParam( 6, company_map, PDO::PARAM_STR );
+    statement.bindParam( 7, simple_date, PDO::PARAM_STR );
+    simple_date_map = json_encode( simple_date_map );
+    statement.bindParam( 8, simple_date_map, PDO::PARAM_STR );
+    simple_date_set = json_encode( simple_date_set );
+    statement.bindParam( 9, simple_date_set, PDO::PARAM_STR );
+    simple_date_list = json_encode( simple_date_list );
+    statement.bindParam( 10, simple_date_list, PDO::PARAM_STR );
+    name_set_map = json_encode( name_set_map );
+    statement.bindParam( 11, name_set_map, PDO::PARAM_STR );
+    statement.bindParam( 12, text, PDO::PARAM_STR );
+
+    if ( !statement.execute() )
+    {
+        var_dump( statement.errorInfo() );
+    }
+
+    return GetDatabaseAddedId( statement );
+}
+
+// ~~
+
 function SetDatabaseCompound(
     int id,
     string location,

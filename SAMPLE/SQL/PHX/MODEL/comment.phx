@@ -64,6 +64,27 @@ function AddDatabaseComment(
 
 // ~~
 
+function PutDatabaseComment(
+    int article_id,
+    int user_id,
+    string text
+    )
+{
+    var statement = GetDatabaseStatement( 'replace into COMMENT ( ArticleId, UserId, Text, DateTime ) values ( ?, ?, ?, now() )' );
+    statement.bindParam( 1, article_id, PDO::PARAM_INT );
+    statement.bindParam( 2, user_id, PDO::PARAM_INT );
+    statement.bindParam( 3, text, PDO::PARAM_STR );
+
+    if ( !statement.execute() )
+    {
+        var_dump( statement.errorInfo() );
+    }
+
+    return GetDatabaseAddedId( statement );
+}
+
+// ~~
+
 function SetDatabaseComment(
     int id,
     int article_id,

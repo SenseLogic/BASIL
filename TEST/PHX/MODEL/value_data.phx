@@ -53,6 +53,27 @@ function AddDatabaseValueData(
 
 // ~~
 
+function PutDatabaseValueData(
+    string uuid,
+    int value_id,
+    string value_uuid
+    )
+{
+    var statement = GetDatabaseStatement( 'replace into VALUE_DATA ( Uuid, ValueId, ValueUuid ) values ( ?, ?, ? )' );
+    statement.bindParam( 1, uuid, PDO::PARAM_STR );
+    statement.bindParam( 2, value_id, PDO::PARAM_INT );
+    statement.bindParam( 3, value_uuid, PDO::PARAM_STR );
+
+    if ( !statement.execute() )
+    {
+        var_dump( statement.errorInfo() );
+    }
+
+    return GetDatabaseAddedId( statement );
+}
+
+// ~~
+
 function SetDatabaseValueData(
     string uuid,
     int value_id,

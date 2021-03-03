@@ -28,6 +28,22 @@ func AddDatabaseSection(
 
 // ~~
 
+
+// ~~
+
+function AddDatabaseSection(
+    string uuid,
+    int number,
+    string slug,
+    string name,
+    string text,
+    string image
+    )
+{
+}
+
+// ~~
+
 func SetDatabaseSection(
     section * SECTION,
     error_code * ERROR_CODE
@@ -187,6 +203,30 @@ func AddDatabaseUser(
     }
 
     return true;
+}
+
+// ~~
+
+
+// ~~
+
+function AddDatabaseUser(
+    string uuid,
+    string first_name,
+    string last_name,
+    string email,
+    string pseudonym,
+    string password,
+    string phone,
+    string street,
+    string city,
+    string code,
+    string region,
+    string country,
+    string company,
+    bool it_is_administrator
+    )
+{
 }
 
 // ~~
@@ -372,6 +412,24 @@ func AddDatabaseArticle(
 
 // ~~
 
+
+// ~~
+
+function AddDatabaseArticle(
+    string uuid,
+    string section_uuid,
+    string user_uuid,
+    string slug,
+    string title,
+    string text,
+    string image,
+    string date
+    )
+{
+}
+
+// ~~
+
 func SetDatabaseArticle(
     article * ARTICLE,
     error_code * ERROR_CODE
@@ -532,6 +590,21 @@ func AddDatabaseComment(
 
 // ~~
 
+
+// ~~
+
+function AddDatabaseComment(
+    string uuid,
+    string article_uuid,
+    string user_uuid,
+    string text,
+    string date_time
+    )
+{
+}
+
+// ~~
+
 func SetDatabaseComment(
     comment * COMMENT,
     error_code * ERROR_CODE
@@ -677,6 +750,19 @@ func AddDatabaseSubscriber(
     }
 
     return true;
+}
+
+// ~~
+
+
+// ~~
+
+function AddDatabaseSubscriber(
+    string uuid,
+    string name,
+    string email
+    )
+{
 }
 
 // ~~
