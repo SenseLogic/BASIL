@@ -10554,6 +10554,17 @@ bool IsLetterCharacter(
 
 // ~~
 
+bool IsDigitCharacter(
+    char character
+    )
+{
+    return
+        character >= '0'
+        && character <= '9';
+}
+
+// ~~
+
 bool IsVowelCharacter(
     char character
     )
@@ -10868,6 +10879,17 @@ string GetSlugCaseText(
         if ( IsLetterCharacter( character ) )
         {
             slug_case_text ~= character.toLower();
+        }
+        else if ( IsDigitCharacter( character ) )
+        {
+            if ( slug_case_text != ""
+                 && !slug_case_text.endsWith( '-' )
+                 && !IsDigitCharacter( slug_case_text[ $ - 1 ] ) )
+            {
+                slug_case_text ~= '-';
+            }
+
+            slug_case_text ~= character;
         }
         else
         {
