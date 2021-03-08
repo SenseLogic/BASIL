@@ -10770,8 +10770,11 @@ string GetSnakeCaseText(
     foreach ( char character; text )
     {
         if ( ( prior_character.isLower()
-               || prior_character.isDigit() )
-             && character.isUpper() )
+               && ( character.isUpper()
+                    || character.isDigit() ) )
+             || ( prior_character.isDigit()
+                  && ( character.isLower()
+                       || character.isUpper() ) ) )
         {
             snake_case_text ~= '_';
         }
