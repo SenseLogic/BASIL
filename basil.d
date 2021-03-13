@@ -1566,18 +1566,34 @@ class TYPE
 
     // -- INQUIRIES
 
+    bool IsBoolean(
+        )
+    {
+        return BaseName == "BOOL";
+    }
+
+    // ~~
+
+    bool IsNatural(
+        )
+    {
+        return
+            BaseName == "UINT8"
+            || BaseName == "UINT16"
+            || BaseName == "UINT32"
+            || BaseName == "UINT64";
+    }
+
+    // ~~
+
     bool IsInteger(
         )
     {
         return
             BaseName == "INT8"
-            || BaseName == "UINT8"
             || BaseName == "INT16"
-            || BaseName == "UINT16"
             || BaseName == "INT32"
-            || BaseName == "UINT32"
-            || BaseName == "INT64"
-            || BaseName == "UINT64";
+            || BaseName == "INT64";
     }
 
     // ~~
@@ -1588,6 +1604,137 @@ class TYPE
         return
             BaseName == "FLOAT32"
             || BaseName == "FLOAT64";
+    }
+
+    // ~~
+
+    bool IsNumber(
+        )
+    {
+        return
+            BaseName == "INT8"
+            || BaseName == "UINT8"
+            || BaseName == "INT16"
+            || BaseName == "UINT16"
+            || BaseName == "INT32"
+            || BaseName == "UINT32"
+            || BaseName == "INT64"
+            || BaseName == "UINT64"
+            || BaseName == "FLOAT32"
+            || BaseName == "FLOAT64";
+    }
+
+    // ~~
+
+    bool IsString(
+        )
+    {
+        return
+            BaseName == "STRING"
+            || BaseName == "STRING8"
+            || BaseName == "STRING16"
+            || BaseName == "STRING24"
+            || BaseName == "STRING32";
+    }
+
+    // ~~
+
+    bool IsDateTime(
+        )
+    {
+        return BaseName == "DATE_TIME";
+    }
+
+    // ~~
+
+    bool IsDate(
+        )
+    {
+        return BaseName == "DATE";
+    }
+
+    // ~~
+
+    bool IsTime(
+        )
+    {
+        return BaseName == "TIME";
+    }
+
+    // ~~
+
+    bool IsUuid(
+        )
+    {
+        return BaseName == "UUID";
+    }
+
+    // ~~
+
+    bool IsScalar(
+        )
+    {
+        return
+            BaseName == "BOOL"
+            || BaseName == "INT8"
+            || BaseName == "UINT8"
+            || BaseName == "INT16"
+            || BaseName == "UINT16"
+            || BaseName == "INT32"
+            || BaseName == "UINT32"
+            || BaseName == "INT64"
+            || BaseName == "UINT64"
+            || BaseName == "FLOAT32"
+            || BaseName == "FLOAT64"
+            || BaseName == "STRING"
+            || BaseName == "STRING8"
+            || BaseName == "STRING16"
+            || BaseName == "STRING24"
+            || BaseName == "STRING32"
+            || BaseName == "DATETIME"
+            || BaseName == "DATE"
+            || BaseName == "TIME"
+            || BaseName == "UUID";
+    }
+
+    // ~~
+
+    bool IsBlob(
+        )
+    {
+        return BaseName == "BLOB";
+    }
+
+    // ~~
+
+    bool IsTuple(
+        )
+    {
+        return BaseName == "TUPLE";
+    }
+
+    // ~~
+
+    bool IsList(
+        )
+    {
+        return BaseName == "LIST";
+    }
+
+    // ~~
+
+    bool IsSet(
+        )
+    {
+        return BaseName == "SET";
+    }
+
+    // ~~
+
+    bool IsMap(
+        )
+    {
+        return BaseName == "MAP";
     }
 
     // ~~
@@ -4869,10 +5016,34 @@ class COLUMN
 
     // -- INQUIRIES
 
+    bool IsNatural(
+        )
+    {
+        return Type.ActualType.IsNatural();
+    }
+
+    // ~~
+
+    bool IsInteger(
+        )
+    {
+        return Type.ActualType.IsInteger();
+    }
+
+    // ~~
+
+    bool IsReal(
+        )
+    {
+        return Type.ActualType.IsReal();
+    }
+
+    // ~~
+
     bool IsDateTime(
         )
     {
-        return Type.ActualType.BaseName == "DATETIME";
+        return Type.ActualType.IsDateTime();
     }
 
     // ~~
@@ -4880,7 +5051,7 @@ class COLUMN
     bool IsDate(
         )
     {
-        return Type.ActualType.BaseName == "DATE";
+        return Type.ActualType.IsDate();
     }
 
     // ~~
@@ -4888,7 +5059,15 @@ class COLUMN
     bool IsTime(
         )
     {
-        return Type.ActualType.BaseName == "TIME";
+        return Type.ActualType.IsTime();
+    }
+
+    // ~~
+
+    bool IsScalar(
+        )
+    {
+        return Type.ActualType.IsScalar();
     }
 
     // ~~
@@ -5012,6 +5191,23 @@ class COLUMN
         PropertyValueMap[ "javascript_attribute" ] = JavascriptAttribute;
         PropertyValueMap[ "javascript_variable" ] = JavascriptVariable;
         PropertyValueMap[ "javascript_default" ] = JavascriptDefault;
+        PropertyValueMap[ "is_boolean" ] = GetBooleanText( Type.IsBoolean() );
+        PropertyValueMap[ "is_natural" ] = GetBooleanText( Type.IsNatural() );
+        PropertyValueMap[ "is_integer" ] = GetBooleanText( Type.IsInteger() );
+        PropertyValueMap[ "is_real" ] = GetBooleanText( Type.IsReal() );
+        PropertyValueMap[ "is_number" ] = GetBooleanText( Type.IsNumber() );
+        PropertyValueMap[ "is_string" ] = GetBooleanText( Type.IsString() );
+        PropertyValueMap[ "is_datetime" ] = GetBooleanText( Type.IsDateTime() );
+        PropertyValueMap[ "is_date" ] = GetBooleanText( Type.IsDate() );
+        PropertyValueMap[ "is_time" ] = GetBooleanText( Type.IsTime() );
+        PropertyValueMap[ "is_uuid" ] = GetBooleanText( Type.IsUuid() );
+        PropertyValueMap[ "is_scalar" ] = GetBooleanText( Type.IsScalar() );
+        PropertyValueMap[ "is_blob" ] = GetBooleanText( Type.IsBlob() );
+        PropertyValueMap[ "is_tuple" ] = GetBooleanText( Type.IsTuple() );
+        PropertyValueMap[ "is_list" ] = GetBooleanText( Type.IsList() );
+        PropertyValueMap[ "is_set" ] = GetBooleanText( Type.IsSet() );
+        PropertyValueMap[ "is_map" ] = GetBooleanText( Type.IsMap() );
+        PropertyValueMap[ "is_collection" ] = GetBooleanText( Type.IsCollection() );
         PropertyValueMap[ "is_key" ] = GetBooleanText( IsKey );
         PropertyValueMap[ "is_stored" ] = GetBooleanText( IsStored );
         PropertyValueMap[ "is_non_stored" ] = GetBooleanText( !IsStored );
@@ -6976,7 +7172,7 @@ class TABLE
         string
             phoenix_code;
 
-        if ( column.Type.IsCollection() )
+        if ( !column.IsScalar() )
         {
             phoenix_code
                 = "    "
@@ -7010,7 +7206,8 @@ class TABLE
         foreach ( column; ColumnArray )
         {
             if ( column.IsStored
-                 && column.Type.IsInteger() )
+                 && ( column.IsNatural()
+                      || column.IsInteger() ) )
             {
                 phoenix_code
                     ~= indentation
@@ -7024,7 +7221,7 @@ class TABLE
                        ~ " );\n";
             }
             else if ( column.IsStored
-                      && column.Type.IsReal() )
+                      && column.IsReal() )
             {
                 phoenix_code
                     ~= indentation
@@ -7038,7 +7235,7 @@ class TABLE
                        ~ " );\n";
             }
             else if ( column.IsStored
-                      && column.Type.IsCollection() )
+                      && !column.IsScalar() )
             {
                 phoenix_code
                     ~= indentation
