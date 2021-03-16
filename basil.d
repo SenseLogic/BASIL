@@ -5719,7 +5719,9 @@ class TABLE
         CsharpVariable,
         RustType,
         JavascriptType,
-        JavascriptAttribute;
+        JavascriptAttribute,
+        KeyAttribute,
+        KeyVariable;
     string[]
         KeyNameArray;
     COLUMN[]
@@ -8137,6 +8139,8 @@ class TABLE
         PropertyValueMap[ "rust_type" ] = RustType;
         PropertyValueMap[ "javascript_type" ] = JavascriptType;
         PropertyValueMap[ "javascript_attribute" ] = JavascriptAttribute;
+        PropertyValueMap[ "key_attribute" ] = KeyAttribute;
+        PropertyValueMap[ "key_variable" ] = KeyVariable;
         PropertyValueMap[ "go_attribute_declaration" ] = GoAttributeDeclaration;
         PropertyValueMap[ "go_type_declaration" ] = GoTypeDeclaration;
         PropertyValueMap[ "generis_attribute_declaration" ] = GenerisAttributeDeclaration;
@@ -8874,6 +8878,12 @@ class SCHEMA
                              && column.IsKey )
                         {
                             table.KeyNameArray ~= column.Name;
+
+                            if ( table.KeyNameArray.length == 1 )
+                            {
+                                table.KeyAttribute = column.Name.GetAttributeCaseText();
+                                table.KeyVariable = column.Name.GetVariableCaseText();
+                            }
                         }
                     }
                     else if ( line_part_array.length != 1 )
@@ -10955,7 +10965,11 @@ string GetSnakeCaseText(
     )
 {
     char
+        character,
+        next_character,
         prior_character;
+    long
+        character_index;
     string
         snake_case_text;
 
@@ -10964,14 +10978,30 @@ string GetSnakeCaseText(
     snake_case_text = "";
     prior_character = 0;
 
-    foreach ( char character; text )
+    for ( character_index = 0;
+          character_index < text.length;
+          ++character_index )
     {
+        character = text[ character_index ];
+
+        if ( character_index + 1 < text.length )
+        {
+            next_character = text[ character_index + 1 ];
+        }
+        else
+        {
+            next_character = 0;
+        }
+
         if ( ( prior_character.isLower()
                && ( character.isUpper()
                     || character.isDigit() ) )
              || ( prior_character.isDigit()
                   && ( character.isLower()
-                       || character.isUpper() ) ) )
+                       || character.isUpper() ) )
+             || ( prior_character.isUpper()
+                  && character.isUpper()
+                  && next_character.isLower() ) )
         {
             snake_case_text ~= '_';
         }
