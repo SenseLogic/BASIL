@@ -584,6 +584,8 @@ POINTER[ <i>ELEMENT_TYPE</i> ] | !stored
 {#rust_type#}
 {#javascript_type#}
 {#javascript_attribute#}
+{#key_attribute#}
+{#key_variable#}
 {#go_attribute_declaration#}
 {#go_type_declaration#}
 {#generis_attribute_declaration#}
