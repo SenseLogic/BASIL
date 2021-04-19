@@ -10711,6 +10711,14 @@ void WriteText(
 
     writeln( "Writing file : ", file_path );
 
+    file_text = file_text.stripRight();
+
+    if ( file_text != ""
+         && !file_text.endsWith( '\n' ) )
+    {
+        file_text ~= '\n';
+    }
+
     try
     {
         if ( !file_path.exists()
