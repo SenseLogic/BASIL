@@ -5442,6 +5442,12 @@ class COLUMN
                 JavascriptName = value_text_array[ 1 ];
             }
             else if ( property_name == "count"
+                      && value_text_array.length == 2 )
+            {
+                MinimumRandomCount = value_text_array[ 1 ].to!long();
+                MaximumRandomCount = MinimumRandomCount;
+            }
+            else if ( property_name == "count"
                       && value_text_array.length == 3 )
             {
                 MinimumRandomCount = value_text_array[ 1 ].to!long();
