@@ -7,7 +7,7 @@ func AddDatabaseSimple(
 
     error_
         := DatabaseSession.Query(
-               "insert into SIMPLE ( Uuid, Bool, Int8, Uint8, Int16, Uint16, Int32, Uint32, Int64, Uint64, Float32, Float64, String, Name, Date, DateTime, Blob, Option ) values ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? )",
+               "insert into \"SIMPLE\" ( \"Uuid\", \"Bool\", \"Int8\", \"Uint8\", \"Int16\", \"Uint16\", \"Int32\", \"Uint32\", \"Int64\", \"Uint64\", \"Float32\", \"Float64\", \"String\", \"Name\", \"Date\", \"DateTime\", \"Blob\", \"Option\" ) values ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? )",
                simple.Uuid,
                simple.Bool,
                simple.Int8,
@@ -46,16 +46,16 @@ func AddDatabaseSimple(
 function AddDatabaseSimple(
     string uuid,
     bool bool,
-    int int8,
-    int uint8,
-    int int16,
-    int uint16,
-    int int32,
-    int uint32,
-    int int64,
-    int uint64,
-    float float32,
-    float float64,
+    int int_8,
+    int uint_8,
+    int int_16,
+    int uint_16,
+    int int_32,
+    int uint_32,
+    int int_64,
+    int uint_64,
+    float float_32,
+    float float_64,
     string string,
     string name,
     string date,
@@ -75,7 +75,7 @@ func SetDatabaseSimple(
 {
     error_
         := DatabaseSession.Query(
-               "insert into SIMPLE ( Uuid, Bool, Int8, Uint8, Int16, Uint16, Int32, Uint32, Int64, Uint64, Float32, Float64, String, Name, Date, DateTime, Blob, Option ) values ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? )",
+               "insert into \"SIMPLE\" ( \"Uuid\", \"Bool\", \"Int8\", \"Uint8\", \"Int16\", \"Uint16\", \"Int32\", \"Uint32\", \"Int64\", \"Uint64\", \"Float32\", \"Float64\", \"String\", \"Name\", \"Date\", \"DateTime\", \"Blob\", \"Option\" ) values ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? )",
                simple.Uuid,
                simple.Bool,
                simple.Int8,
@@ -115,7 +115,7 @@ func RemoveDatabaseSimple(
 {
     error_
         := DatabaseSession.Query(
-               "delete from SIMPLE where Uuid = ?",
+               "delete from \"SIMPLE\" where \"Uuid\" = ?",
                simple.Uuid
                ).Exec();
 
@@ -138,7 +138,7 @@ func GetDatabaseSimple(
 {
     error_
         := DatabaseSession.Query(
-               "select Bool, Int8, Uint8, Int16, Uint16, Int32, Uint32, Int64, Uint64, Float32, Float64, String, Name, Date, DateTime, Blob, Option from SIMPLE where Uuid = ?",
+               "select \"Bool\", \"Int8\", \"Uint8\", \"Int16\", \"Uint16\", \"Int32\", \"Uint32\", \"Int64\", \"Uint64\", \"Float32\", \"Float64\", \"String\", \"Name\", \"Date\", \"DateTime\", \"Blob\", \"Option\" from \"SIMPLE\" where \"Uuid\" = ?",
                simple.Uuid
                )
                .Consistency( gocql.One )
@@ -184,7 +184,7 @@ func GetDatabaseSimpleList(
 
     iterator
         := DatabaseSession.Query(
-               "select Uuid, Bool, Int8, Uint8, Int16, Uint16, Int32, Uint32, Int64, Uint64, Float32, Float64, String, Name, Date, DateTime, Blob, Option from SIMPLE"
+               "select \"Uuid\", \"Bool\", \"Int8\", \"Uint8\", \"Int16\", \"Uint16\", \"Int32\", \"Uint32\", \"Int64\", \"Uint64\", \"Float32\", \"Float64\", \"String\", \"Name\", \"Date\", \"DateTime\", \"Blob\", \"Option\" from \"SIMPLE\""
                )
                .Consistency( gocql.One )
                .Iter();
@@ -236,7 +236,7 @@ func AddDatabaseCompound(
 {
     error_
         := DatabaseSession.Query(
-               "insert into COMPOUND ( Location, Name, NameSet, PhoneList, EmailSet, CompanyMap, SimpleDate, SimpleDateMap, SimpleDateSet, SimpleDateList, NameSetMap, Text ) values ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? )",
+               "insert into \"COMPOUND\" ( \"Location\", \"Name\", \"NameSet\", \"PhoneList\", \"EmailSet\", \"CompanyMap\", \"SimpleDate\", \"SimpleDateMap\", \"SimpleDateSet\", \"SimpleDateList\", \"NameSetMap\", \"Text\" ) values ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? )",
                compound.Location,
                compound.Name,
                compound.NameSet,
@@ -292,7 +292,7 @@ func SetDatabaseCompound(
 {
     error_
         := DatabaseSession.Query(
-               "insert into COMPOUND ( Id, Location, Name, NameSet, PhoneList, EmailSet, CompanyMap, SimpleDate, SimpleDateMap, SimpleDateSet, SimpleDateList, NameSetMap, Text ) values ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? )",
+               "insert into \"COMPOUND\" ( \"Id\", \"Location\", \"Name\", \"NameSet\", \"PhoneList\", \"EmailSet\", \"CompanyMap\", \"SimpleDate\", \"SimpleDateMap\", \"SimpleDateSet\", \"SimpleDateList\", \"NameSetMap\", \"Text\" ) values ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? )",
                compound.Id,
                compound.Location,
                compound.Name,
@@ -327,7 +327,7 @@ func RemoveDatabaseCompound(
 {
     error_
         := DatabaseSession.Query(
-               "delete from COMPOUND where Id = ?",
+               "delete from \"COMPOUND\" where \"Id\" = ?",
                compound.Id
                ).Exec();
 
@@ -350,7 +350,7 @@ func GetDatabaseCompound(
 {
     error_
         := DatabaseSession.Query(
-               "select Location, Name, NameSet, PhoneList, EmailSet, CompanyMap, SimpleDate, SimpleDateMap, SimpleDateSet, SimpleDateList, NameSetMap, Text,  from COMPOUND where Id = ?",
+               "select \"Location\", \"Name\", \"NameSet\", \"PhoneList\", \"EmailSet\", \"CompanyMap\", \"SimpleDate\", \"SimpleDateMap\", \"SimpleDateSet\", \"SimpleDateList\", \"NameSetMap\", \"Text\",  from \"COMPOUND\" where \"Id\" = ?",
                compound.Id
                )
                .Consistency( gocql.One )
@@ -391,7 +391,7 @@ func GetDatabaseCompoundList(
 
     iterator
         := DatabaseSession.Query(
-               "select Id, Location, Name, NameSet, PhoneList, EmailSet, CompanyMap, SimpleDate, SimpleDateMap, SimpleDateSet, SimpleDateList, NameSetMap, Text from COMPOUND"
+               "select \"Id\", \"Location\", \"Name\", \"NameSet\", \"PhoneList\", \"EmailSet\", \"CompanyMap\", \"SimpleDate\", \"SimpleDateMap\", \"SimpleDateSet\", \"SimpleDateList\", \"NameSetMap\", \"Text\" from \"COMPOUND\""
                )
                .Consistency( gocql.One )
                .Iter();
@@ -438,7 +438,7 @@ func AddDatabaseValue(
 {
     error_
         := DatabaseSession.Query(
-               "insert into VALUE ( Id, Uuid, Name, Integer, Text ) values ( ?, ?, ?, ?, ? )",
+               "insert into \"VALUE\" ( \"Id\", \"Uuid\", \"Name\", \"Integer\", \"Text\" ) values ( ?, ?, ?, ?, ? )",
                value.Id,
                value.Uuid,
                value.Name,
@@ -480,7 +480,7 @@ func SetDatabaseValue(
 {
     error_
         := DatabaseSession.Query(
-               "insert into VALUE ( Id, Uuid, Name, Integer, Text ) values ( ?, ?, ?, ?, ? )",
+               "insert into \"VALUE\" ( \"Id\", \"Uuid\", \"Name\", \"Integer\", \"Text\" ) values ( ?, ?, ?, ?, ? )",
                value.Id,
                value.Uuid,
                value.Name,
@@ -507,7 +507,7 @@ func RemoveDatabaseValue(
 {
     error_
         := DatabaseSession.Query(
-               "delete from VALUE where Id = ?",
+               "delete from \"VALUE\" where \"Id\" = ?",
                value.Id
                ).Exec();
 
@@ -530,7 +530,7 @@ func GetDatabaseValue(
 {
     error_
         := DatabaseSession.Query(
-               "select Uuid, Name, Integer, Text from VALUE where Id = ?",
+               "select \"Uuid\", \"Name\", \"Integer\", \"Text\" from \"VALUE\" where \"Id\" = ?",
                value.Id
                )
                .Consistency( gocql.One )
@@ -563,7 +563,7 @@ func GetDatabaseValueList(
 
     iterator
         := DatabaseSession.Query(
-               "select Id, Uuid, Name, Integer, Text from VALUE"
+               "select \"Id\", \"Uuid\", \"Name\", \"Integer\", \"Text\" from \"VALUE\""
                )
                .Consistency( gocql.One )
                .Iter();
@@ -602,7 +602,7 @@ func AddDatabaseValueData(
 {
     error_
         := DatabaseSession.Query(
-               "insert into VALUE_DATA ( Uuid, ValueId, ValueUuid ) values ( ?, ?, ? )",
+               "insert into \"VALUE_DATA\" ( \"Uuid\", \"ValueId\", \"ValueUuid\" ) values ( ?, ?, ? )",
                value_data.Uuid,
                value_data.ValueId,
                value_data.ValueUuid
@@ -640,7 +640,7 @@ func SetDatabaseValueData(
 {
     error_
         := DatabaseSession.Query(
-               "insert into VALUE_DATA ( Uuid, ValueId, ValueUuid ) values ( ?, ?, ? )",
+               "insert into \"VALUE_DATA\" ( \"Uuid\", \"ValueId\", \"ValueUuid\" ) values ( ?, ?, ? )",
                value_data.Uuid,
                value_data.ValueId,
                value_data.ValueUuid
@@ -665,7 +665,7 @@ func RemoveDatabaseValueData(
 {
     error_
         := DatabaseSession.Query(
-               "delete from VALUE_DATA where Uuid = ?",
+               "delete from \"VALUE_DATA\" where \"Uuid\" = ?",
                value_data.Uuid
                ).Exec();
 
@@ -688,7 +688,7 @@ func GetDatabaseValueData(
 {
     error_
         := DatabaseSession.Query(
-               "select ValueId, ValueUuid,  from VALUE_DATA where Uuid = ?",
+               "select \"ValueId\", \"ValueUuid\",  from \"VALUE_DATA\" where \"Uuid\" = ?",
                value_data.Uuid
                )
                .Consistency( gocql.One )
@@ -719,7 +719,7 @@ func GetDatabaseValueDataList(
 
     iterator
         := DatabaseSession.Query(
-               "select Uuid, ValueId, ValueUuid from VALUE_DATA"
+               "select \"Uuid\", \"ValueId\", \"ValueUuid\" from \"VALUE_DATA\""
                )
                .Consistency( gocql.One )
                .Iter();
@@ -748,4 +748,3 @@ func GetDatabaseValueDataList(
 }
 
 // ~~
-

@@ -3,7 +3,7 @@
 function GetDatabaseCommentArray(
     )
 {
-    var statement = GetDatabaseStatement( 'select Id, ArticleId, UserId, Text, DateTime from COMMENT order by DateTime desc' );
+    var statement = GetDatabaseStatement( 'select `Id`, `ArticleId`, `UserId`, `Text`, `DateTime` from `COMMENT` order by `DateTime` desc' );
 
     if ( !statement.execute() )
     {
@@ -15,6 +15,8 @@ function GetDatabaseCommentArray(
     while ( var comment = statement.fetchObject() )
     {
         comment.Id = ( int )( comment.Id );
+        comment.ArticleId = ( int )( comment.ArticleId );
+        comment.UserId = ( int )( comment.UserId );
         array_push( comment_array, comment );
     }
 
@@ -27,7 +29,7 @@ function GetDatabaseCommentById(
     int id
     )
 {
-    var statement = GetDatabaseStatement( 'select Id, ArticleId, UserId, Text, DateTime from COMMENT where Id = ? limit 1' );
+    var statement = GetDatabaseStatement( 'select `Id`, `ArticleId`, `UserId`, `Text`, `DateTime` from `COMMENT` where `Id` = ? limit 1' );
     statement.bindParam( 1, id, PDO::PARAM_INT );
 
     if ( !statement.execute() )
@@ -37,6 +39,8 @@ function GetDatabaseCommentById(
 
     var comment = statement.fetchObject();
     comment.Id = ( int )( comment.Id );
+    comment.ArticleId = ( int )( comment.ArticleId );
+    comment.UserId = ( int )( comment.UserId );
 
     return comment;
 }
@@ -49,7 +53,7 @@ function AddDatabaseComment(
     string text
     )
 {
-    var statement = GetDatabaseStatement( 'insert into COMMENT ( ArticleId, UserId, Text, DateTime ) values ( ?, ?, ?, now() )' );
+    var statement = GetDatabaseStatement( 'insert into `COMMENT` ( `ArticleId`, `UserId`, `Text`, `DateTime` ) values ( ?, ?, ?, now() )' );
     statement.bindParam( 1, article_id, PDO::PARAM_INT );
     statement.bindParam( 2, user_id, PDO::PARAM_INT );
     statement.bindParam( 3, text, PDO::PARAM_STR );
@@ -70,7 +74,7 @@ function PutDatabaseComment(
     string text
     )
 {
-    var statement = GetDatabaseStatement( 'replace into COMMENT ( ArticleId, UserId, Text, DateTime ) values ( ?, ?, ?, now() )' );
+    var statement = GetDatabaseStatement( 'replace into `COMMENT` ( `ArticleId`, `UserId`, `Text`, `DateTime` ) values ( ?, ?, ?, now() )' );
     statement.bindParam( 1, article_id, PDO::PARAM_INT );
     statement.bindParam( 2, user_id, PDO::PARAM_INT );
     statement.bindParam( 3, text, PDO::PARAM_STR );
@@ -93,7 +97,7 @@ function SetDatabaseComment(
     string date_time
     )
 {
-    var statement = GetDatabaseStatement( 'update COMMENT set ArticleId = ?, UserId = ?, Text = ?, DateTime = ?,  where Id = ?' );
+    var statement = GetDatabaseStatement( 'update `COMMENT` set `ArticleId` = ?, `UserId` = ?, `Text` = ?, `DateTime` = ?,  where Id = ?' );
     statement.bindParam( 1, article_id, PDO::PARAM_INT );
     statement.bindParam( 2, user_id, PDO::PARAM_INT );
     statement.bindParam( 3, text, PDO::PARAM_STR );
@@ -112,7 +116,7 @@ function RemoveDatabaseCommentById(
     int id
     )
 {
-    var statement = GetDatabaseStatement( 'delete from COMMENT where Id = ?' );
+    var statement = GetDatabaseStatement( 'delete from `COMMENT` where `Id` = ?' );
     statement.bindParam( 1, id, PDO::PARAM_INT );
 
     if ( !statement.execute() )

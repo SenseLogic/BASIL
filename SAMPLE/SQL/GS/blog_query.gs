@@ -5,7 +5,7 @@ func AddDatabaseSection(
 {
     statement, error_
         := DatabaseSession.Prepare(
-               "insert into SECTION ( Number, Slug, Name, Text, Image ) values ( ?, ?, ?, ?, ? )"
+               "insert into `SECTION` ( `Number`, `Slug`, `Name`, `Text`, `Image` ) values ( ?, ?, ?, ?, ? )"
                );
 
     if ( error_ != nil )
@@ -56,7 +56,7 @@ function AddDatabaseSection(
     string image
     )
 {
-    var statement = GetDatabaseStatement( 'replace into SECTION ( Number, Slug, Name, Text, Image ) values ( ?, ?, ?, ?, ? )' );
+    var statement = GetDatabaseStatement( 'replace into `SECTION` ( `Number`, `Slug`, `Name`, `Text`, `Image` ) values ( ?, ?, ?, ?, ? )' );
     statement.bindParam( 1, number, PDO::PARAM_INT );
     statement.bindParam( 2, slug, PDO::PARAM_STR );
     statement.bindParam( 3, name, PDO::PARAM_STR );
@@ -80,7 +80,7 @@ func SetDatabaseSection(
 {
     statement, error_
         := DatabaseSession.Prepare(
-               "update SECTION set Number = ?, Slug = ?, Name = ?, Text = ?, Image = ?,  where Id = ?"
+               "update `SECTION` set `Number` = ?, `Slug` = ?, `Name` = ?, `Text` = ?, `Image` = ?,  where Id = ?"
                );
 
     if ( error_ != nil )
@@ -119,7 +119,7 @@ func RemoveDatabaseSection(
 {
     statement, error_
         := DatabaseSession.Prepare(
-               "delete from SECTION where Id = ?"
+               "delete from `SECTION` where `Id` = ?"
                );
 
     if ( error_ != nil )
@@ -153,7 +153,7 @@ func GetDatabaseSection(
 {
     statement, error_
         := DatabaseSession.Prepare(
-               "select Number, Slug, Name, Text, Image,  from SECTION where Id = ? limit 1"
+               "select `Number`, `Slug`, `Name`, `Text`, `Image`,  from `SECTION` where Id = ? limit 1"
                );
 
     if ( error_ != nil )
@@ -216,7 +216,7 @@ func GetDatabaseSectionList(
 
     statement, error_
         := DatabaseSession.Prepare(
-               "select Id, Number, Slug, Name, Text, Image from SECTION"
+               "select `Id`, `Number`, `Slug`, `Name`, `Text`, `Image` from `SECTION`"
                );
 
     if ( error_ != nil )
@@ -271,7 +271,7 @@ func AddDatabaseUser(
 {
     statement, error_
         := DatabaseSession.Prepare(
-               "insert into USER ( FirstName, LastName, Email, Pseudonym, Password, Phone, Street, City, Code, Region, Country, Company, ItIsAdministrator ) values ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? )"
+               "insert into `USER` ( `FirstName`, `LastName`, `Email`, `Pseudonym`, `Password`, `Phone`, `Street`, `City`, `Code`, `Region`, `Country`, `Company`, `ItIsAdministrator` ) values ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? )"
                );
 
     if ( error_ != nil )
@@ -338,7 +338,7 @@ function AddDatabaseUser(
     bool it_is_administrator
     )
 {
-    var statement = GetDatabaseStatement( 'replace into USER ( FirstName, LastName, Email, Pseudonym, Password, Phone, Street, City, Code, Region, Country, Company, ItIsAdministrator ) values ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? )' );
+    var statement = GetDatabaseStatement( 'replace into `USER` ( `FirstName`, `LastName`, `Email`, `Pseudonym`, `Password`, `Phone`, `Street`, `City`, `Code`, `Region`, `Country`, `Company`, `ItIsAdministrator` ) values ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? )' );
     statement.bindParam( 1, first_name, PDO::PARAM_STR );
     statement.bindParam( 2, last_name, PDO::PARAM_STR );
     statement.bindParam( 3, email, PDO::PARAM_STR );
@@ -370,7 +370,7 @@ func SetDatabaseUser(
 {
     statement, error_
         := DatabaseSession.Prepare(
-               "update USER set FirstName = ?, LastName = ?, Email = ?, Pseudonym = ?, Password = ?, Phone = ?, Street = ?, City = ?, Code = ?, Region = ?, Country = ?, Company = ?, ItIsAdministrator = ? where Id = ?"
+               "update `USER` set `FirstName` = ?, `LastName` = ?, `Email` = ?, `Pseudonym` = ?, `Password` = ?, `Phone` = ?, `Street` = ?, `City` = ?, `Code` = ?, `Region` = ?, `Country` = ?, `Company` = ?, `ItIsAdministrator` = ? where Id = ?"
                );
 
     if ( error_ != nil )
@@ -417,7 +417,7 @@ func RemoveDatabaseUser(
 {
     statement, error_
         := DatabaseSession.Prepare(
-               "delete from USER where Id = ?"
+               "delete from `USER` where `Id` = ?"
                );
 
     if ( error_ != nil )
@@ -451,7 +451,7 @@ func GetDatabaseUser(
 {
     statement, error_
         := DatabaseSession.Prepare(
-               "select FirstName, LastName, Email, Pseudonym, Password, Phone, Street, City, Code, Region, Country, Company, ItIsAdministrator from USER where Id = ? limit 1"
+               "select `FirstName`, `LastName`, `Email`, `Pseudonym`, `Password`, `Phone`, `Street`, `City`, `Code`, `Region`, `Country`, `Company`, `ItIsAdministrator` from `USER` where Id = ? limit 1"
                );
 
     if ( error_ != nil )
@@ -522,7 +522,7 @@ func GetDatabaseUserList(
 
     statement, error_
         := DatabaseSession.Prepare(
-               "select Id, FirstName, LastName, Email, Pseudonym, Password, Phone, Street, City, Code, Region, Country, Company, ItIsAdministrator from USER"
+               "select `Id`, `FirstName`, `LastName`, `Email`, `Pseudonym`, `Password`, `Phone`, `Street`, `City`, `Code`, `Region`, `Country`, `Company`, `ItIsAdministrator` from `USER`"
                );
 
     if ( error_ != nil )
@@ -585,7 +585,7 @@ func AddDatabaseArticle(
 {
     statement, error_
         := DatabaseSession.Prepare(
-               "insert into ARTICLE ( SectionId, UserId, Slug, Title, Text, Image, Date ) values ( ?, ?, ?, ?, ?, ?, date( now() ) )"
+               "insert into `ARTICLE` ( `SectionId`, `UserId`, `Slug`, `Title`, `Text`, `Image`, `Date` ) values ( ?, ?, ?, ?, ?, ?, date( now() ) )"
                );
 
     if ( error_ != nil )
@@ -638,7 +638,7 @@ function AddDatabaseArticle(
     string image
     )
 {
-    var statement = GetDatabaseStatement( 'replace into ARTICLE ( SectionId, UserId, Slug, Title, Text, Image, Date ) values ( ?, ?, ?, ?, ?, ?, date( now() ) )' );
+    var statement = GetDatabaseStatement( 'replace into `ARTICLE` ( `SectionId`, `UserId`, `Slug`, `Title`, `Text`, `Image`, `Date` ) values ( ?, ?, ?, ?, ?, ?, date( now() ) )' );
     statement.bindParam( 1, section_id, PDO::PARAM_INT );
     statement.bindParam( 2, user_id, PDO::PARAM_INT );
     statement.bindParam( 3, slug, PDO::PARAM_STR );
@@ -663,7 +663,7 @@ func SetDatabaseArticle(
 {
     statement, error_
         := DatabaseSession.Prepare(
-               "update ARTICLE set SectionId = ?, UserId = ?, Slug = ?, Title = ?, Text = ?, Image = ?, Date = ?,  where Id = ?"
+               "update `ARTICLE` set `SectionId` = ?, `UserId` = ?, `Slug` = ?, `Title` = ?, `Text` = ?, `Image` = ?, `Date` = ?,  where Id = ?"
                );
 
     if ( error_ != nil )
@@ -704,7 +704,7 @@ func RemoveDatabaseArticle(
 {
     statement, error_
         := DatabaseSession.Prepare(
-               "delete from ARTICLE where Id = ?"
+               "delete from `ARTICLE` where `Id` = ?"
                );
 
     if ( error_ != nil )
@@ -738,7 +738,7 @@ func GetDatabaseArticle(
 {
     statement, error_
         := DatabaseSession.Prepare(
-               "select SectionId, UserId, Slug, Title, Text, Image, Date,  from ARTICLE where Id = ? limit 1"
+               "select `SectionId`, `UserId`, `Slug`, `Title`, `Text`, `Image`, `Date`,  from `ARTICLE` where Id = ? limit 1"
                );
 
     if ( error_ != nil )
@@ -803,7 +803,7 @@ func GetDatabaseArticleList(
 
     statement, error_
         := DatabaseSession.Prepare(
-               "select Id, SectionId, UserId, Slug, Title, Text, Image, Date from ARTICLE"
+               "select `Id`, `SectionId`, `UserId`, `Slug`, `Title`, `Text`, `Image`, `Date` from `ARTICLE`"
                );
 
     if ( error_ != nil )
@@ -860,7 +860,7 @@ func AddDatabaseComment(
 {
     statement, error_
         := DatabaseSession.Prepare(
-               "insert into COMMENT ( ArticleId, UserId, Text, DateTime ) values ( ?, ?, ?, now() )"
+               "insert into `COMMENT` ( `ArticleId`, `UserId`, `Text`, `DateTime` ) values ( ?, ?, ?, now() )"
                );
 
     if ( error_ != nil )
@@ -907,7 +907,7 @@ function AddDatabaseComment(
     string text
     )
 {
-    var statement = GetDatabaseStatement( 'replace into COMMENT ( ArticleId, UserId, Text, DateTime ) values ( ?, ?, ?, now() )' );
+    var statement = GetDatabaseStatement( 'replace into `COMMENT` ( `ArticleId`, `UserId`, `Text`, `DateTime` ) values ( ?, ?, ?, now() )' );
     statement.bindParam( 1, article_id, PDO::PARAM_INT );
     statement.bindParam( 2, user_id, PDO::PARAM_INT );
     statement.bindParam( 3, text, PDO::PARAM_STR );
@@ -929,7 +929,7 @@ func SetDatabaseComment(
 {
     statement, error_
         := DatabaseSession.Prepare(
-               "update COMMENT set ArticleId = ?, UserId = ?, Text = ?, DateTime = ?,  where Id = ?"
+               "update `COMMENT` set `ArticleId` = ?, `UserId` = ?, `Text` = ?, `DateTime` = ?,  where Id = ?"
                );
 
     if ( error_ != nil )
@@ -967,7 +967,7 @@ func RemoveDatabaseComment(
 {
     statement, error_
         := DatabaseSession.Prepare(
-               "delete from COMMENT where Id = ?"
+               "delete from `COMMENT` where `Id` = ?"
                );
 
     if ( error_ != nil )
@@ -1001,7 +1001,7 @@ func GetDatabaseComment(
 {
     statement, error_
         := DatabaseSession.Prepare(
-               "select ArticleId, UserId, Text, DateTime,  from COMMENT where Id = ? limit 1"
+               "select `ArticleId`, `UserId`, `Text`, `DateTime`,  from `COMMENT` where Id = ? limit 1"
                );
 
     if ( error_ != nil )
@@ -1063,7 +1063,7 @@ func GetDatabaseCommentList(
 
     statement, error_
         := DatabaseSession.Prepare(
-               "select Id, ArticleId, UserId, Text, DateTime from COMMENT"
+               "select `Id`, `ArticleId`, `UserId`, `Text`, `DateTime` from `COMMENT`"
                );
 
     if ( error_ != nil )
@@ -1117,7 +1117,7 @@ func AddDatabaseSubscriber(
 {
     statement, error_
         := DatabaseSession.Prepare(
-               "insert into SUBSCRIBER ( Name, Email ) values ( ?, ? )"
+               "insert into `SUBSCRIBER` ( `Name`, `Email` ) values ( ?, ? )"
                );
 
     if ( error_ != nil )
@@ -1162,7 +1162,7 @@ function AddDatabaseSubscriber(
     string email
     )
 {
-    var statement = GetDatabaseStatement( 'replace into SUBSCRIBER ( Name, Email ) values ( ?, ? )' );
+    var statement = GetDatabaseStatement( 'replace into `SUBSCRIBER` ( `Name`, `Email` ) values ( ?, ? )' );
     statement.bindParam( 1, name, PDO::PARAM_STR );
     statement.bindParam( 2, email, PDO::PARAM_STR );
 
@@ -1183,7 +1183,7 @@ func SetDatabaseSubscriber(
 {
     statement, error_
         := DatabaseSession.Prepare(
-               "update SUBSCRIBER set Name = ?, Email = ? where Id = ?"
+               "update `SUBSCRIBER` set `Name` = ?, `Email` = ? where Id = ?"
                );
 
     if ( error_ != nil )
@@ -1219,7 +1219,7 @@ func RemoveDatabaseSubscriber(
 {
     statement, error_
         := DatabaseSession.Prepare(
-               "delete from SUBSCRIBER where Id = ?"
+               "delete from `SUBSCRIBER` where `Id` = ?"
                );
 
     if ( error_ != nil )
@@ -1253,7 +1253,7 @@ func GetDatabaseSubscriber(
 {
     statement, error_
         := DatabaseSession.Prepare(
-               "select Name, Email from SUBSCRIBER where Id = ? limit 1"
+               "select `Name`, `Email` from `SUBSCRIBER` where Id = ? limit 1"
                );
 
     if ( error_ != nil )
@@ -1313,7 +1313,7 @@ func GetDatabaseSubscriberList(
 
     statement, error_
         := DatabaseSession.Prepare(
-               "select Id, Name, Email from SUBSCRIBER"
+               "select `Id`, `Name`, `Email` from `SUBSCRIBER`"
                );
 
     if ( error_ != nil )

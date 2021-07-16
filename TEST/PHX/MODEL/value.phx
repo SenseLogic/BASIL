@@ -3,7 +3,7 @@
 function GetDatabaseValueArray(
     )
 {
-    var statement = GetDatabaseStatement( 'select Id, Uuid, Name, Integer, Text from VALUE' );
+    var statement = GetDatabaseStatement( 'select `Id`, `Uuid`, `Name`, `Integer`, `Text` from `VALUE`' );
 
     if ( !statement.execute() )
     {
@@ -28,7 +28,7 @@ function GetDatabaseValueById(
     int id
     )
 {
-    var statement = GetDatabaseStatement( 'select Id, Uuid, Name, Integer, Text from VALUE where Id = ? limit 1' );
+    var statement = GetDatabaseStatement( 'select `Id`, `Uuid`, `Name`, `Integer`, `Text` from `VALUE` where `Id` = ? limit 1' );
     statement.bindParam( 1, id, PDO::PARAM_INT );
 
     if ( !statement.execute() )
@@ -53,7 +53,7 @@ function AddDatabaseValue(
     string text
     )
 {
-    var statement = GetDatabaseStatement( 'insert into VALUE ( Id, Uuid, Name, Integer, Text ) values ( ?, ?, ?, ?, ? )' );
+    var statement = GetDatabaseStatement( 'insert into `VALUE` ( `Id`, `Uuid`, `Name`, `Integer`, `Text` ) values ( ?, ?, ?, ?, ? )' );
     statement.bindParam( 1, id, PDO::PARAM_INT );
     statement.bindParam( 2, uuid, PDO::PARAM_STR );
     statement.bindParam( 3, name, PDO::PARAM_STR );
@@ -78,7 +78,7 @@ function PutDatabaseValue(
     string text
     )
 {
-    var statement = GetDatabaseStatement( 'replace into VALUE ( Id, Uuid, Name, Integer, Text ) values ( ?, ?, ?, ?, ? )' );
+    var statement = GetDatabaseStatement( 'replace into `VALUE` ( `Id`, `Uuid`, `Name`, `Integer`, `Text` ) values ( ?, ?, ?, ?, ? )' );
     statement.bindParam( 1, id, PDO::PARAM_INT );
     statement.bindParam( 2, uuid, PDO::PARAM_STR );
     statement.bindParam( 3, name, PDO::PARAM_STR );
@@ -103,7 +103,7 @@ function SetDatabaseValue(
     string text
     )
 {
-    var statement = GetDatabaseStatement( 'update VALUE set Uuid = ?, Name = ?, Integer = ?, Text = ? where Id = ?' );
+    var statement = GetDatabaseStatement( 'update `VALUE` set `Uuid` = ?, `Name` = ?, `Integer` = ?, `Text` = ? where Id = ?' );
     statement.bindParam( 1, uuid, PDO::PARAM_STR );
     statement.bindParam( 2, name, PDO::PARAM_STR );
     statement.bindParam( 3, integer, PDO::PARAM_INT );
@@ -122,7 +122,7 @@ function RemoveDatabaseValueById(
     int id
     )
 {
-    var statement = GetDatabaseStatement( 'delete from VALUE where Id = ?' );
+    var statement = GetDatabaseStatement( 'delete from `VALUE` where `Id` = ?' );
     statement.bindParam( 1, id, PDO::PARAM_INT );
 
     if ( !statement.execute() )

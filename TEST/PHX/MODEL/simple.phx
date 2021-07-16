@@ -3,7 +3,7 @@
 function GetDatabaseSimpleArray(
     )
 {
-    var statement = GetDatabaseStatement( 'select Uuid, Bool, Int8, Uint8, Int16, Uint16, Int32, Uint32, Int64, Uint64, Float32, Float64, String, Name, Date, DateTime, Blob, Option from SIMPLE' );
+    var statement = GetDatabaseStatement( 'select `Uuid`, `Bool`, `Int8`, `Uint8`, `Int16`, `Uint16`, `Int32`, `Uint32`, `Int64`, `Uint64`, `Float32`, `Float64`, `String`, `Name`, `Date`, `DateTime`, `Blob`, `Option` from `SIMPLE`' );
 
     if ( !statement.execute() )
     {
@@ -24,6 +24,7 @@ function GetDatabaseSimpleArray(
         simple.Uint64 = ( int )( simple.Uint64 );
         simple.Float32 = ( float )( simple.Float32 );
         simple.Float64 = ( float )( simple.Float64 );
+        simple.Blob = json_decode( simple.Blob );
         array_push( simple_array, simple );
     }
 
@@ -36,7 +37,7 @@ function GetDatabaseSimpleByUuid(
     string uuid
     )
 {
-    var statement = GetDatabaseStatement( 'select Uuid, Bool, Int8, Uint8, Int16, Uint16, Int32, Uint32, Int64, Uint64, Float32, Float64, String, Name, Date, DateTime, Blob, Option from SIMPLE where Uuid = ? limit 1' );
+    var statement = GetDatabaseStatement( 'select `Uuid`, `Bool`, `Int8`, `Uint8`, `Int16`, `Uint16`, `Int32`, `Uint32`, `Int64`, `Uint64`, `Float32`, `Float64`, `String`, `Name`, `Date`, `DateTime`, `Blob`, `Option` from `SIMPLE` where `Uuid` = ? limit 1' );
     statement.bindParam( 1, uuid, PDO::PARAM_STR );
 
     if ( !statement.execute() )
@@ -55,6 +56,7 @@ function GetDatabaseSimpleByUuid(
     simple.Uint64 = ( int )( simple.Uint64 );
     simple.Float32 = ( float )( simple.Float32 );
     simple.Float64 = ( float )( simple.Float64 );
+    simple.Blob = json_decode( simple.Blob );
 
     return simple;
 }
@@ -64,16 +66,16 @@ function GetDatabaseSimpleByUuid(
 function AddDatabaseSimple(
     string uuid,
     bool bool,
-    int int8,
-    int uint8,
-    int int16,
-    int uint16,
-    int int32,
-    int uint32,
-    int int64,
-    int uint64,
-    float float32,
-    float float64,
+    int int_8,
+    int uint_8,
+    int int_16,
+    int uint_16,
+    int int_32,
+    int uint_32,
+    int int_64,
+    int uint_64,
+    float float_32,
+    float float_64,
     string string,
     string name,
     string date,
@@ -82,23 +84,24 @@ function AddDatabaseSimple(
     string option
     )
 {
-    var statement = GetDatabaseStatement( 'insert into SIMPLE ( Uuid, Bool, Int8, Uint8, Int16, Uint16, Int32, Uint32, Int64, Uint64, Float32, Float64, String, Name, Date, DateTime, Blob, Option ) values ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? )' );
+    var statement = GetDatabaseStatement( 'insert into `SIMPLE` ( `Uuid`, `Bool`, `Int8`, `Uint8`, `Int16`, `Uint16`, `Int32`, `Uint32`, `Int64`, `Uint64`, `Float32`, `Float64`, `String`, `Name`, `Date`, `DateTime`, `Blob`, `Option` ) values ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? )' );
     statement.bindParam( 1, uuid, PDO::PARAM_STR );
     statement.bindParam( 2, bool, PDO::PARAM_BOOL );
-    statement.bindParam( 3, int8, PDO::PARAM_INT );
-    statement.bindParam( 4, uint8, PDO::PARAM_INT );
-    statement.bindParam( 5, int16, PDO::PARAM_INT );
-    statement.bindParam( 6, uint16, PDO::PARAM_INT );
-    statement.bindParam( 7, int32, PDO::PARAM_INT );
-    statement.bindParam( 8, uint32, PDO::PARAM_INT );
-    statement.bindParam( 9, int64, PDO::PARAM_INT );
-    statement.bindParam( 10, uint64, PDO::PARAM_INT );
-    statement.bindParam( 11, float32, PDO::PARAM_STR );
-    statement.bindParam( 12, float64, PDO::PARAM_STR );
+    statement.bindParam( 3, int_8, PDO::PARAM_INT );
+    statement.bindParam( 4, uint_8, PDO::PARAM_INT );
+    statement.bindParam( 5, int_16, PDO::PARAM_INT );
+    statement.bindParam( 6, uint_16, PDO::PARAM_INT );
+    statement.bindParam( 7, int_32, PDO::PARAM_INT );
+    statement.bindParam( 8, uint_32, PDO::PARAM_INT );
+    statement.bindParam( 9, int_64, PDO::PARAM_INT );
+    statement.bindParam( 10, uint_64, PDO::PARAM_INT );
+    statement.bindParam( 11, float_32, PDO::PARAM_STR );
+    statement.bindParam( 12, float_64, PDO::PARAM_STR );
     statement.bindParam( 13, string, PDO::PARAM_STR );
     statement.bindParam( 14, name, PDO::PARAM_STR );
     statement.bindParam( 15, date, PDO::PARAM_STR );
     statement.bindParam( 16, date_time, PDO::PARAM_STR );
+    blob = json_encode( blob );
     statement.bindParam( 17, blob, PDO::PARAM_STR );
     statement.bindParam( 18, option, PDO::PARAM_STR );
 
@@ -115,16 +118,16 @@ function AddDatabaseSimple(
 function PutDatabaseSimple(
     string uuid,
     bool bool,
-    int int8,
-    int uint8,
-    int int16,
-    int uint16,
-    int int32,
-    int uint32,
-    int int64,
-    int uint64,
-    float float32,
-    float float64,
+    int int_8,
+    int uint_8,
+    int int_16,
+    int uint_16,
+    int int_32,
+    int uint_32,
+    int int_64,
+    int uint_64,
+    float float_32,
+    float float_64,
     string string,
     string name,
     string date,
@@ -133,23 +136,24 @@ function PutDatabaseSimple(
     string option
     )
 {
-    var statement = GetDatabaseStatement( 'replace into SIMPLE ( Uuid, Bool, Int8, Uint8, Int16, Uint16, Int32, Uint32, Int64, Uint64, Float32, Float64, String, Name, Date, DateTime, Blob, Option ) values ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? )' );
+    var statement = GetDatabaseStatement( 'replace into `SIMPLE` ( `Uuid`, `Bool`, `Int8`, `Uint8`, `Int16`, `Uint16`, `Int32`, `Uint32`, `Int64`, `Uint64`, `Float32`, `Float64`, `String`, `Name`, `Date`, `DateTime`, `Blob`, `Option` ) values ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? )' );
     statement.bindParam( 1, uuid, PDO::PARAM_STR );
     statement.bindParam( 2, bool, PDO::PARAM_BOOL );
-    statement.bindParam( 3, int8, PDO::PARAM_INT );
-    statement.bindParam( 4, uint8, PDO::PARAM_INT );
-    statement.bindParam( 5, int16, PDO::PARAM_INT );
-    statement.bindParam( 6, uint16, PDO::PARAM_INT );
-    statement.bindParam( 7, int32, PDO::PARAM_INT );
-    statement.bindParam( 8, uint32, PDO::PARAM_INT );
-    statement.bindParam( 9, int64, PDO::PARAM_INT );
-    statement.bindParam( 10, uint64, PDO::PARAM_INT );
-    statement.bindParam( 11, float32, PDO::PARAM_STR );
-    statement.bindParam( 12, float64, PDO::PARAM_STR );
+    statement.bindParam( 3, int_8, PDO::PARAM_INT );
+    statement.bindParam( 4, uint_8, PDO::PARAM_INT );
+    statement.bindParam( 5, int_16, PDO::PARAM_INT );
+    statement.bindParam( 6, uint_16, PDO::PARAM_INT );
+    statement.bindParam( 7, int_32, PDO::PARAM_INT );
+    statement.bindParam( 8, uint_32, PDO::PARAM_INT );
+    statement.bindParam( 9, int_64, PDO::PARAM_INT );
+    statement.bindParam( 10, uint_64, PDO::PARAM_INT );
+    statement.bindParam( 11, float_32, PDO::PARAM_STR );
+    statement.bindParam( 12, float_64, PDO::PARAM_STR );
     statement.bindParam( 13, string, PDO::PARAM_STR );
     statement.bindParam( 14, name, PDO::PARAM_STR );
     statement.bindParam( 15, date, PDO::PARAM_STR );
     statement.bindParam( 16, date_time, PDO::PARAM_STR );
+    blob = json_encode( blob );
     statement.bindParam( 17, blob, PDO::PARAM_STR );
     statement.bindParam( 18, option, PDO::PARAM_STR );
 
@@ -166,16 +170,16 @@ function PutDatabaseSimple(
 function SetDatabaseSimple(
     string uuid,
     bool bool,
-    int int8,
-    int uint8,
-    int int16,
-    int uint16,
-    int int32,
-    int uint32,
-    int int64,
-    int uint64,
-    float float32,
-    float float64,
+    int int_8,
+    int uint_8,
+    int int_16,
+    int uint_16,
+    int int_32,
+    int uint_32,
+    int int_64,
+    int uint_64,
+    float float_32,
+    float float_64,
     string string,
     string name,
     string date,
@@ -184,22 +188,23 @@ function SetDatabaseSimple(
     string option
     )
 {
-    var statement = GetDatabaseStatement( 'update SIMPLE set Bool = ?, Int8 = ?, Uint8 = ?, Int16 = ?, Uint16 = ?, Int32 = ?, Uint32 = ?, Int64 = ?, Uint64 = ?, Float32 = ?, Float64 = ?, String = ?, Name = ?, Date = ?, DateTime = ?, Blob = ?, Option = ? where Uuid = ?' );
+    var statement = GetDatabaseStatement( 'update `SIMPLE` set `Bool` = ?, `Int8` = ?, `Uint8` = ?, `Int16` = ?, `Uint16` = ?, `Int32` = ?, `Uint32` = ?, `Int64` = ?, `Uint64` = ?, `Float32` = ?, `Float64` = ?, `String` = ?, `Name` = ?, `Date` = ?, `DateTime` = ?, `Blob` = ?, `Option` = ? where Uuid = ?' );
     statement.bindParam( 1, bool, PDO::PARAM_BOOL );
-    statement.bindParam( 2, int8, PDO::PARAM_INT );
-    statement.bindParam( 3, uint8, PDO::PARAM_INT );
-    statement.bindParam( 4, int16, PDO::PARAM_INT );
-    statement.bindParam( 5, uint16, PDO::PARAM_INT );
-    statement.bindParam( 6, int32, PDO::PARAM_INT );
-    statement.bindParam( 7, uint32, PDO::PARAM_INT );
-    statement.bindParam( 8, int64, PDO::PARAM_INT );
-    statement.bindParam( 9, uint64, PDO::PARAM_INT );
-    statement.bindParam( 10, float32, PDO::PARAM_STR );
-    statement.bindParam( 11, float64, PDO::PARAM_STR );
+    statement.bindParam( 2, int_8, PDO::PARAM_INT );
+    statement.bindParam( 3, uint_8, PDO::PARAM_INT );
+    statement.bindParam( 4, int_16, PDO::PARAM_INT );
+    statement.bindParam( 5, uint_16, PDO::PARAM_INT );
+    statement.bindParam( 6, int_32, PDO::PARAM_INT );
+    statement.bindParam( 7, uint_32, PDO::PARAM_INT );
+    statement.bindParam( 8, int_64, PDO::PARAM_INT );
+    statement.bindParam( 9, uint_64, PDO::PARAM_INT );
+    statement.bindParam( 10, float_32, PDO::PARAM_STR );
+    statement.bindParam( 11, float_64, PDO::PARAM_STR );
     statement.bindParam( 12, string, PDO::PARAM_STR );
     statement.bindParam( 13, name, PDO::PARAM_STR );
     statement.bindParam( 14, date, PDO::PARAM_STR );
     statement.bindParam( 15, date_time, PDO::PARAM_STR );
+    blob = json_encode( blob );
     statement.bindParam( 16, blob, PDO::PARAM_STR );
     statement.bindParam( 17, option, PDO::PARAM_STR );
     statement.bindParam( 18, uuid, PDO::PARAM_STR );
@@ -216,7 +221,7 @@ function RemoveDatabaseSimpleByUuid(
     string uuid
     )
 {
-    var statement = GetDatabaseStatement( 'delete from SIMPLE where Uuid = ?' );
+    var statement = GetDatabaseStatement( 'delete from `SIMPLE` where `Uuid` = ?' );
     statement.bindParam( 1, uuid, PDO::PARAM_STR );
 
     if ( !statement.execute() )

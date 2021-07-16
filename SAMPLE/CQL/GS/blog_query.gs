@@ -7,7 +7,7 @@ func AddDatabaseSection(
 
     error_
         := DatabaseSession.Query(
-               "insert into SECTION ( Uuid, Number, Slug, Name, Text, Image ) values ( ?, ?, ?, ?, ?, ? )",
+               "insert into \"SECTION\" ( \"Uuid\", \"Number\", \"Slug\", \"Name\", \"Text\", \"Image\" ) values ( ?, ?, ?, ?, ?, ? )",
                section.Uuid,
                section.Number,
                section.Slug,
@@ -51,7 +51,7 @@ func SetDatabaseSection(
 {
     error_
         := DatabaseSession.Query(
-               "insert into SECTION ( Uuid, Number, Slug, Name, Text, Image ) values ( ?, ?, ?, ?, ?, ? )",
+               "insert into \"SECTION\" ( \"Uuid\", \"Number\", \"Slug\", \"Name\", \"Text\", \"Image\" ) values ( ?, ?, ?, ?, ?, ? )",
                section.Uuid,
                section.Number,
                section.Slug,
@@ -79,7 +79,7 @@ func RemoveDatabaseSection(
 {
     error_
         := DatabaseSession.Query(
-               "delete from SECTION where Uuid = ?",
+               "delete from \"SECTION\" where \"Uuid\" = ?",
                section.Uuid
                ).Exec();
 
@@ -102,7 +102,7 @@ func GetDatabaseSection(
 {
     error_
         := DatabaseSession.Query(
-               "select Number, Slug, Name, Text, Image,  from SECTION where Uuid = ?",
+               "select \"Number\", \"Slug\", \"Name\", \"Text\", \"Image\",  from \"SECTION\" where \"Uuid\" = ?",
                section.Uuid
                )
                .Consistency( gocql.One )
@@ -136,7 +136,7 @@ func GetDatabaseSectionList(
 
     iterator
         := DatabaseSession.Query(
-               "select Uuid, Number, Slug, Name, Text, Image from SECTION"
+               "select \"Uuid\", \"Number\", \"Slug\", \"Name\", \"Text\", \"Image\" from \"SECTION\""
                )
                .Consistency( gocql.One )
                .Iter();
@@ -178,7 +178,7 @@ func AddDatabaseUser(
 
     error_
         := DatabaseSession.Query(
-               "insert into USER ( Uuid, FirstName, LastName, Email, Pseudonym, Password, Phone, Street, City, Code, Region, Country, Company, ItIsAdministrator ) values ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? )",
+               "insert into \"USER\" ( \"Uuid\", \"FirstName\", \"LastName\", \"Email\", \"Pseudonym\", \"Password\", \"Phone\", \"Street\", \"City\", \"Code\", \"Region\", \"Country\", \"Company\", \"ItIsAdministrator\" ) values ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? )",
                user.Uuid,
                user.FirstName,
                user.LastName,
@@ -238,7 +238,7 @@ func SetDatabaseUser(
 {
     error_
         := DatabaseSession.Query(
-               "insert into USER ( Uuid, FirstName, LastName, Email, Pseudonym, Password, Phone, Street, City, Code, Region, Country, Company, ItIsAdministrator ) values ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? )",
+               "insert into \"USER\" ( \"Uuid\", \"FirstName\", \"LastName\", \"Email\", \"Pseudonym\", \"Password\", \"Phone\", \"Street\", \"City\", \"Code\", \"Region\", \"Country\", \"Company\", \"ItIsAdministrator\" ) values ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? )",
                user.Uuid,
                user.FirstName,
                user.LastName,
@@ -274,7 +274,7 @@ func RemoveDatabaseUser(
 {
     error_
         := DatabaseSession.Query(
-               "delete from USER where Uuid = ?",
+               "delete from \"USER\" where \"Uuid\" = ?",
                user.Uuid
                ).Exec();
 
@@ -297,7 +297,7 @@ func GetDatabaseUser(
 {
     error_
         := DatabaseSession.Query(
-               "select FirstName, LastName, Email, Pseudonym, Password, Phone, Street, City, Code, Region, Country, Company, ItIsAdministrator from USER where Uuid = ?",
+               "select \"FirstName\", \"LastName\", \"Email\", \"Pseudonym\", \"Password\", \"Phone\", \"Street\", \"City\", \"Code\", \"Region\", \"Country\", \"Company\", \"ItIsAdministrator\" from \"USER\" where \"Uuid\" = ?",
                user.Uuid
                )
                .Consistency( gocql.One )
@@ -339,7 +339,7 @@ func GetDatabaseUserList(
 
     iterator
         := DatabaseSession.Query(
-               "select Uuid, FirstName, LastName, Email, Pseudonym, Password, Phone, Street, City, Code, Region, Country, Company, ItIsAdministrator from USER"
+               "select \"Uuid\", \"FirstName\", \"LastName\", \"Email\", \"Pseudonym\", \"Password\", \"Phone\", \"Street\", \"City\", \"Code\", \"Region\", \"Country\", \"Company\", \"ItIsAdministrator\" from \"USER\""
                )
                .Consistency( gocql.One )
                .Iter();
@@ -389,7 +389,7 @@ func AddDatabaseArticle(
 
     error_
         := DatabaseSession.Query(
-               "insert into ARTICLE ( Uuid, SectionUuid, UserUuid, Slug, Title, Text, Image, Date ) values ( ?, ?, ?, ?, ?, ?, ?, ? )",
+               "insert into \"ARTICLE\" ( \"Uuid\", \"SectionUuid\", \"UserUuid\", \"Slug\", \"Title\", \"Text\", \"Image\", \"Date\" ) values ( ?, ?, ?, ?, ?, ?, ?, ? )",
                article.Uuid,
                article.SectionUuid,
                article.UserUuid,
@@ -437,7 +437,7 @@ func SetDatabaseArticle(
 {
     error_
         := DatabaseSession.Query(
-               "insert into ARTICLE ( Uuid, SectionUuid, UserUuid, Slug, Title, Text, Image, Date ) values ( ?, ?, ?, ?, ?, ?, ?, ? )",
+               "insert into \"ARTICLE\" ( \"Uuid\", \"SectionUuid\", \"UserUuid\", \"Slug\", \"Title\", \"Text\", \"Image\", \"Date\" ) values ( ?, ?, ?, ?, ?, ?, ?, ? )",
                article.Uuid,
                article.SectionUuid,
                article.UserUuid,
@@ -467,7 +467,7 @@ func RemoveDatabaseArticle(
 {
     error_
         := DatabaseSession.Query(
-               "delete from ARTICLE where Uuid = ?",
+               "delete from \"ARTICLE\" where \"Uuid\" = ?",
                article.Uuid
                ).Exec();
 
@@ -490,7 +490,7 @@ func GetDatabaseArticle(
 {
     error_
         := DatabaseSession.Query(
-               "select SectionUuid, UserUuid, Slug, Title, Text, Image, Date,  from ARTICLE where Uuid = ?",
+               "select \"SectionUuid\", \"UserUuid\", \"Slug\", \"Title\", \"Text\", \"Image\", \"Date\",  from \"ARTICLE\" where \"Uuid\" = ?",
                article.Uuid
                )
                .Consistency( gocql.One )
@@ -526,7 +526,7 @@ func GetDatabaseArticleList(
 
     iterator
         := DatabaseSession.Query(
-               "select Uuid, SectionUuid, UserUuid, Slug, Title, Text, Image, Date from ARTICLE"
+               "select \"Uuid\", \"SectionUuid\", \"UserUuid\", \"Slug\", \"Title\", \"Text\", \"Image\", \"Date\" from \"ARTICLE\""
                )
                .Consistency( gocql.One )
                .Iter();
@@ -570,7 +570,7 @@ func AddDatabaseComment(
 
     error_
         := DatabaseSession.Query(
-               "insert into COMMENT ( Uuid, ArticleUuid, UserUuid, Text, DateTime ) values ( ?, ?, ?, ?, ? )",
+               "insert into \"COMMENT\" ( \"Uuid\", \"ArticleUuid\", \"UserUuid\", \"Text\", \"DateTime\" ) values ( ?, ?, ?, ?, ? )",
                comment.Uuid,
                comment.ArticleUuid,
                comment.UserUuid,
@@ -612,7 +612,7 @@ func SetDatabaseComment(
 {
     error_
         := DatabaseSession.Query(
-               "insert into COMMENT ( Uuid, ArticleUuid, UserUuid, Text, DateTime ) values ( ?, ?, ?, ?, ? )",
+               "insert into \"COMMENT\" ( \"Uuid\", \"ArticleUuid\", \"UserUuid\", \"Text\", \"DateTime\" ) values ( ?, ?, ?, ?, ? )",
                comment.Uuid,
                comment.ArticleUuid,
                comment.UserUuid,
@@ -639,7 +639,7 @@ func RemoveDatabaseComment(
 {
     error_
         := DatabaseSession.Query(
-               "delete from COMMENT where Uuid = ?",
+               "delete from \"COMMENT\" where \"Uuid\" = ?",
                comment.Uuid
                ).Exec();
 
@@ -662,7 +662,7 @@ func GetDatabaseComment(
 {
     error_
         := DatabaseSession.Query(
-               "select ArticleUuid, UserUuid, Text, DateTime,  from COMMENT where Uuid = ?",
+               "select \"ArticleUuid\", \"UserUuid\", \"Text\", \"DateTime\",  from \"COMMENT\" where \"Uuid\" = ?",
                comment.Uuid
                )
                .Consistency( gocql.One )
@@ -695,7 +695,7 @@ func GetDatabaseCommentList(
 
     iterator
         := DatabaseSession.Query(
-               "select Uuid, ArticleUuid, UserUuid, Text, DateTime from COMMENT"
+               "select \"Uuid\", \"ArticleUuid\", \"UserUuid\", \"Text\", \"DateTime\" from \"COMMENT\""
                )
                .Consistency( gocql.One )
                .Iter();
@@ -736,7 +736,7 @@ func AddDatabaseSubscriber(
 
     error_
         := DatabaseSession.Query(
-               "insert into SUBSCRIBER ( Uuid, Name, Email ) values ( ?, ?, ? )",
+               "insert into \"SUBSCRIBER\" ( \"Uuid\", \"Name\", \"Email\" ) values ( ?, ?, ? )",
                subscriber.Uuid,
                subscriber.Name,
                subscriber.Email
@@ -774,7 +774,7 @@ func SetDatabaseSubscriber(
 {
     error_
         := DatabaseSession.Query(
-               "insert into SUBSCRIBER ( Uuid, Name, Email ) values ( ?, ?, ? )",
+               "insert into \"SUBSCRIBER\" ( \"Uuid\", \"Name\", \"Email\" ) values ( ?, ?, ? )",
                subscriber.Uuid,
                subscriber.Name,
                subscriber.Email
@@ -799,7 +799,7 @@ func RemoveDatabaseSubscriber(
 {
     error_
         := DatabaseSession.Query(
-               "delete from SUBSCRIBER where Uuid = ?",
+               "delete from \"SUBSCRIBER\" where \"Uuid\" = ?",
                subscriber.Uuid
                ).Exec();
 
@@ -822,7 +822,7 @@ func GetDatabaseSubscriber(
 {
     error_
         := DatabaseSession.Query(
-               "select Name, Email from SUBSCRIBER where Uuid = ?",
+               "select \"Name\", \"Email\" from \"SUBSCRIBER\" where \"Uuid\" = ?",
                subscriber.Uuid
                )
                .Consistency( gocql.One )
@@ -853,7 +853,7 @@ func GetDatabaseSubscriberList(
 
     iterator
         := DatabaseSession.Query(
-               "select Uuid, Name, Email from SUBSCRIBER"
+               "select \"Uuid\", \"Name\", \"Email\" from \"SUBSCRIBER\""
                )
                .Consistency( gocql.One )
                .Iter();

@@ -8,8 +8,8 @@ replace into `BLOG`.`SECTION`
         1,
         "sports",
         "Sports",
-        "Day before him if once seen me. Rose stepped forward once said but salvation as `learning', anxiety in silence for sale welcome my hair. Cared little pleasures of dice the advice received advice.",
-        "mulerrek.png"
+        "Write the branches and we you know nothing else, time for telling you at daybreak I said, lovely is late once every look eternal life. Fell silent for him except to say, from an eagerness to heal the verse.",
+        "olamikik.png"
     );
 
 replace into `BLOG`.`SECTION`
@@ -22,8 +22,8 @@ replace into `BLOG`.`SECTION`
         2,
         "gaming",
         "Gaming",
-        "Fled today how still had given upper garments. If there thus this as clearly his impending death. Among his worldly and clear voice talking about it. Black hair like to nurse him very reason why.",
-        "igharede.png"
+        "Leapt in your trainee for jewelry lost your poem, man than of differentiation for there sky in himself, pilgrims and ultimately hopeless when you'll see. Time from there aren't the childlike person, ran through teachings well this be holy.",
+        "atnander.png"
     );
 
 replace into `BLOG`.`SECTION`
@@ -36,8 +36,8 @@ replace into `BLOG`.`SECTION`
         3,
         "entertainment",
         "Entertainment",
-        "Hasn't it hurrying suffering a sound reached them, among carters and laughed and this hour. Glance with fear he fasted for them, business he chose I asked to sleep.",
-        "celiawit.gif"
+        "Sat with anger to it yet none of humans, words few with a gift another after another time. Never he chose I could force him.",
+        "macallal.png"
     );
 
 replace into `BLOG`.`SECTION`
@@ -50,8 +50,8 @@ replace into `BLOG`.`SECTION`
         4,
         "science",
         "Science",
-        "People can after midnight being alive after year, did his farewell from our business was awaiting you. Everything that love of inhaling of pondering, senses bring him with verses all perceived it.",
-        "naudinaf.gif"
+        "And fresh as novices taken on in fine clothes. They've become a great and everyone in ear, just slowly she called upon himself without clothes, made myself from everywhere and moon and passion.",
+        "casaughe.gif"
     );
 
 replace into `BLOG`.`SECTION`
@@ -64,8 +64,8 @@ replace into `BLOG`.`SECTION`
         5,
         "history",
         "History",
-        "Always good is left me to come said quietly. Whispered a fish costs and ultimate part, whenever embarrassment and essence of quiet the oneness.",
-        "itkannes.jpg"
+        "Stood alone without power he listened silently, day I followed a mango-tree that all. Have wrinkles and treated the filled with.",
+        "felicevo.gif"
     );
 
 replace into `BLOG`.`SECTION`
@@ -78,8 +78,8 @@ replace into `BLOG`.`SECTION`
         6,
         "travel",
         "Travel",
-        "Purpose of being astonished like stars beautiful pleasure-garden, thinking his way delicious or in confirmation. Could win his tenderness his bowl of rebirths.",
-        "basillyl.png"
+        "Wheel once he'll turn from on earth, questions but his face listening attentively perceived. Wondrous it in error that teachings from horror.",
+        "eattipel.png"
     );
 
 replace into `BLOG`.`SECTION`
@@ -92,8 +92,8 @@ replace into `BLOG`.`SECTION`
         7,
         "finance",
         "Finance",
-        "Any specific intention regarded as animals of sloth, say friend just slowly lose its own soul. Said to save him across a garden, entered for about money filled her friend. Language would you believe out and denial.",
-        "ersipemo.png"
+        "First woman for I told you be learned. I'll give an oar with ropes of life, mouth like into his disposition for your plan. His skin that foolish but not recognise him, she became mute his bath in one's thoughts.",
+        "ligikico.png"
     );
 
 replace into `BLOG`.`USER`
@@ -108,13 +108,13 @@ replace into `BLOG`.`USER`
         "rick.deckard@mail.com",
         "rick.deckard",
         "b-263-54",
-        "+82 132 750 584",
-        "Cline Drive",
-        "Cedar Fort",
-        "5322",
-        "Massachusetts",
-        "Namibia",
-        "Boutilier Logic",
+        "+16 576 351 655",
+        "Mulvie Park",
+        "Missoula",
+        "2243",
+        "Wyoming",
+        "Uganda",
+        "Majd Shop",
         1
     );
 
@@ -130,13 +130,13 @@ replace into `BLOG`.`USER`
         "rachael.tyrell@outlook.com",
         "rachael.tyrell",
         "nexus-7",
-        "+23 253 376 566",
-        "Aston Alley",
-        "Kure Beach",
-        "8751",
-        "Ontario",
-        "Samoa",
-        "Adcox Channel",
+        "+70 584 582 311",
+        "Kendall Lane",
+        "Shortsville",
+        "5160",
+        "Quebec",
+        "Swaziland",
+        "Oucharek Online",
         0
     );
 
@@ -152,13 +152,13 @@ replace into `BLOG`.`USER`
         "arthur.dent@gmail.com",
         "arthur.dent",
         "42",
-        "+38 277 633 717",
-        "Collins Drive",
-        "Sky Londa",
-        "6866",
-        "Montana",
-        "Kyrgyzstan",
-        "Chagnon Consulting",
+        "+32 831 825 401",
+        "Harold Park",
+        "Elkport",
+        "6713",
+        "Nunavut",
+        "East Timor",
+        "Kluger Group",
         0
     );
 
@@ -169,18 +169,18 @@ replace into `BLOG`.`USER`
     values
     (
         4,
-        "Ramaprakash",
-        "Jong",
-        "ramaprakash.jong@outlook.com",
-        "ramaprakashjong",
-        "ae1nn*lowR",
-        "+17 846 576 607",
-        "Milakovic Alley",
-        "Clarkson Valley",
-        "8323",
-        "North Carolina",
-        "Philippines",
-        "Kiefer Point",
+        "Alika",
+        "Traylor",
+        "alika.traylor@hotmail.com",
+        "alikatraylor",
+        "nefag2oG;da",
+        "+96 882 650 420",
+        "Panger Alley",
+        "Woodbine",
+        "3786",
+        "West Virginia",
+        "Zambia",
+        "Breon Team",
         1
     );
 
@@ -191,18 +191,18 @@ replace into `BLOG`.`USER`
     values
     (
         5,
-        "Cheeyin",
-        "Sargent",
-        "cheeyin.sargent@outlook.com",
-        "cheeyinsargent",
-        "ennargO5!os",
-        "+61 938 836 872",
-        "Nicandro Alley",
-        "Port William",
-        "4911",
-        "Nunavut",
-        "Macau",
-        "Potter Depot",
+        "Bird",
+        "Colpitts",
+        "bird.colpitts@yahoo.com",
+        "birdcolpitts",
+        "uenKs2y!",
+        "+42 961 882 769",
+        "Loos Lane",
+        "Green Mountain Falls",
+        "9086",
+        "Missouri",
+        "Djibouti",
+        "Freeth Vision",
         0
     );
 
@@ -213,13 +213,13 @@ replace into `BLOG`.`ARTICLE`
     values
     (
         1,
-        5,
+        3,
         4,
-        "image-and-no-oar-and-life-that-line",
-        "Image and no oar and life that line.",
-        "A pilgrim myself that supple willingness delights my glance, wants to such trifles to walk on. Senses he loved any given me yet, if ten years simply believed in secrets. Once told the gate sat firmly concentrated.",
-        "geraende.jpg",
-        "2007-06-28"
+        "moderate-living-joy-without-stirring",
+        "Moderate living joy without stirring.",
+        "Listen better opinion of desires were accepted. Left by me and nothing let escape from me, hours he passes through life the run-away. Gave one admiring the beats of transitoriness in himself, might very human death from time that line.",
+        "kovicili.png",
+        "2005-01-19"
     );
 
 replace into `BLOG`.`ARTICLE`
@@ -229,13 +229,13 @@ replace into `BLOG`.`ARTICLE`
     values
     (
         2,
-        3,
-        3,
-        "up-to-their-law-of-a",
-        "Up to their law of a.",
-        "Them up with desire is his chest, wisdom that she called timidly for so venerable one. Black hair like being seen came without an error.",
-        "ingebour.jpg",
-        "2010-04-12"
+        5,
+        4,
+        "hours-he-could-do-it",
+        "Hours he could do it.",
+        "Ran incessantly it belongs to scold him safe, meditation there was kneeling and precocious words, past times real life full he used crude swearwords.",
+        "bulelpiu.gif",
+        "2001-09-17"
     );
 
 replace into `BLOG`.`ARTICLE`
@@ -245,13 +245,13 @@ replace into `BLOG`.`ARTICLE`
     values
     (
         3,
-        6,
-        1,
-        "straightened-up-just-know-people-own",
-        "Straightened up just know people own.",
-        "Glance pleases the woman who at her about you, being served food even now is better. Lust for a time mortal was the evening's ablution.",
-        "kaniadon.png",
-        "2001-11-04"
+        7,
+        2,
+        "without-clothes-and-wait",
+        "Without clothes and wait.",
+        "Heard him concerning his bath in him, putting himself and of old eyes how everything is. Beckoned him over slowly become great thinkers do this, thanked and preserved by and solved up impetuously hunting. Read for several times for permission my father's face.",
+        "bisurnop.jpg",
+        "2001-06-27"
     );
 
 replace into `BLOG`.`ARTICLE`
@@ -261,13 +261,13 @@ replace into `BLOG`.`ARTICLE`
     values
     (
         4,
+        6,
         1,
-        1,
-        "accustomed-to-wait-if-wasn-t-helping-you",
-        "Accustomed to wait if wasn't helping you.",
-        "Goal stood the beats in you mean, touched shoulder embraced once and inside and here thought. But in living strongly living joy of him.",
-        "ichilciu.jpg",
-        "2001-08-23"
+        "then-for-being-among-other-one",
+        "Then for being among other one.",
+        "More zealously forced him about spiritual matters the holy, childlike people like he finds a poem. Willingness delights my tongue was leading of humans, awakened and I wanted for everything the singular one.",
+        "aldnahav.png",
+        "2015-07-21"
     );
 
 replace into `BLOG`.`ARTICLE`
@@ -277,13 +277,13 @@ replace into `BLOG`.`ARTICLE`
     values
     (
         5,
-        7,
         5,
-        "their-refuge-with-contracted-pupils-begging-ones",
-        "Their refuge with contracted pupils begging ones.",
-        "To it together all dependencies by him. Entire path are they have the wish of thirst, even he hoped to side to himself. His being afraid of how much sin. More of in many austere and ate the uncertain.",
-        "markuseu.png",
-        "2005-06-17"
+        2,
+        "non-eternal-things-most-quickly",
+        "Non-eternal things most quickly.",
+        "Latter had wasted time had as bright smile, learned it had given me for riches. Past seemed indeed like me exclaimed lamentingly. Do much vomits it had every insult with hunger.",
+        "ervallis.jpg",
+        "2002-01-13"
     );
 
 replace into `BLOG`.`ARTICLE`
@@ -293,13 +293,13 @@ replace into `BLOG`.`ARTICLE`
     values
     (
         6,
-        7,
-        3,
-        "which-today-already-learning",
-        "Which today already learning.",
-        "Who revel in loops perhaps it to us. Held a invited me with your words behind him, you'll again disgust which there young face.",
-        "ligorzic.png",
-        "2012-10-19"
+        4,
+        2,
+        "good-life-than-learning-from-the",
+        "Good life than learning from the.",
+        "Nothing which I even became confused and smiling oneness, easily he searches for we be such feats. Exalted teachings and when every child could kidnap you.",
+        "aseppere.gif",
+        "2012-08-12"
     );
 
 replace into `BLOG`.`ARTICLE`
@@ -309,13 +309,13 @@ replace into `BLOG`.`ARTICLE`
     values
     (
         7,
+        5,
         4,
-        3,
-        "sinner-which-the-ascetics-nor-self-castigation-so-good",
-        "Sinner which the ascetics nor self-castigation so good.",
-        "Loudly and spoke for example hadn't been strange. Senses were brothers their transitoriness in fine clothes, deep sleep he searches for possession and lazy.",
-        "arleerab.png",
-        "2008-12-26"
+        "sadness-has-distinguished-himself-than-used-crude-swearwords",
+        "Sadness has distinguished himself than used crude swearwords.",
+        "Bent over which guided me how to relieve suffering, beautiful women that no childish notions for twenty-eight days. Shouldn't I see is my desire is proven.",
+        "leapakec.jpg",
+        "2009-02-09"
     );
 
 replace into `BLOG`.`ARTICLE`
@@ -325,13 +325,13 @@ replace into `BLOG`.`ARTICLE`
     values
     (
         8,
-        1,
         5,
-        "nevertheless-broken-both-masters-of-these-teachings",
-        "Nevertheless broken both masters of these teachings.",
-        "Didn't you make you write the pike stirred up, these verses too many to spare your son's upbringing. They've become great urge to beautiful learned nothing, he's strong the night's last hut were a man.",
-        "acejorau.gif",
-        "2003-10-23"
+        4,
+        "fasting-waiting-his-self",
+        "Fasting waiting his self.",
+        "Black snake is precisely the injury of talk, held the opposite bank of sounded sweet. Anxiety in them was calmly sitting on my father, clean and what I've known for once more willing, same amount of thoughts to drown himself all life.",
+        "ennurcha.gif",
+        "2011-04-26"
     );
 
 replace into `BLOG`.`ARTICLE`
@@ -341,13 +341,13 @@ replace into `BLOG`.`ARTICLE`
     values
     (
         9,
-        3,
-        4,
-        "teachings-to-satisfy-his-suffering",
-        "Teachings to satisfy his suffering.",
-        "Indignation is near it turned black snake was broken, bent down in circles we won't for riches. Day shone always good fortune is waiting, I've lost a passionately painful confession of oneness, exalted spoke the cistern the evening's ablution.",
-        "agulliny.png",
-        "2002-01-10"
+        2,
+        1,
+        "his-tale-when-we-are-wise",
+        "His tale when we are wise.",
+        "Wouldn't punish me into thousands at all, dreams flowed on all belonged together with hunger. Her little to save him very good. Pleasure cannot be dead did his arm.",
+        "joceline.jpg",
+        "2003-06-12"
     );
 
 replace into `BLOG`.`ARTICLE`
@@ -357,13 +357,13 @@ replace into `BLOG`.`ARTICLE`
     values
     (
         10,
+        7,
         2,
-        1,
-        "fully-become-rich-people-can-t",
-        "Fully become rich people can't.",
-        "I'm losing high bright robe bearing these verses, I would advise me down before that teachings, late at the pestilence and angry and stupid. Many secrets so said who walked through her eyelids.",
-        "asnevero.gif",
-        "2014-02-04"
+        "wanted-to-participate-in-love",
+        "Wanted to participate in love.",
+        "Rest with other turned all vices through enlightenment. Shall reach their richness and contracts on shoulder. Source dark call climbing a wonderful verses. Next person of offerings to handle the perfection, truly the father thinking does nothing else.",
+        "artahaco.jpg",
+        "2009-06-10"
     );
 
 replace into `BLOG`.`ARTICLE`
@@ -373,13 +373,13 @@ replace into `BLOG`.`ARTICLE`
     values
     (
         11,
-        5,
-        5,
-        "long-sequence-of-such-hair",
-        "Long sequence of such hair.",
-        "Someone always thinks of faces rested flowed on foot, stone by sex by them he dreamed this. Loudly clapped her cheek turned back inside of the.",
-        "soubeppy.gif",
-        "2007-10-10"
+        7,
+        1,
+        "forgive-me-on-foot",
+        "Forgive me on foot.",
+        "These waters and called all very old sneak, moderate living joy I imagined some among so beautiful. Him lured him my soul full the business.",
+        "ieblabra.png",
+        "2009-10-24"
     );
 
 replace into `BLOG`.`ARTICLE`
@@ -390,12 +390,12 @@ replace into `BLOG`.`ARTICLE`
     (
         12,
         4,
-        3,
-        "that-kind-his-death-the-salvation",
-        "That kind his death the salvation.",
-        "Pleasure and stupid are so clear voice, son with much longer used the gods. Tales and casually as animals too much. Enchantment which might not satisfied from old man, saw people whose smile quietly looked back inside.",
-        "earlekur.jpg",
-        "2010-09-12"
+        5,
+        "leaned-to-walk-on",
+        "Leaned to walk on.",
+        "Her in days by words sound foolish world, failed to salvation from teachings most wretched people. Shouldn't I also fear to strike him at it, full he the sun and bodies themselves.",
+        "aughalla.gif",
+        "2002-03-16"
     );
 
 replace into `BLOG`.`ARTICLE`
@@ -405,13 +405,13 @@ replace into `BLOG`.`ARTICLE`
     values
     (
         13,
-        7,
-        1,
-        "better-teachings-are-some-gamblers-with-him",
-        "Better teachings are some gamblers with him.",
-        "Body this time of everything shown everything the sleep, consciousness the soul had slightly weak at the bank. Understood them quickly I couldn't recognise him.",
-        "odelebob.png",
-        "2008-07-07"
+        5,
+        5,
+        "herself-had-thoughts-to-myself",
+        "Herself had thoughts to myself.",
+        "Latter had pointed them my benefit to earthly things, always the than before the friend is. Yesterday greeting you he won't hit him.",
+        "oussitec.jpg",
+        "2005-06-18"
     );
 
 replace into `BLOG`.`ARTICLE`
@@ -421,13 +421,13 @@ replace into `BLOG`.`ARTICLE`
     values
     (
         14,
+        6,
         3,
-        4,
-        "touched-a-syllable-which-contained-in-your-child",
-        "Touched a syllable which contained in your child.",
-        "Whenever they crossed a daze he thought, to draw some moments a meaning was necessary. Carefully he possessed so affectionately to do nothing else, gave advice but without possession his business-deals with defamation. You'll hear my speech not let his advice.",
-        "oskellab.jpg",
-        "2004-05-12"
+        "said-everything-they-parted",
+        "Said everything they parted.",
+        "Indeed was accustomed to finer food even more quiet, often hard everything hostile in fine food nor thinking, join water and from such an old.",
+        "icksardu.gif",
+        "2009-09-02"
     );
 
 replace into `BLOG`.`ARTICLE`
@@ -437,13 +437,13 @@ replace into `BLOG`.`ARTICLE`
     values
     (
         15,
-        2,
-        4,
-        "distorted-from-community-were-one-the-heron-s-death",
-        "Distorted from community were one the heron's death.",
-        "Wonderful sleep nor young man went on foot. Knew deep in perfect equanimity his actions, river who walked through him by he stopped suffering. Won't for watching waited for twenty-eight days.",
-        "alainelu.jpg",
-        "2005-10-21"
+        3,
+        1,
+        "my-self-of-rice-there-in-you",
+        "My self of rice there in you.",
+        "One thing most shameful despair in himself, non-eternal things you suffering had for it. Ah you once more no oar of a, saw people can't think about to live.",
+        "ejbarvai.gif",
+        "2002-12-07"
     );
 
 replace into `BLOG`.`COMMENT`
@@ -453,10 +453,10 @@ replace into `BLOG`.`COMMENT`
     values
     (
         1,
-        15,
+        7,
         2,
-        "Stopped on new something cooked rice, himself down and no goal. Nothing when woke up impetuously hunting. She him at he replied.",
-        "2000-08-20 03:36:11"
+        "Seeing images appeared on gods, any truth had joy to go.",
+        "2010-03-20 07:55:37"
     );
 
 replace into `BLOG`.`COMMENT`
@@ -466,23 +466,23 @@ replace into `BLOG`.`COMMENT`
     values
     (
         2,
-        4,
-        5,
-        "Let them too learn this, at your wondrous words sound of misery, pearls he continued but that with dice.",
-        "2004-06-23 17:55:31"
-    );
-
-replace into `BLOG`.`COMMENT`
-    (
-        `Id`, `ArticleId`, `UserId`, `Text`, `DateTime`
-    )
-    values
-    (
-        3,
         12,
+        2,
+        "Before a follower of dying ones taught, hours looked over her gaze asked.",
+        "2010-03-28 05:21:57"
+    );
+
+replace into `BLOG`.`COMMENT`
+    (
+        `Id`, `ArticleId`, `UserId`, `Text`, `DateTime`
+    )
+    values
+    (
         3,
-        "Truly searching man walking silently, sacrifices and grief since then, even a dice-gambler the deep sleep. Felt nothing will return was you.",
-        "2004-06-20 06:56:53"
+        13,
+        3,
+        "We were water to spare your fare, once a king with in thinking.",
+        "2008-10-16 00:57:48"
     );
 
 replace into `BLOG`.`COMMENT`
@@ -492,10 +492,10 @@ replace into `BLOG`.`COMMENT`
     values
     (
         4,
-        1,
-        2,
-        "Who told about what shines a teacher, daily at a smile with great secret.",
-        "2008-08-16 16:13:07"
+        13,
+        4,
+        "You've met even and dull life, being among thousands possess this been.",
+        "2015-07-24 06:46:20"
     );
 
 replace into `BLOG`.`COMMENT`
@@ -506,9 +506,9 @@ replace into `BLOG`.`COMMENT`
     (
         5,
         5,
-        3,
-        "Warrior gives strength his trip, one day's journey away out badly. No daemons there he share his way.",
-        "2015-09-21 13:21:39"
+        5,
+        "At odds with sky-blue ones, the dead jackal lay hidden. A myth ran growing old man's.",
+        "2007-12-07 05:08:18"
     );
 
 replace into `BLOG`.`COMMENT`
@@ -518,10 +518,10 @@ replace into `BLOG`.`COMMENT`
     values
     (
         6,
-        10,
-        3,
-        "Softly and mountains which these things, will enter the father thinking the pilgrim. Opened the year after the business, of sloth and fears the poison.",
-        "2012-08-12 22:56:11"
+        11,
+        2,
+        "Warrior gives me exclaimed loudly, man had crouched down on water.",
+        "2007-01-05 15:36:09"
     );
 
 replace into `BLOG`.`COMMENT`
@@ -531,10 +531,10 @@ replace into `BLOG`.`COMMENT`
     values
     (
         7,
-        9,
+        10,
         4,
-        "Ah you may see him, were of talk about you.",
-        "2005-12-22 18:13:58"
+        "Having passed through your hair, greeted you planning to capture it.",
+        "2006-07-27 22:49:38"
     );
 
 replace into `BLOG`.`COMMENT`
@@ -544,10 +544,10 @@ replace into `BLOG`.`COMMENT`
     values
     (
         8,
-        1,
-        4,
-        "Straightened up strong hunger taught him dead, I'm asking to enlightenment it my brothers.",
-        "2000-12-18 23:08:38"
+        3,
+        5,
+        "Enjoyed his mourning pampered boy over, they me where I do we won't, offerings from you don't know you did. Body and hands were brought her eyes.",
+        "2013-02-01 18:05:37"
     );
 
 replace into `BLOG`.`COMMENT`
@@ -557,10 +557,10 @@ replace into `BLOG`.`COMMENT`
     values
     (
         9,
-        15,
-        2,
-        "Made a lack clothes are and beggar, down next morning a pilgrimage, you'll soon he left in poverty.",
-        "2012-12-25 14:08:49"
+        4,
+        4,
+        "Him given him everything is. Tell him is fading now on, your sleep spoke go through enlightenment, young falcon together the words.",
+        "2001-01-12 05:16:15"
     );
 
 replace into `BLOG`.`COMMENT`
@@ -570,10 +570,10 @@ replace into `BLOG`.`COMMENT`
     values
     (
         10,
-        8,
-        3,
-        "Even he as it out, clothes fine oil in words. Had heard them found to lose him.",
-        "2001-04-25 23:29:08"
+        1,
+        4,
+        "Near thus the heart I know, with himself all those many words. They've become of human being.",
+        "2007-10-16 11:19:47"
     );
 
 replace into `BLOG`.`COMMENT`
@@ -583,10 +583,10 @@ replace into `BLOG`.`COMMENT`
     values
     (
         11,
-        14,
-        1,
-        "Previous lives the verses in heat. I'll stop him like this, occasionally dreaming at our foolishness. I called himself a resolution.",
-        "2004-01-08 21:42:15"
+        2,
+        2,
+        "Goal the game which did you again. Lacked all dying in living for this. Told him joy with great secret of.",
+        "2012-04-03 17:02:19"
     );
 
 replace into `BLOG`.`COMMENT`
@@ -596,10 +596,10 @@ replace into `BLOG`.`COMMENT`
     values
     (
         12,
-        1,
         4,
-        "Wondrous teachings you've become his bread, you're stronger than others more to live. Sir always led through so good.",
-        "2012-07-04 17:56:55"
+        3,
+        "Attentively to participate in confirmation, full he could no never talked incessantly. Ate once heard it even conscious anxiety, I've never stopped looking for an opinion.",
+        "2005-03-24 12:20:04"
     );
 
 replace into `BLOG`.`COMMENT`
@@ -609,10 +609,10 @@ replace into `BLOG`.`COMMENT`
     values
     (
         13,
-        4,
-        2,
-        "Possessions of two old in you. Conducted him don't find a man.",
-        "2003-12-07 02:01:31"
+        12,
+        5,
+        "She'll die than by this, could force him quietly to.",
+        "2008-05-11 08:24:47"
     );
 
 replace into `BLOG`.`COMMENT`
@@ -622,10 +622,10 @@ replace into `BLOG`.`COMMENT`
     values
     (
         14,
-        3,
-        4,
-        "There always expect the hours looked inside, look every child could tell. Speak a jaguar and your indulgence. Many things have their transitoriness in him.",
-        "2005-11-22 07:31:42"
+        5,
+        2,
+        "An inscription reminiscent of misery. Half all was slowly become his lips.",
+        "2012-08-11 01:14:26"
     );
 
 replace into `BLOG`.`COMMENT`
@@ -635,10 +635,10 @@ replace into `BLOG`.`COMMENT`
     values
     (
         15,
-        10,
-        5,
-        "Deaf and holy source of this, exclaimed indignantly but just listening.",
-        "2002-05-20 09:06:29"
+        3,
+        1,
+        "Over him at our business, purpose and remembered that ferry.",
+        "2015-12-21 15:56:12"
     );
 
 replace into `BLOG`.`COMMENT`
@@ -648,10 +648,10 @@ replace into `BLOG`.`COMMENT`
     values
     (
         16,
-        13,
-        5,
-        "Won't and slept in secrets. Often I shall find could tell, before a woman again I thought.",
-        "2014-08-20 05:37:30"
+        10,
+        2,
+        "As old childlike face a starry sky, afterwards insight came who did he laughed, nevertheless always led back for yours. Source a slow path by this.",
+        "2015-11-26 10:06:30"
     );
 
 replace into `BLOG`.`COMMENT`
@@ -661,10 +661,10 @@ replace into `BLOG`.`COMMENT`
     values
     (
         17,
-        4,
-        4,
-        "Flesh waned from her mistress's ear, wanted to those moments a dream.",
-        "2002-08-21 16:11:24"
+        10,
+        3,
+        "Herself had quenched out business-affairs they commanded. Having spoken to finally drown, means that then the grove, yesterday and man by any more.",
+        "2001-03-08 10:34:44"
     );
 
 replace into `BLOG`.`COMMENT`
@@ -674,10 +674,10 @@ replace into `BLOG`.`COMMENT`
     values
     (
         18,
+        5,
         2,
-        3,
-        "Down before seen this further, awakened I have admired you. Bad people are smart brown, people like them as well.",
-        "2009-08-17 13:20:28"
+        "Knew everything which reminded him growing ill. Learned among people walking a resolution.",
+        "2000-12-27 02:54:25"
     );
 
 replace into `BLOG`.`COMMENT`
@@ -687,10 +687,10 @@ replace into `BLOG`.`COMMENT`
     values
     (
         19,
-        7,
+        3,
         5,
-        "For telling me for him, ah most hurriedly walking along. Speaking still remained forever that you.",
-        "2004-08-24 03:24:56"
+        "Surrounded by hyaenas was good, yes she him don't force him. Near perfection and lots of others, young walking through so it is.",
+        "2001-05-14 01:07:34"
     );
 
 replace into `BLOG`.`COMMENT`
@@ -700,10 +700,10 @@ replace into `BLOG`.`COMMENT`
     values
     (
         20,
-        15,
-        4,
-        "I'm fighting for a saint. He owned a bow down by him, at bottom already standing in ear. Anxiety in motion will not know.",
-        "2002-09-08 22:57:52"
+        14,
+        3,
+        "Walking along with sky-blue ones, herself had commanded him go through enlightenment.",
+        "2001-01-14 04:09:50"
     );
 
 replace into `BLOG`.`COMMENT`
@@ -713,10 +713,10 @@ replace into `BLOG`.`COMMENT`
     values
     (
         21,
-        11,
-        3,
-        "Mumbled a source in my thoughts. Passed on all elements of this birth.",
-        "2013-02-23 18:56:28"
+        2,
+        1,
+        "Entire path by one's own soul, do you must not find salvation, them blew through it off their end.",
+        "2010-06-28 21:10:54"
     );
 
 replace into `BLOG`.`COMMENT`
@@ -726,10 +726,10 @@ replace into `BLOG`.`COMMENT`
     values
     (
         22,
-        11,
-        2,
-        "Venerable father realized that time, does not bear any will receive thanks.",
-        "2014-12-01 09:57:05"
+        1,
+        4,
+        "Also gives me down from an, gave copper-coins to accept alms move on. Much delude myself alone he accepted invitation. Lacked nothing to gather brushwood for her.",
+        "2008-07-21 11:42:20"
     );
 
 replace into `BLOG`.`COMMENT`
@@ -739,10 +739,10 @@ replace into `BLOG`.`COMMENT`
     values
     (
         23,
-        11,
-        1,
-        "Even fish jumped in everything, wondrous detours it out and shameful life. With was willing to destroy himself.",
-        "2012-05-23 16:03:48"
+        3,
+        5,
+        "Owned locked the banana tasted, she'll die his spot his teachings.",
+        "2005-11-23 21:06:01"
     );
 
 replace into `BLOG`.`COMMENT`
@@ -752,10 +752,10 @@ replace into `BLOG`.`COMMENT`
     values
     (
         24,
-        3,
+        11,
         2,
-        "Never one-sided which a father, slowly walking on chance not died, conducted him alone in it.",
-        "2013-03-07 20:36:14"
+        "Loved in ear and dust in it, let's practise love the fields. Monk and time said quietly, of reluctance to heal everyone can understand.",
+        "2000-11-11 07:59:45"
     );
 
 replace into `BLOG`.`COMMENT`
@@ -765,10 +765,10 @@ replace into `BLOG`.`COMMENT`
     values
     (
         25,
-        13,
-        3,
-        "Himself appeared and gathered his ear, will study and best thought since then.",
-        "2002-12-21 13:26:23"
+        7,
+        5,
+        "Wondrous it also died something like foolishness. Continued what you're on water, takes everyone who petitioned him.",
+        "2011-10-20 02:28:42"
     );
 
 replace into `BLOG`.`COMMENT`
@@ -778,10 +778,10 @@ replace into `BLOG`.`COMMENT`
     values
     (
         26,
-        5,
-        5,
-        "Willingness my cousin in this objection, indignation is good he speak. Once as it laughed clearly. Shimmered reddishly in perfect in such jokes.",
-        "2007-06-04 16:36:30"
+        10,
+        2,
+        "Soul flew over the dying in it. Stayed where travellers of our business.",
+        "2010-11-27 07:02:38"
     );
 
 replace into `BLOG`.`COMMENT`
@@ -791,10 +791,10 @@ replace into `BLOG`.`COMMENT`
     values
     (
         27,
-        6,
-        1,
-        "Times always led into deception called upon, since those feats to speak, listened up gave copper-coins to remember this.",
-        "2003-12-01 03:24:09"
+        7,
+        5,
+        "Better than three noble promises, sir the gesture of nicely dressed people. People have oil in poverty. Yet my travels not stop breathing.",
+        "2012-06-16 12:08:17"
     );
 
 replace into `BLOG`.`COMMENT`
@@ -804,10 +804,10 @@ replace into `BLOG`.`COMMENT`
     values
     (
         28,
+        13,
         2,
-        4,
-        "Other one spoke his arms folded, full height when buying bananas.",
-        "2002-12-10 20:45:43"
+        "Farewell to free being retold many times, somehow happened that very own suffering.",
+        "2003-02-09 22:17:26"
     );
 
 replace into `BLOG`.`COMMENT`
@@ -817,10 +817,10 @@ replace into `BLOG`.`COMMENT`
     values
     (
         29,
-        14,
-        5,
-        "Someone might easily thus childlike people, occasionally they used to attach to die, don't know what you're seeing that obstacle. Knew more fell silent for me.",
-        "2002-12-24 22:53:33"
+        10,
+        4,
+        "Saw song-bird in times been very good, speak a listener completely a circle, courtesan has come into its dinner. Ablutions nor self-castigation offerings for himself.",
+        "2001-07-07 08:22:17"
     );
 
 replace into `BLOG`.`COMMENT`
@@ -830,10 +830,10 @@ replace into `BLOG`.`COMMENT`
     values
     (
         30,
-        12,
-        5,
-        "Had dreamt of just too modest, your exalted one whose voice sounded sweet. Even better opinion of oneness.",
-        "2009-02-06 17:15:07"
+        14,
+        4,
+        "Whenever they won't make love, times to discover its ten thousand times, deep sadness and time a. And drunk far ahead of age.",
+        "2011-06-21 10:39:12"
     );
 
 replace into `BLOG`.`SUBSCRIBER`
@@ -843,8 +843,8 @@ replace into `BLOG`.`SUBSCRIBER`
     values
     (
         1,
-        "Racz",
-        "charlie.buckley@mail.com"
+        "Oberpriller",
+        "loreta.werling@yahoo.com"
     );
 
 replace into `BLOG`.`SUBSCRIBER`
@@ -854,8 +854,8 @@ replace into `BLOG`.`SUBSCRIBER`
     values
     (
         2,
-        "Dao",
-        "nikky.aboussouan@hotmail.com"
+        "Jobe",
+        "katusha.mathews@hotmail.com"
     );
 
 replace into `BLOG`.`SUBSCRIBER`
@@ -865,8 +865,8 @@ replace into `BLOG`.`SUBSCRIBER`
     values
     (
         3,
-        "Ludwick",
-        "aubry.shafik@live.com"
+        "Yarbrough",
+        "charla.walters@yahoo.com"
     );
 
 replace into `BLOG`.`SUBSCRIBER`
@@ -876,8 +876,8 @@ replace into `BLOG`.`SUBSCRIBER`
     values
     (
         4,
-        "Caputo",
-        "derek.vanlaten@outlook.com"
+        "Macdonell",
+        "rio.russell@gmail.com"
     );
 
 replace into `BLOG`.`SUBSCRIBER`
@@ -887,7 +887,6 @@ replace into `BLOG`.`SUBSCRIBER`
     values
     (
         5,
-        "Mciver",
-        "kakalina.milakovic@hotmail.com"
+        "Dasilva",
+        "gant.intplan@gmail.com"
     );
-

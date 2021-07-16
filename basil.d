@@ -5882,7 +5882,7 @@ class TABLE
             generis_code
                 ~= "    statement, error_\n"
                    ~ "        := DatabaseSession.Prepare(\n"
-                   ~ "               \"insert into " ~ Name ~ " ( ";
+                   ~ "               \"insert into `" ~ Name ~ "` ( ";
 
             column_count = 0;
 
@@ -5898,7 +5898,7 @@ class TABLE
                     }
 
                     generis_code
-                        ~= column.StoredName;
+                        ~= "`" ~ column.StoredName ~ "`";
 
                     ++column_count;
                 }
@@ -6032,7 +6032,7 @@ class TABLE
             generis_code
                 ~= "    error_\n"
                    ~ "        := DatabaseSession.Query(\n"
-                   ~ "               \"insert into " ~ Name ~ " ( ";
+                   ~ "               \"insert into \\\"" ~ Name ~ "\\\" ( ";
 
             column_count = 0;
 
@@ -6048,7 +6048,7 @@ class TABLE
                     }
 
                     generis_code
-                        ~= column.StoredName;
+                        ~= "\\\"" ~ column.StoredName ~ "\\\"";
 
                     ++column_count;
                 }
@@ -6151,7 +6151,7 @@ class TABLE
             generis_code
                 ~= "    statement, error_\n"
                    ~ "        := DatabaseSession.Prepare(\n"
-                   ~ "               \"update " ~ Name ~ " set ";
+                   ~ "               \"update `" ~ Name ~ "` set ";
 
             foreach ( column; ColumnArray )
             {
@@ -6159,7 +6159,7 @@ class TABLE
                      && !column.IsKey )
                 {
                     generis_code
-                        ~= column.StoredName ~ " = ?";
+                        ~= "`" ~ column.StoredName ~ "` = ?";
 
                     if ( !column.IsLastNonKey )
                     {
@@ -6239,14 +6239,14 @@ class TABLE
             generis_code
                 ~= "    error_\n"
                    ~ "        := DatabaseSession.Query(\n"
-                   ~ "               \"insert into " ~ Name ~ " ( ";
+                   ~ "               \"insert into \\\"" ~ Name ~ "\\\" ( ";
 
             foreach ( column; ColumnArray )
             {
                 if ( column.IsStored )
                 {
                     generis_code
-                        ~= column.StoredName;
+                        ~= "\\\"" ~ column.StoredName ~ "\\\"";
 
                     if ( !column.IsLastStored )
                     {
@@ -6334,7 +6334,7 @@ class TABLE
             generis_code
                 ~= "    statement, error_\n"
                    ~ "        := DatabaseSession.Prepare(\n"
-                   ~ "               \"delete from " ~ Name ~ " where ";
+                   ~ "               \"delete from `" ~ Name ~ "` where ";
 
             foreach ( column; ColumnArray )
             {
@@ -6342,7 +6342,7 @@ class TABLE
                      && column.IsKey )
                 {
                     generis_code
-                        ~= column.StoredName ~ " = ?";
+                        ~= "`" ~ column.StoredName ~ "` = ?";
 
                     if ( !column.IsLastKey )
                     {
@@ -6393,7 +6393,7 @@ class TABLE
             generis_code
                 ~= "    error_\n"
                    ~ "        := DatabaseSession.Query(\n"
-                   ~ "               \"delete from " ~ Name ~ " where ";
+                   ~ "               \"delete from \\\"" ~ Name ~ "\\\" where ";
 
             foreach ( column; ColumnArray )
             {
@@ -6401,7 +6401,7 @@ class TABLE
                      && column.IsKey )
                 {
                     generis_code
-                        ~= column.StoredName ~ " = ?";
+                        ~= "\\\"" ~ column.StoredName ~ "\\\" = ?";
 
                     if ( !column.IsLastKey )
                     {
@@ -6482,7 +6482,7 @@ class TABLE
                      && !column.IsKey )
                 {
                     generis_code
-                        ~= column.StoredName;
+                        ~= "`" ~ column.StoredName ~ "`";
 
                     if ( column.IsStored
                          && !column.IsLastNonKey )
@@ -6494,7 +6494,7 @@ class TABLE
             }
 
             generis_code
-                ~= " from " ~ Name ~ " where ";
+                ~= " from `" ~ Name ~ "` where ";
 
             foreach ( column; ColumnArray )
             {
@@ -6606,7 +6606,7 @@ class TABLE
                      && !column.IsKey )
                 {
                     generis_code
-                        ~= column.StoredName;
+                        ~= "\\\"" ~ column.StoredName ~ "\\\"";
 
                     if ( !column.IsLastNonKey )
                     {
@@ -6617,7 +6617,7 @@ class TABLE
             }
 
             generis_code
-                ~= " from " ~ Name ~ " where ";
+                ~= " from \\\"" ~ Name ~ "\\\" where ";
 
             foreach ( column; ColumnArray )
             {
@@ -6625,7 +6625,7 @@ class TABLE
                      && column.IsKey )
                 {
                     generis_code
-                        ~= column.StoredName ~ " = ?";
+                        ~= "\\\"" ~ column.StoredName ~ "\\\" = ?";
 
                     if ( !column.IsLastKey )
                     {
@@ -6732,7 +6732,7 @@ class TABLE
                 if ( column.IsStored )
                 {
                     generis_code
-                        ~= column.StoredName;
+                        ~= "`" ~ column.StoredName ~ "`";
 
                     if ( !column.IsLastStored )
                     {
@@ -6743,7 +6743,7 @@ class TABLE
             }
 
             generis_code
-                ~= " from " ~ Name ~ "\"\n"
+                ~= " from `" ~ Name ~ "`\"\n"
                    ~ "               );\n"
                    ~ "\n"
                    ~ "    if ( error_ != nil )\n"
@@ -6814,7 +6814,7 @@ class TABLE
                 if ( column.IsStored )
                 {
                     generis_code
-                        ~= column.StoredName;
+                        ~= "\\\"" ~ column.StoredName ~ "\\\"";
 
                     if ( !column.IsLastStored )
                     {
@@ -6825,7 +6825,7 @@ class TABLE
             }
 
             generis_code
-                ~= " from " ~ Name ~ "\"\n"
+                ~= " from \\\"" ~ Name ~ "\\\"\"\n"
                    ~ "               )\n"
                    ~ "               .Consistency( gocql.One )\n"
                    ~ "               .Iter();\n"
@@ -7377,7 +7377,7 @@ class TABLE
         if ( SqlOptionIsEnabled )
         {
             phoenix_code
-                ~= "    var statement = GetDatabaseStatement( 'insert into " ~ Name ~ " ( ";
+                ~= "    var statement = GetDatabaseStatement( 'insert into `" ~ Name ~ "` ( ";
 
             column_count = 0;
 
@@ -7393,7 +7393,7 @@ class TABLE
                     }
 
                     phoenix_code
-                        ~= column.StoredName;
+                        ~= "`" ~ column.StoredName ~ "`";
 
                     ++column_count;
                 }
@@ -7523,7 +7523,7 @@ class TABLE
         if ( SqlOptionIsEnabled )
         {
             phoenix_code
-                ~= "    var statement = GetDatabaseStatement( 'update " ~ Name ~ " set ";
+                ~= "    var statement = GetDatabaseStatement( 'update `" ~ Name ~ "` set ";
 
             foreach ( column; ColumnArray )
             {
@@ -7531,7 +7531,7 @@ class TABLE
                      && !column.IsKey )
                 {
                     phoenix_code
-                        ~= column.StoredName ~ " = ?";
+                        ~= "`" ~ column.StoredName ~ "` = ?";
 
                     if ( !column.IsLastNonKey )
                     {
@@ -7667,7 +7667,7 @@ class TABLE
         if ( SqlOptionIsEnabled )
         {
             phoenix_code
-                ~= "    var statement = GetDatabaseStatement( 'delete from " ~ Name ~ " where ";
+                ~= "    var statement = GetDatabaseStatement( 'delete from `" ~ Name ~ "` where ";
 
             foreach ( column; ColumnArray )
             {
@@ -7675,7 +7675,7 @@ class TABLE
                      && column.IsKey )
                 {
                     phoenix_code
-                        ~= column.StoredName ~ " = ?";
+                        ~= "`" ~ column.StoredName ~ "` = ?";
 
                     if ( !column.IsLastKey )
                     {
@@ -7787,7 +7787,7 @@ class TABLE
                 if ( column.IsStored )
                 {
                     phoenix_code
-                        ~= column.StoredName;
+                        ~= "`" ~ column.StoredName ~ "`";
 
                     if ( !column.IsLastStored )
                     {
@@ -7798,7 +7798,7 @@ class TABLE
             }
 
             phoenix_code
-                ~= " from " ~ Name ~ " where ";
+                ~= " from `" ~ Name ~ "` where ";
 
             foreach ( column; ColumnArray )
             {
@@ -7806,7 +7806,7 @@ class TABLE
                      && column.IsKey )
                 {
                     phoenix_code
-                        ~= column.StoredName ~ " = ?";
+                        ~= "`" ~ column.StoredName ~ "` = ?";
 
                     if ( !column.IsLastKey )
                     {
@@ -7880,7 +7880,7 @@ class TABLE
                         if ( column.IsStored )
                         {
                             phoenix_code
-                                ~= column.StoredName;
+                                ~= "`" ~ column.StoredName ~ "`";
 
                             if ( !column.IsLastStored )
                             {
@@ -7891,7 +7891,7 @@ class TABLE
                     }
 
                     phoenix_code
-                        ~= " from " ~ Name ~ " where " ~ key_column.StoredName ~ " = ? limit 1' );\n"
+                        ~= " from `" ~ Name ~ "` where " ~ key_column.StoredName ~ " = ? limit 1' );\n"
                            ~ "    statement.bindParam( 1, " ~ key_column.PhpVariable ~ ", " ~ key_column.PhpParameterType ~ " );\n"
                            ~ "\n"
                            ~ "    if ( !statement.execute() )\n"
@@ -7938,7 +7938,7 @@ class TABLE
                 if ( column.IsStored )
                 {
                     phoenix_code
-                        ~= column.StoredName;
+                        ~= "`" ~ column.StoredName ~ "`";
 
                     if ( !column.IsLastStored )
                     {
@@ -7949,7 +7949,7 @@ class TABLE
             }
 
             phoenix_code
-                ~= " from " ~ Name;
+                ~= " from `" ~ Name ~ "`";
 
             if ( table_is_sorted )
             {
@@ -7978,7 +7978,7 @@ class TABLE
                             }
 
                             phoenix_code
-                                ~= column.StoredName;
+                                ~= "`" ~ column.StoredName ~ "`";
 
                             if ( column.IsAscending )
                             {
@@ -8073,7 +8073,7 @@ class TABLE
                         if ( column.IsStored )
                         {
                             phoenix_code
-                                ~= column.StoredName;
+                                ~= "`" ~ column.StoredName ~ "`";
 
                             if ( !column.IsLastStored )
                             {
@@ -8084,7 +8084,7 @@ class TABLE
                     }
 
                     phoenix_code
-                        ~= " from " ~ Name ~ "' );\n"
+                        ~= " from `" ~ Name ~ "`' );\n"
                            ~ "\n"
                            ~ "    if ( !statement.execute() )\n"
                            ~ "    {\n"

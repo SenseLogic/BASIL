@@ -3,7 +3,7 @@
 function GetDatabaseSectionArray(
     )
 {
-    var statement = GetDatabaseStatement( 'select Id, Number, Slug, Name, Text, Image from SECTION' );
+    var statement = GetDatabaseStatement( 'select `Id`, `Number`, `Slug`, `Name`, `Text`, `Image` from `SECTION`' );
 
     if ( !statement.execute() )
     {
@@ -28,7 +28,7 @@ function GetDatabaseSectionById(
     int id
     )
 {
-    var statement = GetDatabaseStatement( 'select Id, Number, Slug, Name, Text, Image from SECTION where Id = ? limit 1' );
+    var statement = GetDatabaseStatement( 'select `Id`, `Number`, `Slug`, `Name`, `Text`, `Image` from `SECTION` where `Id` = ? limit 1' );
     statement.bindParam( 1, id, PDO::PARAM_INT );
 
     if ( !statement.execute() )
@@ -53,7 +53,7 @@ function AddDatabaseSection(
     string image
     )
 {
-    var statement = GetDatabaseStatement( 'insert into SECTION ( Number, Slug, Name, Text, Image ) values ( ?, ?, ?, ?, ? )' );
+    var statement = GetDatabaseStatement( 'insert into `SECTION` ( `Number`, `Slug`, `Name`, `Text`, `Image` ) values ( ?, ?, ?, ?, ? )' );
     statement.bindParam( 1, number, PDO::PARAM_INT );
     statement.bindParam( 2, slug, PDO::PARAM_STR );
     statement.bindParam( 3, name, PDO::PARAM_STR );
@@ -78,7 +78,7 @@ function PutDatabaseSection(
     string image
     )
 {
-    var statement = GetDatabaseStatement( 'replace into SECTION ( Number, Slug, Name, Text, Image ) values ( ?, ?, ?, ?, ? )' );
+    var statement = GetDatabaseStatement( 'replace into `SECTION` ( `Number`, `Slug`, `Name`, `Text`, `Image` ) values ( ?, ?, ?, ?, ? )' );
     statement.bindParam( 1, number, PDO::PARAM_INT );
     statement.bindParam( 2, slug, PDO::PARAM_STR );
     statement.bindParam( 3, name, PDO::PARAM_STR );
@@ -104,7 +104,7 @@ function SetDatabaseSection(
     string image
     )
 {
-    var statement = GetDatabaseStatement( 'update SECTION set Number = ?, Slug = ?, Name = ?, Text = ?, Image = ?,  where Id = ?' );
+    var statement = GetDatabaseStatement( 'update `SECTION` set `Number` = ?, `Slug` = ?, `Name` = ?, `Text` = ?, `Image` = ?,  where Id = ?' );
     statement.bindParam( 1, number, PDO::PARAM_INT );
     statement.bindParam( 2, slug, PDO::PARAM_STR );
     statement.bindParam( 3, name, PDO::PARAM_STR );
@@ -124,7 +124,7 @@ function RemoveDatabaseSectionById(
     int id
     )
 {
-    var statement = GetDatabaseStatement( 'delete from SECTION where Id = ?' );
+    var statement = GetDatabaseStatement( 'delete from `SECTION` where `Id` = ?' );
     statement.bindParam( 1, id, PDO::PARAM_INT );
 
     if ( !statement.execute() )

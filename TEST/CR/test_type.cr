@@ -1,16 +1,16 @@
 class SIMPLE
     @uuid : String
     @bool : bool
-    @int8 : Int8
-    @uint8 : Uint8
-    @int16 : Int16
-    @uint16 : Uint16
-    @int32 : Int32
-    @uint32 : Uint32
-    @int64 : Int64
-    @uint64 : Uint64
-    @float32 : Float32
-    @float64 : Float64
+    @int_8 : Int8
+    @uint_8 : Uint8
+    @int_16 : Int16
+    @uint_16 : Uint16
+    @int_32 : Int32
+    @uint_32 : Uint32
+    @int_64 : Int64
+    @uint_64 : Uint64
+    @float_32 : Float32
+    @float_64 : Float64
     @string : String
     @name : String
     @date : String

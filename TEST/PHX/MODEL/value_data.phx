@@ -3,14 +3,22 @@
 function GetDatabaseValueDataArray(
     )
 {
-    var statement = GetDatabaseStatement( 'select Uuid, ValueId, ValueUuid from VALUE_DATA' );
+    var statement = GetDatabaseStatement( 'select `Uuid`, `ValueId`, `ValueUuid` from `VALUE_DATA`' );
 
     if ( !statement.execute() )
     {
         var_dump( statement.errorInfo() );
     }
 
-    return GetDatabaseObjectArray( statement );
+    var value_data_array = [];
+
+    while ( var value_data = statement.fetchObject() )
+    {
+        value_data.ValueId = ( int )( value_data.ValueId );
+        array_push( value_data_array, value_data );
+    }
+
+    return value_data_array;
 }
 
 // ~~
@@ -19,7 +27,7 @@ function GetDatabaseValueDataByUuid(
     string uuid
     )
 {
-    var statement = GetDatabaseStatement( 'select Uuid, ValueId, ValueUuid from VALUE_DATA where Uuid = ? limit 1' );
+    var statement = GetDatabaseStatement( 'select `Uuid`, `ValueId`, `ValueUuid` from `VALUE_DATA` where `Uuid` = ? limit 1' );
     statement.bindParam( 1, uuid, PDO::PARAM_STR );
 
     if ( !statement.execute() )
@@ -27,7 +35,10 @@ function GetDatabaseValueDataByUuid(
         var_dump( statement.errorInfo() );
     }
 
-    return statement.fetchObject();
+    var value_data = statement.fetchObject();
+    value_data.ValueId = ( int )( value_data.ValueId );
+
+    return value_data;
 }
 
 // ~~
@@ -38,7 +49,7 @@ function AddDatabaseValueData(
     string value_uuid
     )
 {
-    var statement = GetDatabaseStatement( 'insert into VALUE_DATA ( Uuid, ValueId, ValueUuid ) values ( ?, ?, ? )' );
+    var statement = GetDatabaseStatement( 'insert into `VALUE_DATA` ( `Uuid`, `ValueId`, `ValueUuid` ) values ( ?, ?, ? )' );
     statement.bindParam( 1, uuid, PDO::PARAM_STR );
     statement.bindParam( 2, value_id, PDO::PARAM_INT );
     statement.bindParam( 3, value_uuid, PDO::PARAM_STR );
@@ -59,7 +70,7 @@ function PutDatabaseValueData(
     string value_uuid
     )
 {
-    var statement = GetDatabaseStatement( 'replace into VALUE_DATA ( Uuid, ValueId, ValueUuid ) values ( ?, ?, ? )' );
+    var statement = GetDatabaseStatement( 'replace into `VALUE_DATA` ( `Uuid`, `ValueId`, `ValueUuid` ) values ( ?, ?, ? )' );
     statement.bindParam( 1, uuid, PDO::PARAM_STR );
     statement.bindParam( 2, value_id, PDO::PARAM_INT );
     statement.bindParam( 3, value_uuid, PDO::PARAM_STR );
@@ -80,7 +91,7 @@ function SetDatabaseValueData(
     string value_uuid
     )
 {
-    var statement = GetDatabaseStatement( 'update VALUE_DATA set ValueId = ?, ValueUuid = ?,  where Uuid = ?' );
+    var statement = GetDatabaseStatement( 'update `VALUE_DATA` set `ValueId` = ?, `ValueUuid` = ?,  where Uuid = ?' );
     statement.bindParam( 1, value_id, PDO::PARAM_INT );
     statement.bindParam( 2, value_uuid, PDO::PARAM_STR );
     statement.bindParam( 3, uuid, PDO::PARAM_STR );
@@ -97,7 +108,7 @@ function RemoveDatabaseValueDataByUuid(
     string uuid
     )
 {
-    var statement = GetDatabaseStatement( 'delete from VALUE_DATA where Uuid = ?' );
+    var statement = GetDatabaseStatement( 'delete from `VALUE_DATA` where `Uuid` = ?' );
     statement.bindParam( 1, uuid, PDO::PARAM_STR );
 
     if ( !statement.execute() )

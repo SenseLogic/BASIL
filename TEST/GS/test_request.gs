@@ -609,4 +609,3 @@ func HandleGetValueDataListDatabaseRequest(
 }
 
 // ~~
-
