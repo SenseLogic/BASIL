@@ -40,7 +40,11 @@ public class SIMPLE
     public String
         Blob;
     public string
-        Option;
+        Option,
+        EnglishText,
+        SpanishText,
+        FrenchText,
+        LatinText;
 }
 
 // ~~

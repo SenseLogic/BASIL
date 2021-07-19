@@ -30,6 +30,10 @@ class SIMPLE {
     DateTime : DATETIME
     Blob : BLOB
     Option : STRING
+    EnglishText : STRING
+    SpanishText : STRING
+    FrenchText : STRING
+    LatinText : STRING
 }
 
 class COMPOUND {

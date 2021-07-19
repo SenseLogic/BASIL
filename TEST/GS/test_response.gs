@@ -39,6 +39,14 @@ func WriteResponseSimple(
     WriteResponseBlob( writer, simple.Blob );
     WriteResponse( writer, ",\"Option\":" );
     WriteResponseString( writer, simple.Option );
+    WriteResponse( writer, ",\"EnglishText\":" );
+    WriteResponseString( writer, simple.EnglishText );
+    WriteResponse( writer, ",\"SpanishText\":" );
+    WriteResponseString( writer, simple.SpanishText );
+    WriteResponse( writer, ",\"FrenchText\":" );
+    WriteResponseString( writer, simple.FrenchText );
+    WriteResponse( writer, ",\"LatinText\":" );
+    WriteResponseString( writer, simple.LatinText );
     WriteResponse( writer, "}" );
 }
 

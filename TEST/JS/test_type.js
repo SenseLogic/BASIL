@@ -21,6 +21,10 @@ class SIMPLE
         this.DateTime = null;
         this.Blob = null;
         this.Option = null;
+        this.EnglishText = null;
+        this.SpanishText = null;
+        this.FrenchText = null;
+        this.LatinText = null;
     }
 }
 

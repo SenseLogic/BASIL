@@ -17,6 +17,10 @@ type SIMPLE struct {
     DateTime time.Time    `db:"DateTime"`;
     Blob [] byte    `db:"Blob"`;
     Option string    `db:"Option"`;
+    EnglishText string    `db:"EnglishText"`;
+    SpanishText string    `db:"SpanishText"`;
+    FrenchText string    `db:"FrenchText"`;
+    LatinText string    `db:"LatinText"`;
 }
 
 // ~~

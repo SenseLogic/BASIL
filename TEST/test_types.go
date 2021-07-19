@@ -21,6 +21,10 @@ type SIMPLE struct {
     DateTime time.Time;
     Blob [] byte;
     Option string;
+    EnglishText string;
+    SpanishText string;
+    FrenchText string;
+    LatinText string;
 }
 
 // ~~

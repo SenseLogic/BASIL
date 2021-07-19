@@ -25,6 +25,10 @@ create table if not exists `TEST`.`SIMPLE`(
     `DateTime` DATETIME NULL,
     `Blob` BLOB NULL,
     `Option` TEXT NULL,
+    `EnglishText` TEXT NULL,
+    `SpanishText` TEXT NULL,
+    `FrenchText` TEXT NULL,
+    `LatinText` TEXT NULL,
     primary key( `Uuid` )
     ) engine = InnoDB;
 

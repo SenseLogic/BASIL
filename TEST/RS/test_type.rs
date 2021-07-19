@@ -17,7 +17,11 @@ struct SIMPLE
     date : String,
     date_time : String,
     blob : String,
-    option : String
+    option : String,
+    english_text : String,
+    spanish_text : String,
+    french_text : String,
+    latin_text : String
 }
 
 // ~~

@@ -97,11 +97,15 @@ class RANDOM
         RegionNameArray,
         CountryNameArray;
     VERTEX[]
-        VertexArray;
+        EnglishVertexArray,
+        SpanishVertexArray,
+        FrenchVertexArray;
     long[ string ]
-        VertexIndexMap;
+        EnglishVertexIndexMap,
+        SpanishVertexIndexMap,
+        FrenchVertexIndexMap;
     string[]
-        WordArray,
+        LatinWordArray,
         SyllableArray;
     string[ string ]
         IdMap,
@@ -120,8 +124,10 @@ class RANDOM
         MakeCityNameArray(),
         MakeRegionNameArray(),
         MakeCountryNameArray(),
-        MakeVertexArray();
-        MakeWordArray();
+        MakeEnglishVertexArray();
+        MakeSpanishVertexArray();
+        MakeFrenchVertexArray();
+        MakeLatinWordArray();
         MakeSyllableArray();
     }
 
@@ -212,6 +218,8 @@ class RANDOM
     // ~~
 
     long GetVertexIndex(
+        ref VERTEX[] vertex_array,
+        ref long[ string ] vertex_index_map,
         string word
         )
     {
@@ -226,7 +234,7 @@ class RANDOM
 
         key = "[" ~ word ~ "]";
 
-        found_vertex_index = ( key in VertexIndexMap );
+        found_vertex_index = ( key in vertex_index_map );
 
         if ( found_vertex_index != null )
         {
@@ -235,9 +243,9 @@ class RANDOM
         else
         {
             vertex = new VERTEX( word );
-            vertex_index = VertexArray.length;
-            VertexArray ~= vertex;
-            VertexIndexMap[ key ] = vertex_index;
+            vertex_index = vertex_array.length;
+            vertex_array ~= vertex;
+            vertex_index_map[ key ] = vertex_index;
 
             return vertex_index;
         }
@@ -271,6 +279,9 @@ class RANDOM
     // ~~
 
     void MakeVertexArray(
+        ref VERTEX[] vertex_array,
+        ref long[ string ] vertex_index_map,
+        string text_file_path
         )
     {
         bool
@@ -286,11 +297,11 @@ class RANDOM
             prior_vertex,
             vertex;
 
-        text = GetExecutablePath( "english_text.txt" ).ReadText().strip().replace( "\r", "" );
+        text = GetExecutablePath( text_file_path ).ReadText().strip().replace( "\r", "" );
         line_array = text.split( '\n' );
 
-        VertexArray = null;
-        VertexIndexMap = null;
+        vertex_array = null;
+        vertex_index_map = null;
 
         foreach ( ref line; line_array )
         {
@@ -299,8 +310,8 @@ class RANDOM
 
             foreach ( word_index, ref word; word_array )
             {
-                vertex_index = GetVertexIndex( word );
-                vertex = VertexArray[ vertex_index ];
+                vertex_index = GetVertexIndex( vertex_array, vertex_index_map, word );
+                vertex = vertex_array[ vertex_index ];
 
                 if ( word_index == 0 )
                 {
@@ -321,16 +332,40 @@ class RANDOM
 
     // ~~
 
-    void MakeWordArray(
+    void MakeEnglishVertexArray(
+        )
+    {
+        MakeVertexArray( EnglishVertexArray, EnglishVertexIndexMap, "english_text.txt" );
+    }
+
+    // ~~
+
+    void MakeSpanishVertexArray(
+        )
+    {
+        MakeVertexArray( SpanishVertexArray, SpanishVertexIndexMap, "spanish_text.txt" );
+    }
+
+    // ~~
+
+    void MakeFrenchVertexArray(
+        )
+    {
+        MakeVertexArray( FrenchVertexArray, FrenchVertexIndexMap, "french_text.txt" );
+    }
+
+    // ~~
+
+    void MakeLatinWordArray(
         )
     {
         string
             text;
 
         text = GetExecutablePath( "latin_text.txt" ).ReadText();
-        WordArray = text.replace( "\r", "" ).replace( "\n", " " ).strip().split( ' ' );
+        LatinWordArray = text.replace( "\r", "" ).replace( "\n", " " ).strip().split( ' ' );
 
-        GetExecutablePath( "word_table.txt" ).WriteText( WordArray.join( '\n' ) );
+        GetExecutablePath( "word_table.txt" ).WriteText( LatinWordArray.join( '\n' ) );
     }
 
     // ~~
@@ -1199,15 +1234,8 @@ class RANDOM
 
     // ~~
 
-    string MakeWord(
-        )
-    {
-        return PickElement( WordArray );
-    }
-
-    // ~~
-
-    string MakeEnglishSentence(
+    string MakeSentence(
+        VERTEX[] vertex_array,
         long minimum_word_count,
         long maximum_word_count
         )
@@ -1232,7 +1260,7 @@ class RANDOM
 
             do
             {
-                vertex = PickElement( VertexArray );
+                vertex = PickElement( vertex_array );
             }
             while ( !vertex.IsInitial );
 
@@ -1250,7 +1278,7 @@ class RANDOM
                 }
 
                 link = PickElement( vertex.LinkArray );
-                vertex = VertexArray[ link.VertexIndex ];
+                vertex = vertex_array[ link.VertexIndex ];
 
                 if ( vertex.Word == prior_vertex.Word )
                 {
@@ -1275,6 +1303,36 @@ class RANDOM
 
     // ~~
 
+    string MakeEnglishSentence(
+        long minimum_word_count,
+        long maximum_word_count
+        )
+    {
+        return MakeSentence( EnglishVertexArray, minimum_word_count, maximum_word_count );
+    }
+
+    // ~~
+
+    string MakeSpanishSentence(
+        long minimum_word_count,
+        long maximum_word_count
+        )
+    {
+        return MakeSentence( SpanishVertexArray, minimum_word_count, maximum_word_count );
+    }
+
+    // ~~
+
+    string MakeFrenchSentence(
+        long minimum_word_count,
+        long maximum_word_count
+        )
+    {
+        return MakeSentence( FrenchVertexArray, minimum_word_count, maximum_word_count );
+    }
+
+    // ~~
+
     string MakeLatinSentence(
         long minimum_word_count,
         long maximum_word_count
@@ -1290,7 +1348,7 @@ class RANDOM
 
         foreach ( word_index; 0 .. word_count )
         {
-            sentence ~= PickElement( WordArray );
+            sentence ~= PickElement( LatinWordArray );
 
             if ( word_index < word_count - 1 )
             {
@@ -1312,6 +1370,14 @@ class RANDOM
         if ( language == "english" )
         {
             return MakeEnglishSentence( minimum_word_count, maximum_word_count );
+        }
+        else if ( language == "spanish" )
+        {
+            return MakeSpanishSentence( minimum_word_count, maximum_word_count );
+        }
+        else if ( language == "french" )
+        {
+            return MakeFrenchSentence( minimum_word_count, maximum_word_count );
         }
         else
         {
@@ -3026,6 +3092,28 @@ class TYPE
                                 template_part
                                     = Random.MakeText(
                                           "english",
+                                          ( filter_argument_count > 0 ) ? filter_argument_array[ 0 ].to!long() : 3,
+                                          ( filter_argument_count > 1 ) ? filter_argument_array[ 1 ].to!long() : 5,
+                                          ( filter_argument_count > 2 ) ? filter_argument_array[ 2 ].to!long() : 7,
+                                          ( filter_argument_count > 3 ) ? filter_argument_array[ 3 ].to!long() : 9
+                                          );
+                            }
+                            else if ( filter_name == "spanish" )
+                            {
+                                template_part
+                                    = Random.MakeText(
+                                          "spanish",
+                                          ( filter_argument_count > 0 ) ? filter_argument_array[ 0 ].to!long() : 3,
+                                          ( filter_argument_count > 1 ) ? filter_argument_array[ 1 ].to!long() : 5,
+                                          ( filter_argument_count > 2 ) ? filter_argument_array[ 2 ].to!long() : 7,
+                                          ( filter_argument_count > 3 ) ? filter_argument_array[ 3 ].to!long() : 9
+                                          );
+                            }
+                            else if ( filter_name == "french" )
+                            {
+                                template_part
+                                    = Random.MakeText(
+                                          "french",
                                           ( filter_argument_count > 0 ) ? filter_argument_array[ 0 ].to!long() : 3,
                                           ( filter_argument_count > 1 ) ? filter_argument_array[ 1 ].to!long() : 5,
                                           ( filter_argument_count > 2 ) ? filter_argument_array[ 2 ].to!long() : 7,
