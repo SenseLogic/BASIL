@@ -26,9 +26,10 @@ create table if not exists `TEST`.`SIMPLE`(
     `Blob` BLOB NULL,
     `Option` TEXT NULL,
     `EnglishText` TEXT NULL,
-    `SpanishText` TEXT NULL,
     `FrenchText` TEXT NULL,
+    `GermanText` TEXT NULL,
     `LatinText` TEXT NULL,
+    `SpanishText` TEXT NULL,
     primary key( `Uuid` )
     ) engine = InnoDB;
 

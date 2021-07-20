@@ -21,9 +21,10 @@ TEST | count 10
         Blob : BLOB
         Option : STRING = "first_{{String}}|second_{{Name}}|third_{{Date}}|fourth_{{DateTime}}"
         EnglishText : STRING = "{{english 2 4 5 10}}"
-        SpanishText : STRING = "{{spanish 2 4 5 10}}"
         FrenchText : STRING = "{{french 2 4 5 10}}"
+        GermanText : STRING = "{{german 2 4 5 10}}"
         LatinText : STRING = "{{latin 2 4 5 10}}"
+        SpanishText : STRING = "{{spanish 2 4 5 10}}"
 
     COMPOUND
 

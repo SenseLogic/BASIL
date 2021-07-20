@@ -27,9 +27,10 @@ func HandleAddSimpleDatabaseRequest(
          && GetRequestBlob( request, &simple.Blob, "Blob", &error_code )
          && GetRequestString( request, &simple.Option, "Option", &error_code )
          && GetRequestString( request, &simple.EnglishText, "EnglishText", &error_code )
-         && GetRequestString( request, &simple.SpanishText, "SpanishText", &error_code )
          && GetRequestString( request, &simple.FrenchText, "FrenchText", &error_code )
+         && GetRequestString( request, &simple.GermanText, "GermanText", &error_code )
          && GetRequestString( request, &simple.LatinText, "LatinText", &error_code )
+         && GetRequestString( request, &simple.SpanishText, "SpanishText", &error_code )
          && AddDatabaseSimple( &simple, &error_code ) )
     {
         WriteResponse( response_writer, "{" );
@@ -75,9 +76,10 @@ func HandleSetSimpleDatabaseRequest(
          && GetRequestBlob( request, &simple.Blob, "Blob", &error_code )
          && GetRequestString( request, &simple.Option, "Option", &error_code )
          && GetRequestString( request, &simple.EnglishText, "EnglishText", &error_code )
-         && GetRequestString( request, &simple.SpanishText, "SpanishText", &error_code )
          && GetRequestString( request, &simple.FrenchText, "FrenchText", &error_code )
+         && GetRequestString( request, &simple.GermanText, "GermanText", &error_code )
          && GetRequestString( request, &simple.LatinText, "LatinText", &error_code )
+         && GetRequestString( request, &simple.SpanishText, "SpanishText", &error_code )
          && SetDatabaseSimple( &simple, &error_code ) )
     {
         WriteResponseSuccess( response_writer );

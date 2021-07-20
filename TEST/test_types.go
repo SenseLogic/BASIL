@@ -22,9 +22,10 @@ type SIMPLE struct {
     Blob [] byte;
     Option string;
     EnglishText string;
-    SpanishText string;
     FrenchText string;
+    GermanText string;
     LatinText string;
+    SpanishText string;
 }
 
 // ~~

@@ -98,12 +98,14 @@ class RANDOM
         CountryNameArray;
     VERTEX[]
         EnglishVertexArray,
-        SpanishVertexArray,
-        FrenchVertexArray;
+        FrenchVertexArray,
+        GermanVertexArray,
+        SpanishVertexArray;
     long[ string ]
         EnglishVertexIndexMap,
-        SpanishVertexIndexMap,
-        FrenchVertexIndexMap;
+        FrenchVertexIndexMap,
+        GermanVertexIndexMap,
+        SpanishVertexIndexMap;
     string[]
         LatinWordArray,
         SyllableArray;
@@ -125,8 +127,9 @@ class RANDOM
         MakeRegionNameArray(),
         MakeCountryNameArray(),
         MakeEnglishVertexArray();
-        MakeSpanishVertexArray();
         MakeFrenchVertexArray();
+        MakeGermanVertexArray();
+        MakeSpanishVertexArray();
         MakeLatinWordArray();
         MakeSyllableArray();
     }
@@ -340,18 +343,26 @@ class RANDOM
 
     // ~~
 
-    void MakeSpanishVertexArray(
-        )
-    {
-        MakeVertexArray( SpanishVertexArray, SpanishVertexIndexMap, "spanish_text.txt" );
-    }
-
-    // ~~
-
     void MakeFrenchVertexArray(
         )
     {
         MakeVertexArray( FrenchVertexArray, FrenchVertexIndexMap, "french_text.txt" );
+    }
+
+    // ~~
+
+    void MakeGermanVertexArray(
+        )
+    {
+        MakeVertexArray( GermanVertexArray, GermanVertexIndexMap, "german_text.txt" );
+    }
+
+    // ~~
+
+    void MakeSpanishVertexArray(
+        )
+    {
+        MakeVertexArray( SpanishVertexArray, SpanishVertexIndexMap, "spanish_text.txt" );
     }
 
     // ~~
@@ -1313,12 +1324,12 @@ class RANDOM
 
     // ~~
 
-    string MakeSpanishSentence(
+    string MakeGermanSentence(
         long minimum_word_count,
         long maximum_word_count
         )
     {
-        return MakeSentence( SpanishVertexArray, minimum_word_count, maximum_word_count );
+        return MakeSentence( GermanVertexArray, minimum_word_count, maximum_word_count );
     }
 
     // ~~
@@ -1329,6 +1340,16 @@ class RANDOM
         )
     {
         return MakeSentence( FrenchVertexArray, minimum_word_count, maximum_word_count );
+    }
+
+    // ~~
+
+    string MakeSpanishSentence(
+        long minimum_word_count,
+        long maximum_word_count
+        )
+    {
+        return MakeSentence( SpanishVertexArray, minimum_word_count, maximum_word_count );
     }
 
     // ~~
@@ -1371,13 +1392,17 @@ class RANDOM
         {
             return MakeEnglishSentence( minimum_word_count, maximum_word_count );
         }
-        else if ( language == "spanish" )
+        else if ( language == "german" )
         {
-            return MakeSpanishSentence( minimum_word_count, maximum_word_count );
+            return MakeGermanSentence( minimum_word_count, maximum_word_count );
         }
         else if ( language == "french" )
         {
             return MakeFrenchSentence( minimum_word_count, maximum_word_count );
+        }
+        else if ( language == "spanish" )
+        {
+            return MakeSpanishSentence( minimum_word_count, maximum_word_count );
         }
         else
         {
@@ -3098,22 +3123,33 @@ class TYPE
                                           ( filter_argument_count > 3 ) ? filter_argument_array[ 3 ].to!long() : 9
                                           );
                             }
-                            else if ( filter_name == "spanish" )
+                            else if ( filter_name == "french" )
                             {
                                 template_part
                                     = Random.MakeText(
-                                          "spanish",
+                                          "french",
                                           ( filter_argument_count > 0 ) ? filter_argument_array[ 0 ].to!long() : 3,
                                           ( filter_argument_count > 1 ) ? filter_argument_array[ 1 ].to!long() : 5,
                                           ( filter_argument_count > 2 ) ? filter_argument_array[ 2 ].to!long() : 7,
                                           ( filter_argument_count > 3 ) ? filter_argument_array[ 3 ].to!long() : 9
                                           );
                             }
-                            else if ( filter_name == "french" )
+                            else if ( filter_name == "german" )
                             {
                                 template_part
                                     = Random.MakeText(
-                                          "french",
+                                          "german",
+                                          ( filter_argument_count > 0 ) ? filter_argument_array[ 0 ].to!long() : 3,
+                                          ( filter_argument_count > 1 ) ? filter_argument_array[ 1 ].to!long() : 5,
+                                          ( filter_argument_count > 2 ) ? filter_argument_array[ 2 ].to!long() : 7,
+                                          ( filter_argument_count > 3 ) ? filter_argument_array[ 3 ].to!long() : 9
+                                          );
+                            }
+                            else if ( filter_name == "spanish" )
+                            {
+                                template_part
+                                    = Random.MakeText(
+                                          "spanish",
                                           ( filter_argument_count > 0 ) ? filter_argument_array[ 0 ].to!long() : 3,
                                           ( filter_argument_count > 1 ) ? filter_argument_array[ 1 ].to!long() : 5,
                                           ( filter_argument_count > 2 ) ? filter_argument_array[ 2 ].to!long() : 7,

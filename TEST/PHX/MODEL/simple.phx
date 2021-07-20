@@ -3,7 +3,7 @@
 function GetDatabaseSimpleArray(
     )
 {
-    var statement = GetDatabaseStatement( 'select `Uuid`, `Bool`, `Int8`, `Uint8`, `Int16`, `Uint16`, `Int32`, `Uint32`, `Int64`, `Uint64`, `Float32`, `Float64`, `String`, `Name`, `Date`, `DateTime`, `Blob`, `Option`, `EnglishText`, `SpanishText`, `FrenchText`, `LatinText` from `SIMPLE`' );
+    var statement = GetDatabaseStatement( 'select `Uuid`, `Bool`, `Int8`, `Uint8`, `Int16`, `Uint16`, `Int32`, `Uint32`, `Int64`, `Uint64`, `Float32`, `Float64`, `String`, `Name`, `Date`, `DateTime`, `Blob`, `Option`, `EnglishText`, `FrenchText`, `GermanText`, `LatinText`, `SpanishText` from `SIMPLE`' );
 
     if ( !statement.execute() )
     {
@@ -37,7 +37,7 @@ function GetDatabaseSimpleByUuid(
     string uuid
     )
 {
-    var statement = GetDatabaseStatement( 'select `Uuid`, `Bool`, `Int8`, `Uint8`, `Int16`, `Uint16`, `Int32`, `Uint32`, `Int64`, `Uint64`, `Float32`, `Float64`, `String`, `Name`, `Date`, `DateTime`, `Blob`, `Option`, `EnglishText`, `SpanishText`, `FrenchText`, `LatinText` from `SIMPLE` where `Uuid` = ? limit 1' );
+    var statement = GetDatabaseStatement( 'select `Uuid`, `Bool`, `Int8`, `Uint8`, `Int16`, `Uint16`, `Int32`, `Uint32`, `Int64`, `Uint64`, `Float32`, `Float64`, `String`, `Name`, `Date`, `DateTime`, `Blob`, `Option`, `EnglishText`, `FrenchText`, `GermanText`, `LatinText`, `SpanishText` from `SIMPLE` where `Uuid` = ? limit 1' );
     statement.bindParam( 1, uuid, PDO::PARAM_STR );
 
     if ( !statement.execute() )
@@ -83,12 +83,13 @@ function AddDatabaseSimple(
     string blob,
     string option,
     string english_text,
-    string spanish_text,
     string french_text,
-    string latin_text
+    string german_text,
+    string latin_text,
+    string spanish_text
     )
 {
-    var statement = GetDatabaseStatement( 'insert into `SIMPLE` ( `Uuid`, `Bool`, `Int8`, `Uint8`, `Int16`, `Uint16`, `Int32`, `Uint32`, `Int64`, `Uint64`, `Float32`, `Float64`, `String`, `Name`, `Date`, `DateTime`, `Blob`, `Option`, `EnglishText`, `SpanishText`, `FrenchText`, `LatinText` ) values ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? )' );
+    var statement = GetDatabaseStatement( 'insert into `SIMPLE` ( `Uuid`, `Bool`, `Int8`, `Uint8`, `Int16`, `Uint16`, `Int32`, `Uint32`, `Int64`, `Uint64`, `Float32`, `Float64`, `String`, `Name`, `Date`, `DateTime`, `Blob`, `Option`, `EnglishText`, `FrenchText`, `GermanText`, `LatinText`, `SpanishText` ) values ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? )' );
     statement.bindParam( 1, uuid, PDO::PARAM_STR );
     statement.bindParam( 2, bool, PDO::PARAM_BOOL );
     statement.bindParam( 3, int_8, PDO::PARAM_INT );
@@ -109,9 +110,10 @@ function AddDatabaseSimple(
     statement.bindParam( 17, blob, PDO::PARAM_STR );
     statement.bindParam( 18, option, PDO::PARAM_STR );
     statement.bindParam( 19, english_text, PDO::PARAM_STR );
-    statement.bindParam( 20, spanish_text, PDO::PARAM_STR );
-    statement.bindParam( 21, french_text, PDO::PARAM_STR );
+    statement.bindParam( 20, french_text, PDO::PARAM_STR );
+    statement.bindParam( 21, german_text, PDO::PARAM_STR );
     statement.bindParam( 22, latin_text, PDO::PARAM_STR );
+    statement.bindParam( 23, spanish_text, PDO::PARAM_STR );
 
     if ( !statement.execute() )
     {
@@ -143,12 +145,13 @@ function PutDatabaseSimple(
     string blob,
     string option,
     string english_text,
-    string spanish_text,
     string french_text,
-    string latin_text
+    string german_text,
+    string latin_text,
+    string spanish_text
     )
 {
-    var statement = GetDatabaseStatement( 'replace into `SIMPLE` ( `Uuid`, `Bool`, `Int8`, `Uint8`, `Int16`, `Uint16`, `Int32`, `Uint32`, `Int64`, `Uint64`, `Float32`, `Float64`, `String`, `Name`, `Date`, `DateTime`, `Blob`, `Option`, `EnglishText`, `SpanishText`, `FrenchText`, `LatinText` ) values ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? )' );
+    var statement = GetDatabaseStatement( 'replace into `SIMPLE` ( `Uuid`, `Bool`, `Int8`, `Uint8`, `Int16`, `Uint16`, `Int32`, `Uint32`, `Int64`, `Uint64`, `Float32`, `Float64`, `String`, `Name`, `Date`, `DateTime`, `Blob`, `Option`, `EnglishText`, `FrenchText`, `GermanText`, `LatinText`, `SpanishText` ) values ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? )' );
     statement.bindParam( 1, uuid, PDO::PARAM_STR );
     statement.bindParam( 2, bool, PDO::PARAM_BOOL );
     statement.bindParam( 3, int_8, PDO::PARAM_INT );
@@ -169,9 +172,10 @@ function PutDatabaseSimple(
     statement.bindParam( 17, blob, PDO::PARAM_STR );
     statement.bindParam( 18, option, PDO::PARAM_STR );
     statement.bindParam( 19, english_text, PDO::PARAM_STR );
-    statement.bindParam( 20, spanish_text, PDO::PARAM_STR );
-    statement.bindParam( 21, french_text, PDO::PARAM_STR );
+    statement.bindParam( 20, french_text, PDO::PARAM_STR );
+    statement.bindParam( 21, german_text, PDO::PARAM_STR );
     statement.bindParam( 22, latin_text, PDO::PARAM_STR );
+    statement.bindParam( 23, spanish_text, PDO::PARAM_STR );
 
     if ( !statement.execute() )
     {
@@ -203,12 +207,13 @@ function SetDatabaseSimple(
     string blob,
     string option,
     string english_text,
-    string spanish_text,
     string french_text,
-    string latin_text
+    string german_text,
+    string latin_text,
+    string spanish_text
     )
 {
-    var statement = GetDatabaseStatement( 'update `SIMPLE` set `Bool` = ?, `Int8` = ?, `Uint8` = ?, `Int16` = ?, `Uint16` = ?, `Int32` = ?, `Uint32` = ?, `Int64` = ?, `Uint64` = ?, `Float32` = ?, `Float64` = ?, `String` = ?, `Name` = ?, `Date` = ?, `DateTime` = ?, `Blob` = ?, `Option` = ?, `EnglishText` = ?, `SpanishText` = ?, `FrenchText` = ?, `LatinText` = ? where Uuid = ?' );
+    var statement = GetDatabaseStatement( 'update `SIMPLE` set `Bool` = ?, `Int8` = ?, `Uint8` = ?, `Int16` = ?, `Uint16` = ?, `Int32` = ?, `Uint32` = ?, `Int64` = ?, `Uint64` = ?, `Float32` = ?, `Float64` = ?, `String` = ?, `Name` = ?, `Date` = ?, `DateTime` = ?, `Blob` = ?, `Option` = ?, `EnglishText` = ?, `FrenchText` = ?, `GermanText` = ?, `LatinText` = ?, `SpanishText` = ? where Uuid = ?' );
     statement.bindParam( 1, bool, PDO::PARAM_BOOL );
     statement.bindParam( 2, int_8, PDO::PARAM_INT );
     statement.bindParam( 3, uint_8, PDO::PARAM_INT );
@@ -228,10 +233,11 @@ function SetDatabaseSimple(
     statement.bindParam( 16, blob, PDO::PARAM_STR );
     statement.bindParam( 17, option, PDO::PARAM_STR );
     statement.bindParam( 18, english_text, PDO::PARAM_STR );
-    statement.bindParam( 19, spanish_text, PDO::PARAM_STR );
-    statement.bindParam( 20, french_text, PDO::PARAM_STR );
+    statement.bindParam( 19, french_text, PDO::PARAM_STR );
+    statement.bindParam( 20, german_text, PDO::PARAM_STR );
     statement.bindParam( 21, latin_text, PDO::PARAM_STR );
-    statement.bindParam( 22, uuid, PDO::PARAM_STR );
+    statement.bindParam( 22, spanish_text, PDO::PARAM_STR );
+    statement.bindParam( 23, uuid, PDO::PARAM_STR );
 
     if ( !statement.execute() )
     {

@@ -309,9 +309,10 @@ real <i>minimum_value</i> <i>maximum_value</i>
 integer <i>minimum_value</i> <i>maximum_value</i>
 natural <i>minimum_value</i> <i>maximum_value</i> <i>digit_count</i>
 english <i>minimum_sentence_count</i> <i>maximum_sentence_count</i> <i>minimum_word_count</i> <i>maximum_word_count</i>
-spanish <i>minimum_sentence_count</i> <i>maximum_sentence_count</i> <i>minimum_word_count</i> <i>maximum_word_count</i>
 french <i>minimum_sentence_count</i> <i>maximum_sentence_count</i> <i>minimum_word_count</i> <i>maximum_word_count</i>
+german <i>minimum_sentence_count</i> <i>maximum_sentence_count</i> <i>minimum_word_count</i> <i>maximum_word_count</i>
 latin <i>minimum_sentence_count</i> <i>maximum_sentence_count</i> <i>minimum_word_count</i> <i>maximum_word_count</i>
+spanish <i>minimum_sentence_count</i> <i>maximum_sentence_count</i> <i>minimum_word_count</i> <i>maximum_word_count</i>
 name <i>minimum_letter_count</i> <i>maximum_letter_count</i>
 first_name
 last_name

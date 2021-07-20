@@ -18,9 +18,10 @@ type SIMPLE struct {
     Blob [] byte    `db:"Blob"`;
     Option string    `db:"Option"`;
     EnglishText string    `db:"EnglishText"`;
-    SpanishText string    `db:"SpanishText"`;
     FrenchText string    `db:"FrenchText"`;
+    GermanText string    `db:"GermanText"`;
     LatinText string    `db:"LatinText"`;
+    SpanishText string    `db:"SpanishText"`;
 }
 
 // ~~

@@ -42,9 +42,10 @@ public class SIMPLE
     public string
         Option,
         EnglishText,
-        SpanishText,
         FrenchText,
-        LatinText;
+        GermanText,
+        LatinText,
+        SpanishText;
 }
 
 // ~~

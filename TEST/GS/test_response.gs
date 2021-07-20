@@ -41,12 +41,14 @@ func WriteResponseSimple(
     WriteResponseString( writer, simple.Option );
     WriteResponse( writer, ",\"EnglishText\":" );
     WriteResponseString( writer, simple.EnglishText );
-    WriteResponse( writer, ",\"SpanishText\":" );
-    WriteResponseString( writer, simple.SpanishText );
     WriteResponse( writer, ",\"FrenchText\":" );
     WriteResponseString( writer, simple.FrenchText );
+    WriteResponse( writer, ",\"GermanText\":" );
+    WriteResponseString( writer, simple.GermanText );
     WriteResponse( writer, ",\"LatinText\":" );
     WriteResponseString( writer, simple.LatinText );
+    WriteResponse( writer, ",\"SpanishText\":" );
+    WriteResponseString( writer, simple.SpanishText );
     WriteResponse( writer, "}" );
 }
 

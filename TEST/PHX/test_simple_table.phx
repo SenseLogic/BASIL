@@ -2,14 +2,14 @@
 Table :
     SIMPLE : SIMPLE / Simple / simple / simple / Simple / Simple / simple
         Properties : false false
-        Columns : Uuid, Bool, Int8, Uint8, Int16, Uint16, Int32, Uint32, Int64, Uint64, Float32, Float64, String, Name, Date, DateTime, Blob, Option, EnglishText, SpanishText, FrenchText, LatinText
+        Columns : Uuid, Bool, Int8, Uint8, Int16, Uint16, Int32, Uint32, Int64, Uint64, Float32, Float64, String, Name, Date, DateTime, Blob, Option, EnglishText, FrenchText, GermanText, LatinText, SpanishText
         Key columns : Uuid
-        Non key columns : Bool, Int8, Uint8, Int16, Uint16, Int32, Uint32, Int64, Uint64, Float32, Float64, String, Name, Date, DateTime, Blob, Option, EnglishText, SpanishText, FrenchText, LatinText
-        Stored columns : Uuid, Bool, Int8, Uint8, Int16, Uint16, Int32, Uint32, Int64, Uint64, Float32, Float64, String, Name, Date, DateTime, Blob, Option, EnglishText, SpanishText, FrenchText, LatinText
+        Non key columns : Bool, Int8, Uint8, Int16, Uint16, Int32, Uint32, Int64, Uint64, Float32, Float64, String, Name, Date, DateTime, Blob, Option, EnglishText, FrenchText, GermanText, LatinText, SpanishText
+        Stored columns : Uuid, Bool, Int8, Uint8, Int16, Uint16, Int32, Uint32, Int64, Uint64, Float32, Float64, String, Name, Date, DateTime, Blob, Option, EnglishText, FrenchText, GermanText, LatinText, SpanishText
         Non Stored columns : 
         Stored key columns : Uuid
         Non Stored key columns : 
-        Stored non key columns : Bool, Int8, Uint8, Int16, Uint16, Int32, Uint32, Int64, Uint64, Float32, Float64, String, Name, Date, DateTime, Blob, Option, EnglishText, SpanishText, FrenchText, LatinText
+        Stored non key columns : Bool, Int8, Uint8, Int16, Uint16, Int32, Uint32, Int64, Uint64, Float32, Float64, String, Name, Date, DateTime, Blob, Option, EnglishText, FrenchText, GermanText, LatinText, SpanishText
         Non Stored non key columns : 
         Columns :
             Uuid : Uuid / uuid / uuid / Uuid / Uuid / uuid
@@ -145,13 +145,6 @@ Table :
                 Crystal : String english_text
                 C# : string EnglishText
                 Rust : String english_text
-            SpanishText : SpanishText / spanish_text / spanish-text / Spanish Text / Spanish text / spanish text
-                Properties : false false
-                Go : string SpanishText
-                PHP : string SpanishText
-                Crystal : String spanish_text
-                C# : string SpanishText
-                Rust : String spanish_text
             FrenchText : FrenchText / french_text / french-text / French Text / French text / french text
                 Properties : false false
                 Go : string FrenchText
@@ -159,6 +152,13 @@ Table :
                 Crystal : String french_text
                 C# : string FrenchText
                 Rust : String french_text
+            GermanText : GermanText / german_text / german-text / German Text / German text / german text
+                Properties : false false
+                Go : string GermanText
+                PHP : string GermanText
+                Crystal : String german_text
+                C# : string GermanText
+                Rust : String german_text
             LatinText : LatinText / latin_text / latin-text / Latin Text / Latin text / latin text
                 Properties : false false
                 Go : string LatinText
@@ -166,4 +166,11 @@ Table :
                 Crystal : String latin_text
                 C# : string LatinText
                 Rust : String latin_text
+            SpanishText : SpanishText / spanish_text / spanish-text / Spanish Text / Spanish text / spanish text
+                Properties : false false
+                Go : string SpanishText
+                PHP : string SpanishText
+                Crystal : String spanish_text
+                C# : string SpanishText
+                Rust : String spanish_text
 </pre>

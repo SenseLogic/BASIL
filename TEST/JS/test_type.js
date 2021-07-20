@@ -22,9 +22,10 @@ class SIMPLE
         this.Blob = null;
         this.Option = null;
         this.EnglishText = null;
-        this.SpanishText = null;
         this.FrenchText = null;
+        this.GermanText = null;
         this.LatinText = null;
+        this.SpanishText = null;
     }
 }
 

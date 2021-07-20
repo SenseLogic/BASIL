@@ -31,9 +31,10 @@ class SIMPLE {
     Blob : BLOB
     Option : STRING
     EnglishText : STRING
-    SpanishText : STRING
     FrenchText : STRING
+    GermanText : STRING
     LatinText : STRING
+    SpanishText : STRING
 }
 
 class COMPOUND {

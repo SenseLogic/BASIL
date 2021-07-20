@@ -19,9 +19,10 @@ struct SIMPLE
     blob : String,
     option : String,
     english_text : String,
-    spanish_text : String,
     french_text : String,
-    latin_text : String
+    german_text : String,
+    latin_text : String,
+    spanish_text : String
 }
 
 // ~~
