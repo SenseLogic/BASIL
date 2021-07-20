@@ -29,7 +29,7 @@ import std.random : uniform;
 import std.path : dirName;
 import std.regex : regex, replaceAll, Regex;
 import std.stdio : writeln;
-import std.string : endsWith, format, indexOf, join, lastIndexOf, lineSplitter, replace, startsWith, split, strip, stripRight, toLower, toUpper;
+import std.string : capitalize, endsWith, format, indexOf, join, lastIndexOf, lineSplitter, replace, startsWith, split, strip, stripRight, toLower, toUpper;
 import std.digest.md : md5Of;
 
 // -- TYPES
@@ -11031,14 +11031,7 @@ string GetCapitalizedText(
     string text
     )
 {
-    if ( text.length > 0 )
-    {
-        return text[ 0 .. 1 ].toUpper() ~ text[ 1 .. $ ];
-    }
-    else
-    {
-        return "";
-    }
+    return text.capitalize();
 }
 
 // ~~
