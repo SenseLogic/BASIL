@@ -9901,7 +9901,7 @@ il est des jours la mer pour enjôler le mousse
 lui découvre ses lits agite ses dessous
 débouche bruyamment un champagne qui mousse
 mauvais livre de poche acheté quatre sous
-(ses yeux demain feront sourire l'équipage)
+ses yeux demain feront sourire l'équipage
 ballon bocal d'oiseaux légers pris au filet
 le manège à vapeur enroule son voyage
 on ne monte plus c'est complet
@@ -10019,7 +10019,7 @@ lorsque l'attaque avec sa bêche
 quelque féroce garnement
 dans un élégant sarcophage
 voyez descendre au fil de l'eau
-(ce jeu convient-il à votre âge)
+ce jeu convient-il à votre âge
 la belle rameuse en maillot
 tous plaisirs ce temps les empêche
 mais si nous ne l'effarouchons
@@ -10070,8 +10070,8 @@ appelaient au secours de leur lit aux pieds d'or
 les matelots entraient et changeaient le décor
 une morte riant dans son cercueil de verre
 conduisait les chevaux de son char ventre à terre
-(ce char appartenait au marchand de coco
-)
+ce char appartenait au marchand de coco
+
 c'était herculanum pompéï jéricho
 jamais je n'ai rien vu de plus fou sur la terre
 ciel d'avril
@@ -10282,8 +10282,8 @@ sur les genoux de ton cocher
 minuit
 l'enfant dort
 à noël il fait semblant
-(jeune mère cela vous met à l'aise
-)
+jeune mère cela vous met à l'aise
+
 à côté veille assis sur la chaise
 son ange gardien ramoneur blanc
 les cheveux gris quand jeunesse les porte
@@ -10405,7 +10405,7 @@ et toujours au zénith de nouvelles étoiles
 l'incendie
 joyeux épouvantail quel drame
 les cerises
-(celles du haut surtout) en perdent la raison
+celles du haut surtout en perdent la raison
 quoi la pure aglaé d'un pompier s'est éprise
 et cet amour est su de toute la maison
 pour ses larmes maison pardonne lui sa faute
@@ -10770,7 +10770,7 @@ nocturne
 car vénus a découvert le vol
 de ses perles et réveille tous les étages
 la peur donnant des ailes au courage
-(allégorie)
+allégorie
 mon mal hésite
 un mal s'enfonce
 il entre mal
@@ -10909,7 +10909,7 @@ est un vrai fantôme grivois
 hirondelles sont tes bottines
 annonçant l'orage
 les voix
-(rires et rondes enfantines)
+rires et rondes enfantines
 doivent sortir d'un appareil
 à celui de jeanne pareil
 souvent l'indiscret photographe
@@ -10942,7 +10942,7 @@ sur la baigneuse une cabine
 c'est du tir à la carabine
 zèbre joli comme un forçat
 le tout s'il raye son plumage
-(et le mieux serait le plus tôt)
+et le mieux serait le plus tôt
 pour un arrangement d'images
 à la façon de jean cocteau
 changements à vue

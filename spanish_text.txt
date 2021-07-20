@@ -114,12 +114,12 @@ veréis amor de patria no movido
 por premio vil más alto y casi eterno
 pues que no es premio vil ser conocido
 por pregón de su nido aunque paterno
-y en cuanto de éstos canto (pues no puedo
-cantar de vos pues no me atrevo a tanto)
+y en cuanto de éstos canto pues no puedo
+cantar de vos pues no me atrevo a tanto
 los vuestros gobernad con tal denuedo
 que deis al reino paz materia al canto
 sientan vuestro valor y tengan miedo
-(que por el mundo todo cause espanto)
+que por el mundo todo cause espanto
 de ejércitos y hechos singulares
 tierras en libia y en oriente mares
 en vos los ojos tiene el moro frío
@@ -164,8 +164,8 @@ convocados de parte del tonante
 por el nieto gentil del viejo atlante
 y de los cielos siete el regimiento
 dejaban del poder más alto dado
-(alto poder que con el pensamiento
-gobierna cielo tierra y mar airado)
+alto poder que con el pensamiento
+gobierna cielo tierra y mar airado
 allí se ayuntan todos al momento
 los que el arturo habitan congelado
 y los que el austro tiene y partes donde
@@ -794,7 +794,7 @@ fuera siempre habitado de cristianos
 el capitán que con su sano intento
 no ve ser dichos locos y livianos
 con dádivas muy grandes le rogaba
-lo guíe (donde el moro lo guiaba)
+lo guíe donde el moro lo guiaba
 lo mismo el falso moro determina
 que el seguro cristiano le demanda
 que en la isla que dice estar vecina
@@ -918,7 +918,7 @@ los cristianos que tanto ver desean
 que le lleven al rey presentes manda
 porque la voluntad que le mostraba
 la conserve segura limpia y blanda
-(aunque bien al contrario en todo estaba)
+aunque bien al contrario en todo estaba
 ya la gente del moro va a la banda
 y la nuestra con ella el mar cortaba
 fueron con rostros ledos y fingidos
@@ -1068,7 +1068,7 @@ con miedo del horrible son que oían
 que antes quieren al mar aventurarse
 que a manos de los nuestros entregarse
 cual en arroyo charco o en laguna
-las ranas (que ya fueron licia gente)
+las ranas que ya fueron licia gente
 cuando sienten venir persona alguna
 si a la ribera están incautamente
 saltan de dos en dos y de una en una
@@ -1841,7 +1841,7 @@ que por la antigüedad tuvieron guerra
 del primer ser humano y la costumbre
 con los que el nilo riega su ancha tierra
 mas cada cual andaba a la vislumbre
-(con que el juicio humano tanto yerra)
+con que el juicio humano tanto yerra
 que de cierto lo cierto se informara
 si al damasceno campo se llegara
 ahora en estas partes nombre tienen
@@ -2157,8 +2157,8 @@ tocan al arma hierve el campo en gente
 las lanzas y arcos toman y sonaban
 trompetas que los cielos atronaban
 así como la llama que atizada
-en las aristas (cuando está soplando
-el furioso bóreas) animada
+en las aristas cuando está soplando
+el furioso bóreas animada
 del soplo el bosque todo va talando
 la pastoral compaña recostada
 que en dulce sueño estaba despertando
@@ -2652,8 +2652,8 @@ ya los nietos de agar se están riendo
 del español poder poco aunque ajeno
 las tierras ya por suyas repartiendo
 entre todo el ejército agareno
-(que con título falso poseyendo
-está el famoso nombre sarraceno)
+que con título falso poseyendo
+está el famoso nombre sarraceno
 así también reparten ya por suya
 la tierra que tenía dueño y cuya
 cual el membrudo y bárbaro gigante
@@ -2770,8 +2770,8 @@ al príncipe y los hijos que dejaba
 que más que no la muerte le aquejaba
 al cristalino cielo levantando
 con lágrimas los ojos piadosos
-los ojos (que las manos le está atando
-uno de los ministros rigurosos)
+los ojos que las manos le está atando
+uno de los ministros rigurosos
 y después sus hijuelos contemplando
 tan tiernos tan queridos y mimosos
 cuya orfandad cual madre temía tanto
@@ -2785,9 +2785,9 @@ vemos todos un tierno sentimiento
 cual de nino en la madre se mostraron
 y en los que la gran roma edificaron
 tú que de humano tienes gesto y pecho
-(si de humano es matar una doncella
+si de humano es matar una doncella
 flaca y sin fuerza porque dió de hecho
-su corazón a quien supo vencella)
+su corazón a quien supo vencella
 detengan estos nietos tu despecho
 pues no puede la muerte obscura de ella
 moverte a compasión de ellos y mía
@@ -2810,8 +2810,8 @@ estas reliquias suyas que aquí viste
 consolación extrema de esta triste
 quería perdonarle el rey benino
 oyendo las palabras que la abonan
-mas el pertinaz pueblo (y su destino
-que así lo permitió) no la perdonan
+mas el pertinaz pueblo y su destino
+que así lo permitió no la perdonan
 echan mano al acero puro y fino
 los que este hecho bueno ser pregonan
 contra una dama pechos carniceros
@@ -2821,7 +2821,7 @@ consuelo sólo de la madre vieja
 porque el alma de aquiles la condena
 con hierro el duro pirro se apareja
 y ella con un mirar tierno serena
-(así como paciente y mansa oveja)
+así como paciente y mansa oveja
 vuelto el rostro a la madre que enloquece
 al duro sacrificio el cuello ofrece
 tales contra la inés los matadores
@@ -2873,7 +2873,7 @@ de todos los soberbios vituperios
 a más ladrones dió castigo feo
 que alcides el valiente ni teseo
 del justo y duro pedro nace el blando
-(ved de la naturaleza el caso extraño)
+ved de la naturaleza el caso extraño
 remiso y sin cuidado rey fernando
 por quien al reino vino tanto daño
 pues cuando el castellano entró talando
@@ -2977,7 +2977,7 @@ porque la hija al padre le sucede
 sus fuerzas ajuntó para las guerras
 de varias regiones varias tierras
 de la provincia vienen que de un brigo
-(si fué) ya tuvo el nombre derivado
+si fué ya tuvo el nombre derivado
 de tierras que fernando y rey rodrigo
 ganaron del tirano y moro estado
 no estiman en el campo al enemigo
@@ -3065,7 +3065,7 @@ el temor arrancar que ya tomasteis
 poned en boca y manos lazo y freno
 que yo desecharé este yugo ajeno
 con mis vasallos y con ésta puedo
-(sacando de la vaina media espada)
+sacando de la vaina media espada
 defender de tal fuerza y duro enredo
 la tierra nunca de otro sojuzgada
 en virtud de mi rey y patria quedo
@@ -3900,8 +3900,8 @@ no menos les fué a todos excesivo
 milagro y causa grande de harto espanto
 ver las nubes del mar con caño largo
 las aguas recoger del mar amargo
-yo lo vi ciertamente (y no presumo
-que la vista me engaña) levantarse
+yo lo vi ciertamente y no presumo
+que la vista me engaña levantarse
 en el aire un vapor de sutil humo
 y movido del viento rodearse
 alzarse de aquí un caño al polo sumo
@@ -4034,7 +4034,7 @@ tuvimos de la india deseada
 que estar muy lejos de ella este paraje
 y convenir seguir nuestro viaje
 preguntóle a veloso un compañero
-(estándose los más de esto riendo)
+estándose los más de esto riendo
 hola veloso amigo aquel otero
 es más fácil subiendo o descendiendo
 de bajar es mejor dijo el guerrero
@@ -4110,7 +4110,7 @@ de quien me descubrió grave venganza
 y no se acabará con esto el daño
 de vuestra no domada confianza
 antes en vuestras naos veréis cada año
-(si es cierto lo que aquí mi ciencia alcanza)
+si es cierto lo que aquí mi ciencia alcanza
 naufragios perdiciones de tal suerte
 que el menor mal de todos sea la muerte
 y del primer ilustre que ventura
@@ -4135,7 +4135,7 @@ vendrán los cafres ásperos y avaros
 a quitar a la dama sus vestidos
 los cristalinos miembros y preclaros
 al frío y al calor serán curtidos
-después de haber pisado ( oh grave pena )
+después de haber pisado oh grave pena
 con delicados pies la ardiente arena
 verán los que pudieren escaparse
 de tanto mal y grave desventura
@@ -5112,8 +5112,8 @@ mas dicen que después el gran magricio
 deseoso de ver cosas más grandes
 en la tierra se queda do un servicio
 a la condesa hizo que es de flandes
-(que profesando marte tu novicio
-no se acobardará en cuanto le mandes)
+que profesando marte tu novicio
+no se acobardará en cuanto le mandes
 un fiero francés mata que el destino
 de torcato traía y de corvino
 y de los doce un otro en alemaña
@@ -5468,7 +5468,7 @@ con despojos de nuestra europa rica
 griegos traces armenios georgianos
 gritos os dan que aqueste pueblo bruto
 sus hijuelos obliga a los profanos
-preceptos de mahoma ( cruel tributo )
+preceptos de mahoma cruel tributo
 en castigar los pechos inhumanos
 os gloriad de un pecho fuerte astuto
 y no queráis loores arrogantes
@@ -5530,7 +5530,7 @@ tienen de su remedio en las sonantes
 aguas de gange y tierra de bengala
 fértil de suerte que otra no la iguala
 el reino de cambaya belicoso
-(dicen que fué de poro rey potente)
+dicen que fué de poro rey potente
 el reino de narsinga poderoso
 más de oro y piedras que de fuerte gente
 divísase de aquí del mar undoso
@@ -6235,7 +6235,7 @@ con las cabezas dos de centinelas
 do la emboscada esconde con que alcanza
 la ciudad por sus mañas y cautelas
 cuya figura con tan gran pujanza
-por armas le sirvió (no de novelas)
+por armas le sirvió no de novelas
 a la ciudad hecho nunca hecho
 digno del gran giraldo y de su pecho
 no ves el caballero que agraviado
@@ -7629,7 +7629,7 @@ ahora con consejos bien pensados
 con la espada en la mano al brazo el manto
 respondiendo al valor de los pasados
 por lo imposible no toméis quebranto
-(siempre podrá el que quiere) y celebrados
+siempre podrá el que quiere y celebrados
 seréis con los héroes esclarecidos
 en esta isla de venus recibidos
 mas ya el claro amador de larisea
@@ -7767,7 +7767,7 @@ con sangre teñirá y cetro sublime
 y viendo que a pacheco le abandona
 su fuerza y que no hay fuerza que él estime
 inventará traiciones y venenos
-mas siempre (dios queriendo) hará menos
+mas siempre dios queriendo hará menos
 tornará la vez séptima cantaba
 a pelear con el invicto luso
 a quien trabajo alguno no espantaba
@@ -8257,7 +8257,7 @@ pues no se alza o abaja mas un puesto
 en toda parte tiene en cualquier parte
 está principio y fin por divina arte
 uniforme perfecto y sostenido
-en sí (tal arquetipo lo criara)
+en sí tal arquetipo lo criara
 viendo el gama tal globo conmovido
 de deseo y espanto se quedara
 aquí dijo la diosa reducido
@@ -8308,7 +8308,7 @@ en fin que el sumo dios que por segundas
 causas obra este mundo todo manda
 y tornando a contarte las profundas
 obras de aquesta mano veneranda
-debajo el orbe (ve no te confundas)
+debajo el orbe ve no te confundas
 donde gozan las almas que no se anda
 otro corre tan presto y tan ligero
 que no se ve el cual es móvil primero
@@ -8587,7 +8587,7 @@ dejáis a los infieles deslumbrados
 sal sois y si os podrís en vuestro caro
 nido donde profetas no hay nombrados
 con qué se salarán en nuestros días
-(infieles dejo) tantas herejías
+infieles dejo tantas herejías
 mas paso esta materia peligrosa
 tornemos a la costa dibujada
 ya con esta ciudad tan populosa
@@ -8802,7 +8802,7 @@ que los pechos levanta de contino
 a buscar en trabajos alegría
 pues rey que por consejo alto divino
 la gente gobernáis que el luso cría
-mirad que sólo sois (ved otras gentes)
+mirad que sólo sois ved otras gentes
 señor de unos vasallos excelentes
 mirad qué alegres van por las tormentas
 cuales fieros leones toros bravos
@@ -8825,7 +8825,7 @@ mostrándoles humana esa presencia
 de leyes les mitigue la aspereza
 que es el cierto camino de excelencia
 a los dignos encumbre en la grandeza
-(que tuvieren bondad con experiencia)
+que tuvieren bondad con experiencia
 de vuestro gran consejo pues que saben
 el cómo y cuándo y dó las cosas caben
 a todos dad favor en sus oficios
