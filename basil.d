@@ -11031,7 +11031,19 @@ string GetCapitalizedText(
     string text
     )
 {
-    return text.capitalize();
+    dstring
+        unicode_text;
+
+    if ( text == "" )
+    {
+        return "";
+    }
+    else
+    {
+        unicode_text = text.to!dstring();
+
+        return ( unicode_text[ 0 .. 1 ].capitalize() ~ unicode_text[ 1 .. $ ] ).to!string();
+    }
 }
 
 // ~~
