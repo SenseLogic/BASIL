@@ -348,6 +348,7 @@ plural
 
 <pre>
 [!]stored
+[!]added
 [!]edited
 [!]key
 [!]partitioned
@@ -487,24 +488,29 @@ POINTER[ <i>ELEMENT_TYPE</i> ] | !stored
 %%output file path
 
 <#content for each table#>
+<#^content for each stored table^#>
+<#°content for each non stored table°#>
+<#§content for each edited table§#>
+
 <%content for each column%>
 <@content for each key column@>
 <$content for each non key column$>
 
-<#^content for each stored table^#>
 <%^content for each stored column^%>
 <@^content for each stored key column^@>
 <$^content for each stored non key column^$>
 
-<#°content for each non stored table°#>
 <%°content for each non stored column°%>
 <@°content for each non stored key column°@>
 <$°content for each non stored non key column°$>
 
-<#§content for each edited table^#>
-<%§content for each edited column^%>
-<@§content for each edited key column^@>
-<$§content for each edited non key column^$>
+<%¨content for each added column¨%>
+<@¨content for each added key column¨@>
+<$¨content for each added non key column¨$>
+
+<%§content for each edited column§%>
+<@§content for each edited key column§@>
+<$§content for each edited non key column§$>
 
 <~Equals<>first text<>second text<>text if same texts~>
 <~Equals<>first text<>second text<>text if same texts<>text if not same texts~>
@@ -676,6 +682,12 @@ POINTER[ <i>ELEMENT_TYPE</i> ] | !stored
 {%is_non_stored_key%}
 {%is_stored_non_key%}
 {%is_non_stored_non_key%}
+{%is_added%}
+{%is_non_added%}
+{%is_added_key%}
+{%is_non_added_key%}
+{%is_added_non_key%}
+{%is_non_added_non_key%}
 {%is_edited%}
 {%is_non_edited%}
 {%is_edited_key%}
@@ -692,6 +704,12 @@ POINTER[ <i>ELEMENT_TYPE</i> ] | !stored
 {%is_first_non_stored_key%}
 {%is_first_stored_non_key%}
 {%is_first_non_stored_non_key%}
+{%is_first_added%}
+{%is_first_non_added%}
+{%is_first_added_key%}
+{%is_first_non_added_key%}
+{%is_first_added_non_key%}
+{%is_first_non_added_non_key%}
 {%is_first_edited%}
 {%is_first_non_edited%}
 {%is_first_edited_key%}
@@ -709,6 +727,12 @@ POINTER[ <i>ELEMENT_TYPE</i> ] | !stored
 {%is_last_non_stored_key%}
 {%is_last_stored_non_key%}
 {%is_last_non_stored_non_key%}
+{%is_last_added%}
+{%is_last_non_added%}
+{%is_last_added_key%}
+{%is_last_non_added_key%}
+{%is_last_added_non_key%}
+{%is_last_non_added_non_key%}
 {%is_last_edited%}
 {%is_last_non_edited%}
 {%is_last_edited_key%}

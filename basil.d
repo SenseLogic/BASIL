@@ -5018,6 +5018,7 @@ class COLUMN
         OrderIndex;
     bool
         IsStored,
+        IsAdded,
         IsEdited,
         IsUnique,
         IsKey,
@@ -5044,6 +5045,12 @@ class COLUMN
         IsFirstNonStoredKey,
         IsFirstStoredNonKey,
         IsFirstNonStoredNonKey,
+        IsFirstAdded,
+        IsFirstNonAdded,
+        IsFirstAddedKey,
+        IsFirstNonAddedKey,
+        IsFirstAddedNonKey,
+        IsFirstNonAddedNonKey,
         IsFirstEdited,
         IsFirstNonEdited,
         IsFirstEditedKey,
@@ -5061,6 +5068,12 @@ class COLUMN
         IsLastNonStoredKey,
         IsLastStoredNonKey,
         IsLastNonStoredNonKey,
+        IsLastAdded,
+        IsLastNonAdded,
+        IsLastAddedKey,
+        IsLastNonAddedKey,
+        IsLastAddedNonKey,
+        IsLastNonAddedNonKey,
         IsLastEdited,
         IsLastNonEdited,
         IsLastEditedKey,
@@ -5133,6 +5146,7 @@ class COLUMN
         Name = name.replace( " ", "" );
         Type = new TYPE( table, this, Name, type );
         IsStored = table.IsStored;
+        IsAdded = table.IsStored;
         IsEdited = table.IsEdited;
         MinimumRandomCount = table.RowCount;
         MaximumRandomCount = table.RowCount;
@@ -5339,6 +5353,12 @@ class COLUMN
         PropertyValueMap[ "is_non_stored_key" ] = GetBooleanText( !IsStored && IsKey );
         PropertyValueMap[ "is_stored_non_key" ] = GetBooleanText( IsStored && !IsKey );
         PropertyValueMap[ "is_non_stored_non_key" ] = GetBooleanText( !IsStored && !IsKey );
+        PropertyValueMap[ "is_added" ] = GetBooleanText( IsAdded );
+        PropertyValueMap[ "is_non_added" ] = GetBooleanText( !IsAdded );
+        PropertyValueMap[ "is_added_key" ] = GetBooleanText( IsAdded && IsKey );
+        PropertyValueMap[ "is_non_added_key" ] = GetBooleanText( !IsAdded && IsKey );
+        PropertyValueMap[ "is_added_non_key" ] = GetBooleanText( IsAdded && !IsKey );
+        PropertyValueMap[ "is_non_added_non_key" ] = GetBooleanText( !IsAdded && !IsKey );
         PropertyValueMap[ "is_edited" ] = GetBooleanText( IsEdited );
         PropertyValueMap[ "is_non_edited" ] = GetBooleanText( !IsEdited );
         PropertyValueMap[ "is_edited_key" ] = GetBooleanText( IsEdited && IsKey );
@@ -5356,6 +5376,12 @@ class COLUMN
         PropertyValueMap[ "is_first_non_stored_key" ] = GetBooleanText( IsFirstNonStoredKey );
         PropertyValueMap[ "is_first_stored_non_key" ] = GetBooleanText( IsFirstStoredNonKey );
         PropertyValueMap[ "is_first_non_stored_non_key" ] = GetBooleanText( IsFirstNonStoredNonKey );
+        PropertyValueMap[ "is_first_added" ] = GetBooleanText( IsFirstAdded );
+        PropertyValueMap[ "is_first_non_added" ] = GetBooleanText( IsFirstNonAdded );
+        PropertyValueMap[ "is_first_added_key" ] = GetBooleanText( IsFirstAddedKey );
+        PropertyValueMap[ "is_first_non_added_key" ] = GetBooleanText( IsFirstNonAddedKey );
+        PropertyValueMap[ "is_first_added_non_key" ] = GetBooleanText( IsFirstAddedNonKey );
+        PropertyValueMap[ "is_first_non_added_non_key" ] = GetBooleanText( IsFirstNonAddedNonKey );
         PropertyValueMap[ "is_first_edited" ] = GetBooleanText( IsFirstEdited );
         PropertyValueMap[ "is_first_non_edited" ] = GetBooleanText( IsFirstNonEdited );
         PropertyValueMap[ "is_first_edited_key" ] = GetBooleanText( IsFirstEditedKey );
@@ -5373,6 +5399,12 @@ class COLUMN
         PropertyValueMap[ "is_last_non_stored_key" ] = GetBooleanText( IsLastNonStoredKey );
         PropertyValueMap[ "is_last_stored_non_key" ] = GetBooleanText( IsLastStoredNonKey );
         PropertyValueMap[ "is_last_non_stored_non_key" ] = GetBooleanText( IsLastNonStoredNonKey );
+        PropertyValueMap[ "is_last_added" ] = GetBooleanText( IsLastAdded );
+        PropertyValueMap[ "is_last_non_added" ] = GetBooleanText( IsLastNonAdded );
+        PropertyValueMap[ "is_last_added_key" ] = GetBooleanText( IsLastAddedKey );
+        PropertyValueMap[ "is_last_non_added_key" ] = GetBooleanText( IsLastNonAddedKey );
+        PropertyValueMap[ "is_last_added_non_key" ] = GetBooleanText( IsLastAddedNonKey );
+        PropertyValueMap[ "is_last_non_added_non_key" ] = GetBooleanText( IsLastNonAddedNonKey );
         PropertyValueMap[ "is_last_edited" ] = GetBooleanText( IsLastEdited );
         PropertyValueMap[ "is_last_non_edited" ] = GetBooleanText( IsLastNonEdited );
         PropertyValueMap[ "is_last_edited_key" ] = GetBooleanText( IsLastEditedKey );
@@ -5431,6 +5463,16 @@ class COLUMN
                       && value_text_array.length == 2 )
             {
                 IsStored = ( value_text_array[ 1 ] != "false" );
+
+                if ( !IsStored )
+                {
+                    IsAdded = false;
+                }
+            }
+            else if ( property_name == "added"
+                      && value_text_array.length == 2 )
+            {
+                IsAdded = ( value_text_array[ 1 ] != "false" );
             }
             else if ( property_name == "edited"
                       && value_text_array.length == 2 )
@@ -5486,8 +5528,9 @@ class COLUMN
                       && value_text_array.length == 2 )
             {
                 IsIncremented = ( value_text_array[ 1 ] != "false" );
+                IsAdded = false;
             }
-            else if ( property_name == "constrainde"
+            else if ( property_name == "constrained"
                       && value_text_array.length == 2 )
             {
                 IsConstrained = ( value_text_array[ 1 ] != "false" );
@@ -5524,6 +5567,7 @@ class COLUMN
                       && value_text_array.length == 2 )
             {
                 IsNow = ( value_text_array[ 1 ] != "false" );
+                IsAdded = false;
             }
             else if ( property_name == "sqlname"
                       && value_text_array.length == 2 )
@@ -6250,7 +6294,7 @@ class TABLE
         )
     {
         return
-            GetAddDatabaseObjectPhoenixCode()
+            GetAddDatabaseObjectGenerisCode()
                 .replace( "func AddDatabase", "func PutDatabase" )
                 .replace( "insert into", "replace into" );
     }
@@ -8383,12 +8427,18 @@ class TABLE
         )
     {
         COLUMN
+            first_added_column,
+            first_added_key_column,
+            first_added_non_key_column,
             first_column,
             first_edited_column,
             first_edited_key_column,
             first_edited_non_key_column,
             first_incremented_column,
             first_key_column,
+            first_non_added_column,
+            first_non_added_key_column,
+            first_non_added_non_key_column,
             first_non_edited_column,
             first_non_edited_key_column,
             first_non_edited_non_key_column,
@@ -8400,12 +8450,18 @@ class TABLE
             first_stored_column,
             first_stored_key_column,
             first_stored_non_key_column,
+            last_added_column,
+            last_added_key_column,
+            last_added_non_key_column,
             last_column,
             last_edited_column,
             last_edited_key_column,
             last_edited_non_key_column,
             last_incremented_column,
             last_key_column,
+            last_non_added_column,
+            last_non_added_key_column,
+            last_non_added_non_key_column,
             last_non_edited_column,
             last_non_edited_key_column,
             last_non_edited_non_key_column,
@@ -8434,6 +8490,12 @@ class TABLE
         first_non_stored_key_column = null;
         first_stored_non_key_column = null;
         first_non_stored_non_key_column = null;
+        first_added_column = null;
+        first_non_added_column = null;
+        first_added_key_column = null;
+        first_non_added_key_column = null;
+        first_added_non_key_column = null;
+        first_non_added_non_key_column = null;
         first_edited_column = null;
         first_non_edited_column = null;
         first_edited_key_column = null;
@@ -8452,6 +8514,12 @@ class TABLE
         last_non_stored_key_column = null;
         last_stored_non_key_column = null;
         last_non_stored_non_key_column = null;
+        last_added_column = null;
+        last_non_added_column = null;
+        last_added_key_column = null;
+        last_non_added_key_column = null;
+        last_added_non_key_column = null;
+        last_non_added_non_key_column = null;
         last_edited_column = null;
         last_non_edited_column = null;
         last_edited_key_column = null;
@@ -8507,6 +8575,40 @@ class TABLE
                  && !column.IsKey )
             {
                 first_non_stored_non_key_column = column;
+            }
+
+            if ( column.IsAdded )
+            {
+                first_added_column = column;
+            }
+
+            if ( !column.IsAdded )
+            {
+                first_non_added_column = column;
+            }
+
+            if ( column.IsAdded
+                 && column.IsKey )
+            {
+                first_added_key_column = column;
+            }
+
+            if ( !column.IsAdded
+                 && column.IsKey )
+            {
+                first_non_added_key_column = column;
+            }
+
+            if ( column.IsAdded
+                 && !column.IsKey )
+            {
+                first_added_non_key_column = column;
+            }
+
+            if ( !column.IsAdded
+                 && !column.IsKey )
+            {
+                first_non_added_non_key_column = column;
             }
 
             if ( column.IsEdited )
@@ -8602,6 +8704,40 @@ class TABLE
                 last_non_stored_non_key_column = column;
             }
 
+            if ( column.IsAdded )
+            {
+                last_added_column = column;
+            }
+
+            if ( !column.IsAdded )
+            {
+                last_non_added_column = column;
+            }
+
+            if ( column.IsAdded
+                 && column.IsKey )
+            {
+                last_added_key_column = column;
+            }
+
+            if ( !column.IsAdded
+                 && column.IsKey )
+            {
+                last_non_added_key_column = column;
+            }
+
+            if ( column.IsAdded
+                 && !column.IsKey )
+            {
+                last_added_non_key_column = column;
+            }
+
+            if ( !column.IsAdded
+                 && !column.IsKey )
+            {
+                last_non_added_non_key_column = column;
+            }
+
             if ( column.IsEdited )
             {
                 last_edited_column = column;
@@ -8692,6 +8828,66 @@ class TABLE
             first_non_stored_non_key_column.IsFirstNonStoredNonKey = true;
         }
 
+        if ( first_added_column !is null )
+        {
+            first_added_column.IsFirstAdded = true;
+        }
+
+        if ( first_non_added_column !is null )
+        {
+            first_non_added_column.IsFirstNonAdded = true;
+        }
+
+        if ( first_added_key_column !is null )
+        {
+            first_added_key_column.IsFirstAddedKey = true;
+        }
+
+        if ( first_non_added_key_column !is null )
+        {
+            first_non_added_key_column.IsFirstNonAddedKey = true;
+        }
+
+        if ( first_added_non_key_column !is null )
+        {
+            first_added_non_key_column.IsFirstAddedNonKey = true;
+        }
+
+        if ( first_non_added_non_key_column !is null )
+        {
+            first_non_added_non_key_column.IsFirstNonAddedNonKey = true;
+        }
+
+        if ( first_added_column !is null )
+        {
+            first_added_column.IsFirstAdded = true;
+        }
+
+        if ( first_non_added_column !is null )
+        {
+            first_non_added_column.IsFirstNonAdded = true;
+        }
+
+        if ( first_added_key_column !is null )
+        {
+            first_added_key_column.IsFirstAddedKey = true;
+        }
+
+        if ( first_non_added_key_column !is null )
+        {
+            first_non_added_key_column.IsFirstNonAddedKey = true;
+        }
+
+        if ( first_added_non_key_column !is null )
+        {
+            first_added_non_key_column.IsFirstAddedNonKey = true;
+        }
+
+        if ( first_non_added_non_key_column !is null )
+        {
+            first_non_added_non_key_column.IsFirstNonAddedNonKey = true;
+        }
+
         if ( first_edited_column !is null )
         {
             first_edited_column.IsFirstEdited = true;
@@ -8775,6 +8971,36 @@ class TABLE
         if ( last_non_stored_non_key_column !is null )
         {
             last_non_stored_non_key_column.IsLastNonStoredNonKey = true;
+        }
+
+        if ( last_added_column !is null )
+        {
+            last_added_column.IsLastAdded = true;
+        }
+
+        if ( last_non_added_column !is null )
+        {
+            last_non_added_column.IsLastNonAdded = true;
+        }
+
+        if ( last_added_key_column !is null )
+        {
+            last_added_key_column.IsLastAddedKey = true;
+        }
+
+        if ( last_non_added_key_column !is null )
+        {
+            last_non_added_key_column.IsLastNonAddedKey = true;
+        }
+
+        if ( last_added_non_key_column !is null )
+        {
+            last_added_non_key_column.IsLastAddedNonKey = true;
+        }
+
+        if ( last_non_added_non_key_column !is null )
+        {
+            last_non_added_non_key_column.IsLastNonAddedNonKey = true;
         }
 
         if ( last_edited_column !is null )
@@ -11546,6 +11772,7 @@ string ReplaceColumnTags(
     )
 {
     bool
+        added_is_checked,
         edited_is_checked,
         key_is_checked,
         stored_is_checked,
@@ -11562,16 +11789,17 @@ string ReplaceColumnTags(
         template_part_array;
 
     for ( tag_index = 0;
-          tag_index < 12;
+          tag_index < 15;
           ++tag_index )
     {
-        opening_tag = [ "<%^", "<@^", "<$^", "<%°", "<@°", "<$°", "<%§", "<@§", "<$§", "<%", "<@", "<$" ][ tag_index ];
-        closing_tag = [ "^%>", "^@>", "^$>", "°%>", "°@>", "°$>", "§%>", "§@>", "§$>", "%>", "@>", "$>" ][ tag_index ];
-        key_is_checked = [ false, true, true, false, true, true, false, true, true, false, true, true ][ tag_index ];
-        column_is_key = [ false, true, false, false, true, false, false, true, false, false, true, false ][ tag_index ];
-        stored_is_checked = [ true, true, true, true, true, true, false, false, false, false, false, false ][ tag_index ];
-        column_is_stored = [ true, true, true, false, false, false, false, false, false, false, false, false ][ tag_index ];
-        edited_is_checked = [ false, false, false, false, false, false, true, true, true, false, false, false ][ tag_index ];
+        opening_tag = [ "<%^", "<@^", "<$^", "<%°", "<@°", "<$°", "<%¨", "<@¨", "<$¨", "<%§", "<@§", "<$§", "<%", "<@", "<$" ][ tag_index ];
+        closing_tag = [ "^%>", "^@>", "^$>", "°%>", "°@>", "°$>", "¨%>", "¨@>", "¨$>", "§%>", "§@>", "§$>", "%>", "@>", "$>" ][ tag_index ];
+        key_is_checked = [ false, true, true, false, true, true, false, true, true, false, true, true, false, true, true ][ tag_index ];
+        column_is_key = [ false, true, false, false, true, false, false, true, false, false, true, false, false, true, false ][ tag_index ];
+        stored_is_checked = [ true, true, true, true, true, true, false, false, false, false, false, false, false, false, false ][ tag_index ];
+        column_is_stored = [ true, true, true, false, false, false, false, false, false, false, false, false, false, false, false ][ tag_index ];
+        added_is_checked = [ false, false, false, false, false, false, true, true, true, false, false, false, false, false, false ][ tag_index ];
+        edited_is_checked = [ false, false, false, false, false, false, false, false, false, true, true, true, false, false, false ][ tag_index ];
 
         template_part_array = template_text.GetPartArray( opening_tag, closing_tag );
 
@@ -11585,6 +11813,7 @@ string ReplaceColumnTags(
                 {
                     if ( ( !key_is_checked || column.IsKey == column_is_key )
                          && ( !stored_is_checked || column.IsStored == column_is_stored )
+                         && ( !added_is_checked || column.IsAdded )
                          && ( !edited_is_checked || column.IsEdited ) )
                     {
                         instance_part ~= column.ReplaceProperties( template_part );
