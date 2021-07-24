@@ -45,30 +45,49 @@ func AddDatabaseSection(
 
 // ~~
 
-
-// ~~
-
-function AddDatabaseSection(
-    int number,
-    string slug,
-    string name,
-    string text,
-    string image
-    )
+func PutDatabaseSection(
+    section * SECTION,
+    error_code * ERROR_CODE
+    ) bool
 {
-    var statement = GetDatabaseStatement( 'replace into `SECTION` ( `Number`, `Slug`, `Name`, `Text`, `Image` ) values ( ?, ?, ?, ?, ? )' );
-    statement.bindParam( 1, number, PDO::PARAM_INT );
-    statement.bindParam( 2, slug, PDO::PARAM_STR );
-    statement.bindParam( 3, name, PDO::PARAM_STR );
-    statement.bindParam( 4, text, PDO::PARAM_STR );
-    statement.bindParam( 5, image, PDO::PARAM_STR );
+    statement, error_
+        := DatabaseSession.Prepare(
+               "replace into `SECTION` ( `Number`, `Slug`, `Name`, `Text`, `Image` ) values ( ?, ?, ?, ?, ? )"
+               );
 
-    if ( !statement.execute() )
+    if ( error_ != nil )
     {
-        var_dump( statement.errorInfo() );
+        error_code.SetError( error_, http.StatusBadRequest );
+
+        return false;
     }
 
-    return GetDatabaseAddedId( statement );
+    result, error_
+        := statement.Exec(
+               section.Number,
+               section.Slug,
+               section.Name,
+               section.Text,
+               section.Image
+               );
+
+    if ( error_ != nil )
+    {
+        error_code.SetError( error_, http.StatusBadRequest );
+
+        return false;
+    }
+
+    section.Id, error_ = result.LastInsertId();
+
+    if ( error_ != nil )
+    {
+        error_code.SetError( error_, http.StatusBadRequest );
+
+        return false;
+    }
+
+    return true;
 }
 
 // ~~
@@ -319,46 +338,57 @@ func AddDatabaseUser(
 
 // ~~
 
-
-// ~~
-
-function AddDatabaseUser(
-    string first_name,
-    string last_name,
-    string email,
-    string pseudonym,
-    string password,
-    string phone,
-    string street,
-    string city,
-    string code,
-    string region,
-    string country,
-    string company,
-    bool it_is_administrator
-    )
+func PutDatabaseUser(
+    user * USER,
+    error_code * ERROR_CODE
+    ) bool
 {
-    var statement = GetDatabaseStatement( 'replace into `USER` ( `FirstName`, `LastName`, `Email`, `Pseudonym`, `Password`, `Phone`, `Street`, `City`, `Code`, `Region`, `Country`, `Company`, `ItIsAdministrator` ) values ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? )' );
-    statement.bindParam( 1, first_name, PDO::PARAM_STR );
-    statement.bindParam( 2, last_name, PDO::PARAM_STR );
-    statement.bindParam( 3, email, PDO::PARAM_STR );
-    statement.bindParam( 4, pseudonym, PDO::PARAM_STR );
-    statement.bindParam( 5, password, PDO::PARAM_STR );
-    statement.bindParam( 6, phone, PDO::PARAM_STR );
-    statement.bindParam( 7, street, PDO::PARAM_STR );
-    statement.bindParam( 8, city, PDO::PARAM_STR );
-    statement.bindParam( 9, code, PDO::PARAM_STR );
-    statement.bindParam( 10, region, PDO::PARAM_STR );
-    statement.bindParam( 11, country, PDO::PARAM_STR );
-    statement.bindParam( 12, company, PDO::PARAM_STR );
-    statement.bindParam( 13, it_is_administrator, PDO::PARAM_BOOL );
+    statement, error_
+        := DatabaseSession.Prepare(
+               "replace into `USER` ( `FirstName`, `LastName`, `Email`, `Pseudonym`, `Password`, `Phone`, `Street`, `City`, `Code`, `Region`, `Country`, `Company`, `ItIsAdministrator` ) values ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? )"
+               );
 
-    if ( !statement.execute() )
+    if ( error_ != nil )
     {
-        var_dump( statement.errorInfo() );
+        error_code.SetError( error_, http.StatusBadRequest );
+
+        return false;
     }
 
-    return GetDatabaseAddedId( statement );
+    result, error_
+        := statement.Exec(
+               user.FirstName,
+               user.LastName,
+               user.Email,
+               user.Pseudonym,
+               user.Password,
+               user.Phone,
+               user.Street,
+               user.City,
+               user.Code,
+               user.Region,
+               user.Country,
+               user.Company,
+               user.ItIsAdministrator
+               );
+
+    if ( error_ != nil )
+    {
+        error_code.SetError( error_, http.StatusBadRequest );
+
+        return false;
+    }
+
+    user.Id, error_ = result.LastInsertId();
+
+    if ( error_ != nil )
+    {
+        error_code.SetError( error_, http.StatusBadRequest );
+
+        return false;
+    }
+
+    return true;
 }
 
 // ~~
@@ -626,32 +656,50 @@ func AddDatabaseArticle(
 
 // ~~
 
-
-// ~~
-
-function AddDatabaseArticle(
-    int section_id,
-    int user_id,
-    string slug,
-    string title,
-    string text,
-    string image
-    )
+func PutDatabaseArticle(
+    article * ARTICLE,
+    error_code * ERROR_CODE
+    ) bool
 {
-    var statement = GetDatabaseStatement( 'replace into `ARTICLE` ( `SectionId`, `UserId`, `Slug`, `Title`, `Text`, `Image`, `Date` ) values ( ?, ?, ?, ?, ?, ?, date( now() ) )' );
-    statement.bindParam( 1, section_id, PDO::PARAM_INT );
-    statement.bindParam( 2, user_id, PDO::PARAM_INT );
-    statement.bindParam( 3, slug, PDO::PARAM_STR );
-    statement.bindParam( 4, title, PDO::PARAM_STR );
-    statement.bindParam( 5, text, PDO::PARAM_STR );
-    statement.bindParam( 6, image, PDO::PARAM_STR );
+    statement, error_
+        := DatabaseSession.Prepare(
+               "replace into `ARTICLE` ( `SectionId`, `UserId`, `Slug`, `Title`, `Text`, `Image`, `Date` ) values ( ?, ?, ?, ?, ?, ?, date( now() ) )"
+               );
 
-    if ( !statement.execute() )
+    if ( error_ != nil )
     {
-        var_dump( statement.errorInfo() );
+        error_code.SetError( error_, http.StatusBadRequest );
+
+        return false;
     }
 
-    return GetDatabaseAddedId( statement );
+    result, error_
+        := statement.Exec(
+               article.SectionId,
+               article.UserId,
+               article.Slug,
+               article.Title,
+               article.Text,
+               article.Image
+               );
+
+    if ( error_ != nil )
+    {
+        error_code.SetError( error_, http.StatusBadRequest );
+
+        return false;
+    }
+
+    article.Id, error_ = result.LastInsertId();
+
+    if ( error_ != nil )
+    {
+        error_code.SetError( error_, http.StatusBadRequest );
+
+        return false;
+    }
+
+    return true;
 }
 
 // ~~
@@ -898,26 +946,47 @@ func AddDatabaseComment(
 
 // ~~
 
-
-// ~~
-
-function AddDatabaseComment(
-    int article_id,
-    int user_id,
-    string text
-    )
+func PutDatabaseComment(
+    comment * COMMENT,
+    error_code * ERROR_CODE
+    ) bool
 {
-    var statement = GetDatabaseStatement( 'replace into `COMMENT` ( `ArticleId`, `UserId`, `Text`, `DateTime` ) values ( ?, ?, ?, now() )' );
-    statement.bindParam( 1, article_id, PDO::PARAM_INT );
-    statement.bindParam( 2, user_id, PDO::PARAM_INT );
-    statement.bindParam( 3, text, PDO::PARAM_STR );
+    statement, error_
+        := DatabaseSession.Prepare(
+               "replace into `COMMENT` ( `ArticleId`, `UserId`, `Text`, `DateTime` ) values ( ?, ?, ?, now() )"
+               );
 
-    if ( !statement.execute() )
+    if ( error_ != nil )
     {
-        var_dump( statement.errorInfo() );
+        error_code.SetError( error_, http.StatusBadRequest );
+
+        return false;
     }
 
-    return GetDatabaseAddedId( statement );
+    result, error_
+        := statement.Exec(
+               comment.ArticleId,
+               comment.UserId,
+               comment.Text
+               );
+
+    if ( error_ != nil )
+    {
+        error_code.SetError( error_, http.StatusBadRequest );
+
+        return false;
+    }
+
+    comment.Id, error_ = result.LastInsertId();
+
+    if ( error_ != nil )
+    {
+        error_code.SetError( error_, http.StatusBadRequest );
+
+        return false;
+    }
+
+    return true;
 }
 
 // ~~
@@ -1154,24 +1223,46 @@ func AddDatabaseSubscriber(
 
 // ~~
 
-
-// ~~
-
-function AddDatabaseSubscriber(
-    string name,
-    string email
-    )
+func PutDatabaseSubscriber(
+    subscriber * SUBSCRIBER,
+    error_code * ERROR_CODE
+    ) bool
 {
-    var statement = GetDatabaseStatement( 'replace into `SUBSCRIBER` ( `Name`, `Email` ) values ( ?, ? )' );
-    statement.bindParam( 1, name, PDO::PARAM_STR );
-    statement.bindParam( 2, email, PDO::PARAM_STR );
+    statement, error_
+        := DatabaseSession.Prepare(
+               "replace into `SUBSCRIBER` ( `Name`, `Email` ) values ( ?, ? )"
+               );
 
-    if ( !statement.execute() )
+    if ( error_ != nil )
     {
-        var_dump( statement.errorInfo() );
+        error_code.SetError( error_, http.StatusBadRequest );
+
+        return false;
     }
 
-    return GetDatabaseAddedId( statement );
+    result, error_
+        := statement.Exec(
+               subscriber.Name,
+               subscriber.Email
+               );
+
+    if ( error_ != nil )
+    {
+        error_code.SetError( error_, http.StatusBadRequest );
+
+        return false;
+    }
+
+    subscriber.Id, error_ = result.LastInsertId();
+
+    if ( error_ != nil )
+    {
+        error_code.SetError( error_, http.StatusBadRequest );
+
+        return false;
+    }
+
+    return true;
 }
 
 // ~~

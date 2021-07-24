@@ -308,6 +308,12 @@ count <i>row_count</i>
 real <i>minimum_value</i> <i>maximum_value</i>
 integer <i>minimum_value</i> <i>maximum_value</i>
 natural <i>minimum_value</i> <i>maximum_value</i> <i>digit_count</i>
+date <i>minimum_year<i> <i>maximum_year</i>
+time <i>minimum_hour<i> <i>maximum_hour</i>
+blob <i>hexadecimal_digit_count</i>
+uuid
+isbn
+tag_list <i>minimum_word_count</i>  <i>maximum_word_count</i>
 english <i>minimum_sentence_count</i> <i>maximum_sentence_count</i> <i>minimum_word_count</i> <i>maximum_word_count</i>
 french <i>minimum_sentence_count</i> <i>maximum_sentence_count</i> <i>minimum_word_count</i> <i>maximum_word_count</i>
 german <i>minimum_sentence_count</i> <i>maximum_sentence_count</i> <i>minimum_word_count</i> <i>maximum_word_count</i>
@@ -317,6 +323,21 @@ name <i>minimum_letter_count</i> <i>maximum_letter_count</i>
 first_name
 last_name
 full_name
+password
+phone_number
+street_name
+street_address
+city_code
+city_name
+region_name
+country_name
+country_code
+company_name
+image_file_name
+audio_file_name
+video_file_name
+file_name
+folder_path
 <i>column_name</i>
 </pre>
 

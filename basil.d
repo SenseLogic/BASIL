@@ -536,10 +536,12 @@ class RANDOM
     // ~~
 
     string MakeDate(
+        long minimum_year = 2000,
+        long maximum_year = 2015
         )
     {
         return
-            MakeInteger( 2000, 2015 ).to!string()
+            MakeInteger( minimum_year, maximum_year ).to!string()
             ~ "-"
             ~ MakeNatural( 1, 12, 2 ).to!string()
             ~ "-"
@@ -549,6 +551,8 @@ class RANDOM
     // ~~
 
     string MakeTime(
+        ulong minimum_hour = 0,
+        ulong maximum_hour = 23
         )
     {
         return
@@ -971,7 +975,7 @@ class RANDOM
 
     // ~~
 
-    string MakePhone(
+    string MakePhoneNumber(
         )
     {
         return
@@ -1007,7 +1011,7 @@ class RANDOM
 
     // ~~
 
-    string MakeAddress(
+    string MakeStreetAddress(
         )
     {
         return
@@ -1162,7 +1166,7 @@ class RANDOM
 
     // ~~
 
-    string MakeImageName(
+    string MakeImageFileName(
         )
     {
         return
@@ -1176,7 +1180,7 @@ class RANDOM
 
     // ~~
 
-    string MakeAudioName(
+    string MakeAudioFileName(
         )
     {
         return
@@ -1190,7 +1194,7 @@ class RANDOM
 
     // ~~
 
-    string MakeVideoName(
+    string MakeVideoFileName(
         )
     {
         return
@@ -1238,9 +1242,11 @@ class RANDOM
     // ~~
 
     string MakeTagList(
+        long minimum_word_count = 5,
+        long maximum_word_count = 10
         )
     {
-        return MakeEnglishSentence( 5, 10 ).replace( " ", ", " );
+        return MakeEnglishSentence( minimum_word_count, maximum_word_count ).toLower().replace( " ", ", " );
     }
 
     // ~~
@@ -3099,8 +3105,8 @@ class TYPE
                             {
                                 template_part
                                     = Random.MakeInteger(
-                                          ( filter_argument_count > 0 ) ? filter_argument_array[ 0 ].to!long() : 1,
-                                          ( filter_argument_count > 1 ) ? filter_argument_array[ 1 ].to!long() : 100
+                                          ( filter_argument_count > 0 ) ? filter_argument_array[ 0 ].to!long() : 2000,
+                                          ( filter_argument_count > 1 ) ? filter_argument_array[ 1 ].to!long() : 2015
                                           ).to!string();
                             }
                             else if ( filter_name == "natural" )
@@ -3111,6 +3117,45 @@ class TYPE
                                           ( filter_argument_count > 1 ) ? filter_argument_array[ 1 ].to!ulong() : 100,
                                           ( filter_argument_count > 2 ) ? filter_argument_array[ 2 ].to!long() : 0
                                           ).to!string();
+                            }
+                            else if ( filter_name == "date" )
+                            {
+                                template_part
+                                    = Random.MakeDate(
+                                          ( filter_argument_count > 0 ) ? filter_argument_array[ 0 ].to!long() : 1,
+                                          ( filter_argument_count > 1 ) ? filter_argument_array[ 1 ].to!long() : 100
+                                          ).to!string();
+                            }
+                            else if ( filter_name == "time" )
+                            {
+                                template_part
+                                    = Random.MakeTime(
+                                          ( filter_argument_count > 0 ) ? filter_argument_array[ 0 ].to!ulong() : 0,
+                                          ( filter_argument_count > 1 ) ? filter_argument_array[ 1 ].to!ulong() : 23
+                                          ).to!string();
+                            }
+                            else if ( filter_name == "blob" )
+                            {
+                                template_part
+                                    = Random.MakeBlob(
+                                          ( filter_argument_count > 0 ) ? filter_argument_array[ 0 ].to!long() : 0
+                                          ).to!string();
+                            }
+                            else if ( filter_name == "uuid" )
+                            {
+                                template_part = Random.MakeUuid();
+                            }
+                            else if ( filter_name == "isbn" )
+                            {
+                                template_part = Random.MakeIsbn();
+                            }
+                            else if ( filter_name == "tag_list" )
+                            {
+                                template_part
+                                    = Random.MakeTagList(
+                                          ( filter_argument_count > 0 ) ? filter_argument_array[ 0 ].to!long() : 5,
+                                          ( filter_argument_count > 1 ) ? filter_argument_array[ 1 ].to!long() : 10
+                                          );
                             }
                             else if ( filter_name == "english" )
                             {
@@ -3145,22 +3190,22 @@ class TYPE
                                           ( filter_argument_count > 3 ) ? filter_argument_array[ 3 ].to!long() : 9
                                           );
                             }
-                            else if ( filter_name == "spanish" )
+                            else if ( filter_name == "latin" )
                             {
                                 template_part
                                     = Random.MakeText(
-                                          "spanish",
+                                          "latin",
                                           ( filter_argument_count > 0 ) ? filter_argument_array[ 0 ].to!long() : 3,
                                           ( filter_argument_count > 1 ) ? filter_argument_array[ 1 ].to!long() : 5,
                                           ( filter_argument_count > 2 ) ? filter_argument_array[ 2 ].to!long() : 7,
                                           ( filter_argument_count > 3 ) ? filter_argument_array[ 3 ].to!long() : 9
                                           );
                             }
-                            else if ( filter_name == "latin" )
+                            else if ( filter_name == "spanish" )
                             {
                                 template_part
                                     = Random.MakeText(
-                                          "latin",
+                                          "spanish",
                                           ( filter_argument_count > 0 ) ? filter_argument_array[ 0 ].to!long() : 3,
                                           ( filter_argument_count > 1 ) ? filter_argument_array[ 1 ].to!long() : 5,
                                           ( filter_argument_count > 2 ) ? filter_argument_array[ 2 ].to!long() : 7,
@@ -3189,6 +3234,81 @@ class TYPE
                                       && filter_argument_count == 0 )
                             {
                                 template_part = Random.MakeFullName();
+                            }
+                            else if ( filter_name == "password"
+                                      && filter_argument_count == 0 )
+                            {
+                                template_part = Random.MakePassword();
+                            }
+                            else if ( filter_name == "phone_number"
+                                      && filter_argument_count == 0 )
+                            {
+                                template_part = Random.MakePhoneNumber();
+                            }
+                            else if ( filter_name == "street_name"
+                                      && filter_argument_count == 0 )
+                            {
+                                template_part = Random.MakeStreetName();
+                            }
+                            else if ( filter_name == "street_address"
+                                      && filter_argument_count == 0 )
+                            {
+                                template_part = Random.MakeStreetAddress();
+                            }
+                            else if ( filter_name == "city_code"
+                                      && filter_argument_count == 0 )
+                            {
+                                template_part = Random.MakeCityCode();
+                            }
+                            else if ( filter_name == "city_name"
+                                      && filter_argument_count == 0 )
+                            {
+                                template_part = Random.MakeCityName();
+                            }
+                            else if ( filter_name == "region_name"
+                                      && filter_argument_count == 0 )
+                            {
+                                template_part = Random.MakeRegionName();
+                            }
+                            else if ( filter_name == "country_name"
+                                      && filter_argument_count == 0 )
+                            {
+                                template_part = Random.MakeCountryName();
+                            }
+                            else if ( filter_name == "country_code"
+                                      && filter_argument_count == 0 )
+                            {
+                                template_part = Random.MakeCountryCode();
+                            }
+                            else if ( filter_name == "company_name"
+                                      && filter_argument_count == 0 )
+                            {
+                                template_part = Random.MakeCompanyName();
+                            }
+                            else if ( filter_name == "image_file_name"
+                                      && filter_argument_count == 0 )
+                            {
+                                template_part = Random.MakeImageFileName();
+                            }
+                            else if ( filter_name == "audio_file_name"
+                                      && filter_argument_count == 0 )
+                            {
+                                template_part = Random.MakeAudioFileName();
+                            }
+                            else if ( filter_name == "video_file_name"
+                                      && filter_argument_count == 0 )
+                            {
+                                template_part = Random.MakeVideoFileName();
+                            }
+                            else if ( filter_name == "file_name"
+                                      && filter_argument_count == 0 )
+                            {
+                                template_part = Random.MakeFileName();
+                            }
+                            else if ( filter_name == "folder_path"
+                                      && filter_argument_count == 0 )
+                            {
+                                template_part = Random.MakeFolderPath();
                             }
                             else if ( filter_name == "remove_prefix"
                                       && filter_argument_count == 1 )
@@ -4697,7 +4817,7 @@ class VALUE
                 else if ( Type.ColumnName.endsWith( "Phone" )
                           || Type.ColumnName.endsWith( "PhoneNumber" ) )
                 {
-                    Text = Random.MakePhone();
+                    Text = Random.MakePhoneNumber();
                 }
                 else if ( Type.ColumnName.endsWith( "Street" )
                           || Type.ColumnName.endsWith( "StreetName" ) )
@@ -4706,7 +4826,7 @@ class VALUE
                 }
                 else if ( Type.ColumnName.endsWith( "Address" ) )
                 {
-                    Text = Random.MakeAddress();
+                    Text = Random.MakeStreetAddress();
                 }
                 else if ( Type.ColumnName.endsWith( "CountryCode" ) )
                 {
@@ -4743,7 +4863,7 @@ class VALUE
                           || Type.ColumnName.endsWith( "PictureName" )
                           || Type.ColumnName.endsWith( "BackgroundName" ) )
                 {
-                    Text = Random.MakeImageName();
+                    Text = Random.MakeImageFileName();
                 }
                 else if ( Type.ColumnName.endsWith( "Audio" )
                           || Type.ColumnName.endsWith( "Sound" )
@@ -4754,14 +4874,14 @@ class VALUE
                           || Type.ColumnName.endsWith( "MusicName" )
                           || Type.ColumnName.endsWith( "ClipName" ) )
                 {
-                    Text = Random.MakeAudioName();
+                    Text = Random.MakeAudioFileName();
                 }
                 else if ( Type.ColumnName.endsWith( "Video" )
                           || Type.ColumnName.endsWith( "Movie" )
                           || Type.ColumnName.endsWith( "VideoName" )
                           || Type.ColumnName.endsWith( "MovieName" ) )
                 {
-                    Text = Random.MakeVideoName();
+                    Text = Random.MakeVideoFileName();
                 }
                 else if ( Type.ColumnName.endsWith( "File" )
                           || Type.ColumnName.endsWith( "FilePath" ) )
@@ -4782,7 +4902,8 @@ class VALUE
                 {
                     Text = Random.MakeIsbn();
                 }
-                else if ( Type.ColumnName.endsWith( "Tags" ) )
+                else if ( Type.ColumnName.endsWith( "Tags" )
+                          || Type.ColumnName.endsWith( "TagList" ) )
                 {
                     Text = Random.MakeTagList();
                 }

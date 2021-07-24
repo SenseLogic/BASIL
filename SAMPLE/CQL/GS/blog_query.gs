@@ -28,18 +28,32 @@ func AddDatabaseSection(
 
 // ~~
 
-
-// ~~
-
-function AddDatabaseSection(
-    string uuid,
-    int number,
-    string slug,
-    string name,
-    string text,
-    string image
-    )
+func PutDatabaseSection(
+    section * SECTION,
+    error_code * ERROR_CODE
+    ) bool
 {
+    section.Uuid = gocql.TimeUUID();
+
+    error_
+        := DatabaseSession.Query(
+               "replace into \"SECTION\" ( \"Uuid\", \"Number\", \"Slug\", \"Name\", \"Text\", \"Image\" ) values ( ?, ?, ?, ?, ?, ? )",
+               section.Uuid,
+               section.Number,
+               section.Slug,
+               section.Name,
+               section.Text,
+               section.Image
+               ).Exec();
+
+    if ( error_ != nil )
+    {
+        error_code.SetError( error_, http.StatusBadRequest );
+
+        return false;
+    }
+
+    return true;
 }
 
 // ~~
@@ -207,26 +221,40 @@ func AddDatabaseUser(
 
 // ~~
 
-
-// ~~
-
-function AddDatabaseUser(
-    string uuid,
-    string first_name,
-    string last_name,
-    string email,
-    string pseudonym,
-    string password,
-    string phone,
-    string street,
-    string city,
-    string code,
-    string region,
-    string country,
-    string company,
-    bool it_is_administrator
-    )
+func PutDatabaseUser(
+    user * USER,
+    error_code * ERROR_CODE
+    ) bool
 {
+    user.Uuid = gocql.TimeUUID();
+
+    error_
+        := DatabaseSession.Query(
+               "replace into \"USER\" ( \"Uuid\", \"FirstName\", \"LastName\", \"Email\", \"Pseudonym\", \"Password\", \"Phone\", \"Street\", \"City\", \"Code\", \"Region\", \"Country\", \"Company\", \"ItIsAdministrator\" ) values ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? )",
+               user.Uuid,
+               user.FirstName,
+               user.LastName,
+               user.Email,
+               user.Pseudonym,
+               user.Password,
+               user.Phone,
+               user.Street,
+               user.City,
+               user.Code,
+               user.Region,
+               user.Country,
+               user.Company,
+               user.ItIsAdministrator
+               ).Exec();
+
+    if ( error_ != nil )
+    {
+        error_code.SetError( error_, http.StatusBadRequest );
+
+        return false;
+    }
+
+    return true;
 }
 
 // ~~
@@ -412,20 +440,34 @@ func AddDatabaseArticle(
 
 // ~~
 
-
-// ~~
-
-function AddDatabaseArticle(
-    string uuid,
-    string section_uuid,
-    string user_uuid,
-    string slug,
-    string title,
-    string text,
-    string image,
-    string date
-    )
+func PutDatabaseArticle(
+    article * ARTICLE,
+    error_code * ERROR_CODE
+    ) bool
 {
+    article.Uuid = gocql.TimeUUID();
+
+    error_
+        := DatabaseSession.Query(
+               "replace into \"ARTICLE\" ( \"Uuid\", \"SectionUuid\", \"UserUuid\", \"Slug\", \"Title\", \"Text\", \"Image\", \"Date\" ) values ( ?, ?, ?, ?, ?, ?, ?, ? )",
+               article.Uuid,
+               article.SectionUuid,
+               article.UserUuid,
+               article.Slug,
+               article.Title,
+               article.Text,
+               article.Image,
+               article.Date
+               ).Exec();
+
+    if ( error_ != nil )
+    {
+        error_code.SetError( error_, http.StatusBadRequest );
+
+        return false;
+    }
+
+    return true;
 }
 
 // ~~
@@ -590,17 +632,31 @@ func AddDatabaseComment(
 
 // ~~
 
-
-// ~~
-
-function AddDatabaseComment(
-    string uuid,
-    string article_uuid,
-    string user_uuid,
-    string text,
-    string date_time
-    )
+func PutDatabaseComment(
+    comment * COMMENT,
+    error_code * ERROR_CODE
+    ) bool
 {
+    comment.Uuid = gocql.TimeUUID();
+
+    error_
+        := DatabaseSession.Query(
+               "replace into \"COMMENT\" ( \"Uuid\", \"ArticleUuid\", \"UserUuid\", \"Text\", \"DateTime\" ) values ( ?, ?, ?, ?, ? )",
+               comment.Uuid,
+               comment.ArticleUuid,
+               comment.UserUuid,
+               comment.Text,
+               comment.DateTime
+               ).Exec();
+
+    if ( error_ != nil )
+    {
+        error_code.SetError( error_, http.StatusBadRequest );
+
+        return false;
+    }
+
+    return true;
 }
 
 // ~~
@@ -754,15 +810,29 @@ func AddDatabaseSubscriber(
 
 // ~~
 
-
-// ~~
-
-function AddDatabaseSubscriber(
-    string uuid,
-    string name,
-    string email
-    )
+func PutDatabaseSubscriber(
+    subscriber * SUBSCRIBER,
+    error_code * ERROR_CODE
+    ) bool
 {
+    subscriber.Uuid = gocql.TimeUUID();
+
+    error_
+        := DatabaseSession.Query(
+               "replace into \"SUBSCRIBER\" ( \"Uuid\", \"Name\", \"Email\" ) values ( ?, ?, ? )",
+               subscriber.Uuid,
+               subscriber.Name,
+               subscriber.Email
+               ).Exec();
+
+    if ( error_ != nil )
+    {
+        error_code.SetError( error_, http.StatusBadRequest );
+
+        return false;
+    }
+
+    return true;
 }
 
 // ~~
