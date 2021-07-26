@@ -25,6 +25,10 @@ TEST | count 10
         GermanText : STRING = "{{german 2 4 5 10}}"
         LatinText : STRING = "{{latin 2 4 5 10}}"
         SpanishText : STRING = "{{spanish 2 4 5 10}}"
+        Integer : INT64 = "{{Int64:add Int8:substract Int16:divide 2}}"
+        Natural : UINT64 = "{{Uint64:add Uint8:substract Uint16:divide 2}}"
+        Real : FLOAT64 = "{{Integer:add Natural:add 0.1 0.2:floor 0.01}}"
+        Address : STRING = "{{company_name}}, {{street_address}}, {{city_code}} {{city_name}}, {{region_name}}, {{country_name:upper_case}}"
 
     COMPOUND
 

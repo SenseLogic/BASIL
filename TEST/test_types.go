@@ -26,6 +26,10 @@ type SIMPLE struct {
     GermanText string;
     LatinText string;
     SpanishText string;
+    Integer int64;
+    Natural uint64;
+    Real float64;
+    Address string;
 }
 
 // ~~

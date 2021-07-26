@@ -7,7 +7,7 @@ func AddDatabaseSimple(
 
     error_
         := DatabaseSession.Query(
-               "insert into \"SIMPLE\" ( \"Uuid\", \"Bool\", \"Int8\", \"Uint8\", \"Int16\", \"Uint16\", \"Int32\", \"Uint32\", \"Int64\", \"Uint64\", \"Float32\", \"Float64\", \"String\", \"Name\", \"Date\", \"DateTime\", \"Blob\", \"Option\", \"EnglishText\", \"FrenchText\", \"GermanText\", \"LatinText\", \"SpanishText\" ) values ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? )",
+               "insert into \"SIMPLE\" ( \"Uuid\", \"Bool\", \"Int8\", \"Uint8\", \"Int16\", \"Uint16\", \"Int32\", \"Uint32\", \"Int64\", \"Uint64\", \"Float32\", \"Float64\", \"String\", \"Name\", \"Date\", \"DateTime\", \"Blob\", \"Option\", \"EnglishText\", \"FrenchText\", \"GermanText\", \"LatinText\", \"SpanishText\", \"Integer\", \"Natural\", \"Real\", \"Address\" ) values ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? )",
                simple.Uuid,
                simple.Bool,
                simple.Int8,
@@ -30,7 +30,11 @@ func AddDatabaseSimple(
                simple.FrenchText,
                simple.GermanText,
                simple.LatinText,
-               simple.SpanishText
+               simple.SpanishText,
+               simple.Integer,
+               simple.Natural,
+               simple.Real,
+               simple.Address
                ).Exec();
 
     if ( error_ != nil )
@@ -54,7 +58,7 @@ func PutDatabaseSimple(
 
     error_
         := DatabaseSession.Query(
-               "replace into \"SIMPLE\" ( \"Uuid\", \"Bool\", \"Int8\", \"Uint8\", \"Int16\", \"Uint16\", \"Int32\", \"Uint32\", \"Int64\", \"Uint64\", \"Float32\", \"Float64\", \"String\", \"Name\", \"Date\", \"DateTime\", \"Blob\", \"Option\", \"EnglishText\", \"FrenchText\", \"GermanText\", \"LatinText\", \"SpanishText\" ) values ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? )",
+               "replace into \"SIMPLE\" ( \"Uuid\", \"Bool\", \"Int8\", \"Uint8\", \"Int16\", \"Uint16\", \"Int32\", \"Uint32\", \"Int64\", \"Uint64\", \"Float32\", \"Float64\", \"String\", \"Name\", \"Date\", \"DateTime\", \"Blob\", \"Option\", \"EnglishText\", \"FrenchText\", \"GermanText\", \"LatinText\", \"SpanishText\", \"Integer\", \"Natural\", \"Real\", \"Address\" ) values ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? )",
                simple.Uuid,
                simple.Bool,
                simple.Int8,
@@ -77,7 +81,11 @@ func PutDatabaseSimple(
                simple.FrenchText,
                simple.GermanText,
                simple.LatinText,
-               simple.SpanishText
+               simple.SpanishText,
+               simple.Integer,
+               simple.Natural,
+               simple.Real,
+               simple.Address
                ).Exec();
 
     if ( error_ != nil )
@@ -99,7 +107,7 @@ func SetDatabaseSimple(
 {
     error_
         := DatabaseSession.Query(
-               "insert into \"SIMPLE\" ( \"Uuid\", \"Bool\", \"Int8\", \"Uint8\", \"Int16\", \"Uint16\", \"Int32\", \"Uint32\", \"Int64\", \"Uint64\", \"Float32\", \"Float64\", \"String\", \"Name\", \"Date\", \"DateTime\", \"Blob\", \"Option\", \"EnglishText\", \"FrenchText\", \"GermanText\", \"LatinText\", \"SpanishText\" ) values ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? )",
+               "insert into \"SIMPLE\" ( \"Uuid\", \"Bool\", \"Int8\", \"Uint8\", \"Int16\", \"Uint16\", \"Int32\", \"Uint32\", \"Int64\", \"Uint64\", \"Float32\", \"Float64\", \"String\", \"Name\", \"Date\", \"DateTime\", \"Blob\", \"Option\", \"EnglishText\", \"FrenchText\", \"GermanText\", \"LatinText\", \"SpanishText\", \"Integer\", \"Natural\", \"Real\", \"Address\" ) values ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? )",
                simple.Uuid,
                simple.Bool,
                simple.Int8,
@@ -122,7 +130,11 @@ func SetDatabaseSimple(
                simple.FrenchText,
                simple.GermanText,
                simple.LatinText,
-               simple.SpanishText
+               simple.SpanishText,
+               simple.Integer,
+               simple.Natural,
+               simple.Real,
+               simple.Address
                ).Exec();
 
     if ( error_ != nil )
@@ -167,7 +179,7 @@ func GetDatabaseSimple(
 {
     error_
         := DatabaseSession.Query(
-               "select \"Bool\", \"Int8\", \"Uint8\", \"Int16\", \"Uint16\", \"Int32\", \"Uint32\", \"Int64\", \"Uint64\", \"Float32\", \"Float64\", \"String\", \"Name\", \"Date\", \"DateTime\", \"Blob\", \"Option\", \"EnglishText\", \"FrenchText\", \"GermanText\", \"LatinText\", \"SpanishText\" from \"SIMPLE\" where \"Uuid\" = ?",
+               "select \"Bool\", \"Int8\", \"Uint8\", \"Int16\", \"Uint16\", \"Int32\", \"Uint32\", \"Int64\", \"Uint64\", \"Float32\", \"Float64\", \"String\", \"Name\", \"Date\", \"DateTime\", \"Blob\", \"Option\", \"EnglishText\", \"FrenchText\", \"GermanText\", \"LatinText\", \"SpanishText\", \"Integer\", \"Natural\", \"Real\", \"Address\" from \"SIMPLE\" where \"Uuid\" = ?",
                simple.Uuid
                )
                .Consistency( gocql.One )
@@ -193,7 +205,11 @@ func GetDatabaseSimple(
                     &simple.FrenchText,
                     &simple.GermanText,
                     &simple.LatinText,
-                    &simple.SpanishText
+                    &simple.SpanishText,
+                    &simple.Integer,
+                    &simple.Natural,
+                    &simple.Real,
+                    &simple.Address
                     );
 
     if ( error_ != nil )
@@ -218,7 +234,7 @@ func GetDatabaseSimpleList(
 
     iterator
         := DatabaseSession.Query(
-               "select \"Uuid\", \"Bool\", \"Int8\", \"Uint8\", \"Int16\", \"Uint16\", \"Int32\", \"Uint32\", \"Int64\", \"Uint64\", \"Float32\", \"Float64\", \"String\", \"Name\", \"Date\", \"DateTime\", \"Blob\", \"Option\", \"EnglishText\", \"FrenchText\", \"GermanText\", \"LatinText\", \"SpanishText\" from \"SIMPLE\""
+               "select \"Uuid\", \"Bool\", \"Int8\", \"Uint8\", \"Int16\", \"Uint16\", \"Int32\", \"Uint32\", \"Int64\", \"Uint64\", \"Float32\", \"Float64\", \"String\", \"Name\", \"Date\", \"DateTime\", \"Blob\", \"Option\", \"EnglishText\", \"FrenchText\", \"GermanText\", \"LatinText\", \"SpanishText\", \"Integer\", \"Natural\", \"Real\", \"Address\" from \"SIMPLE\""
                )
                .Consistency( gocql.One )
                .Iter();
@@ -248,7 +264,11 @@ func GetDatabaseSimpleList(
             &simple.FrenchText,
             &simple.GermanText,
             &simple.LatinText,
-            &simple.SpanishText
+            &simple.SpanishText,
+            &simple.Integer,
+            &simple.Natural,
+            &simple.Real,
+            &simple.Address
             )
     {
         *simple_array = append( *simple_array, simple );

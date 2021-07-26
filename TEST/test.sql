@@ -30,6 +30,10 @@ create table if not exists `TEST`.`SIMPLE`(
     `GermanText` TEXT NULL,
     `LatinText` TEXT NULL,
     `SpanishText` TEXT NULL,
+    `Integer` BIGINT NULL,
+    `Natural` BIGINT UNSIGNED NULL,
+    `Real` DOUBLE NULL,
+    `Address` TEXT NULL,
     primary key( `Uuid` )
     ) engine = InnoDB;
 

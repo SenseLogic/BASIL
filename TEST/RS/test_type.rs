@@ -22,7 +22,11 @@ struct SIMPLE
     french_text : String,
     german_text : String,
     latin_text : String,
-    spanish_text : String
+    spanish_text : String,
+    integer : i64,
+    natural : u64,
+    real : f64,
+    address : String
 }
 
 // ~~

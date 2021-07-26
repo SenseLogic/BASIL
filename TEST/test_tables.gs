@@ -14,14 +14,14 @@ func main(
     fmt.Println( "Non stored tables : INTERNAL_DATA" );
     fmt.Println( "Tables :" );
     fmt.Println( "    SIMPLE :" );
-    fmt.Println( "        Columns : Uuid, Bool, Int8, Uint8, Int16, Uint16, Int32, Uint32, Int64, Uint64, Float32, Float64, String, Name, Date, DateTime, Blob, Option, EnglishText, FrenchText, GermanText, LatinText, SpanishText" );
+    fmt.Println( "        Columns : Uuid, Bool, Int8, Uint8, Int16, Uint16, Int32, Uint32, Int64, Uint64, Float32, Float64, String, Name, Date, DateTime, Blob, Option, EnglishText, FrenchText, GermanText, LatinText, SpanishText, Integer, Natural, Real, Address" );
     fmt.Println( "        Key columns : Uuid" );
-    fmt.Println( "        Non key columns : Bool, Int8, Uint8, Int16, Uint16, Int32, Uint32, Int64, Uint64, Float32, Float64, String, Name, Date, DateTime, Blob, Option, EnglishText, FrenchText, GermanText, LatinText, SpanishText" );
-    fmt.Println( "        Stored columns : Uuid, Bool, Int8, Uint8, Int16, Uint16, Int32, Uint32, Int64, Uint64, Float32, Float64, String, Name, Date, DateTime, Blob, Option, EnglishText, FrenchText, GermanText, LatinText, SpanishText" );
+    fmt.Println( "        Non key columns : Bool, Int8, Uint8, Int16, Uint16, Int32, Uint32, Int64, Uint64, Float32, Float64, String, Name, Date, DateTime, Blob, Option, EnglishText, FrenchText, GermanText, LatinText, SpanishText, Integer, Natural, Real, Address" );
+    fmt.Println( "        Stored columns : Uuid, Bool, Int8, Uint8, Int16, Uint16, Int32, Uint32, Int64, Uint64, Float32, Float64, String, Name, Date, DateTime, Blob, Option, EnglishText, FrenchText, GermanText, LatinText, SpanishText, Integer, Natural, Real, Address" );
     fmt.Println( "        Non stored columns : " );
     fmt.Println( "        Stored key columns : Uuid" );
     fmt.Println( "        Non stored key columns : " );
-    fmt.Println( "        Stored non key columns : Bool, Int8, Uint8, Int16, Uint16, Int32, Uint32, Int64, Uint64, Float32, Float64, String, Name, Date, DateTime, Blob, Option, EnglishText, FrenchText, GermanText, LatinText, SpanishText" );
+    fmt.Println( "        Stored non key columns : Bool, Int8, Uint8, Int16, Uint16, Int32, Uint32, Int64, Uint64, Float32, Float64, String, Name, Date, DateTime, Blob, Option, EnglishText, FrenchText, GermanText, LatinText, SpanishText, Integer, Natural, Real, Address" );
     fmt.Println( "        Non stored kon key columns : " );
     fmt.Println( "    COMPOUND :" );
     fmt.Println( "        Columns : Id, Location, Name, NameSet, PhoneList, EmailSet, CompanyMap, SimpleDate, SimpleDateMap, SimpleDateSet, SimpleDateList, NameSetMap, Text, SimplePointerArray" );

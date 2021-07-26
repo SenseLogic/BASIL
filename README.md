@@ -305,9 +305,9 @@ count <i>row_count</i>
 ### Column template functions
 
 <pre>
-real <i>minimum_value</i> <i>maximum_value</i>
-integer <i>minimum_value</i> <i>maximum_value</i>
 natural <i>minimum_value</i> <i>maximum_value</i> <i>digit_count</i>
+integer <i>minimum_value</i> <i>maximum_value</i>
+real <i>minimum_value</i> <i>maximum_value</i> [<i>precision</i>]
 date <i>minimum_year<i> <i>maximum_year</i>
 time <i>minimum_hour<i> <i>maximum_hour</i>
 blob <i>hexadecimal_digit_count</i>
@@ -344,8 +344,35 @@ folder_path
 ### Column template filters
 
 <pre>
+floor [<i>precision</i>]
+ceil [<i>precision</i>]
+round [<i>precision</i>]
+add <i>column_name</i>
+add <i>integer</i>
+add <i>minimum_integer</i> <i>maximum_integer</i>
+add <i>real</i>
+add <i>minimum_real</i> <i>maximum_real</i>
+add_product <i>column_name or real</i> ...
+substract <i>integer</i>
+substract <i>minimum_integer</i> <i>maximum_integer</i>
+substract <i>real</i>
+substract <i>minimum_real</i> <i>maximum_real</i>
+substract <i>column_name</i>
+substract_product <i>column_name or real</i> ...
+multiply <i>column_name</i>
+multiply <i>integer</i>
+multiply <i>minimum_integer</i> <i>maximum_integer</i>
+multiply <i>real</i>
+multiply <i>minimum_real</i> <i>maximum_real</i>
+divide <i>column_name</i>
+divide <i>integer</i>
+divide <i>minimum_integer</i> <i>maximum_integer</i>
+divide <i>real</i>
+divide <i>minimum_real</i> <i>maximum_real</i>
+add_prefix <i>prefix</i>
 remove_prefix <i>prefix</i>
 replace_prefix <i>old_prefix</i> <i>new_content</i>
+add_suffix <i>suffix</i>
 remove_suffix <i>suffix</i>
 replace_suffix <i>old_suffix</i> <i>new_suffix</i>
 remove <i>content</i>

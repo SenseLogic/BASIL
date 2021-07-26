@@ -2,14 +2,14 @@
 Table :
     SIMPLE : SIMPLE / Simple / simple / simple / Simple / Simple / simple
         Properties : false false
-        Columns : Uuid, Bool, Int8, Uint8, Int16, Uint16, Int32, Uint32, Int64, Uint64, Float32, Float64, String, Name, Date, DateTime, Blob, Option, EnglishText, FrenchText, GermanText, LatinText, SpanishText
+        Columns : Uuid, Bool, Int8, Uint8, Int16, Uint16, Int32, Uint32, Int64, Uint64, Float32, Float64, String, Name, Date, DateTime, Blob, Option, EnglishText, FrenchText, GermanText, LatinText, SpanishText, Integer, Natural, Real, Address
         Key columns : Uuid
-        Non key columns : Bool, Int8, Uint8, Int16, Uint16, Int32, Uint32, Int64, Uint64, Float32, Float64, String, Name, Date, DateTime, Blob, Option, EnglishText, FrenchText, GermanText, LatinText, SpanishText
-        Stored columns : Uuid, Bool, Int8, Uint8, Int16, Uint16, Int32, Uint32, Int64, Uint64, Float32, Float64, String, Name, Date, DateTime, Blob, Option, EnglishText, FrenchText, GermanText, LatinText, SpanishText
+        Non key columns : Bool, Int8, Uint8, Int16, Uint16, Int32, Uint32, Int64, Uint64, Float32, Float64, String, Name, Date, DateTime, Blob, Option, EnglishText, FrenchText, GermanText, LatinText, SpanishText, Integer, Natural, Real, Address
+        Stored columns : Uuid, Bool, Int8, Uint8, Int16, Uint16, Int32, Uint32, Int64, Uint64, Float32, Float64, String, Name, Date, DateTime, Blob, Option, EnglishText, FrenchText, GermanText, LatinText, SpanishText, Integer, Natural, Real, Address
         Non Stored columns : 
         Stored key columns : Uuid
         Non Stored key columns : 
-        Stored non key columns : Bool, Int8, Uint8, Int16, Uint16, Int32, Uint32, Int64, Uint64, Float32, Float64, String, Name, Date, DateTime, Blob, Option, EnglishText, FrenchText, GermanText, LatinText, SpanishText
+        Stored non key columns : Bool, Int8, Uint8, Int16, Uint16, Int32, Uint32, Int64, Uint64, Float32, Float64, String, Name, Date, DateTime, Blob, Option, EnglishText, FrenchText, GermanText, LatinText, SpanishText, Integer, Natural, Real, Address
         Non Stored non key columns : 
         Columns :
             Uuid : Uuid / uuid / uuid / Uuid / Uuid / uuid
@@ -173,4 +173,32 @@ Table :
                 Crystal : String spanish_text
                 C# : string SpanishText
                 Rust : String spanish_text
+            Integer : Integer / integer / integer / Integer / Integer / integer
+                Properties : false false
+                Go : int64 Integer
+                PHP : int Integer
+                Crystal : Int64 integer
+                C# : long Integer
+                Rust : i64 integer
+            Natural : Natural / natural / natural / Natural / Natural / natural
+                Properties : false false
+                Go : uint64 Natural
+                PHP : int Natural
+                Crystal : Uint64 natural
+                C# : ulong Natural
+                Rust : u64 natural
+            Real : Real / real / real / Real / Real / real
+                Properties : false false
+                Go : float64 Real
+                PHP : float Real
+                Crystal : Float64 real
+                C# : double Real
+                Rust : f64 real
+            Address : Address / address / address / Address / Address / address
+                Properties : false false
+                Go : string Address
+                PHP : string Address
+                Crystal : String address
+                C# : string Address
+                Rust : String address
 </pre>

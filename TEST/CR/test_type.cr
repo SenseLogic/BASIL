@@ -22,6 +22,10 @@ class SIMPLE
     @german_text : String
     @latin_text : String
     @spanish_text : String
+    @integer : Int64
+    @natural : Uint64
+    @real : Float64
+    @address : String
 end
 
 # ~~

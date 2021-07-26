@@ -35,6 +35,10 @@ class SIMPLE {
     GermanText : STRING
     LatinText : STRING
     SpanishText : STRING
+    Integer : INT64
+    Natural : UINT64
+    Real : FLOAT64
+    Address : STRING
 }
 
 class COMPOUND {

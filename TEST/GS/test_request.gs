@@ -31,6 +31,10 @@ func HandleAddSimpleDatabaseRequest(
          && GetRequestString( request, &simple.GermanText, "GermanText", &error_code )
          && GetRequestString( request, &simple.LatinText, "LatinText", &error_code )
          && GetRequestString( request, &simple.SpanishText, "SpanishText", &error_code )
+         && GetRequestInt64( request, &simple.Integer, "Integer", &error_code )
+         && GetRequestUint64( request, &simple.Natural, "Natural", &error_code )
+         && GetRequestFloat64( request, &simple.Real, "Real", &error_code )
+         && GetRequestString( request, &simple.Address, "Address", &error_code )
          && AddDatabaseSimple( &simple, &error_code ) )
     {
         WriteResponse( response_writer, "{" );
@@ -80,6 +84,10 @@ func HandleSetSimpleDatabaseRequest(
          && GetRequestString( request, &simple.GermanText, "GermanText", &error_code )
          && GetRequestString( request, &simple.LatinText, "LatinText", &error_code )
          && GetRequestString( request, &simple.SpanishText, "SpanishText", &error_code )
+         && GetRequestInt64( request, &simple.Integer, "Integer", &error_code )
+         && GetRequestUint64( request, &simple.Natural, "Natural", &error_code )
+         && GetRequestFloat64( request, &simple.Real, "Real", &error_code )
+         && GetRequestString( request, &simple.Address, "Address", &error_code )
          && SetDatabaseSimple( &simple, &error_code ) )
     {
         WriteResponseSuccess( response_writer );

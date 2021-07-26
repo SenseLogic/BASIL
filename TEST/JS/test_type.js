@@ -26,6 +26,10 @@ class SIMPLE
         this.GermanText = null;
         this.LatinText = null;
         this.SpanishText = null;
+        this.Integer = null;
+        this.Natural = null;
+        this.Real = null;
+        this.Address = null;
     }
 }
 

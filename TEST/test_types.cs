@@ -46,6 +46,14 @@ public class SIMPLE
         GermanText,
         LatinText,
         SpanishText;
+    public long
+        Integer;
+    public ulong
+        Natural;
+    public double
+        Real;
+    public string
+        Address;
 }
 
 // ~~

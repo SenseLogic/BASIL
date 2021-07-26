@@ -23,6 +23,10 @@ type SIMPLE struct
     GermanText string    `db:"GermanText"`;
     LatinText string    `db:"LatinText"`;
     SpanishText string    `db:"SpanishText"`;
+    Integer int64    `db:"Integer"`;
+    Natural uint64    `db:"Natural"`;
+    Real float64    `db:"Real"`;
+    Address string    `db:"Address"`;
 }
 
 // ~~

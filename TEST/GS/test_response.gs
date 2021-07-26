@@ -49,6 +49,14 @@ func WriteResponseSimple(
     WriteResponseString( writer, simple.LatinText );
     WriteResponse( writer, ",\"SpanishText\":" );
     WriteResponseString( writer, simple.SpanishText );
+    WriteResponse( writer, ",\"Integer\":" );
+    WriteResponseInt64( writer, simple.Integer );
+    WriteResponse( writer, ",\"Natural\":" );
+    WriteResponseUint64( writer, simple.Natural );
+    WriteResponse( writer, ",\"Real\":" );
+    WriteResponseFloat64( writer, simple.Real );
+    WriteResponse( writer, ",\"Address\":" );
+    WriteResponseString( writer, simple.Address );
     WriteResponse( writer, "}" );
 }
 

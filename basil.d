@@ -25,13 +25,14 @@ import std.algorithm : countUntil, sort;
 import std.ascii : isDigit, isLower, isUpper;
 import std.conv : to;
 import std.file : dirEntries, exists, mkdirRecurse, readText, thisExePath, write, SpanMode;
+import std.digest.md : md5Of;
+import std.math : ceil, floor, round;
 import std.random : uniform;
 import std.path : dirName;
 import std.regex : regex, replaceAll, Regex;
 import std.stdio : writeln;
 import std.string : capitalize, endsWith, format, indexOf, join, lastIndexOf, lineSplitter, replace, startsWith, split, strip, stripRight, toLower, toUpper;
-import std.digest.md : md5Of;
-
+import std.uni : isAlpha;
 // -- TYPES
 
 class LINK
@@ -416,10 +417,21 @@ class RANDOM
 
     double MakeReal(
         double minimum_value,
-        double maximum_value
+        double maximum_value,
+        double precision = 0.0
         )
     {
-        return uniform!"[]"( minimum_value, maximum_value );
+        double
+            real_;
+
+        real_ = uniform!"[]"( minimum_value, maximum_value );
+
+        if ( precision > 0.0 )
+        {
+            real_ = ( real_ / precision ).floor() * precision;
+        }
+
+        return real_;
     }
 
     // ~~
@@ -3060,9 +3072,14 @@ class TYPE
         long row_index
         )
     {
+        double
+            precision,
+            real_value;
         long
-            filter_argument_count;
+            filter_argument_count,
+            integer_value;
         string
+            filter_argument,
             filter_name;
         string[]
             filter_argument_array,
@@ -3093,52 +3110,53 @@ class TYPE
                             filter_argument_array = filter_argument_array[ 1 .. $ ];
                             filter_argument_count = filter_argument_array.length;
 
-                            if ( filter_name == "real" )
+                            if ( filter_name == "natural" )
                             {
                                 template_part
-                                    = Random.MakeReal(
-                                          ( filter_argument_count > 0 ) ? filter_argument_array[ 0 ].to!double() : 0.0,
-                                          ( filter_argument_count > 1 ) ? filter_argument_array[ 1 ].to!double() : 1.0
+                                    = Random.MakeNatural(
+                                          ( filter_argument_count > 0 ) ? filter_argument_array[ 0 ].GetNatural() : 1,
+                                          ( filter_argument_count > 1 ) ? filter_argument_array[ 1 ].GetNatural() : 100,
+                                          ( filter_argument_count > 2 ) ? filter_argument_array[ 2 ].GetInteger() : 0
                                           ).to!string();
                             }
                             else if ( filter_name == "integer" )
                             {
                                 template_part
                                     = Random.MakeInteger(
-                                          ( filter_argument_count > 0 ) ? filter_argument_array[ 0 ].to!long() : 2000,
-                                          ( filter_argument_count > 1 ) ? filter_argument_array[ 1 ].to!long() : 2015
+                                          ( filter_argument_count > 0 ) ? filter_argument_array[ 0 ].GetInteger() : 2000,
+                                          ( filter_argument_count > 1 ) ? filter_argument_array[ 1 ].GetInteger() : 2015
                                           ).to!string();
                             }
-                            else if ( filter_name == "natural" )
+                            else if ( filter_name == "real" )
                             {
                                 template_part
-                                    = Random.MakeNatural(
-                                          ( filter_argument_count > 0 ) ? filter_argument_array[ 0 ].to!ulong() : 1,
-                                          ( filter_argument_count > 1 ) ? filter_argument_array[ 1 ].to!ulong() : 100,
-                                          ( filter_argument_count > 2 ) ? filter_argument_array[ 2 ].to!long() : 0
+                                    = Random.MakeReal(
+                                          ( filter_argument_count > 0 ) ? filter_argument_array[ 0 ].GetReal() : 0.0,
+                                          ( filter_argument_count > 1 ) ? filter_argument_array[ 1 ].GetReal() : 1.0,
+                                          ( filter_argument_count > 2 ) ? filter_argument_array[ 2 ].GetReal() : 0.0
                                           ).to!string();
                             }
                             else if ( filter_name == "date" )
                             {
                                 template_part
                                     = Random.MakeDate(
-                                          ( filter_argument_count > 0 ) ? filter_argument_array[ 0 ].to!long() : 1,
-                                          ( filter_argument_count > 1 ) ? filter_argument_array[ 1 ].to!long() : 100
+                                          ( filter_argument_count > 0 ) ? filter_argument_array[ 0 ].GetInteger() : 1,
+                                          ( filter_argument_count > 1 ) ? filter_argument_array[ 1 ].GetInteger() : 100
                                           ).to!string();
                             }
                             else if ( filter_name == "time" )
                             {
                                 template_part
                                     = Random.MakeTime(
-                                          ( filter_argument_count > 0 ) ? filter_argument_array[ 0 ].to!ulong() : 0,
-                                          ( filter_argument_count > 1 ) ? filter_argument_array[ 1 ].to!ulong() : 23
+                                          ( filter_argument_count > 0 ) ? filter_argument_array[ 0 ].GetNatural() : 0,
+                                          ( filter_argument_count > 1 ) ? filter_argument_array[ 1 ].GetNatural() : 23
                                           ).to!string();
                             }
                             else if ( filter_name == "blob" )
                             {
                                 template_part
                                     = Random.MakeBlob(
-                                          ( filter_argument_count > 0 ) ? filter_argument_array[ 0 ].to!long() : 0
+                                          ( filter_argument_count > 0 ) ? filter_argument_array[ 0 ].GetInteger() : 0
                                           ).to!string();
                             }
                             else if ( filter_name == "uuid" )
@@ -3153,8 +3171,8 @@ class TYPE
                             {
                                 template_part
                                     = Random.MakeTagList(
-                                          ( filter_argument_count > 0 ) ? filter_argument_array[ 0 ].to!long() : 5,
-                                          ( filter_argument_count > 1 ) ? filter_argument_array[ 1 ].to!long() : 10
+                                          ( filter_argument_count > 0 ) ? filter_argument_array[ 0 ].GetInteger() : 5,
+                                          ( filter_argument_count > 1 ) ? filter_argument_array[ 1 ].GetInteger() : 10
                                           );
                             }
                             else if ( filter_name == "english" )
@@ -3162,10 +3180,10 @@ class TYPE
                                 template_part
                                     = Random.MakeText(
                                           "english",
-                                          ( filter_argument_count > 0 ) ? filter_argument_array[ 0 ].to!long() : 3,
-                                          ( filter_argument_count > 1 ) ? filter_argument_array[ 1 ].to!long() : 5,
-                                          ( filter_argument_count > 2 ) ? filter_argument_array[ 2 ].to!long() : 7,
-                                          ( filter_argument_count > 3 ) ? filter_argument_array[ 3 ].to!long() : 9
+                                          ( filter_argument_count > 0 ) ? filter_argument_array[ 0 ].GetInteger() : 3,
+                                          ( filter_argument_count > 1 ) ? filter_argument_array[ 1 ].GetInteger() : 5,
+                                          ( filter_argument_count > 2 ) ? filter_argument_array[ 2 ].GetInteger() : 7,
+                                          ( filter_argument_count > 3 ) ? filter_argument_array[ 3 ].GetInteger() : 9
                                           );
                             }
                             else if ( filter_name == "french" )
@@ -3173,10 +3191,10 @@ class TYPE
                                 template_part
                                     = Random.MakeText(
                                           "french",
-                                          ( filter_argument_count > 0 ) ? filter_argument_array[ 0 ].to!long() : 3,
-                                          ( filter_argument_count > 1 ) ? filter_argument_array[ 1 ].to!long() : 5,
-                                          ( filter_argument_count > 2 ) ? filter_argument_array[ 2 ].to!long() : 7,
-                                          ( filter_argument_count > 3 ) ? filter_argument_array[ 3 ].to!long() : 9
+                                          ( filter_argument_count > 0 ) ? filter_argument_array[ 0 ].GetInteger() : 3,
+                                          ( filter_argument_count > 1 ) ? filter_argument_array[ 1 ].GetInteger() : 5,
+                                          ( filter_argument_count > 2 ) ? filter_argument_array[ 2 ].GetInteger() : 7,
+                                          ( filter_argument_count > 3 ) ? filter_argument_array[ 3 ].GetInteger() : 9
                                           );
                             }
                             else if ( filter_name == "german" )
@@ -3184,10 +3202,10 @@ class TYPE
                                 template_part
                                     = Random.MakeText(
                                           "german",
-                                          ( filter_argument_count > 0 ) ? filter_argument_array[ 0 ].to!long() : 3,
-                                          ( filter_argument_count > 1 ) ? filter_argument_array[ 1 ].to!long() : 5,
-                                          ( filter_argument_count > 2 ) ? filter_argument_array[ 2 ].to!long() : 7,
-                                          ( filter_argument_count > 3 ) ? filter_argument_array[ 3 ].to!long() : 9
+                                          ( filter_argument_count > 0 ) ? filter_argument_array[ 0 ].GetInteger() : 3,
+                                          ( filter_argument_count > 1 ) ? filter_argument_array[ 1 ].GetInteger() : 5,
+                                          ( filter_argument_count > 2 ) ? filter_argument_array[ 2 ].GetInteger() : 7,
+                                          ( filter_argument_count > 3 ) ? filter_argument_array[ 3 ].GetInteger() : 9
                                           );
                             }
                             else if ( filter_name == "latin" )
@@ -3195,10 +3213,10 @@ class TYPE
                                 template_part
                                     = Random.MakeText(
                                           "latin",
-                                          ( filter_argument_count > 0 ) ? filter_argument_array[ 0 ].to!long() : 3,
-                                          ( filter_argument_count > 1 ) ? filter_argument_array[ 1 ].to!long() : 5,
-                                          ( filter_argument_count > 2 ) ? filter_argument_array[ 2 ].to!long() : 7,
-                                          ( filter_argument_count > 3 ) ? filter_argument_array[ 3 ].to!long() : 9
+                                          ( filter_argument_count > 0 ) ? filter_argument_array[ 0 ].GetInteger() : 3,
+                                          ( filter_argument_count > 1 ) ? filter_argument_array[ 1 ].GetInteger() : 5,
+                                          ( filter_argument_count > 2 ) ? filter_argument_array[ 2 ].GetInteger() : 7,
+                                          ( filter_argument_count > 3 ) ? filter_argument_array[ 3 ].GetInteger() : 9
                                           );
                             }
                             else if ( filter_name == "spanish" )
@@ -3206,18 +3224,18 @@ class TYPE
                                 template_part
                                     = Random.MakeText(
                                           "spanish",
-                                          ( filter_argument_count > 0 ) ? filter_argument_array[ 0 ].to!long() : 3,
-                                          ( filter_argument_count > 1 ) ? filter_argument_array[ 1 ].to!long() : 5,
-                                          ( filter_argument_count > 2 ) ? filter_argument_array[ 2 ].to!long() : 7,
-                                          ( filter_argument_count > 3 ) ? filter_argument_array[ 3 ].to!long() : 9
+                                          ( filter_argument_count > 0 ) ? filter_argument_array[ 0 ].GetInteger() : 3,
+                                          ( filter_argument_count > 1 ) ? filter_argument_array[ 1 ].GetInteger() : 5,
+                                          ( filter_argument_count > 2 ) ? filter_argument_array[ 2 ].GetInteger() : 7,
+                                          ( filter_argument_count > 3 ) ? filter_argument_array[ 3 ].GetInteger() : 9
                                           );
                             }
                             else if ( filter_name == "name" )
                             {
                                 template_part
                                     = Random.MakeName(
-                                          ( filter_argument_count > 0 ) ? filter_argument_array[ 0 ].to!long() : 4,
-                                          ( filter_argument_count > 1 ) ? filter_argument_array[ 1 ].to!long() : 8
+                                          ( filter_argument_count > 0 ) ? filter_argument_array[ 0 ].GetInteger() : 4,
+                                          ( filter_argument_count > 1 ) ? filter_argument_array[ 1 ].GetInteger() : 8
                                           ).to!string();
                             }
                             else if ( filter_name == "first_name"
@@ -3310,6 +3328,266 @@ class TYPE
                             {
                                 template_part = Random.MakeFolderPath();
                             }
+                            else if ( filter_name == "floor"
+                                      && filter_argument_count == 0 )
+                            {
+                                template_part = template_part.GetReal().floor().to!string();
+                            }
+                            else if ( filter_name == "floor"
+                                      && filter_argument_count == 1 )
+                            {
+                                precision = filter_argument_array[ 0 ].GetReal();
+                                template_part = ( ( template_part.GetReal() / precision ).floor() * precision ).to!string();
+                            }
+                            else if ( filter_name == "ceil"
+                                      && filter_argument_count == 0 )
+                            {
+                                template_part = template_part.GetReal().ceil().to!string();
+                            }
+                            else if ( filter_name == "ceil"
+                                      && filter_argument_count == 1 )
+                            {
+                                precision = filter_argument_array[ 0 ].GetReal();
+                                template_part = ( ( template_part.GetReal() / precision ).ceil() * precision ).to!string();
+                            }
+                            else if ( filter_name == "round"
+                                      && filter_argument_count == 0 )
+                            {
+                                template_part = template_part.GetReal().round().to!string();
+                            }
+                            else if ( filter_name == "round"
+                                      && filter_argument_count == 1 )
+                            {
+                                precision = filter_argument_array[ 0 ].GetReal();
+                                template_part = ( ( template_part.GetReal() / precision ).round() * precision ).to!string();
+                            }
+                            else if ( filter_name == "add"
+                                      && filter_argument_count == 1 )
+                            {
+                                filter_argument = filter_argument_array[ 0 ];
+
+                                if ( Column.HasColumnValue( filter_argument ) )
+                                {
+                                    filter_argument = Column.GetColumnValue( filter_argument, row_index );
+                                }
+
+                                if ( template_part.IsInteger()
+                                     && filter_argument.IsInteger() )
+                                {
+                                    template_part = ( template_part.GetInteger() + filter_argument.GetInteger() ).to!string();
+                                }
+                                else
+                                {
+                                    template_part = ( template_part.GetReal() + filter_argument.GetReal() ).to!string();
+                                }
+                            }
+                            else if ( filter_name == "add"
+                                      && filter_argument_count == 2 )
+                            {
+                                if ( template_part.IsInteger()
+                                     && filter_argument_array[ 0 ].IsInteger()
+                                     && filter_argument_array[ 1 ].IsInteger() )
+                                {
+                                    integer_value
+                                        = Random.MakeInteger(
+                                              filter_argument_array[ 0 ].GetInteger(),
+                                              filter_argument_array[ 1 ].GetInteger()
+                                              );
+
+                                    template_part = ( template_part.GetInteger() + integer_value ).to!string();
+                                }
+                                else
+                                {
+                                    real_value
+                                        = Random.MakeReal(
+                                              filter_argument_array[ 0 ].GetReal(),
+                                              filter_argument_array[ 1 ].GetReal()
+                                              );
+
+                                    template_part = ( template_part.GetReal() + real_value ).to!string();
+                                }
+                            }
+                            else if ( filter_name == "add_product"
+                                      && filter_argument_count >= 2 )
+                            {
+                                real_value = 1.0;
+
+                                foreach ( factor_argument; filter_argument_array )
+                                {
+                                    if ( Column.HasColumnValue( factor_argument ) )
+                                    {
+                                        real_value *= Column.GetColumnValue( factor_argument, row_index ).GetReal();
+                                    }
+                                    else
+                                    {
+                                        real_value *= factor_argument.GetReal();
+                                    }
+                                }
+
+                                template_part = ( template_part.GetReal() + real_value ).to!string();
+                            }
+                            else if ( filter_name == "substract"
+                                      && filter_argument_count == 1 )
+                            {
+                                filter_argument = filter_argument_array[ 0 ];
+
+                                if ( Column.HasColumnValue( filter_argument ) )
+                                {
+                                    filter_argument = Column.GetColumnValue( filter_argument, row_index );
+                                }
+
+                                if ( template_part.IsInteger()
+                                     && filter_argument.IsInteger() )
+                                {
+                                    template_part = ( template_part.GetInteger() - filter_argument.GetInteger() ).to!string();
+                                }
+                                else
+                                {
+                                    template_part = ( template_part.GetReal() - filter_argument.GetReal() ).to!string();
+                                }
+                            }
+                            else if ( filter_name == "substract"
+                                      && filter_argument_count == 2 )
+                            {
+                                if ( template_part.IsInteger()
+                                     && filter_argument_array[ 0 ].IsInteger()
+                                     && filter_argument_array[ 1 ].IsInteger() )
+                                {
+                                    integer_value
+                                        = Random.MakeInteger(
+                                              filter_argument_array[ 0 ].GetInteger(),
+                                              filter_argument_array[ 1 ].GetInteger()
+                                              );
+
+                                    template_part = ( template_part.GetInteger() - integer_value ).to!string();
+                                }
+                                else
+                                {
+                                    real_value
+                                        = Random.MakeReal(
+                                              filter_argument_array[ 0 ].GetReal(),
+                                              filter_argument_array[ 1 ].GetReal()
+                                              );
+
+                                    template_part = ( template_part.GetReal() - real_value ).to!string();
+                                }
+                            }
+                            else if ( filter_name == "substract_product"
+                                      && filter_argument_count >= 2 )
+                            {
+                                real_value = 1.0;
+
+                                foreach ( factor_argument; filter_argument_array )
+                                {
+                                    if ( Column.HasColumnValue( factor_argument ) )
+                                    {
+                                        real_value *= Column.GetColumnValue( factor_argument, row_index ).GetReal();
+                                    }
+                                    else
+                                    {
+                                        real_value *= factor_argument.GetReal();
+                                    }
+                                }
+
+                                template_part = ( template_part.GetReal() - real_value ).to!string();
+                            }
+                            else if ( filter_name == "multiply"
+                                      && filter_argument_count == 1 )
+                            {
+                                filter_argument = filter_argument_array[ 0 ];
+
+                                if ( Column.HasColumnValue( filter_argument ) )
+                                {
+                                    filter_argument = Column.GetColumnValue( filter_argument, row_index );
+                                }
+
+                                if ( template_part.IsInteger()
+                                     && filter_argument.IsInteger() )
+                                {
+                                    template_part = ( template_part.GetInteger() * filter_argument.GetInteger() ).to!string();
+                                }
+                                else
+                                {
+                                    template_part = ( template_part.GetReal() * filter_argument.GetReal() ).to!string();
+                                }
+                            }
+                            else if ( filter_name == "multiply"
+                                      && filter_argument_count == 2 )
+                            {
+                                if ( template_part.IsInteger()
+                                     && filter_argument_array[ 0 ].IsInteger()
+                                     && filter_argument_array[ 1 ].IsInteger() )
+                                {
+                                    integer_value
+                                        = Random.MakeInteger(
+                                              filter_argument_array[ 0 ].GetInteger(),
+                                              filter_argument_array[ 1 ].GetInteger()
+                                              );
+
+                                    template_part = ( template_part.GetInteger() * integer_value ).to!string();
+                                }
+                                else
+                                {
+                                    real_value
+                                        = Random.MakeReal(
+                                              filter_argument_array[ 0 ].GetReal(),
+                                              filter_argument_array[ 1 ].GetReal()
+                                              );
+
+                                    template_part = ( template_part.GetReal() * real_value ).to!string();
+                                }
+                            }
+                            else if ( filter_name == "divide"
+                                      && filter_argument_count == 1 )
+                            {
+                                filter_argument = filter_argument_array[ 0 ];
+
+                                if ( Column.HasColumnValue( filter_argument ) )
+                                {
+                                    filter_argument = Column.GetColumnValue( filter_argument, row_index );
+                                }
+
+                                if ( template_part.IsInteger()
+                                     && filter_argument.IsInteger() )
+                                {
+                                    template_part = ( template_part.GetInteger() / filter_argument.GetInteger() ).to!string();
+                                }
+                                else
+                                {
+                                    template_part = ( template_part.GetReal() / filter_argument.GetReal() ).to!string();
+                                }
+                            }
+                            else if ( filter_name == "divide"
+                                      && filter_argument_count == 2 )
+                            {
+                                if ( template_part.IsInteger()
+                                     && filter_argument_array[ 0 ].IsInteger()
+                                     && filter_argument_array[ 1 ].IsInteger() )
+                                {
+                                    integer_value
+                                        = Random.MakeInteger(
+                                              filter_argument_array[ 0 ].GetInteger(),
+                                              filter_argument_array[ 1 ].GetInteger()
+                                              );
+
+                                    template_part = ( template_part.GetInteger() / integer_value ).to!string();
+                                }
+                                else
+                                {
+                                    real_value
+                                        = Random.MakeReal(
+                                              filter_argument_array[ 0 ].GetReal(),
+                                              filter_argument_array[ 1 ].GetReal()
+                                              );
+
+                                    template_part = ( template_part.GetReal() / real_value ).to!string();
+                                }
+                            }
+                            else if ( filter_name == "add_prefix"
+                                      && filter_argument_count >= 1 )
+                            {
+                                template_part = template_part.AddPrefix( filter_argument_array[ 1 .. $ ].join( ' ' ) );
+                            }
                             else if ( filter_name == "remove_prefix"
                                       && filter_argument_count == 1 )
                             {
@@ -3319,6 +3597,11 @@ class TYPE
                                       && filter_argument_count == 2)
                             {
                                 template_part = template_part.ReplacePrefix( filter_argument_array[ 0 ], filter_argument_array[ 1 ] );
+                            }
+                            else if ( filter_name == "add_suffix"
+                                      && filter_argument_count >= 1 )
+                            {
+                                template_part = template_part.AddSuffix( filter_argument_array[ 1 .. $ ].join( ' ' ) );
                             }
                             else if ( filter_name == "remove_suffix"
                                       && filter_argument_count == 1 )
@@ -5578,7 +5861,7 @@ class COLUMN
             if ( property_name == "capacity"
                  && value_text_array.length == 2 )
             {
-                Type.Capacity = value_text_array[ 1 ].to!long();
+                Type.Capacity = value_text_array[ 1 ].GetInteger();
             }
             else if ( property_name == "stored"
                       && value_text_array.length == 2 )
@@ -5667,7 +5950,7 @@ class COLUMN
                 }
                 else
                 {
-                    OrderIndex = value_text_array[ 1 ].to!long();
+                    OrderIndex = value_text_array[ 1 ].GetInteger();
                 }
             }
             else if ( property_name == "descending"
@@ -5681,7 +5964,7 @@ class COLUMN
                 }
                 else
                 {
-                    OrderIndex = value_text_array[ 1 ].to!long();
+                    OrderIndex = value_text_array[ 1 ].GetInteger();
                 }
             }
             else if ( property_name == "now"
@@ -5733,14 +6016,14 @@ class COLUMN
             else if ( property_name == "count"
                       && value_text_array.length == 2 )
             {
-                MinimumRandomCount = value_text_array[ 1 ].to!long();
+                MinimumRandomCount = value_text_array[ 1 ].GetInteger();
                 MaximumRandomCount = MinimumRandomCount;
             }
             else if ( property_name == "count"
                       && value_text_array.length == 3 )
             {
-                MinimumRandomCount = value_text_array[ 1 ].to!long();
-                MaximumRandomCount = value_text_array[ 2 ].to!long();
+                MinimumRandomCount = value_text_array[ 1 ].GetInteger();
+                MaximumRandomCount = value_text_array[ 2 ].GetInteger();
             }
             else if ( property_name == "default" )
             {
@@ -8533,7 +8816,7 @@ class TABLE
             else if ( value_text_array[ 0 ] == "count"
                       && value_text_array.length == 2 )
             {
-                RowCount = value_text_array[ 1 ].to!long();
+                RowCount = value_text_array[ 1 ].GetInteger();
             }
             else
             {
@@ -9286,7 +9569,7 @@ class SCHEMA
                 }
                 else if ( value_text_array[ 0 ] == "count" )
                 {
-                    RowCount = value_text_array[ 1 ].to!long();
+                    RowCount = value_text_array[ 1 ].GetInteger();
                 }
                 else
                 {
@@ -11235,19 +11518,93 @@ string ReadText(
 
 // ~~
 
-bool IsLetterCharacter(
-    char character
+bool IsInteger(
+    string text
     )
 {
-    return
-        ( character >= 'a' && character <= 'z' )
-        || ( character >= 'A' && character <= 'Z' );
+    if ( text.length > 0
+         && text[ 0 ] == '-' )
+    {
+        text = text[ 1 .. $ ];
+    }
+
+    if ( text.length > 0 )
+    {
+        foreach ( character; text )
+        {
+            if ( character < '0'
+                 || character > '9' )
+            {
+                return false;
+            }
+        }
+
+        return true;
+    }
+    else
+    {
+        return false;
+    }
+}
+
+// ~~
+
+ulong GetNatural(
+    string text
+    )
+{
+    try
+    {
+        return text.to!ulong();
+    }
+    catch ( Exception exception )
+    {
+        Abort( "Invalid natural : " ~ text, exception );
+    }
+
+    return 0;
+}
+
+// ~~
+
+long GetInteger(
+    string text
+    )
+{
+    try
+    {
+        return text.to!long();
+    }
+    catch ( Exception exception )
+    {
+        Abort( "Invalid integer : " ~ text, exception );
+    }
+
+    return 0;
+}
+
+// ~~
+
+double GetReal(
+    string text
+    )
+{
+    try
+    {
+        return text.to!double();
+    }
+    catch ( Exception exception )
+    {
+        Abort( "Invalid real : " ~ text, exception );
+    }
+
+    return 0.0;
 }
 
 // ~~
 
 bool IsDigitCharacter(
-    char character
+    dchar character
     )
 {
     return
@@ -11319,6 +11676,16 @@ bool EndsByConsonant(
 
 // ~~
 
+string AddPrefix(
+    string text,
+    string prefix
+    )
+{
+    return prefix ~ text;
+}
+
+// ~~
+
 string RemovePrefix(
     string text,
     string prefix
@@ -11350,6 +11717,16 @@ string ReplacePrefix(
     {
         return text;
     }
+}
+
+// ~~
+
+string AddSuffix(
+    string text,
+    string suffix
+    )
+{
+    return text ~ suffix;
 }
 
 // ~~
@@ -11450,20 +11827,20 @@ string GetPascalCaseText(
 
 // ~~
 
-string GetSnakeCaseText(
-    string text
+dstring GetSnakeCaseText(
+    dstring text
     )
 {
-    char
+    dchar
         character,
         next_character,
         prior_character;
     long
         character_index;
-    string
+    dstring
         snake_case_text;
 
-    text = text.replace( '-', '_' );
+    text = text.replace( dchar( '-' ), dchar( '_' ) );
 
     snake_case_text = "";
     prior_character = 0;
@@ -11501,6 +11878,15 @@ string GetSnakeCaseText(
     }
 
     return snake_case_text;
+}
+
+// ~~
+
+string GetSnakeCaseText(
+    string text
+    )
+{
+    return text.to!dstring().GetSnakeCaseText().to!string();
 }
 
 // ~~
@@ -11587,20 +11973,21 @@ string GetLocutionCaseText(
 
 // ~~
 
-string GetSlugCaseText(
-    string text
+dstring GetSlugCaseText(
+    dstring text
     )
 {
-    string
+    dstring
         slug_case_text;
 
     foreach ( character; text )
     {
-        if ( IsLetterCharacter( character ) )
+        if ( character.isAlpha() )
         {
             slug_case_text ~= character.toLower();
         }
-        else if ( IsDigitCharacter( character ) )
+        else if ( character >= '0'
+                  && character <= '9' )
         {
             if ( slug_case_text != ""
                  && !slug_case_text.endsWith( '-' )
@@ -11626,6 +12013,15 @@ string GetSlugCaseText(
     }
 
     return slug_case_text;
+}
+
+// ~~
+
+string GetSlugCaseText(
+    string text
+    )
+{
+    return text.to!dstring().GetSlugCaseText().to!string();
 }
 
 // ~~
