@@ -386,7 +386,7 @@ type_case
 attribute_case
 variable_case
 style_case
-sentense_case
+sentence_case
 locution_case
 slug_case
 plural
