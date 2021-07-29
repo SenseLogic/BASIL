@@ -27,6 +27,9 @@ type SIMPLE struct
     Natural uint64    `db:"Natural"`;
     Real float64    `db:"Real"`;
     Address string    `db:"Address"`;
+    CategorySlug string    `db:"CategorySlug"`;
+    CategoryName string    `db:"CategoryName"`;
+    CategorySection string    `db:"CategorySection"`;
 }
 
 // ~~

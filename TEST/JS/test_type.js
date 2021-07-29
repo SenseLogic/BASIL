@@ -30,6 +30,9 @@ class SIMPLE
         this.Natural = null;
         this.Real = null;
         this.Address = null;
+        this.CategorySlug = null;
+        this.CategoryName = null;
+        this.CategorySection = null;
     }
 }
 

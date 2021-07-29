@@ -34,6 +34,9 @@ create table if not exists `TEST`.`SIMPLE`(
     `Natural` BIGINT UNSIGNED NULL,
     `Real` DOUBLE NULL,
     `Address` TEXT NULL,
+    `CategorySlug` TEXT NULL,
+    `CategoryName` TEXT NULL,
+    `CategorySection` TEXT NULL,
     primary key( `Uuid` )
     ) engine = InnoDB;
 

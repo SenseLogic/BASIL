@@ -29,6 +29,9 @@ TEST | count 10
         Natural : UINT64 = "{{Uint64:add Uint8:substract Uint16:divide 2}}"
         Real : FLOAT64 = "{{Integer:add Natural:add 0.1 0.2:floor 0.01}}"
         Address : STRING = "{{company_name}}, {{street_address}}, {{city_code}} {{city_name}}, {{region_name}}, {{country_name:upper_case}}"
+        CategorySlug : STRING = "movie|game"
+        CategoryName : STRING = "{{switch CategorySlug movie The\smovie game The\sgame}}"
+        CategorySection : STRING = "{{if CategorySlug = movie:set First\ssection:if CategorySlug = game:set Second\ssection}}"
 
     COMPOUND
 

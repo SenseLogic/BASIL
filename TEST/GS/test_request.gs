@@ -35,6 +35,9 @@ func HandleAddSimpleDatabaseRequest(
          && GetRequestUint64( request, &simple.Natural, "Natural", &error_code )
          && GetRequestFloat64( request, &simple.Real, "Real", &error_code )
          && GetRequestString( request, &simple.Address, "Address", &error_code )
+         && GetRequestString( request, &simple.CategorySlug, "CategorySlug", &error_code )
+         && GetRequestString( request, &simple.CategoryName, "CategoryName", &error_code )
+         && GetRequestString( request, &simple.CategorySection, "CategorySection", &error_code )
          && AddDatabaseSimple( &simple, &error_code ) )
     {
         WriteResponse( response_writer, "{" );
@@ -88,6 +91,9 @@ func HandleSetSimpleDatabaseRequest(
          && GetRequestUint64( request, &simple.Natural, "Natural", &error_code )
          && GetRequestFloat64( request, &simple.Real, "Real", &error_code )
          && GetRequestString( request, &simple.Address, "Address", &error_code )
+         && GetRequestString( request, &simple.CategorySlug, "CategorySlug", &error_code )
+         && GetRequestString( request, &simple.CategoryName, "CategoryName", &error_code )
+         && GetRequestString( request, &simple.CategorySection, "CategorySection", &error_code )
          && SetDatabaseSimple( &simple, &error_code ) )
     {
         WriteResponseSuccess( response_writer );

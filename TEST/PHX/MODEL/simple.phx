@@ -3,7 +3,7 @@
 function GetDatabaseSimpleArray(
     )
 {
-    var statement = GetDatabaseStatement( 'select `Uuid`, `Bool`, `Int8`, `Uint8`, `Int16`, `Uint16`, `Int32`, `Uint32`, `Int64`, `Uint64`, `Float32`, `Float64`, `String`, `Name`, `Date`, `DateTime`, `Blob`, `Option`, `EnglishText`, `FrenchText`, `GermanText`, `LatinText`, `SpanishText`, `Integer`, `Natural`, `Real`, `Address` from `SIMPLE`' );
+    var statement = GetDatabaseStatement( 'select `Uuid`, `Bool`, `Int8`, `Uint8`, `Int16`, `Uint16`, `Int32`, `Uint32`, `Int64`, `Uint64`, `Float32`, `Float64`, `String`, `Name`, `Date`, `DateTime`, `Blob`, `Option`, `EnglishText`, `FrenchText`, `GermanText`, `LatinText`, `SpanishText`, `Integer`, `Natural`, `Real`, `Address`, `CategorySlug`, `CategoryName`, `CategorySection` from `SIMPLE`' );
 
     if ( !statement.execute() )
     {
@@ -40,7 +40,7 @@ function GetDatabaseSimpleByUuid(
     string uuid
     )
 {
-    var statement = GetDatabaseStatement( 'select `Uuid`, `Bool`, `Int8`, `Uint8`, `Int16`, `Uint16`, `Int32`, `Uint32`, `Int64`, `Uint64`, `Float32`, `Float64`, `String`, `Name`, `Date`, `DateTime`, `Blob`, `Option`, `EnglishText`, `FrenchText`, `GermanText`, `LatinText`, `SpanishText`, `Integer`, `Natural`, `Real`, `Address` from `SIMPLE` where `Uuid` = ? limit 1' );
+    var statement = GetDatabaseStatement( 'select `Uuid`, `Bool`, `Int8`, `Uint8`, `Int16`, `Uint16`, `Int32`, `Uint32`, `Int64`, `Uint64`, `Float32`, `Float64`, `String`, `Name`, `Date`, `DateTime`, `Blob`, `Option`, `EnglishText`, `FrenchText`, `GermanText`, `LatinText`, `SpanishText`, `Integer`, `Natural`, `Real`, `Address`, `CategorySlug`, `CategoryName`, `CategorySection` from `SIMPLE` where `Uuid` = ? limit 1' );
     statement.bindParam( 1, uuid, PDO::PARAM_STR );
 
     if ( !statement.execute() )
@@ -96,10 +96,13 @@ function AddDatabaseSimple(
     int integer,
     int natural,
     float real,
-    string address
+    string address,
+    string category_slug,
+    string category_name,
+    string category_section
     )
 {
-    var statement = GetDatabaseStatement( 'insert into `SIMPLE` ( `Uuid`, `Bool`, `Int8`, `Uint8`, `Int16`, `Uint16`, `Int32`, `Uint32`, `Int64`, `Uint64`, `Float32`, `Float64`, `String`, `Name`, `Date`, `DateTime`, `Blob`, `Option`, `EnglishText`, `FrenchText`, `GermanText`, `LatinText`, `SpanishText`, `Integer`, `Natural`, `Real`, `Address` ) values ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? )' );
+    var statement = GetDatabaseStatement( 'insert into `SIMPLE` ( `Uuid`, `Bool`, `Int8`, `Uint8`, `Int16`, `Uint16`, `Int32`, `Uint32`, `Int64`, `Uint64`, `Float32`, `Float64`, `String`, `Name`, `Date`, `DateTime`, `Blob`, `Option`, `EnglishText`, `FrenchText`, `GermanText`, `LatinText`, `SpanishText`, `Integer`, `Natural`, `Real`, `Address`, `CategorySlug`, `CategoryName`, `CategorySection` ) values ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? )' );
     statement.bindParam( 1, uuid, PDO::PARAM_STR );
     statement.bindParam( 2, bool, PDO::PARAM_BOOL );
     statement.bindParam( 3, int_8, PDO::PARAM_INT );
@@ -128,6 +131,9 @@ function AddDatabaseSimple(
     statement.bindParam( 25, natural, PDO::PARAM_INT );
     statement.bindParam( 26, real, PDO::PARAM_STR );
     statement.bindParam( 27, address, PDO::PARAM_STR );
+    statement.bindParam( 28, category_slug, PDO::PARAM_STR );
+    statement.bindParam( 29, category_name, PDO::PARAM_STR );
+    statement.bindParam( 30, category_section, PDO::PARAM_STR );
 
     if ( !statement.execute() )
     {
@@ -166,10 +172,13 @@ function PutDatabaseSimple(
     int integer,
     int natural,
     float real,
-    string address
+    string address,
+    string category_slug,
+    string category_name,
+    string category_section
     )
 {
-    var statement = GetDatabaseStatement( 'replace into `SIMPLE` ( `Uuid`, `Bool`, `Int8`, `Uint8`, `Int16`, `Uint16`, `Int32`, `Uint32`, `Int64`, `Uint64`, `Float32`, `Float64`, `String`, `Name`, `Date`, `DateTime`, `Blob`, `Option`, `EnglishText`, `FrenchText`, `GermanText`, `LatinText`, `SpanishText`, `Integer`, `Natural`, `Real`, `Address` ) values ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? )' );
+    var statement = GetDatabaseStatement( 'replace into `SIMPLE` ( `Uuid`, `Bool`, `Int8`, `Uint8`, `Int16`, `Uint16`, `Int32`, `Uint32`, `Int64`, `Uint64`, `Float32`, `Float64`, `String`, `Name`, `Date`, `DateTime`, `Blob`, `Option`, `EnglishText`, `FrenchText`, `GermanText`, `LatinText`, `SpanishText`, `Integer`, `Natural`, `Real`, `Address`, `CategorySlug`, `CategoryName`, `CategorySection` ) values ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? )' );
     statement.bindParam( 1, uuid, PDO::PARAM_STR );
     statement.bindParam( 2, bool, PDO::PARAM_BOOL );
     statement.bindParam( 3, int_8, PDO::PARAM_INT );
@@ -198,6 +207,9 @@ function PutDatabaseSimple(
     statement.bindParam( 25, natural, PDO::PARAM_INT );
     statement.bindParam( 26, real, PDO::PARAM_STR );
     statement.bindParam( 27, address, PDO::PARAM_STR );
+    statement.bindParam( 28, category_slug, PDO::PARAM_STR );
+    statement.bindParam( 29, category_name, PDO::PARAM_STR );
+    statement.bindParam( 30, category_section, PDO::PARAM_STR );
 
     if ( !statement.execute() )
     {
@@ -236,10 +248,13 @@ function SetDatabaseSimple(
     int integer,
     int natural,
     float real,
-    string address
+    string address,
+    string category_slug,
+    string category_name,
+    string category_section
     )
 {
-    var statement = GetDatabaseStatement( 'update `SIMPLE` set `Bool` = ?, `Int8` = ?, `Uint8` = ?, `Int16` = ?, `Uint16` = ?, `Int32` = ?, `Uint32` = ?, `Int64` = ?, `Uint64` = ?, `Float32` = ?, `Float64` = ?, `String` = ?, `Name` = ?, `Date` = ?, `DateTime` = ?, `Blob` = ?, `Option` = ?, `EnglishText` = ?, `FrenchText` = ?, `GermanText` = ?, `LatinText` = ?, `SpanishText` = ?, `Integer` = ?, `Natural` = ?, `Real` = ?, `Address` = ? where Uuid = ?' );
+    var statement = GetDatabaseStatement( 'update `SIMPLE` set `Bool` = ?, `Int8` = ?, `Uint8` = ?, `Int16` = ?, `Uint16` = ?, `Int32` = ?, `Uint32` = ?, `Int64` = ?, `Uint64` = ?, `Float32` = ?, `Float64` = ?, `String` = ?, `Name` = ?, `Date` = ?, `DateTime` = ?, `Blob` = ?, `Option` = ?, `EnglishText` = ?, `FrenchText` = ?, `GermanText` = ?, `LatinText` = ?, `SpanishText` = ?, `Integer` = ?, `Natural` = ?, `Real` = ?, `Address` = ?, `CategorySlug` = ?, `CategoryName` = ?, `CategorySection` = ? where Uuid = ?' );
     statement.bindParam( 1, bool, PDO::PARAM_BOOL );
     statement.bindParam( 2, int_8, PDO::PARAM_INT );
     statement.bindParam( 3, uint_8, PDO::PARAM_INT );
@@ -267,7 +282,10 @@ function SetDatabaseSimple(
     statement.bindParam( 24, natural, PDO::PARAM_INT );
     statement.bindParam( 25, real, PDO::PARAM_STR );
     statement.bindParam( 26, address, PDO::PARAM_STR );
-    statement.bindParam( 27, uuid, PDO::PARAM_STR );
+    statement.bindParam( 27, category_slug, PDO::PARAM_STR );
+    statement.bindParam( 28, category_name, PDO::PARAM_STR );
+    statement.bindParam( 29, category_section, PDO::PARAM_STR );
+    statement.bindParam( 30, uuid, PDO::PARAM_STR );
 
     if ( !statement.execute() )
     {

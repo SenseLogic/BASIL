@@ -53,7 +53,10 @@ public class SIMPLE
     public double
         Real;
     public string
-        Address;
+        Address,
+        CategorySlug,
+        CategoryName,
+        CategorySection;
 }
 
 // ~~

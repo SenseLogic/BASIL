@@ -57,6 +57,12 @@ func WriteResponseSimple(
     WriteResponseFloat64( writer, simple.Real );
     WriteResponse( writer, ",\"Address\":" );
     WriteResponseString( writer, simple.Address );
+    WriteResponse( writer, ",\"CategorySlug\":" );
+    WriteResponseString( writer, simple.CategorySlug );
+    WriteResponse( writer, ",\"CategoryName\":" );
+    WriteResponseString( writer, simple.CategoryName );
+    WriteResponse( writer, ",\"CategorySection\":" );
+    WriteResponseString( writer, simple.CategorySection );
     WriteResponse( writer, "}" );
 }
 

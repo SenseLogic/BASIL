@@ -30,6 +30,9 @@ type SIMPLE struct {
     Natural uint64;
     Real float64;
     Address string;
+    CategorySlug string;
+    CategoryName string;
+    CategorySection string;
 }
 
 // ~~

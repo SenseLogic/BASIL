@@ -2,14 +2,14 @@
 Table :
     SIMPLE : SIMPLE / Simple / simple / simple / Simple / Simple / simple
         Properties : false false
-        Columns : Uuid, Bool, Int8, Uint8, Int16, Uint16, Int32, Uint32, Int64, Uint64, Float32, Float64, String, Name, Date, DateTime, Blob, Option, EnglishText, FrenchText, GermanText, LatinText, SpanishText, Integer, Natural, Real, Address
+        Columns : Uuid, Bool, Int8, Uint8, Int16, Uint16, Int32, Uint32, Int64, Uint64, Float32, Float64, String, Name, Date, DateTime, Blob, Option, EnglishText, FrenchText, GermanText, LatinText, SpanishText, Integer, Natural, Real, Address, CategorySlug, CategoryName, CategorySection
         Key columns : Uuid
-        Non key columns : Bool, Int8, Uint8, Int16, Uint16, Int32, Uint32, Int64, Uint64, Float32, Float64, String, Name, Date, DateTime, Blob, Option, EnglishText, FrenchText, GermanText, LatinText, SpanishText, Integer, Natural, Real, Address
-        Stored columns : Uuid, Bool, Int8, Uint8, Int16, Uint16, Int32, Uint32, Int64, Uint64, Float32, Float64, String, Name, Date, DateTime, Blob, Option, EnglishText, FrenchText, GermanText, LatinText, SpanishText, Integer, Natural, Real, Address
+        Non key columns : Bool, Int8, Uint8, Int16, Uint16, Int32, Uint32, Int64, Uint64, Float32, Float64, String, Name, Date, DateTime, Blob, Option, EnglishText, FrenchText, GermanText, LatinText, SpanishText, Integer, Natural, Real, Address, CategorySlug, CategoryName, CategorySection
+        Stored columns : Uuid, Bool, Int8, Uint8, Int16, Uint16, Int32, Uint32, Int64, Uint64, Float32, Float64, String, Name, Date, DateTime, Blob, Option, EnglishText, FrenchText, GermanText, LatinText, SpanishText, Integer, Natural, Real, Address, CategorySlug, CategoryName, CategorySection
         Non Stored columns : 
         Stored key columns : Uuid
         Non Stored key columns : 
-        Stored non key columns : Bool, Int8, Uint8, Int16, Uint16, Int32, Uint32, Int64, Uint64, Float32, Float64, String, Name, Date, DateTime, Blob, Option, EnglishText, FrenchText, GermanText, LatinText, SpanishText, Integer, Natural, Real, Address
+        Stored non key columns : Bool, Int8, Uint8, Int16, Uint16, Int32, Uint32, Int64, Uint64, Float32, Float64, String, Name, Date, DateTime, Blob, Option, EnglishText, FrenchText, GermanText, LatinText, SpanishText, Integer, Natural, Real, Address, CategorySlug, CategoryName, CategorySection
         Non Stored non key columns : 
         Columns :
             Uuid : Uuid / uuid / uuid / Uuid / Uuid / uuid
@@ -201,4 +201,25 @@ Table :
                 Crystal : String address
                 C# : string Address
                 Rust : String address
+            CategorySlug : CategorySlug / category_slug / category-slug / Category Slug / Category slug / category slug
+                Properties : false false
+                Go : string CategorySlug
+                PHP : string CategorySlug
+                Crystal : String category_slug
+                C# : string CategorySlug
+                Rust : String category_slug
+            CategoryName : CategoryName / category_name / category-name / Category Name / Category name / category name
+                Properties : false false
+                Go : string CategoryName
+                PHP : string CategoryName
+                Crystal : String category_name
+                C# : string CategoryName
+                Rust : String category_name
+            CategorySection : CategorySection / category_section / category-section / Category Section / Category section / category section
+                Properties : false false
+                Go : string CategorySection
+                PHP : string CategorySection
+                Crystal : String category_section
+                C# : string CategorySection
+                Rust : String category_section
 </pre>

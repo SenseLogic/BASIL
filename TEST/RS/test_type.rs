@@ -26,7 +26,10 @@ struct SIMPLE
     integer : i64,
     natural : u64,
     real : f64,
-    address : String
+    address : String,
+    category_slug : String,
+    category_name : String,
+    category_section : String
 }
 
 // ~~

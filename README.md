@@ -369,6 +369,7 @@ divide <i>integer</i>
 divide <i>minimum_integer</i> <i>maximum_integer</i>
 divide <i>real</i>
 divide <i>minimum_real</i> <i>maximum_real</i>
+set <i>value</i>
 add_prefix <i>prefix</i>
 remove_prefix <i>prefix</i>
 replace_prefix <i>old_prefix</i> <i>new_content</i>
@@ -390,6 +391,17 @@ sentence_case
 locution_case
 slug_case
 plural
+if this|<i>column_name</i>|<i>value</i> =|!=|contains|!contains|has_prefix|!has_prefix|has_suffix|!has_suffix this|<i>column_name</i>|<i>value</i>
+switch this|<i>column_name</i>|<i>value</i> <i>old_value</i> <i>new_value</i> ...
+</pre>
+
+### Column template characters
+
+<pre>
+\s : space character
+\n : linefeed character
+\r : carriage return character
+\t : tabulation character
 </pre>
 
 ### Column properties

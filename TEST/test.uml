@@ -39,6 +39,9 @@ class SIMPLE {
     Natural : UINT64
     Real : FLOAT64
     Address : STRING
+    CategorySlug : STRING
+    CategoryName : STRING
+    CategorySection : STRING
 }
 
 class COMPOUND {

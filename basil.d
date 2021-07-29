@@ -3077,10 +3077,14 @@ class TYPE
             real_value;
         long
             filter_argument_count,
+            filter_argument_index,
+            filter_index,
             integer_value;
         string
+            filter,
             filter_argument,
-            filter_name;
+            filter_name,
+            other_filter_argument;
         string[]
             filter_argument_array,
             filter_array,
@@ -3098,11 +3102,19 @@ class TYPE
             {
                 if ( ( template_part_index & 1 ) == 1 )
                 {
-                    filter_array = template_part.split( ':' );
+                    filter_array = template_part.Split( ':' );
 
-                    foreach ( filter_index, filter; filter_array )
+                    for ( filter_index = 0;
+                          filter_index < filter_array.length;
+                          ++filter_index )
                     {
-                        filter_argument_array = filter.split( ' ' );
+                        filter = filter_array[ filter_index ];
+                        filter_argument_array = filter.Split( ' ' );
+
+                        foreach ( ref filter_argument_; filter_argument_array )
+                        {
+                            filter_argument_ = filter_argument_.GetProcessedText();
+                        }
 
                         if ( filter_argument_array.length >= 1 )
                         {
@@ -3110,7 +3122,12 @@ class TYPE
                             filter_argument_array = filter_argument_array[ 1 .. $ ];
                             filter_argument_count = filter_argument_array.length;
 
-                            if ( filter_name == "natural" )
+                            if ( filter_name == "set"
+                                 && filter_argument_count == 1 )
+                            {
+                                template_part = filter_argument_array[ 0 ];
+                            }
+                            else if ( filter_name == "natural" )
                             {
                                 template_part
                                     = Random.MakeNatural(
@@ -3584,9 +3601,9 @@ class TYPE
                                 }
                             }
                             else if ( filter_name == "add_prefix"
-                                      && filter_argument_count >= 1 )
+                                      && filter_argument_count == 1 )
                             {
-                                template_part = template_part.AddPrefix( filter_argument_array[ 1 .. $ ].join( ' ' ) );
+                                template_part = template_part.AddPrefix( filter_argument_array[ 0 ] );
                             }
                             else if ( filter_name == "remove_prefix"
                                       && filter_argument_count == 1 )
@@ -3599,9 +3616,9 @@ class TYPE
                                 template_part = template_part.ReplacePrefix( filter_argument_array[ 0 ], filter_argument_array[ 1 ] );
                             }
                             else if ( filter_name == "add_suffix"
-                                      && filter_argument_count >= 1 )
+                                      && filter_argument_count == 1 )
                             {
-                                template_part = template_part.AddSuffix( filter_argument_array[ 1 .. $ ].join( ' ' ) );
+                                template_part = template_part.AddSuffix( filter_argument_array[ 0 ] );
                             }
                             else if ( filter_name == "remove_suffix"
                                       && filter_argument_count == 1 )
@@ -3687,6 +3704,77 @@ class TYPE
                                       && filter_argument_count == 0 )
                             {
                                 template_part = template_part.GetPluralText();
+                            }
+                            else if ( filter_name == "switch"
+                                      && filter_argument_count >= 3 )
+                            {
+                                filter_argument = filter_argument_array[ 0 ];
+
+                                if ( filter_argument == "this" )
+                                {
+                                    filter_argument = template_part;
+                                }
+                                else if ( Column.HasColumnValue( filter_argument ) )
+                                {
+                                    filter_argument = Column.GetColumnValue( filter_argument, row_index );
+                                }
+
+                                for ( filter_argument_index = 1;
+                                      filter_argument_index + 1 < filter_argument_array.length;
+                                      ++filter_argument_index )
+                                {
+                                    if ( filter_argument == filter_argument_array[ filter_argument_index ] )
+                                    {
+                                        template_part = filter_argument_array[ filter_argument_index + 1 ];
+
+                                        break;
+                                    }
+                                }
+                            }
+                            else if ( filter_name == "if"
+                                      && filter_argument_count >= 3 )
+                            {
+                                filter_argument = filter_argument_array[ 0 ];
+
+                                if ( filter_argument == "this" )
+                                {
+                                    filter_argument = template_part;
+                                }
+                                else if ( Column.HasColumnValue( filter_argument ) )
+                                {
+                                    filter_argument = Column.GetColumnValue( filter_argument, row_index );
+                                }
+
+                                other_filter_argument = filter_argument_array[ 2 ];
+
+                                if ( other_filter_argument == "this" )
+                                {
+                                    other_filter_argument = template_part;
+                                }
+                                else if ( Column.HasColumnValue( other_filter_argument ) )
+                                {
+                                    other_filter_argument = Column.GetColumnValue( other_filter_argument, row_index );
+                                }
+
+                                if ( !( ( filter_argument_array[ 1 ] == "="
+                                           && filter_argument == other_filter_argument )
+                                        || ( filter_argument_array[ 1 ] == "!="
+                                             && filter_argument != other_filter_argument )
+                                        || ( filter_argument_array[ 1 ] == "contains"
+                                             && filter_argument.indexOf( other_filter_argument ) >= 0 )
+                                        || ( filter_argument_array[ 1 ] == "!contains"
+                                             && filter_argument.indexOf( other_filter_argument ) < 0 )
+                                        || ( filter_argument_array[ 1 ] == "has_prefix"
+                                             && filter_argument.startsWith( other_filter_argument ) )
+                                        || ( filter_argument_array[ 1 ] == "!has_prefix"
+                                             && !filter_argument.startsWith( other_filter_argument ) )
+                                        || ( filter_argument_array[ 1 ] == "has_suffix"
+                                             && filter_argument.endsWith( other_filter_argument ) )
+                                        || ( filter_argument_array[ 1 ] == "!has_suffix"
+                                             && !filter_argument.endsWith( other_filter_argument ) ) ) )
+                                {
+                                    ++filter_index;
+                                }
                             }
                             else if ( Column.HasColumnValue( filter_name ) )
                             {
@@ -12176,6 +12264,106 @@ string InsertCharacter(
     {
         return text[ 0 .. character_index ] ~ character ~ text[ character_index .. $ ];
     }
+}
+
+// ~~
+
+string GetProcessedText(
+    string text
+    )
+{
+    char
+        character;
+    long
+        character_index;
+    string
+        processed_text;
+
+    for ( character_index = 0;
+          character_index < text.length;
+          ++character_index )
+    {
+        character = text[ character_index ];
+
+        if ( character == '\\'
+             && character_index + 1 < text.length )
+        {
+            ++character_index;
+            character = text[ character_index ];
+
+            if ( character == 'n' )
+            {
+                processed_text ~= '\n';
+            }
+            else if ( character == 'r' )
+            {
+                processed_text ~= '\r';
+            }
+            else if ( character == 's' )
+            {
+                processed_text ~= ' ';
+            }
+            else if ( character == 't' )
+            {
+                processed_text ~= '\t';
+            }
+            else if ( character != 'v' )
+            {
+                processed_text ~= character;
+            }
+        }
+        else
+        {
+            processed_text ~= character;
+        }
+    }
+
+    return processed_text;
+}
+
+// ~~
+
+string[] Split(
+    string text,
+    char separator_character
+    )
+{
+    char
+        character;
+    long
+        character_index;
+    string[]
+        part_array;
+
+    if ( text != "" )
+    {
+        part_array ~= "";
+
+        for ( character_index = 0;
+              character_index < text.length;
+              ++character_index )
+        {
+            character = text[ character_index ];
+
+            if ( character == separator_character )
+            {
+                part_array ~= "";
+            }
+            else
+            {
+                part_array[ $ - 1 ] ~= character;
+
+                if ( character == '\\'
+                     && character_index + 1 < text.length )
+                {
+                    ++character_index;
+                    part_array[ $ - 1 ] ~= text[ character_index ];
+                }
+            }
+        }
+    }
+
+    return part_array;
 }
 
 // ~~

@@ -26,6 +26,9 @@ class SIMPLE
     @natural : Uint64
     @real : Float64
     @address : String
+    @category_slug : String
+    @category_name : String
+    @category_section : String
 end
 
 # ~~

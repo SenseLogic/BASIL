@@ -7,7 +7,7 @@ func AddDatabaseSimple(
 
     error_
         := DatabaseSession.Query(
-               "insert into \"SIMPLE\" ( \"Uuid\", \"Bool\", \"Int8\", \"Uint8\", \"Int16\", \"Uint16\", \"Int32\", \"Uint32\", \"Int64\", \"Uint64\", \"Float32\", \"Float64\", \"String\", \"Name\", \"Date\", \"DateTime\", \"Blob\", \"Option\", \"EnglishText\", \"FrenchText\", \"GermanText\", \"LatinText\", \"SpanishText\", \"Integer\", \"Natural\", \"Real\", \"Address\" ) values ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? )",
+               "insert into \"SIMPLE\" ( \"Uuid\", \"Bool\", \"Int8\", \"Uint8\", \"Int16\", \"Uint16\", \"Int32\", \"Uint32\", \"Int64\", \"Uint64\", \"Float32\", \"Float64\", \"String\", \"Name\", \"Date\", \"DateTime\", \"Blob\", \"Option\", \"EnglishText\", \"FrenchText\", \"GermanText\", \"LatinText\", \"SpanishText\", \"Integer\", \"Natural\", \"Real\", \"Address\", \"CategorySlug\", \"CategoryName\", \"CategorySection\" ) values ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? )",
                simple.Uuid,
                simple.Bool,
                simple.Int8,
@@ -34,7 +34,10 @@ func AddDatabaseSimple(
                simple.Integer,
                simple.Natural,
                simple.Real,
-               simple.Address
+               simple.Address,
+               simple.CategorySlug,
+               simple.CategoryName,
+               simple.CategorySection
                ).Exec();
 
     if ( error_ != nil )
@@ -58,7 +61,7 @@ func PutDatabaseSimple(
 
     error_
         := DatabaseSession.Query(
-               "replace into \"SIMPLE\" ( \"Uuid\", \"Bool\", \"Int8\", \"Uint8\", \"Int16\", \"Uint16\", \"Int32\", \"Uint32\", \"Int64\", \"Uint64\", \"Float32\", \"Float64\", \"String\", \"Name\", \"Date\", \"DateTime\", \"Blob\", \"Option\", \"EnglishText\", \"FrenchText\", \"GermanText\", \"LatinText\", \"SpanishText\", \"Integer\", \"Natural\", \"Real\", \"Address\" ) values ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? )",
+               "replace into \"SIMPLE\" ( \"Uuid\", \"Bool\", \"Int8\", \"Uint8\", \"Int16\", \"Uint16\", \"Int32\", \"Uint32\", \"Int64\", \"Uint64\", \"Float32\", \"Float64\", \"String\", \"Name\", \"Date\", \"DateTime\", \"Blob\", \"Option\", \"EnglishText\", \"FrenchText\", \"GermanText\", \"LatinText\", \"SpanishText\", \"Integer\", \"Natural\", \"Real\", \"Address\", \"CategorySlug\", \"CategoryName\", \"CategorySection\" ) values ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? )",
                simple.Uuid,
                simple.Bool,
                simple.Int8,
@@ -85,7 +88,10 @@ func PutDatabaseSimple(
                simple.Integer,
                simple.Natural,
                simple.Real,
-               simple.Address
+               simple.Address,
+               simple.CategorySlug,
+               simple.CategoryName,
+               simple.CategorySection
                ).Exec();
 
     if ( error_ != nil )
@@ -107,7 +113,7 @@ func SetDatabaseSimple(
 {
     error_
         := DatabaseSession.Query(
-               "insert into \"SIMPLE\" ( \"Uuid\", \"Bool\", \"Int8\", \"Uint8\", \"Int16\", \"Uint16\", \"Int32\", \"Uint32\", \"Int64\", \"Uint64\", \"Float32\", \"Float64\", \"String\", \"Name\", \"Date\", \"DateTime\", \"Blob\", \"Option\", \"EnglishText\", \"FrenchText\", \"GermanText\", \"LatinText\", \"SpanishText\", \"Integer\", \"Natural\", \"Real\", \"Address\" ) values ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? )",
+               "insert into \"SIMPLE\" ( \"Uuid\", \"Bool\", \"Int8\", \"Uint8\", \"Int16\", \"Uint16\", \"Int32\", \"Uint32\", \"Int64\", \"Uint64\", \"Float32\", \"Float64\", \"String\", \"Name\", \"Date\", \"DateTime\", \"Blob\", \"Option\", \"EnglishText\", \"FrenchText\", \"GermanText\", \"LatinText\", \"SpanishText\", \"Integer\", \"Natural\", \"Real\", \"Address\", \"CategorySlug\", \"CategoryName\", \"CategorySection\" ) values ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? )",
                simple.Uuid,
                simple.Bool,
                simple.Int8,
@@ -134,7 +140,10 @@ func SetDatabaseSimple(
                simple.Integer,
                simple.Natural,
                simple.Real,
-               simple.Address
+               simple.Address,
+               simple.CategorySlug,
+               simple.CategoryName,
+               simple.CategorySection
                ).Exec();
 
     if ( error_ != nil )
@@ -179,7 +188,7 @@ func GetDatabaseSimple(
 {
     error_
         := DatabaseSession.Query(
-               "select \"Bool\", \"Int8\", \"Uint8\", \"Int16\", \"Uint16\", \"Int32\", \"Uint32\", \"Int64\", \"Uint64\", \"Float32\", \"Float64\", \"String\", \"Name\", \"Date\", \"DateTime\", \"Blob\", \"Option\", \"EnglishText\", \"FrenchText\", \"GermanText\", \"LatinText\", \"SpanishText\", \"Integer\", \"Natural\", \"Real\", \"Address\" from \"SIMPLE\" where \"Uuid\" = ?",
+               "select \"Bool\", \"Int8\", \"Uint8\", \"Int16\", \"Uint16\", \"Int32\", \"Uint32\", \"Int64\", \"Uint64\", \"Float32\", \"Float64\", \"String\", \"Name\", \"Date\", \"DateTime\", \"Blob\", \"Option\", \"EnglishText\", \"FrenchText\", \"GermanText\", \"LatinText\", \"SpanishText\", \"Integer\", \"Natural\", \"Real\", \"Address\", \"CategorySlug\", \"CategoryName\", \"CategorySection\" from \"SIMPLE\" where \"Uuid\" = ?",
                simple.Uuid
                )
                .Consistency( gocql.One )
@@ -209,7 +218,10 @@ func GetDatabaseSimple(
                     &simple.Integer,
                     &simple.Natural,
                     &simple.Real,
-                    &simple.Address
+                    &simple.Address,
+                    &simple.CategorySlug,
+                    &simple.CategoryName,
+                    &simple.CategorySection
                     );
 
     if ( error_ != nil )
@@ -234,7 +246,7 @@ func GetDatabaseSimpleList(
 
     iterator
         := DatabaseSession.Query(
-               "select \"Uuid\", \"Bool\", \"Int8\", \"Uint8\", \"Int16\", \"Uint16\", \"Int32\", \"Uint32\", \"Int64\", \"Uint64\", \"Float32\", \"Float64\", \"String\", \"Name\", \"Date\", \"DateTime\", \"Blob\", \"Option\", \"EnglishText\", \"FrenchText\", \"GermanText\", \"LatinText\", \"SpanishText\", \"Integer\", \"Natural\", \"Real\", \"Address\" from \"SIMPLE\""
+               "select \"Uuid\", \"Bool\", \"Int8\", \"Uint8\", \"Int16\", \"Uint16\", \"Int32\", \"Uint32\", \"Int64\", \"Uint64\", \"Float32\", \"Float64\", \"String\", \"Name\", \"Date\", \"DateTime\", \"Blob\", \"Option\", \"EnglishText\", \"FrenchText\", \"GermanText\", \"LatinText\", \"SpanishText\", \"Integer\", \"Natural\", \"Real\", \"Address\", \"CategorySlug\", \"CategoryName\", \"CategorySection\" from \"SIMPLE\""
                )
                .Consistency( gocql.One )
                .Iter();
@@ -268,7 +280,10 @@ func GetDatabaseSimpleList(
             &simple.Integer,
             &simple.Natural,
             &simple.Real,
-            &simple.Address
+            &simple.Address,
+            &simple.CategorySlug,
+            &simple.CategoryName,
+            &simple.CategorySection
             )
     {
         *simple_array = append( *simple_array, simple );
