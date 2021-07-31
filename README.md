@@ -308,8 +308,8 @@ count <i>row_count</i>
 natural <i>minimum_value</i> <i>maximum_value</i> <i>digit_count</i>
 integer <i>minimum_value</i> <i>maximum_value</i>
 real <i>minimum_value</i> <i>maximum_value</i> [<i>precision</i>]
-date <i>minimum_year<i> <i>maximum_year</i>
-time <i>minimum_hour<i> <i>maximum_hour</i>
+date <i>minimum_year</i> <i>maximum_year</i>
+time <i>minimum_hour</i> <i>maximum_hour</i>
 blob <i>hexadecimal_digit_count</i>
 uuid
 isbn

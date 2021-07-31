@@ -3100,7 +3100,11 @@ class TYPE
 
             foreach ( template_part_index, ref template_part; template_part_array )
             {
-                if ( ( template_part_index & 1 ) == 1 )
+                if ( ( template_part_index & 1 ) == 0 )
+                {
+                    template_part = template_part.GetProcessedText();
+                }
+                else
                 {
                     filter_array = template_part.Split( ':' );
 
