@@ -31251,7 +31251,6 @@ militari
 potest
 fortuna
 nam
-<sicut>
 magno
 accidit
 casu
@@ -31757,7 +31756,6 @@ nullum
 enim
 poterat
 universis
-<a>
 perterritis
 ac
 dispersis

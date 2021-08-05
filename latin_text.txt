@@ -4548,7 +4548,7 @@ celeriter contraque omnium opinionem confecto itinere multos in agris inopinante
 eorum indicio ad ipsum ambiorigem contendit
 quo in loco cum paucis equitibus esse dicebatur
 multum cum in omnibus rebus tum in re militari potest fortuna
-nam <sicut> magno accidit casu ut in ipsum incautum etiam atque imparatum incideret
+nam magno accidit casu ut in ipsum incautum etiam atque imparatum incideret
 priusque eius adventus ab omnibus videretur
 quam fama ac nuntius adferretur
 sic magnae fuit fortunae omni militari instrumento
@@ -4633,7 +4633,7 @@ sed in omnes partes dispersa multitudo
 ubi cuique aut valles abdita aut locus silvestris aut palus impedita spem praesidi aut salutis aliquam offerebat
 consederat
 haec loca vicinitatibus erant nota
-magnamque res diligentiam requirebat non in summa exercitus tuenda nullum enim poterat universis <a> perterritis ac dispersis periculum accidere
+magnamque res diligentiam requirebat non in summa exercitus tuenda nullum enim poterat universis perterritis ac dispersis periculum accidere
 sed in singulis militibus conservandis
 quae tamen ex parte res ad salutem exercitus pertinebat
 nam et praedae cupiditas multos longius evocabat
