@@ -5521,6 +5521,7 @@ class COLUMN
         IsPartitioned,
         IsClustered,
         IsIndexed,
+        IsFiltered,
         IsMapped,
         IsAccessed,
         IsStatic,
@@ -5999,6 +6000,11 @@ class COLUMN
                       && value_text_array.length == 2 )
             {
                 IsIndexed = ( value_text_array[ 1 ] != "false" );
+            }
+            else if ( property_name == "filtered"
+                      && value_text_array.length == 2 )
+            {
+                IsFiltered = ( value_text_array[ 1 ] != "false" );
             }
             else if ( property_name == "mapped"
                       && value_text_array.length == 2 )
@@ -8555,7 +8561,7 @@ class TABLE
                     }
 
                     phoenix_code
-                        ~= " from `" ~ Name ~ "` where " ~ key_column.StoredName ~ " = ? limit 1' );\n"
+                        ~= " from `" ~ Name ~ "` where `" ~ key_column.StoredName ~ "` = ? limit 1' );\n"
                            ~ "    statement.bindParam( 1, " ~ key_column.PhpVariable ~ ", " ~ key_column.PhpParameterType ~ " );\n"
                            ~ "\n"
                            ~ "    if ( !statement.execute() )\n"
@@ -8707,6 +8713,65 @@ class TABLE
                 ~ "\n// ~~\n\n"
                 ~ GetGetDatabaseObjectArrayPhoenixCode( "Sorted", true );
         }
+    }
+
+    // ~~
+
+    string GetGetDatabaseObjectArrayByKeyPhoenixCode(
+        )
+    {
+        string
+            phoenix_code;
+
+        foreach ( key_column; ColumnArray )
+        {
+            if ( key_column.IsFiltered )
+            {
+                phoenix_code
+                    = "\n// ~~\n\n"
+                      ~ "function GetDatabase" ~ PhpAttribute ~ "ArrayBy" ~ key_column.PhpName ~ "(\n"
+                      ~ "    " ~ key_column.PhpType ~ " " ~ key_column.PhpVariable ~ "\n"
+                      ~ "    )\n"
+                      ~ "{\n";
+
+                if ( SqlOptionIsEnabled )
+                {
+                    phoenix_code
+                        ~= "    var statement = GetDatabaseStatement( 'select ";
+
+                    foreach ( column; ColumnArray )
+                    {
+                        if ( column.IsStored )
+                        {
+                            phoenix_code
+                                ~= "`" ~ column.StoredName ~ "`";
+
+                            if ( !column.IsLastStored )
+                            {
+                                phoenix_code
+                                    ~= ", ";
+                            }
+                        }
+                    }
+
+                    phoenix_code
+                        ~= " from `" ~ Name ~ "` where `" ~ key_column.StoredName ~ "` = ?' );\n"
+                           ~ "    statement.bindParam( 1, " ~ key_column.PhpVariable ~ ", " ~ key_column.PhpParameterType ~ " );\n"
+                           ~ "\n"
+                           ~ "    if ( !statement.execute() )\n"
+                           ~ "    {\n"
+                           ~ "        var_dump( statement.errorInfo() );\n"
+                           ~ "    }\n"
+                           ~ "\n"
+                           ~ GetReturnDatabaseObjectArrayPhoenixCode();
+                }
+
+                phoenix_code
+                    ~= "}\n";
+            }
+        }
+
+        return phoenix_code;
     }
 
     // ~~
@@ -11068,6 +11133,7 @@ class SCHEMA
                 phoenix_model_file_text
                     = "// -- FUNCTIONS\n\n"
                       ~ table.GetGetDatabaseObjectArrayPhoenixCode()
+                      ~ table.GetGetDatabaseObjectArrayByKeyPhoenixCode()
                       ~ table.GetGetDatabaseObjectMapPhoenixCode()
                       ~ table.GetGetDatabaseObjectPhoenixCode()
                       ~ table.GetGetDatabaseObjectByKeyPhoenixCode()
