@@ -415,6 +415,7 @@ switch this|<i>column_name</i>|<i>value</i> <i>old_value</i> <i>new_value</i> ..
 [!]clustered
 [!]indexed
 [!]filtered
+[!]grouped
 [!]mapped
 [!]accessed
 [!]static

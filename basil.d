@@ -5522,6 +5522,7 @@ class COLUMN
         IsClustered,
         IsIndexed,
         IsFiltered,
+        IsGrouped,
         IsMapped,
         IsAccessed,
         IsStatic,
@@ -6005,6 +6006,11 @@ class COLUMN
                       && value_text_array.length == 2 )
             {
                 IsFiltered = ( value_text_array[ 1 ] != "false" );
+            }
+            else if ( property_name == "grouped"
+                      && value_text_array.length == 2 )
+            {
+                IsGrouped = ( value_text_array[ 1 ] != "false" );
             }
             else if ( property_name == "mapped"
                       && value_text_array.length == 2 )
@@ -8776,7 +8782,101 @@ class TABLE
 
     // ~~
 
-    string GetGetDatabaseObjectMapPhoenixCode(
+    string GetGetDatabaseObjectArrayByKeyMapPhoenixCode(
+        )
+    {
+        string
+            phoenix_code;
+
+        foreach ( key_column; ColumnArray )
+        {
+            if ( key_column.IsGrouped )
+            {
+                phoenix_code
+                    = "\n// ~~\n\n"
+                      ~ "function GetDatabase" ~ PhpAttribute ~ "ArrayBy" ~ key_column.PhpName ~ "Map(\n"
+                      ~ "    )\n"
+                      ~ "{\n";
+
+                if ( SqlOptionIsEnabled )
+                {
+                    phoenix_code
+                        ~= "    var statement = GetDatabaseStatement( 'select ";
+
+                    foreach ( column; ColumnArray )
+                    {
+                        if ( column.IsStored )
+                        {
+                            phoenix_code
+                                ~= "`" ~ column.StoredName ~ "`";
+
+                            if ( !column.IsLastStored )
+                            {
+                                phoenix_code
+                                    ~= ", ";
+                            }
+                        }
+                    }
+
+                    phoenix_code
+                        ~= " from `" ~ Name ~ "`' );\n"
+                           ~ "\n"
+                           ~ "    if ( !statement.execute() )\n"
+                           ~ "    {\n"
+                           ~ "        var_dump( statement.errorInfo() );\n"
+                           ~ "    }\n"
+                           ~ "\n"
+                           ~ "    var " ~ PhpVariable ~ "_array_map = [];\n"
+                           ~ "\n"
+                           ~ "    while ( var "
+                           ~ PhpVariable
+                           ~ " = statement.fetchObject() )\n"
+                           ~ "    {\n"
+                           ~ GetEncodeDatabaseColumnPhoenixCode( "        " )
+                           ~ "\n"
+                           ~ "        if ( !isset( "
+                           ~ PhpVariable
+                           ~ "_array_map[ "
+                           ~ PhpVariable
+                           ~ "." ~ key_column.PhpName
+                           ~ " ] ) )\n"
+                           ~ "        {\n"
+                           ~ "            "
+                           ~ PhpVariable
+                           ~ "_array_map[ "
+                           ~ PhpVariable
+                           ~ "." ~ key_column.PhpName
+                           ~ " ] = array( "
+                           ~ PhpVariable
+                           ~ " );\n"
+                           ~ "        }\n"
+                           ~ "        else\n"
+                           ~ "        {\n"
+                           ~ "            array_push( "
+                           ~ PhpVariable
+                           ~ "_array_map[ "
+                           ~ PhpVariable
+                           ~ "." ~ key_column.PhpName
+                           ~ " ], "
+                           ~ PhpVariable
+                           ~ " );\n"
+                           ~ "        }\n"
+                           ~ "    }\n"
+                           ~ "\n"
+                           ~ "    return " ~ PhpVariable ~ "_array_map;\n";
+                }
+
+                phoenix_code
+                    ~= "}\n";
+            }
+        }
+
+        return phoenix_code;
+    }
+
+    // ~~
+
+    string GetGetDatabaseObjectByKeyMapPhoenixCode(
         )
     {
         string
@@ -11134,7 +11234,8 @@ class SCHEMA
                     = "// -- FUNCTIONS\n\n"
                       ~ table.GetGetDatabaseObjectArrayPhoenixCode()
                       ~ table.GetGetDatabaseObjectArrayByKeyPhoenixCode()
-                      ~ table.GetGetDatabaseObjectMapPhoenixCode()
+                      ~ table.GetGetDatabaseObjectArrayByKeyMapPhoenixCode()
+                      ~ table.GetGetDatabaseObjectByKeyMapPhoenixCode()
                       ~ table.GetGetDatabaseObjectPhoenixCode()
                       ~ table.GetGetDatabaseObjectByKeyPhoenixCode()
                       ~ table.GetAddDatabaseObjectPhoenixCode()
