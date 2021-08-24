@@ -8826,44 +8826,23 @@ class TABLE
                            ~ "        var_dump( statement.errorInfo() );\n"
                            ~ "    }\n"
                            ~ "\n"
-                           ~ "    var " ~ PhpVariable ~ "_array_map = [];\n"
+                           ~ "    var " ~ PhpVariable ~ "_array_by_" ~ key_column.PhpVariable ~ "_map = [];\n"
                            ~ "\n"
-                           ~ "    while ( var "
-                           ~ PhpVariable
-                           ~ " = statement.fetchObject() )\n"
+                           ~ "    while ( var " ~ PhpVariable ~ " = statement.fetchObject() )\n"
                            ~ "    {\n"
                            ~ GetEncodeDatabaseColumnPhoenixCode( "        " )
                            ~ "\n"
-                           ~ "        if ( !isset( "
-                           ~ PhpVariable
-                           ~ "_array_map[ "
-                           ~ PhpVariable
-                           ~ "." ~ key_column.PhpName
-                           ~ " ] ) )\n"
+                           ~ "        if ( !isset( " ~ PhpVariable ~ "_array_by_" ~ key_column.PhpVariable ~ "_map[ " ~ PhpVariable ~ "." ~ key_column.PhpName ~ " ] ) )\n"
                            ~ "        {\n"
-                           ~ "            "
-                           ~ PhpVariable
-                           ~ "_array_map[ "
-                           ~ PhpVariable
-                           ~ "." ~ key_column.PhpName
-                           ~ " ] = array( "
-                           ~ PhpVariable
-                           ~ " );\n"
+                           ~ "            " ~ PhpVariable ~ "_array_by_" ~ key_column.PhpVariable ~ "_map[ " ~ PhpVariable ~ "." ~ key_column.PhpName ~ " ] = array( " ~ PhpVariable ~ " );\n"
                            ~ "        }\n"
                            ~ "        else\n"
                            ~ "        {\n"
-                           ~ "            array_push( "
-                           ~ PhpVariable
-                           ~ "_array_map[ "
-                           ~ PhpVariable
-                           ~ "." ~ key_column.PhpName
-                           ~ " ], "
-                           ~ PhpVariable
-                           ~ " );\n"
+                           ~ "            array_push( " ~ PhpVariable ~ "_array_by_" ~ key_column.PhpVariable ~ "_map[ " ~ PhpVariable ~ "." ~ key_column.PhpName ~ " ], " ~ PhpVariable ~ " );\n"
                            ~ "        }\n"
                            ~ "    }\n"
                            ~ "\n"
-                           ~ "    return " ~ PhpVariable ~ "_array_map;\n";
+                           ~ "    return " ~ PhpVariable ~ "_array_by_" ~ key_column.PhpVariable ~ "_map;\n";
                 }
 
                 phoenix_code
@@ -8920,24 +8899,15 @@ class TABLE
                            ~ "        var_dump( statement.errorInfo() );\n"
                            ~ "    }\n"
                            ~ "\n"
-                           ~ "    var " ~ PhpVariable ~ "_map = [];\n"
+                           ~ "    var " ~ PhpVariable ~ "_by_" ~ key_column.PhpVariable ~ "_map = [];\n"
                            ~ "\n"
-                           ~ "    while ( var "
-                           ~ PhpVariable
-                           ~ " = statement.fetchObject() )\n"
+                           ~ "    while ( var " ~ PhpVariable ~ " = statement.fetchObject() )\n"
                            ~ "    {\n"
                            ~ GetEncodeDatabaseColumnPhoenixCode( "        " )
-                           ~ "        "
-                           ~ PhpVariable
-                           ~ "_map[ "
-                           ~ PhpVariable
-                           ~ "." ~ key_column.PhpName
-                           ~ " ] = "
-                           ~ PhpVariable
-                           ~ ";\n"
+                           ~ "        " ~ PhpVariable ~ "_by_" ~ key_column.PhpVariable ~ "_map[ " ~ PhpVariable ~ "." ~ key_column.PhpName ~ " ] = " ~ PhpVariable ~ ";\n"
                            ~ "    }\n"
                            ~ "\n"
-                           ~ "    return " ~ PhpVariable ~ "_map;\n";
+                           ~ "    return " ~ PhpVariable ~ "_by_" ~ key_column.PhpVariable ~ "_map;\n";
                 }
 
                 phoenix_code
