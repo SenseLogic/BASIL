@@ -3107,6 +3107,7 @@ class TYPE
                 else
                 {
                     filter_array = template_part.Split( ':' );
+                    template_part = "";
 
                     for ( filter_index = 0;
                           filter_index < filter_array.length;
@@ -3733,6 +3734,26 @@ class TYPE
 
                                         break;
                                     }
+                                }
+                            }
+                            else if ( filter_name == "if"
+                                      && filter_argument_count == 1 )
+                            {
+                                filter_argument = filter_argument_array[ 0 ];
+
+                                if ( filter_argument == "this" )
+                                {
+                                    filter_argument = template_part;
+                                }
+                                else if ( Column.HasColumnValue( filter_argument ) )
+                                {
+                                    filter_argument = Column.GetColumnValue( filter_argument, row_index );
+                                }
+
+                                if ( filter_argument != "false"
+                                     && filter_argument != "0" )
+                                {
+                                    ++filter_index;
                                 }
                             }
                             else if ( filter_name == "if"
