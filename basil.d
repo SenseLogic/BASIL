@@ -24,8 +24,8 @@ import core.stdc.stdlib : exit;
 import std.algorithm : countUntil, sort;
 import std.ascii : isDigit, isLower, isUpper;
 import std.conv : to;
-import std.file : dirEntries, exists, mkdirRecurse, readText, thisExePath, write, SpanMode;
 import std.digest.md : md5Of;
+import std.file : dirEntries, exists, mkdirRecurse, readText, thisExePath, write, SpanMode;
 import std.math : ceil, floor, round;
 import std.random : uniform;
 import std.path : dirName;
@@ -33,6 +33,7 @@ import std.regex : regex, replaceAll, Regex;
 import std.stdio : writeln;
 import std.string : capitalize, endsWith, format, indexOf, join, lastIndexOf, lineSplitter, replace, startsWith, split, strip, stripRight, toLower, toUpper;
 import std.uni : isAlpha;
+
 // -- TYPES
 
 class LINK
