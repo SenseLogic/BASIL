@@ -12862,9 +12862,17 @@ string ReplaceConditionalTags(
     string
         boolean_expression,
         old_text,
-        result_text;
+        result_text,
+        sub_value_separator_text,
+        template_text,
+        value_result_text,
+        value_separator_text,
+        value_text,
+        variable_name;
     string[]
-        argument_array;
+        argument_array,
+        sub_value_array,
+        value_array;
 
     do
     {
@@ -13186,6 +13194,69 @@ string ReplaceConditionalTags(
                 {
                     result_text = argument_array[ 1 ].GetPluralText();
                 }
+                else if ( argument_array.length == 5
+                          && argument_array[ 0 ] == "Split" )
+                {
+                    variable_name = argument_array[ 1 ];
+                    value_text = argument_array[ 2 ];
+                    value_separator_text = argument_array[ 3 ];
+                    result_text = argument_array[ 4 ];
+
+                    value_array = value_text.split( value_separator_text );
+
+                    foreach ( value_index, value; value_array )
+                    {
+                        result_text
+                            = result_text.replace( "{*" ~ variable_name ~ ( value_index + 1 ).to!string() ~ "*}", value );
+                    }
+                }
+                else if ( argument_array.length == 5
+                          && argument_array[ 0 ] == "Map" )
+                {
+                    variable_name = argument_array[ 1 ];
+                    value_text = argument_array[ 2 ];
+                    value_separator_text = argument_array[ 3 ];
+                    template_text = argument_array[ 4 ];
+
+                    result_text = "";
+
+                    value_array = value_text.split( value_separator_text );
+
+                    foreach ( value; value_array )
+                    {
+                        result_text
+                            ~= template_text.replace( "{*" ~ variable_name ~ "*}", value );
+                    }
+                }
+                else if ( argument_array.length == 6
+                          && argument_array[ 0 ] == "Map" )
+                {
+                    variable_name = argument_array[ 1 ];
+                    value_text = argument_array[ 2 ];
+                    value_separator_text = argument_array[ 3 ];
+                    sub_value_separator_text = argument_array[ 4 ];
+                    template_text = argument_array[ 5 ];
+
+                    result_text = "";
+
+                    value_array = value_text.split( value_separator_text );
+
+                    foreach ( value; value_array )
+                    {
+                        value_result_text = template_text;
+
+                        sub_value_array = value.split( sub_value_separator_text );
+
+                        foreach ( sub_value_index, sub_value; sub_value_array )
+                        {
+                            value_result_text
+                                = value_result_text.replace( "{*" ~ variable_name ~ ( sub_value_index + 1 ).to!string() ~ "*}", sub_value );
+                        }
+
+                        result_text ~= value_result_text;
+                    }
+                }
+
                 else if ( ( argument_array.length == 2
                             || argument_array.length == 3 ) )
                 {
@@ -13246,6 +13317,9 @@ string ReplaceIgnoredTags(
             .replace( "@\\>", "@>" )
             .replace( "<\\$", "<$" )
             .replace( "$\\>", "$>" )
+            .replace( "<\\*", "<*" )
+            .replace( "*\\>", "*>" )
+            .replace( "<\\*>", "<*>" )
             .replace( "<\\~", "<~" )
             .replace( "~\\>", "~>" )
             .replace( "<\\>", "<>" )

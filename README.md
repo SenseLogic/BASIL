@@ -632,6 +632,10 @@ POINTER[ <i>ELEMENT_TYPE</i> ] | !stored
 
 <~Plural<>text~>
 
+<~Split<>variable name<>value text<>value separator<>template text~>
+<~Map<>variable name<>value text<>value separator<>template text~>
+<~Map<>variable name<>value text<>value separator<>sub value separator<>template text~>
+
 <~boolean expression<>text if condition is true~>
 <~boolean expression<>text if condition is true<>text if condition is false~>
 
