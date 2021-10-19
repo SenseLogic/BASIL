@@ -6154,10 +6154,12 @@ class COLUMN
             else if ( property_name == "default" )
             {
                 DefaultValueText = value_text_array[ 1 .. $ ].join( ' ' );
+
+                PropertyValueMap[ property_name ] = DefaultValueText;
             }
             else
             {
-                PropertyValueMap[ value_text_array[ 0 ] ] = value_text_array[ 1 .. $ ].join( ' ' );
+                PropertyValueMap[ property_name ] = value_text_array[ 1 .. $ ].join( ' ' );
             }
         }
     }
