@@ -6501,6 +6501,35 @@ class TABLE
 
     // -- INQUIRIES
 
+    long GetColumncount(
+        )
+    {
+        return ColumnArray.length;
+    }
+
+    // ~~
+
+    long GetStoredColumnCount(
+        )
+    {
+        long
+            stored_column_count;
+
+        stored_column_count = 0;
+
+        foreach ( column; ColumnArray )
+        {
+            if ( column.IsStored )
+            {
+                ++stored_column_count;
+            }
+        }
+
+        return stored_column_count;
+    }
+
+    // ~~
+
     long GetValueCount(
         )
     {
@@ -8996,6 +9025,8 @@ class TABLE
         PropertyValueMap[ "is_last_non_stored" ] = GetBooleanText( IsLastNonStored );
         PropertyValueMap[ "is_last_edited" ] = GetBooleanText( IsLastEdited );
         PropertyValueMap[ "is_last_non_edited" ] = GetBooleanText( IsLastNonEdited );
+        PropertyValueMap[ "column_count" ] = GetColumncount().to!string();
+        PropertyValueMap[ "stored_column_count" ] = GetStoredColumnCount().to!string();
 
         foreach ( column; ColumnArray )
         {

@@ -689,6 +689,8 @@ POINTER[ <i>ELEMENT_TYPE</i> ] | !stored
 {#is_last_non_stored#}
 {#is_last_edited#}
 {#is_last_non_edited#}
+{#column_count#}
+{#stored_column_count#}
 
 {#<i>custom_property_name</i>#}
 
