@@ -11565,7 +11565,9 @@ class SCHEMA
             instance_file_text
                 = TemplateFileText
                       .ReplaceTableTags( TableArray )
-                      .ReplaceConditionalTags();
+                      .ReplaceConditionalTags( "<~", "~>", "<>" )
+                      .ReplaceConditionalTags( "<+~", "~+>", "<+>" )
+                      .ReplaceConditionalTags( "<++~", "~++>", "<++>" );
 
             WriteInstanceFiles( instance_file_text );
         }
@@ -12879,16 +12881,21 @@ string EvaluateBooleanExpression(
 // ~~
 
 string ReplaceConditionalTags(
-    string text
+    string text,
+    string opening_tag,
+    string closing_tag,
+    string separator_tag
     )
 {
     char
-        character,
-        next_character;
+        closing_tag_first_character,
+        opening_tag_first_character;
     long
         character_index,
+        closing_tag_character_count,
         first_character_index,
         level,
+        opening_tag_character_count,
         post_character_index;
     string
         boolean_expression,
@@ -12905,401 +12912,187 @@ string ReplaceConditionalTags(
         sub_value_array,
         value_array;
 
-    do
+    if ( text.indexOf( opening_tag ) > 0 )
     {
-        old_text = text;
-        first_character_index = -1;
+        opening_tag_character_count = opening_tag.length;
+        closing_tag_character_count = closing_tag.length;
 
-        for ( character_index = 0;
-              character_index + 1 < text.length;
-              ++character_index )
+        opening_tag_first_character = opening_tag[ 0 ];
+        closing_tag_first_character = closing_tag[ 0 ];
+
+        do
         {
-            character = text[ character_index ];
-            next_character = text[ character_index + 1 ];
+            old_text = text;
+            first_character_index = -1;
 
-            if ( character == '<'
-                 && next_character == '~' )
+            for ( character_index = 0;
+                  character_index + opening_tag_character_count - 1 < text.length;
+                  ++character_index )
             {
-                first_character_index = character_index;
-                ++character_index;
-            }
-            else if ( character == '~'
-                      && next_character == '>' )
-            {
-                post_character_index = character_index + 2;
+                if ( text[ character_index ] == opening_tag_first_character
+                     && text[ character_index .. character_index + opening_tag_character_count ] == opening_tag )
+                {
+                    first_character_index = character_index;
+                    character_index += opening_tag_character_count - 1;
+                }
+                else if ( text[ character_index ] == closing_tag_character_count
+                          && text[ character_index .. character_index + closing_tag_character_count ] == closing_tag )
+                {
+                    post_character_index = character_index + closing_tag_character_count;
 
-                if ( first_character_index < 0 )
-                {
-                    Abort( "Invalid <~ ~> block : " ~ text[ 0 .. post_character_index ] );
-                }
+                    if ( first_character_index < 0 )
+                    {
+                        Abort( "Invalid " ~ opening_tag ~ " " ~ closing_tag ~" block : " ~ text[ 0 .. post_character_index ] );
+                    }
 
-                argument_array = text[ first_character_index + 2 .. character_index ].split( "<>" );
+                    argument_array = text[ first_character_index + opening_tag_character_count .. character_index ].split( separator_tag );
 
-                if ( ( argument_array.length == 4
-                       || argument_array.length == 5 )
-                     && argument_array[ 0 ] == "Equals" )
-                {
-                    if ( argument_array[ 1 ] == argument_array[ 2 ] )
+                    if ( ( argument_array.length == 4
+                           || argument_array.length == 5 )
+                         && argument_array[ 0 ] == "Equals" )
                     {
-                        result_text = argument_array[ 3 ];
-                    }
-                    else if ( argument_array.length == 5 )
-                    {
-                        result_text = argument_array[ 4 ];
-                    }
-                    else
-                    {
-                        result_text = "";
-                    }
-                }
-                else if ( ( argument_array.length == 4
-                            || argument_array.length == 5 )
-                          && argument_array[ 0 ] == "!Equals" )
-                {
-                    if ( argument_array[ 1 ] != argument_array[ 2 ] )
-                    {
-                        result_text = argument_array[ 3 ];
-                    }
-                    else if ( argument_array.length == 5 )
-                    {
-                        result_text = argument_array[ 4 ];
-                    }
-                    else
-                    {
-                        result_text = "";
-                    }
-                }
-                else if ( ( argument_array.length == 4
-                            || argument_array.length == 5 )
-                          && argument_array[ 0 ] == "HasPrefix" )
-                {
-                    if ( argument_array[ 1 ].startsWith( argument_array[ 2 ] ) )
-                    {
-                        result_text = argument_array[ 3 ];
-                    }
-                    else if ( argument_array.length == 5 )
-                    {
-                        result_text = argument_array[ 4 ];
-                    }
-                    else
-                    {
-                        result_text = "";
-                    }
-                }
-                else if ( ( argument_array.length == 4
-                            || argument_array.length == 5 )
-                          && argument_array[ 0 ] == "!HasPrefix" )
-                {
-                    if ( !argument_array[ 1 ].startsWith( argument_array[ 2 ] ) )
-                    {
-                        result_text = argument_array[ 3 ];
-                    }
-                    else if ( argument_array.length == 5 )
-                    {
-                        result_text = argument_array[ 4 ];
-                    }
-                    else
-                    {
-                        result_text = "";
-                    }
-                }
-                else if ( ( argument_array.length == 4
-                            || argument_array.length == 5 )
-                          && argument_array[ 0 ] == "HasSuffix" )
-                {
-                    if ( argument_array[ 1 ].endsWith( argument_array[ 2 ] ) )
-                    {
-                        result_text = argument_array[ 3 ];
-                    }
-                    else if ( argument_array.length == 5 )
-                    {
-                        result_text = argument_array[ 4 ];
-                    }
-                    else
-                    {
-                        result_text = "";
-                    }
-                }
-                else if ( ( argument_array.length == 4
-                            || argument_array.length == 5 )
-                          && argument_array[ 0 ] == "!HasSuffix" )
-                {
-                    if ( !argument_array[ 1 ].endsWith( argument_array[ 2 ] ) )
-                    {
-                        result_text = argument_array[ 3 ];
-                    }
-                    else if ( argument_array.length == 5 )
-                    {
-                        result_text = argument_array[ 4 ];
-                    }
-                    else
-                    {
-                        result_text = "";
-                    }
-                }
-                else if ( ( argument_array.length == 4
-                            || argument_array.length == 5 )
-                          && argument_array[ 0 ] == "Contains" )
-                {
-                    if ( argument_array[ 1 ].indexOf( argument_array[ 2 ] ) >= 0 )
-                    {
-                        result_text = argument_array[ 3 ];
-                    }
-                    else if ( argument_array.length == 5 )
-                    {
-                        result_text = argument_array[ 4 ];
-                    }
-                    else
-                    {
-                        result_text = "";
-                    }
-                }
-                else if ( ( argument_array.length == 4
-                            || argument_array.length == 5 )
-                          && argument_array[ 0 ] == "!Contains" )
-                {
-                    if ( argument_array[ 1 ].indexOf( argument_array[ 2 ] ) < 0 )
-                    {
-                        result_text = argument_array[ 3 ];
-                    }
-                    else if ( argument_array.length == 5 )
-                    {
-                        result_text = argument_array[ 4 ];
-                    }
-                    else
-                    {
-                        result_text = "";
-                    }
-                }
-                else if ( ( argument_array.length == 2
-                            || argument_array.length == 3 )
-                          && argument_array[ 0 ] == "IsLinux" )
-                {
-
-                    if ( IsLinux() )
-                    {
-                        result_text = argument_array[ 1 ];
-                    }
-                    else if ( argument_array.length == 3 )
-                    {
-                        result_text = argument_array[ 2 ];
-                    }
-                    else
-                    {
-                        result_text = "";
-                    }
-                }
-                else if ( ( argument_array.length == 2
-                            || argument_array.length == 3 )
-                          && argument_array[ 0 ] == "IsMacOS" )
-                {
-
-                    if ( IsMacOs() )
-                    {
-                        result_text = argument_array[ 1 ];
-                    }
-                    else if ( argument_array.length == 3 )
-                    {
-                        result_text = argument_array[ 2 ];
-                    }
-                    else
-                    {
-                        result_text = "";
-                    }
-                }
-                else if ( ( argument_array.length == 2
-                            || argument_array.length == 3 )
-                          && argument_array[ 0 ] == "IsWindows" )
-                {
-
-                    if ( IsWindows() )
-                    {
-                        result_text = argument_array[ 1 ];
-                    }
-                    else if ( argument_array.length == 3 )
-                    {
-                        result_text = argument_array[ 2 ];
-                    }
-                    else
-                    {
-                        result_text = "";
-                    }
-                }
-                else if ( argument_array.length == 3
-                          && argument_array[ 0 ] == "RemovePrefix" )
-                {
-                    result_text = argument_array[ 1 ].RemovePrefix( argument_array[ 2 ] );
-                }
-                else if ( argument_array.length == 4
-                          && argument_array[ 0 ] == "ReplacePrefix" )
-                {
-                    result_text = argument_array[ 1 ].ReplacePrefix( argument_array[ 2 ],  argument_array[ 3 ] );
-                }
-                else if ( argument_array.length == 3
-                          && argument_array[ 0 ] == "RemoveSuffix" )
-                {
-                    result_text = argument_array[ 1 ].RemoveSuffix( argument_array[ 2 ] );
-                }
-                else if ( argument_array.length == 4
-                          && argument_array[ 0 ] == "ReplaceSuffix" )
-                {
-                    result_text = argument_array[ 1 ].ReplaceSuffix( argument_array[ 2 ],  argument_array[ 3 ] );
-                }
-                else if ( argument_array.length == 3
-                          && argument_array[ 0 ] == "Remove" )
-                {
-                    result_text = argument_array[ 1 ].replace( argument_array[ 2 ], "" );
-                }
-                else if ( argument_array.length == 4
-                          && argument_array[ 0 ] == "Replace" )
-                {
-                    result_text = argument_array[ 1 ].replace( argument_array[ 2 ], argument_array[ 3 ] );
-                }
-                else if ( argument_array.length == 2
-                          && argument_array[ 0 ] == "LowerCase" )
-                {
-                    result_text = argument_array[ 1 ].toLower();
-                }
-                else if ( argument_array.length == 2
-                          && argument_array[ 0 ] == "UpperCase" )
-                {
-                    result_text = argument_array[ 1 ].toUpper();
-                }
-                else if ( argument_array.length == 2
-                          && argument_array[ 0 ] == "PascalCase" )
-                {
-                    result_text = argument_array[ 1 ].GetPascalCaseText();
-                }
-                else if ( argument_array.length == 2
-                          && argument_array[ 0 ] == "SnakeCase" )
-                {
-                    result_text = argument_array[ 1 ].GetSnakeCaseText();
-                }
-                else if ( argument_array.length == 2
-                          && argument_array[ 0 ] == "KebabCase" )
-                {
-                    result_text = argument_array[ 1 ].GetKebabCaseText();
-                }
-                else if ( argument_array.length == 2
-                          && argument_array[ 0 ] == "TypeCase" )
-                {
-                    result_text = argument_array[ 1 ].GetTypeCaseText();
-                }
-                else if ( argument_array.length == 2
-                          && argument_array[ 0 ] == "AttributeCase" )
-                {
-                    result_text = argument_array[ 1 ].GetAttributeCaseText();
-                }
-                else if ( argument_array.length == 2
-                          && argument_array[ 0 ] == "VariableCase" )
-                {
-                    result_text = argument_array[ 1 ].GetVariableCaseText();
-                }
-                else if ( argument_array.length == 2
-                          && argument_array[ 0 ] == "StyleCase" )
-                {
-                    result_text = argument_array[ 1 ].GetStyleCaseText();
-                }
-                else if ( argument_array.length == 2
-                          && argument_array[ 0 ] == "TitleCase" )
-                {
-                    result_text = argument_array[ 1 ].GetTitleCaseText();
-                }
-                else if ( argument_array.length == 2
-                          && argument_array[ 0 ] == "SentenceCase" )
-                {
-                    result_text = argument_array[ 1 ].GetSentenceCaseText();
-                }
-                else if ( argument_array.length == 2
-                          && argument_array[ 0 ] == "LocutionCase" )
-                {
-                    result_text = argument_array[ 1 ].GetLocutionCaseText();
-                }
-                else if ( argument_array.length == 2
-                          && argument_array[ 0 ] == "SlugCase" )
-                {
-                    result_text = argument_array[ 1 ].GetSlugCaseText();
-                }
-                else if ( argument_array.length == 2
-                          && argument_array[ 0 ] == "Plural" )
-                {
-                    result_text = argument_array[ 1 ].GetPluralText();
-                }
-                else if ( argument_array.length == 5
-                          && argument_array[ 0 ] == "Split" )
-                {
-                    variable_name = argument_array[ 1 ];
-                    value_text = argument_array[ 2 ];
-                    value_separator_text = argument_array[ 3 ];
-                    result_text = argument_array[ 4 ];
-
-                    value_array = value_text.split( value_separator_text );
-
-                    foreach ( value_index, value; value_array )
-                    {
-                        result_text
-                            = result_text.replace( "{*" ~ variable_name ~ ( value_index + 1 ).to!string() ~ "*}", value );
-                    }
-                }
-                else if ( argument_array.length == 5
-                          && argument_array[ 0 ] == "Map" )
-                {
-                    variable_name = argument_array[ 1 ];
-                    value_text = argument_array[ 2 ];
-                    value_separator_text = argument_array[ 3 ];
-                    template_text = argument_array[ 4 ];
-
-                    result_text = "";
-
-                    value_array = value_text.split( value_separator_text );
-
-                    foreach ( value; value_array )
-                    {
-                        result_text
-                            ~= template_text.replace( "{*" ~ variable_name ~ "*}", value );
-                    }
-                }
-                else if ( argument_array.length == 6
-                          && argument_array[ 0 ] == "Map" )
-                {
-                    variable_name = argument_array[ 1 ];
-                    value_text = argument_array[ 2 ];
-                    value_separator_text = argument_array[ 3 ];
-                    sub_value_separator_text = argument_array[ 4 ];
-                    template_text = argument_array[ 5 ];
-
-                    result_text = "";
-
-                    value_array = value_text.split( value_separator_text );
-
-                    foreach ( value; value_array )
-                    {
-                        value_result_text = template_text;
-
-                        sub_value_array = value.split( sub_value_separator_text );
-
-                        foreach ( sub_value_index, sub_value; sub_value_array )
+                        if ( argument_array[ 1 ] == argument_array[ 2 ] )
                         {
-                            value_result_text
-                                = value_result_text.replace( "{*" ~ variable_name ~ ( sub_value_index + 1 ).to!string() ~ "*}", sub_value );
+                            result_text = argument_array[ 3 ];
                         }
-
-                        result_text ~= value_result_text;
+                        else if ( argument_array.length == 5 )
+                        {
+                            result_text = argument_array[ 4 ];
+                        }
+                        else
+                        {
+                            result_text = "";
+                        }
                     }
-                }
-
-                else if ( ( argument_array.length == 2
-                            || argument_array.length == 3 ) )
-                {
-                    boolean_expression = EvaluateBooleanExpression( argument_array[ 0 ] );
-
-                    if ( boolean_expression == "true" )
+                    else if ( ( argument_array.length == 4
+                                || argument_array.length == 5 )
+                              && argument_array[ 0 ] == "!Equals" )
                     {
-                        result_text = argument_array[ 1 ];
+                        if ( argument_array[ 1 ] != argument_array[ 2 ] )
+                        {
+                            result_text = argument_array[ 3 ];
+                        }
+                        else if ( argument_array.length == 5 )
+                        {
+                            result_text = argument_array[ 4 ];
+                        }
+                        else
+                        {
+                            result_text = "";
+                        }
                     }
-                    else if ( boolean_expression == "false" )
+                    else if ( ( argument_array.length == 4
+                                || argument_array.length == 5 )
+                              && argument_array[ 0 ] == "HasPrefix" )
                     {
-                        if ( argument_array.length == 3 )
+                        if ( argument_array[ 1 ].startsWith( argument_array[ 2 ] ) )
+                        {
+                            result_text = argument_array[ 3 ];
+                        }
+                        else if ( argument_array.length == 5 )
+                        {
+                            result_text = argument_array[ 4 ];
+                        }
+                        else
+                        {
+                            result_text = "";
+                        }
+                    }
+                    else if ( ( argument_array.length == 4
+                                || argument_array.length == 5 )
+                              && argument_array[ 0 ] == "!HasPrefix" )
+                    {
+                        if ( !argument_array[ 1 ].startsWith( argument_array[ 2 ] ) )
+                        {
+                            result_text = argument_array[ 3 ];
+                        }
+                        else if ( argument_array.length == 5 )
+                        {
+                            result_text = argument_array[ 4 ];
+                        }
+                        else
+                        {
+                            result_text = "";
+                        }
+                    }
+                    else if ( ( argument_array.length == 4
+                                || argument_array.length == 5 )
+                              && argument_array[ 0 ] == "HasSuffix" )
+                    {
+                        if ( argument_array[ 1 ].endsWith( argument_array[ 2 ] ) )
+                        {
+                            result_text = argument_array[ 3 ];
+                        }
+                        else if ( argument_array.length == 5 )
+                        {
+                            result_text = argument_array[ 4 ];
+                        }
+                        else
+                        {
+                            result_text = "";
+                        }
+                    }
+                    else if ( ( argument_array.length == 4
+                                || argument_array.length == 5 )
+                              && argument_array[ 0 ] == "!HasSuffix" )
+                    {
+                        if ( !argument_array[ 1 ].endsWith( argument_array[ 2 ] ) )
+                        {
+                            result_text = argument_array[ 3 ];
+                        }
+                        else if ( argument_array.length == 5 )
+                        {
+                            result_text = argument_array[ 4 ];
+                        }
+                        else
+                        {
+                            result_text = "";
+                        }
+                    }
+                    else if ( ( argument_array.length == 4
+                                || argument_array.length == 5 )
+                              && argument_array[ 0 ] == "Contains" )
+                    {
+                        if ( argument_array[ 1 ].indexOf( argument_array[ 2 ] ) >= 0 )
+                        {
+                            result_text = argument_array[ 3 ];
+                        }
+                        else if ( argument_array.length == 5 )
+                        {
+                            result_text = argument_array[ 4 ];
+                        }
+                        else
+                        {
+                            result_text = "";
+                        }
+                    }
+                    else if ( ( argument_array.length == 4
+                                || argument_array.length == 5 )
+                              && argument_array[ 0 ] == "!Contains" )
+                    {
+                        if ( argument_array[ 1 ].indexOf( argument_array[ 2 ] ) < 0 )
+                        {
+                            result_text = argument_array[ 3 ];
+                        }
+                        else if ( argument_array.length == 5 )
+                        {
+                            result_text = argument_array[ 4 ];
+                        }
+                        else
+                        {
+                            result_text = "";
+                        }
+                    }
+                    else if ( ( argument_array.length == 2
+                                || argument_array.length == 3 )
+                              && argument_array[ 0 ] == "IsLinux" )
+                    {
+
+                        if ( IsLinux() )
+                        {
+                            result_text = argument_array[ 1 ];
+                        }
+                        else if ( argument_array.length == 3 )
                         {
                             result_text = argument_array[ 2 ];
                         }
@@ -13308,26 +13101,246 @@ string ReplaceConditionalTags(
                             result_text = "";
                         }
                     }
+                    else if ( ( argument_array.length == 2
+                                || argument_array.length == 3 )
+                              && argument_array[ 0 ] == "IsMacOS" )
+                    {
+
+                        if ( IsMacOs() )
+                        {
+                            result_text = argument_array[ 1 ];
+                        }
+                        else if ( argument_array.length == 3 )
+                        {
+                            result_text = argument_array[ 2 ];
+                        }
+                        else
+                        {
+                            result_text = "";
+                        }
+                    }
+                    else if ( ( argument_array.length == 2
+                                || argument_array.length == 3 )
+                              && argument_array[ 0 ] == "IsWindows" )
+                    {
+
+                        if ( IsWindows() )
+                        {
+                            result_text = argument_array[ 1 ];
+                        }
+                        else if ( argument_array.length == 3 )
+                        {
+                            result_text = argument_array[ 2 ];
+                        }
+                        else
+                        {
+                            result_text = "";
+                        }
+                    }
+                    else if ( argument_array.length == 3
+                              && argument_array[ 0 ] == "RemovePrefix" )
+                    {
+                        result_text = argument_array[ 1 ].RemovePrefix( argument_array[ 2 ] );
+                    }
+                    else if ( argument_array.length == 4
+                              && argument_array[ 0 ] == "ReplacePrefix" )
+                    {
+                        result_text = argument_array[ 1 ].ReplacePrefix( argument_array[ 2 ],  argument_array[ 3 ] );
+                    }
+                    else if ( argument_array.length == 3
+                              && argument_array[ 0 ] == "RemoveSuffix" )
+                    {
+                        result_text = argument_array[ 1 ].RemoveSuffix( argument_array[ 2 ] );
+                    }
+                    else if ( argument_array.length == 4
+                              && argument_array[ 0 ] == "ReplaceSuffix" )
+                    {
+                        result_text = argument_array[ 1 ].ReplaceSuffix( argument_array[ 2 ],  argument_array[ 3 ] );
+                    }
+                    else if ( argument_array.length == 3
+                              && argument_array[ 0 ] == "Remove" )
+                    {
+                        result_text = argument_array[ 1 ].replace( argument_array[ 2 ], "" );
+                    }
+                    else if ( argument_array.length == 4
+                              && argument_array[ 0 ] == "Replace" )
+                    {
+                        result_text = argument_array[ 1 ].replace( argument_array[ 2 ], argument_array[ 3 ] );
+                    }
+                    else if ( argument_array.length == 2
+                              && argument_array[ 0 ] == "LowerCase" )
+                    {
+                        result_text = argument_array[ 1 ].toLower();
+                    }
+                    else if ( argument_array.length == 2
+                              && argument_array[ 0 ] == "UpperCase" )
+                    {
+                        result_text = argument_array[ 1 ].toUpper();
+                    }
+                    else if ( argument_array.length == 2
+                              && argument_array[ 0 ] == "PascalCase" )
+                    {
+                        result_text = argument_array[ 1 ].GetPascalCaseText();
+                    }
+                    else if ( argument_array.length == 2
+                              && argument_array[ 0 ] == "SnakeCase" )
+                    {
+                        result_text = argument_array[ 1 ].GetSnakeCaseText();
+                    }
+                    else if ( argument_array.length == 2
+                              && argument_array[ 0 ] == "KebabCase" )
+                    {
+                        result_text = argument_array[ 1 ].GetKebabCaseText();
+                    }
+                    else if ( argument_array.length == 2
+                              && argument_array[ 0 ] == "TypeCase" )
+                    {
+                        result_text = argument_array[ 1 ].GetTypeCaseText();
+                    }
+                    else if ( argument_array.length == 2
+                              && argument_array[ 0 ] == "AttributeCase" )
+                    {
+                        result_text = argument_array[ 1 ].GetAttributeCaseText();
+                    }
+                    else if ( argument_array.length == 2
+                              && argument_array[ 0 ] == "VariableCase" )
+                    {
+                        result_text = argument_array[ 1 ].GetVariableCaseText();
+                    }
+                    else if ( argument_array.length == 2
+                              && argument_array[ 0 ] == "StyleCase" )
+                    {
+                        result_text = argument_array[ 1 ].GetStyleCaseText();
+                    }
+                    else if ( argument_array.length == 2
+                              && argument_array[ 0 ] == "TitleCase" )
+                    {
+                        result_text = argument_array[ 1 ].GetTitleCaseText();
+                    }
+                    else if ( argument_array.length == 2
+                              && argument_array[ 0 ] == "SentenceCase" )
+                    {
+                        result_text = argument_array[ 1 ].GetSentenceCaseText();
+                    }
+                    else if ( argument_array.length == 2
+                              && argument_array[ 0 ] == "LocutionCase" )
+                    {
+                        result_text = argument_array[ 1 ].GetLocutionCaseText();
+                    }
+                    else if ( argument_array.length == 2
+                              && argument_array[ 0 ] == "SlugCase" )
+                    {
+                        result_text = argument_array[ 1 ].GetSlugCaseText();
+                    }
+                    else if ( argument_array.length == 2
+                              && argument_array[ 0 ] == "Plural" )
+                    {
+                        result_text = argument_array[ 1 ].GetPluralText();
+                    }
+                    else if ( argument_array.length == 5
+                              && argument_array[ 0 ] == "Split" )
+                    {
+                        variable_name = argument_array[ 1 ];
+                        value_text = argument_array[ 2 ];
+                        value_separator_text = argument_array[ 3 ];
+                        result_text = argument_array[ 4 ];
+
+                        value_array = value_text.split( value_separator_text );
+
+                        foreach ( value_index, value; value_array )
+                        {
+                            result_text
+                                = result_text.replace( "{*" ~ variable_name ~ ( value_index + 1 ).to!string() ~ "*}", value );
+                        }
+                    }
+                    else if ( argument_array.length == 5
+                              && argument_array[ 0 ] == "Map" )
+                    {
+                        variable_name = argument_array[ 1 ];
+                        value_text = argument_array[ 2 ];
+                        value_separator_text = argument_array[ 3 ];
+                        template_text = argument_array[ 4 ];
+
+                        result_text = "";
+
+                        value_array = value_text.split( value_separator_text );
+
+                        foreach ( value; value_array )
+                        {
+                            result_text
+                                ~= template_text.replace( "{*" ~ variable_name ~ "*}", value );
+                        }
+                    }
+                    else if ( argument_array.length == 6
+                              && argument_array[ 0 ] == "Map" )
+                    {
+                        variable_name = argument_array[ 1 ];
+                        value_text = argument_array[ 2 ];
+                        value_separator_text = argument_array[ 3 ];
+                        sub_value_separator_text = argument_array[ 4 ];
+                        template_text = argument_array[ 5 ];
+
+                        result_text = "";
+
+                        value_array = value_text.split( value_separator_text );
+
+                        foreach ( value; value_array )
+                        {
+                            value_result_text = template_text;
+
+                            sub_value_array = value.split( sub_value_separator_text );
+
+                            foreach ( sub_value_index, sub_value; sub_value_array )
+                            {
+                                value_result_text
+                                    = value_result_text.replace( "{*" ~ variable_name ~ ( sub_value_index + 1 ).to!string() ~ "*}", sub_value );
+                            }
+
+                            result_text ~= value_result_text;
+                        }
+                    }
+
+                    else if ( ( argument_array.length == 2
+                                || argument_array.length == 3 ) )
+                    {
+                        boolean_expression = EvaluateBooleanExpression( argument_array[ 0 ] );
+
+                        if ( boolean_expression == "true" )
+                        {
+                            result_text = argument_array[ 1 ];
+                        }
+                        else if ( boolean_expression == "false" )
+                        {
+                            if ( argument_array.length == 3 )
+                            {
+                                result_text = argument_array[ 2 ];
+                            }
+                            else
+                            {
+                                result_text = "";
+                            }
+                        }
+                        else
+                        {
+                            Abort( "Invalid boolean expression : " ~ argument_array[ 0 ] );
+                        }
+                    }
                     else
                     {
-                        Abort( "Invalid boolean expression : " ~ argument_array[ 0 ] );
+                        Abort( "Invalid <~ ~> block : " ~ text[ first_character_index .. post_character_index ] );
                     }
-                }
-                else
-                {
-                    Abort( "Invalid <~ ~> block : " ~ text[ first_character_index .. post_character_index ] );
-                }
 
-                text
-                    = text[ 0 .. first_character_index ]
-                      ~ result_text
-                      ~ text[ post_character_index .. $ ];
+                    text
+                        = text[ 0 .. first_character_index ]
+                          ~ result_text
+                          ~ text[ post_character_index .. $ ];
 
-                break;
+                    break;
+                }
             }
         }
+        while ( text != old_text );
     }
-    while ( text != old_text );
 
     return text;
 }
@@ -13352,8 +13365,14 @@ string ReplaceIgnoredTags(
             .replace( "*\\>", "*>" )
             .replace( "<\\*>", "<*>" )
             .replace( "<\\~", "<~" )
+            .replace( "<\\+\\~", "<+~" )
+            .replace( "<\\+\\+\\~", "<++~" )
             .replace( "~\\>", "~>" )
+            .replace( "~\\+\\>", "~+>" )
+            .replace( "~\\+\\+\\>", "~++>" )
             .replace( "<\\>", "<>" )
+            .replace( "<\\+\\>", "<+>" )
+            .replace( "<\\+\\+\\>", "<++>" )
             .replace( "{\\#", "{#" )
             .replace( "#\\}", "#}" )
             .replace( "{\\%", "{%" )
