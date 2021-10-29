@@ -12935,7 +12935,7 @@ string ReplaceConditionalTags(
                     first_character_index = character_index;
                     character_index += opening_tag_character_count - 1;
                 }
-                else if ( text[ character_index ] == closing_tag_character_count
+                else if ( text[ character_index ] == closing_tag_first_character
                           && text[ character_index .. character_index + closing_tag_character_count ] == closing_tag )
                 {
                     post_character_index = character_index + closing_tag_character_count;
