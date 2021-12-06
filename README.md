@@ -391,7 +391,7 @@ sentence_case
 locution_case
 slug_case
 plural
-fetch <i>table name</i> <i>key column name</i> <i>key column value</i> <i>column name</i>
+fetch <i>table_name</i> <i>key_column_name</i> <i>key_column_value</i> <i>column_name</i>
 if this|<i>column_name</i>|<i>value</i> =|!=|contains|!contains|has_prefix|!has_prefix|has_suffix|!has_suffix this|<i>column_name</i>|<i>value</i>
 switch this|<i>column_name</i>|<i>value</i> <i>old_value</i> <i>new_value</i> ...
 </pre>
