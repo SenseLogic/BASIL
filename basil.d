@@ -3715,7 +3715,7 @@ class TYPE
                                       && filter_argument_count == 3 )
                             {
                                 template_part
-                                    = Schema.FindColumnValue(
+                                    = Schema.FindColumnValueText(
                                           filter_argument_array[ 0 ],
                                           filter_argument_array[ 1 ],
                                           template_part,
@@ -9865,7 +9865,7 @@ class SCHEMA
 
     // ~~
 
-    string FindColumnValue(
+    string FindColumnValueText(
         string table_name,
         string key_column_name,
         string key_column_value_text,
