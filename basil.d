@@ -9875,8 +9875,8 @@ class SCHEMA
         long
             row_index;
         COLUMN
-            column,
-            key_column;
+            key_column,
+            value_column;
         TABLE
             table;
 
@@ -9885,7 +9885,7 @@ class SCHEMA
         if ( table !is null )
         {
             key_column = table.FindColumn( key_column_name );
-            column = table.FindColumn( value_column_name );
+            value_column = table.FindColumn( value_column_name );
 
             if ( key_column !is null
                  && column !is null )
@@ -9894,7 +9894,7 @@ class SCHEMA
 
                 if ( row_index >= 0 )
                 {
-                    return column.FindValueText( row_index );
+                    return value_column.FindValueText( row_index );
                 }
             }
         }
