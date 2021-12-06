@@ -9869,7 +9869,7 @@ class SCHEMA
         string table_name,
         string key_column_name,
         string key_column_value_text,
-        string column_name
+        string value_column_name
         )
     {
         long
@@ -9885,7 +9885,7 @@ class SCHEMA
         if ( table !is null )
         {
             key_column = table.FindColumn( key_column_name );
-            column = table.FindColumn( column_name );
+            column = table.FindColumn( value_column_name );
 
             if ( key_column !is null
                  && column !is null )
