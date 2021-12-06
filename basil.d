@@ -9888,7 +9888,7 @@ class SCHEMA
             value_column = table.FindColumn( value_column_name );
 
             if ( key_column !is null
-                 && column !is null )
+                 && value_column !is null )
             {
                 row_index = key_column.FindRowIndex( key_column_value_text );
 
