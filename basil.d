@@ -3711,6 +3711,17 @@ class TYPE
                             {
                                 template_part = template_part.GetPluralText();
                             }
+                            else if ( filter_name == "fetch"
+                                      && filter_argument_count == 3 )
+                            {
+                                template_part
+                                    = Schema.FindColumnValue(
+                                          filter_argument_array[ 0 ],
+                                          filter_argument_array[ 1 ],
+                                          template_part,
+                                          filter_argument_array[ 2 ]
+                                          );
+                            }
                             else if ( filter_name == "switch"
                                       && filter_argument_count >= 3 )
                             {
@@ -5783,6 +5794,43 @@ class COLUMN
         }
 
         return "";
+    }
+
+    // ~~
+
+    long FindRowIndex(
+        string value_text
+        )
+    {
+        MakeValues();
+
+        foreach ( row_index; 0 .. ValueArray.length )
+        {
+            if ( ValueArray[ row_index ].Text == value_text )
+            {
+                return row_index;
+            }
+        }
+
+        return -1;
+    }
+
+    // ~~
+
+    string FindValueText(
+        long row_index
+        )
+    {
+        MakeValues();
+
+        if ( row_index < ValueArray.length )
+        {
+            return ValueArray[ row_index].Text;
+        }
+        else
+        {
+            return "";
+        }
     }
 
     // ~~
@@ -9813,6 +9861,45 @@ class SCHEMA
         Abort( "Invalid foreign column name : " ~ foreign_column_name );
 
         return null;
+    }
+
+    // ~~
+
+    string FindColumnValue(
+        string table_name,
+        string key_column_name,
+        string key_column_value_text,
+        string column_name
+        )
+    {
+        long
+            row_index;
+        COLUMN
+            column,
+            key_column;
+        TABLE
+            table;
+
+        table = FindTable( table_name );
+
+        if ( table !is null )
+        {
+            key_column = table.FindColumn( key_column_name );
+            column = table.FindColumn( column_name );
+
+            if ( key_column !is null
+                 && column !is null )
+            {
+                row_index = key_column.FindRowIndex( key_column_value_text );
+
+                if ( row_index >= 0 )
+                {
+                    return column.FindValueText( row_index );
+                }
+            }
+        }
+
+        return "";
     }
 
     // -- OPERATIONS
