@@ -3606,6 +3606,11 @@ class TYPE
                                     template_part = ( template_part.GetReal() / real_value ).to!string();
                                 }
                             }
+                            else if ( filter_name == "prefix"
+                                      && filter_argument_count == 1 )
+                            {
+                                template_part = template_part.GetPrefix( filter_argument_array[ 0 ] );
+                            }
                             else if ( filter_name == "add_prefix"
                                       && filter_argument_count == 1 )
                             {
@@ -3620,6 +3625,11 @@ class TYPE
                                       && filter_argument_count == 2)
                             {
                                 template_part = template_part.ReplacePrefix( filter_argument_array[ 0 ], filter_argument_array[ 1 ] );
+                            }
+                            else if ( filter_name == "suffix"
+                                      && filter_argument_count == 1 )
+                            {
+                                template_part = template_part.GetSuffix( filter_argument_array[ 0 ] );
                             }
                             else if ( filter_name == "add_suffix"
                                       && filter_argument_count == 1 )
@@ -5558,6 +5568,7 @@ class COLUMN
         IsGrouped,
         IsMapped,
         IsAccessed,
+        IsProcessed,
         IsStatic,
         IsRequired,
         IsIncremented,
@@ -5566,7 +5577,7 @@ class COLUMN
         IsDescending,
         IsNow,
         IsForeign,
-        IsProcessed,
+        IsFilled,
         IsFirst,
         IsFirstKey,
         IsFirstNonKey,
@@ -6092,6 +6103,11 @@ class COLUMN
             {
                 IsAccessed = ( value_text_array[ 1 ] != "false" );
             }
+            else if ( property_name == "processed"
+                      && value_text_array.length == 2 )
+            {
+                IsProcessed = ( value_text_array[ 1 ] != "false" );
+            }
             else if ( property_name == "static"
                       && value_text_array.length == 2 )
             {
@@ -6361,7 +6377,7 @@ class COLUMN
     void MakeValues(
         )
     {
-        if ( IsProcessed )
+        if ( IsFilled )
         {
             Abort( "Mutual column dependency : " ~ Table.Name ~ "." ~ Name );
         }
@@ -6370,7 +6386,7 @@ class COLUMN
         {
             writeln( "Filling column : " ~ Table.Name ~ "." ~ Name );
 
-            IsProcessed = true;
+            IsFilled = true;
 
             while ( ValueCount < Table.RowCount )
             {
@@ -6391,7 +6407,7 @@ class COLUMN
                 ++ValueCount;
             }
 
-            IsProcessed = false;
+            IsFilled = false;
         }
     }
 
@@ -8641,7 +8657,7 @@ class TABLE
                 phoenix_code
                     = "\n// ~~\n\n"
                       ~ "function GetDatabase" ~ PhpAttribute ~ "By" ~ key_column.PhpName ~ "(\n"
-                      ~ "    " ~ key_column.PhpType ~ " " ~ key_column.PhpVariable ~ "\n"
+                      ~ "    " ~ key_column.PhpType ~ " " ~ PhpVariable ~ "_" ~ key_column.PhpVariable ~ "\n"
                       ~ "    )\n"
                       ~ "{\n";
 
@@ -8667,7 +8683,7 @@ class TABLE
 
                     phoenix_code
                         ~= " from `" ~ Name ~ "` where `" ~ key_column.StoredName ~ "` = ? limit 1' );\n"
-                           ~ "    statement.bindParam( 1, " ~ key_column.PhpVariable ~ ", " ~ key_column.PhpParameterType ~ " );\n"
+                           ~ "    statement.bindParam( 1, " ~ PhpVariable ~ "_" ~ key_column.PhpVariable ~ ", " ~ key_column.PhpParameterType ~ " );\n"
                            ~ "\n"
                            ~ "    if ( !statement.execute() )\n"
                            ~ "    {\n"
@@ -8835,7 +8851,7 @@ class TABLE
                 phoenix_code
                     = "\n// ~~\n\n"
                       ~ "function GetDatabase" ~ PhpAttribute ~ "ArrayBy" ~ key_column.PhpName ~ "(\n"
-                      ~ "    " ~ key_column.PhpType ~ " " ~ key_column.PhpVariable ~ "\n"
+                      ~ "    " ~ key_column.PhpType ~ " " ~ PhpVariable ~ "_" ~ key_column.PhpVariable ~ "\n"
                       ~ "    )\n"
                       ~ "{\n";
 
@@ -8861,7 +8877,7 @@ class TABLE
 
                     phoenix_code
                         ~= " from `" ~ Name ~ "` where `" ~ key_column.StoredName ~ "` = ?' );\n"
-                           ~ "    statement.bindParam( 1, " ~ key_column.PhpVariable ~ ", " ~ key_column.PhpParameterType ~ " );\n"
+                           ~ "    statement.bindParam( 1, " ~ PhpVariable ~ "_" ~ key_column.PhpVariable ~ ", " ~ key_column.PhpParameterType ~ " );\n"
                            ~ "\n"
                            ~ "    if ( !statement.execute() )\n"
                            ~ "    {\n"
@@ -8933,7 +8949,7 @@ class TABLE
                            ~ "\n"
                            ~ "        if ( !isset( " ~ PhpVariable ~ "_array_by_" ~ key_column.PhpVariable ~ "_map[ " ~ PhpVariable ~ "." ~ key_column.PhpName ~ " ] ) )\n"
                            ~ "        {\n"
-                           ~ "            " ~ PhpVariable ~ "_array_by_" ~ key_column.PhpVariable ~ "_map[ " ~ PhpVariable ~ "." ~ key_column.PhpName ~ " ] = array( " ~ PhpVariable ~ " );\n"
+                           ~ "            " ~ PhpVariable ~ "_array_by_" ~ key_column.PhpVariable ~ "_map[ " ~ PhpVariable ~ "." ~ key_column.PhpName ~ " ] = [ " ~ PhpVariable ~ " ];\n"
                            ~ "        }\n"
                            ~ "        else\n"
                            ~ "        {\n"
@@ -9011,6 +9027,93 @@ class TABLE
 
                 phoenix_code
                     ~= "}\n";
+            }
+        }
+
+        return phoenix_code;
+    }
+
+    // ~~
+
+    string GetGetObjectArrayByKeyPhoenixCode(
+        )
+    {
+        string
+            phoenix_code;
+
+        foreach ( key_column; ColumnArray )
+        {
+            if ( key_column.IsProcessed )
+            {
+                phoenix_code
+                    ~= "\n// ~~\n\n"
+                       ~ "function Get" ~ PhpAttribute ~ "ArrayBy" ~ key_column.PhpName ~ "Map(\n"
+                       ~ "    array &" ~ PhpVariable ~ "_array\n"
+                       ~ "    )\n"
+                       ~ "{\n"
+                       ~ "    var " ~ PhpVariable ~ "_array_by_" ~ key_column.PhpVariable ~ "_map = [];\n"
+                       ~ "\n"
+                       ~ "    foreach ( var " ~ PhpVariable ~ "; " ~ PhpVariable ~ "_array )\n"
+                       ~ "    {\n"
+                       ~ "        if ( !isset( " ~ PhpVariable ~ "_array_by_" ~ key_column.PhpVariable ~ "_map[ " ~ PhpVariable ~ "." ~ key_column.PhpName ~ " ] ) )\n"
+                       ~ "        {\n"
+                       ~ "            " ~ PhpVariable ~ "_array_by_" ~ key_column.PhpVariable ~ "_map[ " ~ PhpVariable ~ "." ~ key_column.PhpName ~ " ] = [ " ~ PhpVariable ~ " ];\n"
+                       ~ "        }\n"
+                       ~ "        else\n"
+                       ~ "        {\n"
+                       ~ "            array_push( " ~ PhpVariable ~ "_array_by_" ~ key_column.PhpVariable ~ "_map[ " ~ PhpVariable ~ "." ~ key_column.PhpName ~ " ], " ~ PhpVariable ~ " );\n"
+                       ~ "        }\n"
+                       ~ "    }\n"
+                       ~ "\n"
+                       ~ "    return " ~ PhpVariable ~ "_array_by_" ~ key_column.PhpVariable ~ "_map;\n"
+                       ~ "}\n"
+                       ~ "\n// ~~\n\n"
+                       ~ "function Get" ~ PhpAttribute ~ "ArrayBy" ~ key_column.PhpName ~ "(\n"
+                       ~ "    array &" ~ PhpVariable ~ "_array,\n"
+                       ~ "    " ~ key_column.PhpType ~ " " ~ key_column.PhpVariable ~ "\n"
+                       ~ "    )\n"
+                       ~ "{\n"
+                       ~ "    var " ~ PhpVariable ~ "_array_by_" ~ key_column.PhpVariable ~ " = [];\n"
+                       ~ "\n"
+                       ~ "    foreach ( var " ~ PhpVariable ~ "; " ~ PhpVariable ~ "_array )\n"
+                       ~ "    {\n"
+                       ~ "        if ( " ~ PhpVariable ~ "." ~ key_column.PhpName ~ " === " ~ key_column.PhpVariable ~ " )\n"
+                       ~ "        {\n"
+                       ~ "            array_push( " ~ PhpVariable ~ "_array_by_" ~ key_column.PhpVariable ~ ", " ~ PhpVariable ~ " );\n"
+                       ~ "        }\n"
+                       ~ "    }\n"
+                       ~ "\n"
+                       ~ "    return " ~ PhpVariable ~ "_array_by_" ~ key_column.PhpVariable ~ ";\n"
+                       ~ "}\n"
+                       ~ "\n// ~~\n\n"
+                       ~ "function Get" ~ PhpAttribute ~ "By" ~ key_column.PhpName ~ "Map(\n"
+                       ~ "    array &" ~ PhpVariable ~ "_array\n"
+                       ~ "    )\n"
+                       ~ "{\n"
+                       ~ "    var " ~ PhpVariable ~ "_by_" ~ key_column.PhpVariable ~ "_map = [];\n"
+                       ~ "\n"
+                       ~ "    foreach ( var " ~ PhpVariable ~ "; " ~ PhpVariable ~ "_array )\n"
+                       ~ "    {\n"
+                       ~ "        " ~ PhpVariable ~ "_by_" ~ key_column.PhpVariable ~ "_map[ " ~ PhpVariable ~ "." ~ key_column.PhpName ~ " ] = " ~ PhpVariable ~ ";\n"
+                       ~ "    }\n"
+                       ~ "\n"
+                       ~ "    return " ~ PhpVariable ~ "_by_" ~ key_column.PhpVariable ~ "_map;\n"
+                       ~ "}\n"
+                       ~ "\n// ~~\n\n"
+                       ~ "function Get" ~ PhpAttribute ~ "By" ~ key_column.PhpName ~ "(\n"
+                       ~ "    array &" ~ PhpVariable ~ "_by_" ~ key_column.PhpVariable ~ "_map,\n"
+                       ~ "    " ~ key_column.PhpType ~ " " ~ key_column.PhpVariable ~ "\n"
+                       ~ "    )\n"
+                       ~ "{\n"
+                       ~ "    if ( isset( " ~ PhpVariable ~ "_by_" ~ key_column.PhpVariable ~ "_map[ " ~ key_column.PhpVariable ~ " ] ) )\n"
+                       ~ "    {\n"
+                       ~ "        return " ~ PhpVariable ~ "_by_" ~ key_column.PhpVariable ~ "_map[ " ~ key_column.PhpVariable ~ " ];\n"
+                       ~ "    }\n"
+                       ~ "    else\n"
+                       ~ "    {\n"
+                       ~ "        return null;\n"
+                       ~ "    }\n"
+                       ~ "}\n";
             }
         }
 
@@ -11351,7 +11454,8 @@ class SCHEMA
                       ~ table.GetAddDatabaseObjectPhoenixCode()
                       ~ table.GetPutDatabaseObjectPhoenixCode()
                       ~ table.GetSetDatabaseObjectPhoenixCode()
-                      ~ table.GetRemoveDatabaseObjectPhoenixCode();
+                      ~ table.GetRemoveDatabaseObjectPhoenixCode()
+                      ~ table.GetGetObjectArrayByKeyPhoenixCode();
 
                 phoenix_model_file_path.WriteText( phoenix_model_file_text );
             }
@@ -12047,6 +12151,16 @@ bool EndsByConsonant(
 
 // ~~
 
+string GetPrefix(
+    string text,
+    string separator
+    )
+{
+    return text.split( separator )[ 0 ];
+}
+
+// ~~
+
 string AddPrefix(
     string text,
     string prefix
@@ -12088,6 +12202,16 @@ string ReplacePrefix(
     {
         return text;
     }
+}
+
+// ~~
+
+string GetSuffix(
+    string text,
+    string separator
+    )
+{
+    return text.split( separator )[ $ - 1 ];
 }
 
 // ~~
@@ -12344,6 +12468,46 @@ string GetLocutionCaseText(
 
 // ~~
 
+dchar GetSlugCharacter(
+    dchar character
+    )
+{
+    switch ( character )
+    {
+        case 'à' : return 'a';
+        case 'â' : return 'a';
+        case 'é' : return 'e';
+        case 'è' : return 'e';
+        case 'ê' : return 'e';
+        case 'ë' : return 'e';
+        case 'î' : return 'i';
+        case 'ï' : return 'i';
+        case 'ô' : return 'o';
+        case 'ö' : return 'o';
+        case 'û' : return 'u';
+        case 'ü' : return 'u';
+        case 'ç' : return 'c';
+        case 'ñ' : return 'n';
+        case 'À' : return 'a';
+        case 'Â' : return 'a';
+        case 'É' : return 'e';
+        case 'È' : return 'e';
+        case 'Ê' : return 'e';
+        case 'Ë' : return 'e';
+        case 'Î' : return 'i';
+        case 'Ï' : return 'i';
+        case 'Ô' : return 'o';
+        case 'Ö' : return 'o';
+        case 'Û' : return 'u';
+        case 'Ü' : return 'u';
+        case 'C' : return 'c';
+        case 'Ñ' : return 'n';
+        default : return character.toLower();
+    }
+}
+
+// ~~
+
 dstring GetSlugCaseText(
     dstring text
     )
@@ -12355,7 +12519,7 @@ dstring GetSlugCaseText(
     {
         if ( character.isAlpha() )
         {
-            slug_case_text ~= character.toLower();
+            slug_case_text ~= GetSlugCharacter( character );
         }
         else if ( character >= '0'
                   && character <= '9' )

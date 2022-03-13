@@ -370,9 +370,11 @@ divide <i>minimum_integer</i> <i>maximum_integer</i>
 divide <i>real</i>
 divide <i>minimum_real</i> <i>maximum_real</i>
 set <i>value</i>
+prefix <i>separator</i>
 add_prefix <i>prefix</i>
 remove_prefix <i>prefix</i>
 replace_prefix <i>old_prefix</i> <i>new_content</i>
+suffix <i>separator</i>
 add_suffix <i>suffix</i>
 remove_suffix <i>suffix</i>
 replace_suffix <i>old_suffix</i> <i>new_suffix</i>
@@ -419,6 +421,7 @@ switch this|<i>column_name</i>|<i>value</i> <i>old_value</i> <i>new_value</i> ..
 [!]grouped
 [!]mapped
 [!]accessed
+[!]processed
 [!]static
 [!]required
 [!]incremented
