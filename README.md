@@ -270,7 +270,11 @@ using System.Collections.Generic;
 ## Schema file syntax
 
 <pre>
--- <i>comment</i>
+# <i>single-line comment</i>
+
+##
+    <i>multiline comment</i>
+##
 
 <i>database_name</i> [| <i>database_property</i>, <i>database_property</i>, ...]
 

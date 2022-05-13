@@ -10457,7 +10457,10 @@ class SCHEMA
         string text
         )
     {
+        long
+            line_index;
         string
+            line,
             stripped_line;
         string[]
             line_array,
@@ -10466,15 +10469,30 @@ class SCHEMA
         line_array = text.split( '\n' );
         stripped_line_array = null;
 
-        foreach ( line; line_array )
+        for ( line_index = 0;
+              line_index < line_array.length;
+              ++line_index )
         {
-            line = line.stripRight();
-            stripped_line = line.strip();
+            line = line_array[ line_index ].stripRight();
 
-            if ( stripped_line != ""
-                 && !stripped_line.startsWith( "--" ) )
+            if ( line.startsWith( "##" ) )
             {
-                stripped_line_array ~= line;
+                ++line_index;
+
+                while ( line_index < line_array.length
+                        && !line_array[ line_index ].startsWith( "##" ) )
+                {
+                    ++line_index;
+                }
+            }
+            else if ( !line.startsWith( '#' ) )
+            {
+                stripped_line = line.strip();
+
+                if ( stripped_line != "" )
+                {
+                    stripped_line_array ~= line;
+                }
             }
         }
 
