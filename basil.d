@@ -5154,7 +5154,11 @@ class VALUE
 
         do
         {
-            if ( Type.BaseName.indexOf( '.' ) >= 0 )
+            if ( Type.HasTemplateText )
+            {
+                Text = Type.GetTemplateValue( row_index );
+            }
+            else if ( Type.BaseName.indexOf( '.' ) >= 0 )
             {
                 Type.GetForeignColumn().MakeValues();
 
@@ -5164,10 +5168,6 @@ class VALUE
                 }
 
                 Set( Random.PickElement( Type.ForeignColumn.ValueArray ) );
-            }
-            else if ( Type.HasTemplateText )
-            {
-                Text = Type.GetTemplateValue( row_index );
             }
             else if ( Type.BaseName == "STRING"
                       || Type.BaseName == "STRING8"
@@ -6450,7 +6450,9 @@ class COLUMN
                     }
                 }
 
-                if ( !value_is_found )
+                if ( !value_is_found
+                     && !( ( "is_optional" in PropertyValueMap ) !is null )
+                           && value.GetText() == "" )
                 {
                     PrintWarning( "Invalid foreign value : " ~ value.GetText() );
                 }
