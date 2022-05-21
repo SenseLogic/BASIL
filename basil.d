@@ -5573,6 +5573,7 @@ class COLUMN
         IsRequired,
         IsIncremented,
         IsConstrained,
+        IsOptional,
         IsAscending,
         IsDescending,
         IsNow,
@@ -5946,6 +5947,7 @@ class COLUMN
         PropertyValueMap[ "is_non_edited_non_key" ] = GetBooleanText( !IsEdited && !IsKey );
         PropertyValueMap[ "is_incremented" ] = GetBooleanText( IsIncremented );
         PropertyValueMap[ "is_constrained" ] = GetBooleanText( IsConstrained );
+        PropertyValueMap[ "is_optional" ] = GetBooleanText( IsOptional );
         PropertyValueMap[ "is_first" ] = GetBooleanText( IsFirst );
         PropertyValueMap[ "is_first_key" ] = GetBooleanText( IsFirstKey );
         PropertyValueMap[ "is_first_non_key" ] = GetBooleanText( IsFirstNonKey );
@@ -6128,6 +6130,11 @@ class COLUMN
                       && value_text_array.length == 2 )
             {
                 IsConstrained = ( value_text_array[ 1 ] != "false" );
+            }
+            else if ( property_name == "optional"
+                      && value_text_array.length == 2 )
+            {
+                IsOptional = ( value_text_array[ 1 ] != "false" );
             }
             else if ( property_name == "ascending"
                       && value_text_array.length == 2 )
@@ -6499,6 +6506,7 @@ class TABLE
     bool
         IsStored,
         IsEdited,
+        IsManaged,
         IsSorted,
         IsDropped,
         IsFirst,
@@ -9168,6 +9176,8 @@ class TABLE
         PropertyValueMap[ "is_non_stored" ] = GetBooleanText( !IsStored );
         PropertyValueMap[ "is_edited" ] = GetBooleanText( IsEdited );
         PropertyValueMap[ "is_non_edited" ] = GetBooleanText( !IsEdited );
+        PropertyValueMap[ "is_managed" ] = GetBooleanText( IsManaged );
+        PropertyValueMap[ "is_non_managed" ] = GetBooleanText( !IsManaged );
         PropertyValueMap[ "is_first" ] = GetBooleanText( IsFirst );
         PropertyValueMap[ "is_first_stored" ] = GetBooleanText( IsFirstStored );
         PropertyValueMap[ "is_first_non_stored" ] = GetBooleanText( IsFirstNonStored );
@@ -9235,6 +9245,11 @@ class TABLE
                       && value_text_array.length == 2 )
             {
                 IsEdited = ( value_text_array[ 1 ] != "false" );
+            }
+            else if ( property_name == "managed"
+                      && value_text_array.length == 2 )
+            {
+                IsManaged = ( value_text_array[ 1 ] != "false" );
             }
             else if ( property_name == "sorted"
                       && value_text_array.length == 2 )

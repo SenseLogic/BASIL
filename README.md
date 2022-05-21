@@ -298,6 +298,7 @@ count <i>row_count</i>
 <pre>
 [!]stored
 [!]edited
+[!]managed
 [!]sorted
 [!]dropped
 count <i>row_count</i>
@@ -430,6 +431,7 @@ switch this|<i>column_name</i>|<i>value</i> <i>old_value</i> <i>new_value</i> ..
 [!]required
 [!]incremented
 [!]constrained
+[!]optional
 ascending [<i>order index</i>]
 descending [<i>order index</i>]
 now
