@@ -6458,8 +6458,7 @@ class COLUMN
                 }
 
                 if ( !value_is_found
-                     && !( ( "is_optional" in PropertyValueMap ) !is null )
-                           && value.GetText() == "" )
+                     && !( IsOptional && value.GetText() == "" ) )
                 {
                     PrintWarning( "Invalid foreign value : " ~ value.GetText() );
                 }
