@@ -6458,7 +6458,8 @@ class COLUMN
                 }
 
                 if ( !value_is_found
-                     && !( IsOptional && value.GetText() == "" ) )
+                     && !( IsOptional
+                           && value.GetText() == "''" ) )
                 {
                     PrintWarning( "Invalid foreign value : " ~ value.GetText() );
                 }
