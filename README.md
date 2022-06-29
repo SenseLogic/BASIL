@@ -408,8 +408,9 @@ switch this|<i>column_name</i>|<i>value</i> <i>old_value</i> <i>new_value</i> ..
 <pre>
 \s : space character
 \n : linefeed character
-\r : carriage return character
+\r : return character
 \t : tabulation character
+\v : void string
 </pre>
 
 ### Column properties
