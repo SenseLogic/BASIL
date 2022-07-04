@@ -638,7 +638,7 @@ class RANDOM
     string MakeTuid(
         )
     {
-        return MakeTuid( MakeBlob( 32 ) );
+        return Base64URLNoPadding.encode( md5Of( MakeBlob( 32 ) ) );
     }
 
     // ~~
