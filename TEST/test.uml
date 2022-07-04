@@ -62,7 +62,7 @@ class COMPOUND {
 }
 
 class VALUE {
-    Id : INT64
+    Tuid : TUID
     Uuid : UUID
     Name : STRING
     Integer : INT32
@@ -71,7 +71,7 @@ class VALUE {
 
 class VALUE_DATA {
     Uuid : UUID
-    ValueId : VALUE.Id
+    ValueTuid : VALUE.Tuid
     ValueUuid : VALUE.Uuid
     InternalId : INTERNAL_DATA.Id
     InternalUuid : INTERNAL_DATA.Uuid
@@ -82,7 +82,7 @@ class VALUE_DATA {
 class INTERNAL_DATA {
     Id : INT64
     Uuid : UUID
-    ValueId : VALUE.Id
+    ValueTuid : VALUE.Tuid
     ValueUuid : VALUE.Uuid
     FirstName : STRING
     LastName : STRING
@@ -91,7 +91,7 @@ class INTERNAL_DATA {
 
 SIMPLE <-- COMPOUND : SimpleDate
 
-VALUE <-- VALUE_DATA : ValueId
+VALUE <-- VALUE_DATA : ValueTuid
 
 VALUE <-- VALUE_DATA : ValueUuid
 
@@ -103,7 +103,7 @@ INTERNAL_DATA <-- VALUE_DATA : InternalValueId
 
 INTERNAL_DATA <-- VALUE_DATA : InternalValueUuid
 
-VALUE <-- INTERNAL_DATA : ValueId
+VALUE <-- INTERNAL_DATA : ValueTuid
 
 VALUE <-- INTERNAL_DATA : ValueUuid
 

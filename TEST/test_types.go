@@ -57,7 +57,7 @@ type COMPOUND struct {
 // ~~
 
 type VALUE struct {
-    Id int64;
+    Tuid string;
     Uuid gocql.UUID;
     Name string;
     Integer int32;
@@ -68,7 +68,7 @@ type VALUE struct {
 
 type VALUE_DATA struct {
     Uuid gocql.UUID;
-    ValueId int64;
+    ValueTuid string;
     ValueUuid gocql.UUID;
     InternalId int64;
     InternalUuid gocql.UUID;
@@ -81,7 +81,7 @@ type VALUE_DATA struct {
 type INTERNAL_DATA struct {
     Id int64;
     Uuid gocql.UUID;
-    ValueId int64;
+    ValueTuid string;
     ValueUuid gocql.UUID;
     FirstName string;
     LastName string;

@@ -53,7 +53,7 @@ end
 # ~~
 
 class VALUE
-    @id : Int64
+    @tuid : String
     @uuid : String
     @name : String
     @integer : Int32
@@ -64,7 +64,7 @@ end
 
 class VALUE_DATA
     @uuid : String
-    @value_id : Int64
+    @value_tuid : String
     @value_uuid : String
     @internal_id : Int64
     @internal_uuid : String
@@ -77,7 +77,7 @@ end
 class INTERNAL_DATA
     @id : Int64
     @uuid : String
-    @value_id : Int64
+    @value_tuid : String
     @value_uuid : String
     @first_name : String
     @last_name : String

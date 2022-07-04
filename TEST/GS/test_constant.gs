@@ -1,9 +1,15 @@
 const (
-    first = 3344523601393165508;
-    second = -6907789044519798771;
-    third = -5292141111288023615;
-    fourth = -7654305769731274948;
-    fifth = -5359923222225123686;
+    first = "iwTV43ddKY54RV78XKQE1Q";
+    second = "qfDmGhN9hqqdtTRl4IAWEg";
+    third = "3VyL9RVY_8vlAHBxkI6VJA";
+    fourth = "wHWfJBZJhwiEHnl1VmNgzg";
+    fifth = "CIOmUg5utskwTc-3EDTQUw";
+    76dc9bd6dcea872bbc2158221d6c41b7 = "uL6qZnmq5EuzGGewsHweuw";
+    1007dc42bef2d395ba17c8e0871ed213 = "5-E_GRLcRhwTwsgjfu8Igw";
+    d5e6415833f1b5b2850c488591a49cff = "mf3obIQNHPmxs3EFPOV9fg";
+    13311d80427dc7e801a6ee39d20f2bf8 = "sJSMWBaKVy26LqaiBqxqLQ";
+    5085212cb00abb1c1948daf03fed222a = "NDZ2ZhfZbxa2plxWGTwlBQ";
+    a5ef4a6535807c077a28ad517b44efa6 = "m0JKddaxiWfdHW5W53Yvow";
     );
 
 var simple = gocql.UUID { 0x8d, 0xbd, 0xda, 0x48, 0xfb, 0x87, 0x48, 0xd6, 0x74, 0x6f, 0x19, 0x65, 0x82, 0x4e, 0x96, 0x6a };

@@ -58,17 +58,17 @@ create table if not exists `TEST`.`COMPOUND`(
     ) engine = InnoDB;
 
 create table if not exists `TEST`.`VALUE`(
-    `Id` BIGINT NOT NULL,
+    `Tuid` VARCHAR(22) NOT NULL,
     `Uuid` VARCHAR(36) NULL,
     `Name` TEXT NULL,
     `Integer` INT NULL,
     `Text` TEXT NULL,
-    primary key( `Id` )
+    primary key( `Tuid` )
     ) engine = InnoDB;
 
 create table if not exists `TEST`.`VALUE_DATA`(
     `Uuid` VARCHAR(36) NOT NULL,
-    `ValueId` BIGINT NULL,
+    `ValueTuid` VARCHAR(22) NULL,
     `ValueUuid` VARCHAR(36) NULL,
     primary key( `Uuid` )
     ) engine = InnoDB;

@@ -90,8 +90,8 @@ public class COMPOUND
 
 public class VALUE
 {
-    public long
-        Id;
+    public String
+        Tuid;
     public Guid
         Uuid;
     public string
@@ -108,8 +108,8 @@ public class VALUE_DATA
 {
     public Guid
         Uuid;
-    public long
-        ValueId;
+    public String
+        ValueTuid;
     public Guid
         ValueUuid;
     public long
@@ -130,8 +130,8 @@ public class INTERNAL_DATA
         Id;
     public Guid
         Uuid;
-    public long
-        ValueId;
+    public String
+        ValueTuid;
     public Guid
         ValueUuid;
     public string

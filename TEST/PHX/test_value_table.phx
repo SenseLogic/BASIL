@@ -2,23 +2,23 @@
 Table :
     VALUE : VALUE / Value / value / value / Value / Value / value
         Properties : false false
-        Columns : Id, Uuid, Name, Integer, Text
-        Key columns : Id
+        Columns : Tuid, Uuid, Name, Integer, Text
+        Key columns : Tuid
         Non key columns : Uuid, Name, Integer, Text
-        Stored columns : Id, Uuid, Name, Integer, Text
+        Stored columns : Tuid, Uuid, Name, Integer, Text
         Non Stored columns : 
-        Stored key columns : Id
+        Stored key columns : Tuid
         Non Stored key columns : 
         Stored non key columns : Uuid, Name, Integer, Text
         Non Stored non key columns : 
         Columns :
-            Id : Id / id / id / Id / Id / id
+            Tuid : Tuid / tuid / tuid / Tuid / Tuid / tuid
                 Properties : false false
-                Go : int64 Id
-                PHP : int Id
-                Crystal : Int64 id
-                C# : long Id
-                Rust : i64 id
+                Go : string Tuid
+                PHP : string Tuid
+                Crystal : String tuid
+                C# : String Tuid
+                Rust : String tuid
             Uuid : Uuid / uuid / uuid / Uuid / Uuid / uuid
                 Properties : false false
                 Go : gocql.UUID Uuid

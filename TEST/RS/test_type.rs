@@ -56,7 +56,7 @@ struct COMPOUND
 
 struct VALUE
 {
-    id : i64,
+    tuid : String,
     uuid : String,
     name : String,
     integer : i32,
@@ -68,7 +68,7 @@ struct VALUE
 struct VALUE_DATA
 {
     uuid : String,
-    value_id : i64,
+    value_tuid : String,
     value_uuid : String,
     internal_id : i64,
     internal_uuid : String,
@@ -82,7 +82,7 @@ struct INTERNAL_DATA
 {
     id : i64,
     uuid : String,
-    value_id : i64,
+    value_tuid : String,
     value_uuid : String,
     first_name : String,
     last_name : String,

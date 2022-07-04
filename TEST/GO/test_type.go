@@ -53,7 +53,7 @@ type COMPOUND struct {
 // ~~
 
 type VALUE struct {
-    Id int64    `db:"Id"`;
+    Tuid string    `db:"Tuid"`;
     Uuid gocql.UUID    `db:"Uuid"`;
     Name string    `db:"Name"`;
     Integer int32    `db:"Integer"`;
@@ -64,7 +64,7 @@ type VALUE struct {
 
 type VALUE_DATA struct {
     Uuid gocql.UUID    `db:"Uuid"`;
-    ValueId int64    `db:"ValueId"`;
+    ValueTuid string    `db:"ValueTuid"`;
     ValueUuid gocql.UUID    `db:"ValueUuid"`;
     InternalId int64    `db:"-"`;
     InternalUuid gocql.UUID    `db:"-"`;
@@ -77,7 +77,7 @@ type VALUE_DATA struct {
 type INTERNAL_DATA struct {
     Id int64    `db:"Id"`;
     Uuid gocql.UUID    `db:"-"`;
-    ValueId int64    `db:"ValueId"`;
+    ValueTuid string    `db:"ValueTuid"`;
     ValueUuid gocql.UUID    `db:"ValueUuid"`;
     FirstName string    `db:"-"`;
     LastName string    `db:"-"`;

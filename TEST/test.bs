@@ -72,7 +72,7 @@ TEST | count 10
 
         Id : INT64 | key, stored
         Uuid : UUID | key
-        ValueId : VALUE.Id | stored
+        ValueTuid : VALUE.Tuid | stored
         ValueUuid : VALUE.Uuid | stored
         FirstName : STRING | !has_button
         LastName : STRING | !has_button

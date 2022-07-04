@@ -67,7 +67,7 @@ class VALUE
     constructor(
         )
     {
-        this.Id = null;
+        this.Tuid = null;
         this.Uuid = null;
         this.Name = null;
         this.Integer = null;
@@ -83,7 +83,7 @@ class VALUE_DATA
         )
     {
         this.Uuid = null;
-        this.ValueId = null;
+        this.ValueTuid = null;
         this.ValueUuid = null;
         this.InternalId = null;
         this.InternalUuid = null;
@@ -101,7 +101,7 @@ class INTERNAL_DATA
     {
         this.Id = null;
         this.Uuid = null;
-        this.ValueId = null;
+        this.ValueTuid = null;
         this.ValueUuid = null;
         this.FirstName = null;
         this.LastName = null;
