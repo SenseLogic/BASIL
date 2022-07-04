@@ -316,6 +316,7 @@ real <i>minimum_value</i> <i>maximum_value</i> [<i>precision</i>]
 date <i>minimum_year</i> <i>maximum_year</i>
 time <i>minimum_hour</i> <i>maximum_hour</i>
 blob <i>hexadecimal_digit_count</i>
+tuid
 uuid
 isbn
 tag_list <i>minimum_word_count</i>  <i>maximum_word_count</i>
@@ -509,6 +510,7 @@ STRING32
 DATETIME
 DATE
 TIME
+TUID
 UUID
 BLOB
 <i>TABLE_NAME</i>.<i>ColumnName</i>
@@ -540,7 +542,8 @@ POINTER[ <i>ELEMENT_TYPE</i> ] | !stored
 </pre>
 
 <pre>
-%identifier : CRC64 hash INT64
+%identifier : MD5 hash TUID
+% : null TUID
 #identifier : MD5 hash UUID
 # : null UUID
 ~ : value separator
@@ -745,6 +748,7 @@ POINTER[ <i>ELEMENT_TYPE</i> ] | !stored
 {%is_datetime%}
 {%is_date%}
 {%is_time%}
+{%is_tuid%}
 {%is_uuid%}
 {%is_scalar%}
 {%is_blob%}

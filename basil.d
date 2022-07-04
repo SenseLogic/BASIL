@@ -23,6 +23,7 @@
 import core.stdc.stdlib : exit;
 import std.algorithm : countUntil, sort;
 import std.ascii : isDigit, isLower, isUpper;
+import std.base64 : Base64URLNoPadding;
 import std.conv : to;
 import std.digest.md : md5Of;
 import std.file : dirEntries, exists, mkdirRecurse, readText, thisExePath, write, SpanMode;
@@ -112,10 +113,10 @@ class RANDOM
         LatinWordArray,
         SyllableArray;
     string[ string ]
-        IdMap,
+        TuidMap,
         UuidMap;
     string[]
-        IdTextArray,
+        TuidTextArray,
         UuidTextArray;
 
     // -- CONSTRUCTORS
@@ -634,6 +635,14 @@ class RANDOM
 
     // ~~
 
+    string MakeTuid(
+        )
+    {
+        return MakeTuid( MakeBlob( 32 ) );
+    }
+
+    // ~~
+
     string MakeUuid(
         )
     {
@@ -651,7 +660,7 @@ class RANDOM
 
     // ~~
 
-    string MakeId(
+    ulong MakeHash64(
         string text
         )
     {
@@ -802,15 +811,37 @@ class RANDOM
             hash = constant_array[ ( hash ^ character ) & 255 ] ^ ( hash >> 8 );
         }
 
-        id = ( cast( long )hash ).to!string();
+        return hash;
+    }
 
-        if ( ( text in IdMap ) is null )
+    // ~~
+
+    string MakeTuid(
+        string text
+        )
+    {
+        string
+            tuid;
+        ubyte[16]
+            hash;
+
+        if ( text == "" )
         {
-            IdMap[ text ] = id;
-            IdTextArray ~= text;
+            tuid = "";
+        }
+        else
+        {
+            hash = md5Of( text );
+            tuid = Base64URLNoPadding.encode( hash );
+
+            if ( ( text in TuidMap ) is null )
+            {
+                TuidMap[ text ] = tuid;
+                TuidTextArray ~= text;
+            }
         }
 
-        return id;
+        return tuid;
     }
 
     // ~~
@@ -1773,6 +1804,14 @@ class TYPE
 
     // ~~
 
+    bool IsTuid(
+        )
+    {
+        return BaseName == "TUID";
+    }
+
+    // ~~
+
     bool IsUuid(
         )
     {
@@ -1804,6 +1843,7 @@ class TYPE
             || BaseName == "DATETIME"
             || BaseName == "DATE"
             || BaseName == "TIME"
+            || BaseName == "TUID"
             || BaseName == "UUID";
     }
 
@@ -1971,6 +2011,10 @@ class TYPE
         {
             return "TIME";
         }
+        else if ( type_name == "TUID" )
+        {
+            return "VARCHAR(22)";
+        }
         else if ( type_name == "UUID" )
         {
             return "VARCHAR(36)";
@@ -2092,6 +2136,10 @@ class TYPE
         {
             return "timestamp";
         }
+        else if ( type_name == "TUID" )
+        {
+            return "text";
+        }
         else if ( type_name == "UUID" )
         {
             return "uuid";
@@ -2210,6 +2258,10 @@ class TYPE
                   || type_name == "TIME" )
         {
             return "time.Time";
+        }
+        else if ( type_name == "TUID" )
+        {
+            return "string";
         }
         else if ( type_name == "UUID" )
         {
@@ -2333,6 +2385,10 @@ class TYPE
         {
             return "DateTime";
         }
+        else if ( type_name == "TUID" )
+        {
+            return "String";
+        }
         else if ( type_name == "UUID" )
         {
             return "Uuid";
@@ -2409,6 +2465,7 @@ class TYPE
                   || type_name == "DATETIME"
                   || type_name == "DATE"
                   || type_name == "TIME"
+                  || type_name == "TUID"
                   || type_name == "UUID"
                   || type_name == "BLOB"
                   || type_name == "POINTER" )
@@ -2544,6 +2601,10 @@ class TYPE
         {
             return "DateTime";
         }
+        else if ( type_name == "TUID" )
+        {
+            return "String";
+        }
         else if ( type_name == "UUID" )
         {
             return "Uuid";
@@ -2665,6 +2726,7 @@ class TYPE
                   || type_name == "DATETIME"
                   || type_name == "DATE"
                   || type_name == "TIME"
+                  || type_name == "TUID"
                   || type_name == "UUID"
                   || type_name == "BLOB" )
         {
@@ -2789,6 +2851,10 @@ class TYPE
         {
             return "DateTime";
         }
+        else if ( type_name == "TUID" )
+        {
+            return "String";
+        }
         else if ( type_name == "UUID" )
         {
             return "Guid";
@@ -2911,6 +2977,10 @@ class TYPE
         {
             return "DateTime";
         }
+        else if ( type_name == "TUID" )
+        {
+            return "String";
+        }
         else if ( type_name == "UUID" )
         {
             return "Uuid";
@@ -3032,6 +3102,7 @@ class TYPE
                   || type_name == "DATETIME"
                   || type_name == "DATE"
                   || type_name == "TIME"
+                  || type_name == "TUID"
                   || type_name == "UUID"
                   || type_name == "BLOB" )
         {
@@ -3181,6 +3252,10 @@ class TYPE
                                     = Random.MakeBlob(
                                           ( filter_argument_count > 0 ) ? filter_argument_array[ 0 ].GetInteger() : 0
                                           ).to!string();
+                            }
+                            else if ( filter_name == "tuid" )
+                            {
+                                template_part = Random.MakeTuid();
                             }
                             else if ( filter_name == "uuid" )
                             {
@@ -4539,7 +4614,8 @@ class VALUE
         }
         else if ( type_name == "DATETIME"
                   || type_name == "DATE"
-                  || type_name == "TIME" )
+                  || type_name == "TIME"
+                  || type_name == "TUID" )
         {
             cql_text = "'" ~ Text ~ "'";
         }
@@ -4654,6 +4730,7 @@ class VALUE
         else if ( type_name == "DATETIME"
                   || type_name == "DATE"
                   || type_name == "TIME"
+                  || type_name == "TUID"
                   || type_name == "UUID"
                   || type_name == "BLOB" )
         {
@@ -4749,6 +4826,7 @@ class VALUE
         else if ( type_name == "DATETIME"
                   || type_name == "DATE"
                   || type_name == "TIME"
+                  || type_name == "TUID"
                   || type_name == "UUID"
                   || type_name == "BLOB" )
         {
@@ -4849,6 +4927,7 @@ class VALUE
         else if ( type_name == "DATETIME"
                   || type_name == "DATE"
                   || type_name == "TIME"
+                  || type_name == "TUID"
                   || type_name == "UUID"
                   || type_name == "BLOB" )
         {
@@ -4926,15 +5005,22 @@ class VALUE
         text = GetCqlText();
         type_name = Type.ActualType.BaseName;
 
-        if ( type_name == "INT64" )
+        if ( type_name == "TUID" )
         {
-            foreach ( id_text, id; Random.IdMap )
+            if ( Text == "AAAAAAAAAAAAAAAAAAAAAA" )
             {
-                if ( id == Text )
+                text = "%";
+            }
+            else
+            {
+                foreach ( tuid_text, tuid; Random.TuidMap )
                 {
-                    text = "%" ~ id_text;
+                    if ( tuid == Text )
+                    {
+                        text = "%" ~ tuid_text;
 
-                    break;
+                        break;
+                    }
                 }
             }
         }
@@ -5056,10 +5142,10 @@ class VALUE
                 Abort( "Invalid list data : " ~ data_value.GetText() );
             }
         }
-        else if ( type_name == "INT64"
+        else if ( type_name == "TUID"
                   && data_value.Text.startsWith( '%' ) )
         {
-            Text = Random.MakeId( data_value.Text[ 1 .. $ ] );
+            Text = Random.MakeTuid( data_value.Text[ 1 .. $ ] );
         }
         else if ( type_name == "UUID"
                   && data_value.Text.startsWith( '#' ) )
@@ -5119,6 +5205,10 @@ class VALUE
         else if ( type_name == "DATE" )
         {
             Text = "1970-01-01";
+        }
+        else if ( type_name == "TUID" )
+        {
+            Text = "AAAAAAAAAAAAAAAAAAAAAA";
         }
         else if ( type_name == "UUID" )
         {
@@ -5430,6 +5520,10 @@ class VALUE
             else if ( Type.BaseName == "TIME" )
             {
                 Text = Random.MakeTime();
+            }
+            else if ( Type.BaseName == "TUID" )
+            {
+                Text = Random.MakeTuid();
             }
             else if ( Type.BaseName == "UUID" )
             {
@@ -5918,6 +6012,7 @@ class COLUMN
         PropertyValueMap[ "is_datetime" ] = GetBooleanText( Type.ActualType.IsDateTime() );
         PropertyValueMap[ "is_date" ] = GetBooleanText( Type.ActualType.IsDate() );
         PropertyValueMap[ "is_time" ] = GetBooleanText( Type.ActualType.IsTime() );
+        PropertyValueMap[ "is_tuid" ] = GetBooleanText( Type.ActualType.IsTuid() );
         PropertyValueMap[ "is_uuid" ] = GetBooleanText( Type.ActualType.IsUuid() );
         PropertyValueMap[ "is_scalar" ] = GetBooleanText( Type.ActualType.IsScalar() );
         PropertyValueMap[ "is_blob" ] = GetBooleanText( Type.ActualType.IsBlob() );
@@ -11418,18 +11513,18 @@ class SCHEMA
             character_index;
         string
             generis_constant_file_text,
-            id,
+            tuid,
             uuid;
 
-        if ( Random.IdTextArray.length > 0 )
+        if ( Random.TuidTextArray.length > 0 )
         {
             generis_constant_file_text = "const (\n";
 
-            foreach ( id_text; Random.IdTextArray )
+            foreach ( tuid_text; Random.TuidTextArray )
             {
-                id = Random.IdMap[ id_text ];
+                tuid = Random.TuidMap[ tuid_text ];
 
-                generis_constant_file_text ~= "    " ~ id_text ~ " = " ~ id ~ ";\n";
+                generis_constant_file_text ~= "    " ~ tuid_text ~ " = \"" ~ tuid ~ "\";\n";
             }
 
             generis_constant_file_text ~= "    );\n\n";
@@ -11595,23 +11690,23 @@ class SCHEMA
     {
         string
             csharp_constant_file_text,
-            id,
+            tuid,
             uuid;
 
-        if ( Random.IdTextArray.length > 0 )
+        if ( Random.TuidTextArray.length > 0 )
         {
-            csharp_constant_file_text = "    public const long\n";
+            csharp_constant_file_text = "    public const string\n";
 
-            foreach ( id_index, id_text; Random.IdTextArray )
+            foreach ( tuid_index, tuid_text; Random.TuidTextArray )
             {
-                if ( id_index > 0 )
+                if ( tuid_index > 0 )
                 {
                     csharp_constant_file_text ~= ",\n";
                 }
 
-                id = Random.IdMap[ id_text ];
+                tuid = Random.TuidMap[ tuid_text ];
 
-                csharp_constant_file_text ~= "        " ~ id_text ~ " = " ~ id;
+                csharp_constant_file_text ~= "        " ~ tuid_text ~ " = \"" ~ tuid ~ "\"";
             }
 
             csharp_constant_file_text ~= ";\n";

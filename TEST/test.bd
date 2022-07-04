@@ -44,7 +44,7 @@ COMPOUND
 
 VALUE
 
-    Id Uuid Name Integer Text
+    Tuid Uuid Name Integer Text
 
         %first ~ #first ~ first ~ 1 ~ ^This is the first text, with spaces^
         %second ~ #second ~ second ~ 2 ~ This is the second text, with escaped characters \^\~\{\}
@@ -55,7 +55,7 @@ VALUE
 
 VALUE_DATA
 
-    ValueId ValueUuid
+    ValueTuid ValueUuid
 
         %first ~ #first
         %second ~ #second
