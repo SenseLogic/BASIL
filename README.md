@@ -444,6 +444,7 @@ goname <i>go_field_name</i>
 crystalname <i>crystal_field_name</i>
 csharpname <i>csharp_field_name</i>
 rustname <i>rust_field_name</i>
+match <i>foreign_column_name</i> <i>sibling_column_name</i>
 count <i>minimum_element_count</i> <i>maximum_element_count</i>
 count <i>element_count</i>
 

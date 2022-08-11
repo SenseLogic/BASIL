@@ -5222,6 +5222,143 @@ class VALUE
 
     // ~~
 
+    void MakeList(
+        long row_index,
+        long row_count
+        )
+    {
+        long
+            element_value_count,
+            element_value_index;
+        COLUMN
+            element_column,
+            foreign_column,
+            sibling_column;
+        VALUE
+            element_value,
+            foreign_value,
+            sibling_value;
+
+        if ( Type.Column.IsMatched )
+        {
+            writeln( "Matching column : ", Type.Table.Name, ".", Type.Column.Name );
+
+            element_column = Type.SubTypeArray[ 0 ].GetForeignColumn();
+            element_column.MakeValues();
+
+            foreign_column = Schema.FindForeignColumn( Type.Column.MatchedForeignColumnName );
+            sibling_column = Schema.FindForeignColumn( Type.Column.MatchedSiblingColumnName );
+
+            if ( foreign_column is null
+                 || foreign_column.Table != element_column.Table )
+            {
+                Abort( "Invalid foreign column : " ~ Type.Column.MatchedForeignColumnName );
+            }
+
+            if ( sibling_column is null
+                 || sibling_column.Table != Type.Column.Table )
+            {
+                Abort( "Invalid sibling column : " ~ Type.Column.MatchedSiblingColumnName );
+            }
+
+            foreign_column.MakeValues();
+            sibling_column.MakeValues();
+            sibling_value = sibling_column.ValueArray[ row_index ];
+
+            if ( element_column.ValueCount != foreign_column.ValueCount )
+            {
+                Abort( "Invalid value count : " ~ Type.Column.MatchedForeignColumnName );
+            }
+
+            for ( element_value_index = 0;
+                  element_value_index < element_column.ValueCount;
+                  ++element_value_index )
+            {
+                element_value = element_column.ValueArray[ element_value_index ];
+                foreign_value = foreign_column.ValueArray[ element_value_index ];
+
+                if ( foreign_value.IsEqual( sibling_value ) )
+                {
+                    ElementValueArray ~= new VALUE( Type.SubTypeArray[ 0 ] );
+                    ElementValueArray[ $ - 1 ].Set( element_value );
+                }
+            }
+        }
+        else
+        {
+            element_value_count = Type.GetElementValueCount();
+
+            for ( element_value_index = ElementValueArray.length;
+                  element_value_index < element_value_count;
+                  ++element_value_index )
+            {
+                ElementValueArray ~= new VALUE( Type.SubTypeArray[ 0 ] );
+                ElementValueArray[ element_value_index ].Make( row_index, row_count, true );
+            }
+        }
+    }
+
+    // ~~
+
+    void MakeSet(
+        long row_index,
+        long row_count
+        )
+    {
+        long
+            element_value_count,
+            element_value_index;
+
+        element_value_count = Type.GetElementValueCount();
+
+        for ( element_value_index = ElementValueArray.length;
+              element_value_index < element_value_count;
+              ++element_value_index )
+        {
+            ElementValueArray ~= new VALUE( Type.SubTypeArray[ 0 ] );
+            ElementValueArray[ element_value_index ].Make( row_index, row_count, true );
+
+            if ( IsPriorValue( ElementValueArray, element_value_index ) )
+            {
+                --element_value_index;
+            }
+        }
+    }
+
+    // ~~
+
+    void MakeMap(
+        long row_index,
+        long row_count
+        )
+    {
+        long
+            element_value_count,
+            element_value_index;
+
+        element_value_count = Type.GetElementValueCount();
+
+        for ( element_value_index = ElementValueArray.length;
+              element_value_index < element_value_count;
+              ++element_value_index )
+        {
+            KeyValueArray ~= new VALUE( Type.SubTypeArray[ 0 ] );
+            KeyValueArray[ element_value_index ].Make( row_index, row_count, true );
+
+            if ( IsPriorValue( KeyValueArray, element_value_index ) )
+            {
+                --element_value_index;
+            }
+            else
+            {
+                ElementValueArray ~= new VALUE( Type.SubTypeArray[ 1 ] );
+                ElementValueArray[ element_value_index ].Make( row_index, row_count, true );
+            }
+        }
+    }
+
+    // ~~
+
     void Make(
         long row_index,
         long row_count,
@@ -5230,8 +5367,6 @@ class VALUE
     {
         long
             blob_byte_count,
-            element_value_count,
-            element_value_index,
             prior_row_index;
         string
             prior_email,
@@ -5544,54 +5679,15 @@ class VALUE
             }
             else if ( Type.BaseName == "LIST" )
             {
-                element_value_count = Type.GetElementValueCount();
-
-                for ( element_value_index = ElementValueArray.length;
-                      element_value_index < element_value_count;
-                      ++element_value_index )
-                {
-                    ElementValueArray ~= new VALUE( Type.SubTypeArray[ 0 ] );
-                    ElementValueArray[ element_value_index ].Make( row_index, row_count, true );
-                }
+                MakeList( row_index, row_count );
             }
             else if ( Type.BaseName == "SET" )
             {
-                element_value_count = Type.GetElementValueCount();
-
-                for ( element_value_index = ElementValueArray.length;
-                      element_value_index < element_value_count;
-                      ++element_value_index )
-                {
-                    ElementValueArray ~= new VALUE( Type.SubTypeArray[ 0 ] );
-                    ElementValueArray[ element_value_index ].Make( row_index, row_count, true );
-
-                    if ( IsPriorValue( ElementValueArray, element_value_index ) )
-                    {
-                        --element_value_index;
-                    }
-                }
+                MakeSet( row_index, row_count );
             }
             else if ( Type.BaseName == "MAP" )
             {
-                element_value_count = Type.GetElementValueCount();
-
-                for ( element_value_index = ElementValueArray.length;
-                      element_value_index < element_value_count;
-                      ++element_value_index )
-                {
-                    KeyValueArray ~= new VALUE( Type.SubTypeArray[ 0 ] );
-                    KeyValueArray[ element_value_index ].Make( row_index, row_count, true );
-
-                    if ( IsPriorValue( KeyValueArray, element_value_index ) )
-                    {
-                        --element_value_index;
-                    }
-                    else
-                    {
-                        ElementValueArray ~= new VALUE( Type.SubTypeArray[ 1 ] );
-                        ElementValueArray[ element_value_index ].Make( row_index, row_count, true );
-                    }
-                }
+                MakeMap( row_index, row_count );
             }
             else
             {
@@ -5667,6 +5763,7 @@ class COLUMN
         IsRequired,
         IsIncremented,
         IsConstrained,
+        IsMatched,
         IsOptional,
         IsAscending,
         IsDescending,
@@ -5730,6 +5827,9 @@ class COLUMN
         ValueCount;
     COLUMN
         ForeignColumn;
+    string
+        MatchedForeignColumnName,
+        MatchedSiblingColumnName;
     string[ string ]
         PropertyValueMap;
     string
@@ -5785,8 +5885,8 @@ class COLUMN
         IsStored = table.IsStored;
         IsAdded = table.IsStored;
         IsEdited = table.IsEdited;
-        MinimumRandomCount = table.RowCount;
-        MaximumRandomCount = table.RowCount;
+        MinimumRandomCount = 0;
+        MaximumRandomCount = 0;
     }
 
     // -- INQUIRIES
@@ -6304,6 +6404,13 @@ class COLUMN
                       && value_text_array.length == 2 )
             {
                 JavascriptName = value_text_array[ 1 ];
+            }
+            else if ( property_name == "match"
+                      && value_text_array.length == 3 )
+            {
+                IsMatched = true;
+                MatchedForeignColumnName = value_text_array[ 1 ];
+                MatchedSiblingColumnName = value_text_array[ 2 ];
             }
             else if ( property_name == "count"
                       && value_text_array.length == 2 )
