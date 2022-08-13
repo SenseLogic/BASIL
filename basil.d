@@ -5229,8 +5229,10 @@ class VALUE
     {
         long
             element_value_count,
-            element_value_index;
+            element_value_index,
+            value_index;
         COLUMN
+            column,
             element_column,
             foreign_column,
             sibling_column;
@@ -5239,48 +5241,84 @@ class VALUE
             foreign_value,
             sibling_value;
 
-        if ( Type.Column.IsMatched )
-        {
-            writeln( "Matching column : ", Type.Table.Name, ".", Type.Column.Name );
+        column = Type.Column;
 
+        if ( column.IsExhaustive )
+        {
             element_column = Type.SubTypeArray[ 0 ].GetForeignColumn();
             element_column.MakeValues();
 
-            foreign_column = Schema.FindForeignColumn( Type.Column.MatchedForeignColumnName );
-            sibling_column = Schema.FindForeignColumn( Type.Column.MatchedSiblingColumnName );
-
-            if ( foreign_column is null
-                 || foreign_column.Table != element_column.Table )
+            if ( column.ExhaustiveForeignColumnName != ""
+                 && column.ExhaustiveSiblingColumnName != "" )
             {
-                Abort( "Invalid foreign column : " ~ Type.Column.MatchedForeignColumnName );
-            }
+                foreign_column = Schema.FindForeignColumn( column.ExhaustiveForeignColumnName );
+                sibling_column = Schema.FindForeignColumn( column.ExhaustiveSiblingColumnName );
 
-            if ( sibling_column is null
-                 || sibling_column.Table != Type.Column.Table )
-            {
-                Abort( "Invalid sibling column : " ~ Type.Column.MatchedSiblingColumnName );
-            }
-
-            foreign_column.MakeValues();
-            sibling_column.MakeValues();
-            sibling_value = sibling_column.ValueArray[ row_index ];
-
-            if ( element_column.ValueCount != foreign_column.ValueCount )
-            {
-                Abort( "Invalid value count : " ~ Type.Column.MatchedForeignColumnName );
-            }
-
-            for ( element_value_index = 0;
-                  element_value_index < element_column.ValueCount;
-                  ++element_value_index )
-            {
-                element_value = element_column.ValueArray[ element_value_index ];
-                foreign_value = foreign_column.ValueArray[ element_value_index ];
-
-                if ( foreign_value.IsEqual( sibling_value ) )
+                if ( foreign_column is null
+                     || foreign_column.Table != element_column.Table )
                 {
-                    ElementValueArray ~= new VALUE( Type.SubTypeArray[ 0 ] );
-                    ElementValueArray[ $ - 1 ].Set( element_value );
+                    Abort( "Invalid foreign column : " ~ column.ExhaustiveForeignColumnName );
+                }
+
+                if ( sibling_column is null
+                     || sibling_column.Table != column.Table )
+                {
+                    Abort( "Invalid sibling column : " ~ column.ExhaustiveSiblingColumnName );
+                }
+
+                foreign_column.MakeValues();
+                sibling_column.MakeValues();
+                sibling_value = sibling_column.ValueArray[ row_index ];
+
+                if ( element_column.ValueCount != foreign_column.ValueCount )
+                {
+                    Abort( "Invalid value count : " ~ column.ExhaustiveForeignColumnName );
+                }
+
+                for ( element_value_index = 0;
+                      element_value_index < element_column.ValueCount;
+                      ++element_value_index )
+                {
+                    element_value = element_column.ValueArray[ element_value_index ];
+                    foreign_value = foreign_column.ValueArray[ element_value_index ];
+
+                    if ( foreign_value.IsEqual( sibling_value ) )
+                    {
+                        ElementValueArray ~= new VALUE( Type.SubTypeArray[ 0 ] );
+                        ElementValueArray[ $ - 1 ].Set( element_value );
+                    }
+                }
+            }
+            else
+            {
+                if ( column.IsFilled
+                     && column.ValueCount == 0
+                     && column.Table.RowCount > 0 )
+                {
+                    column.ValueCount = column.Table.RowCount - 1;
+
+                    for ( value_index = 0;
+                          value_index < column.Table.RowCount;
+                          ++value_index )
+                    {
+                        if ( value_index >= column.ValueArray.length )
+                        {
+                            column.ValueArray ~= new VALUE( Type );
+                        }
+                        else
+                        {
+                            column.ValueArray[ value_index ] = new VALUE( Type );
+                        }
+                    }
+
+                    for ( element_value_index = 0;
+                          element_value_index < element_column.ValueCount;
+                          ++element_value_index )
+                    {
+                        element_value = element_column.ValueArray[ element_value_index ];
+                        value_index = Random.MakeInteger( 0, column.Table.RowCount - 1 );
+                        column.ValueArray[ value_index ].ElementValueArray ~= element_value;
+                    }
                 }
             }
         }
@@ -5763,7 +5801,7 @@ class COLUMN
         IsRequired,
         IsIncremented,
         IsConstrained,
-        IsMatched,
+        IsExhaustive,
         IsOptional,
         IsAscending,
         IsDescending,
@@ -5828,8 +5866,8 @@ class COLUMN
     COLUMN
         ForeignColumn;
     string
-        MatchedForeignColumnName,
-        MatchedSiblingColumnName;
+        ExhaustiveForeignColumnName,
+        ExhaustiveSiblingColumnName;
     string[ string ]
         PropertyValueMap;
     string
@@ -6331,6 +6369,21 @@ class COLUMN
             {
                 IsOptional = ( value_text_array[ 1 ] != "false" );
             }
+            else if ( property_name == "exhaustive"
+                      && value_text_array.length == 2
+                      && value_text_array[ 1 ] == "true" )
+            {
+                IsExhaustive = true;
+                ExhaustiveForeignColumnName = "";
+                ExhaustiveSiblingColumnName = "";
+            }
+            else if ( property_name == "exhaustive"
+                      && value_text_array.length == 3 )
+            {
+                IsExhaustive = true;
+                ExhaustiveForeignColumnName = value_text_array[ 1 ];
+                ExhaustiveSiblingColumnName = value_text_array[ 2 ];
+            }
             else if ( property_name == "ascending"
                       && value_text_array.length == 2 )
             {
@@ -6404,13 +6457,6 @@ class COLUMN
                       && value_text_array.length == 2 )
             {
                 JavascriptName = value_text_array[ 1 ];
-            }
-            else if ( property_name == "match"
-                      && value_text_array.length == 3 )
-            {
-                IsMatched = true;
-                MatchedForeignColumnName = value_text_array[ 1 ];
-                MatchedSiblingColumnName = value_text_array[ 2 ];
             }
             else if ( property_name == "count"
                       && value_text_array.length == 2 )

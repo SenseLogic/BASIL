@@ -434,6 +434,8 @@ switch this|<i>column_name</i>|<i>value</i> <i>old_value</i> <i>new_value</i> ..
 [!]incremented
 [!]constrained
 [!]optional
+exhaustive
+exhaustive <i>foreign_column_name</i> <i>sibling_column_name</i>
 ascending [<i>order index</i>]
 descending [<i>order index</i>]
 now
@@ -444,7 +446,6 @@ goname <i>go_field_name</i>
 crystalname <i>crystal_field_name</i>
 csharpname <i>csharp_field_name</i>
 rustname <i>rust_field_name</i>
-match <i>foreign_column_name</i> <i>sibling_column_name</i>
 count <i>minimum_element_count</i> <i>maximum_element_count</i>
 count <i>element_count</i>
 
@@ -902,7 +903,7 @@ basil [options] script_file.bs [script_file.bs|bd|bt ...]
 --exclude-command <command_name>
 ```
 
-The `--sql` and `--cql` options are mutually exclusive.
+The `--sql` and `--cql` options are mutually exhaustive.
 
 The `--json`, `--go`, `--generis`, `--crystal`, `--csharp`, `--rust` and `--javascript` options require the `--sql` or the `--cql` option.
 
