@@ -6016,7 +6016,7 @@ class COLUMN
             }
         }
 
-        return false;
+        return Schema.HasForeignColumn( column_name );
     }
 
     // ~~
@@ -6026,6 +6026,9 @@ class COLUMN
         long row_index
         )
     {
+        COLUMN
+            foreign_column;
+
         foreach ( column; Table.ColumnArray )
         {
             if ( column.IsStored
@@ -6034,6 +6037,18 @@ class COLUMN
                 column.MakeValues();
 
                 return column.ValueArray[ row_index ].Text;
+            }
+        }
+
+        foreign_column = Schema.FindForeignColumn( column_name );
+
+        if ( foreign_column !is null )
+        {
+            foreign_column.MakeValues();
+
+            if ( foreign_column.ValueCount > 0 )
+            {
+                return foreign_column.ValueArray[ Random.MakeIndex( foreign_column.ValueCount ) ].Text;
             }
         }
 
@@ -10201,6 +10216,32 @@ class SCHEMA
         }
 
         return null;
+    }
+
+    // ~~
+
+    bool HasForeignColumn(
+        string foreign_column_name
+        )
+    {
+        string[]
+            foreign_column_name_part_array;
+        TABLE
+            foreign_table;
+
+        foreign_column_name_part_array = foreign_column_name.split( '.' );
+
+        if ( foreign_column_name_part_array.length == 2 )
+        {
+            foreign_table = FindTable( foreign_column_name_part_array[ 0 ] );
+
+            if ( foreign_table !is null )
+            {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     // ~~

@@ -345,6 +345,7 @@ video_file_name
 file_name
 folder_path
 <i>column_name</i>
+<i>table_name.column_name</i>
 </pre>
 
 ### Column template filters
