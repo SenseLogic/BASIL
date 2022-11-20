@@ -3936,7 +3936,11 @@ class TYPE
         COLUMN
             foreign_column;
 
-        if ( BaseName.indexOf( '.' ) >= 0 )
+        if ( BaseName.indexOf( '.' ) >= 0
+             && !BaseName.startsWith( "TUPLE[" )
+             && !BaseName.startsWith( "LIST[" )
+             && !BaseName.startsWith( "SET[" )
+             && !BaseName.startsWith( "MAP[" ) )
         {
             foreign_column = GetForeignColumn();
 
@@ -5411,7 +5415,8 @@ class VALUE
             prior_first_name,
             prior_last_name,
             prior_name,
-            prior_title;
+            prior_title,
+            template_value;
         ulong
             random_natural;
 
@@ -5419,7 +5424,21 @@ class VALUE
         {
             if ( Type.HasTemplateText )
             {
-                Text = Type.GetTemplateValue( row_index );
+                template_value = Type.GetTemplateValue( row_index );
+
+                if ( Type.BaseName == "TUID"
+                     || Type.BaseName == "UUID"
+                     || Type.BaseName == "TUPLE"
+                     || Type.BaseName == "LIST"
+                     || Type.BaseName == "SET"
+                     || Type.BaseName == "MAP" )
+                {
+                    Set( new DATA_VALUE( template_value ) );
+                }
+                else
+                {
+                    Text = template_value;
+                }
             }
             else if ( Type.BaseName.indexOf( '.' ) >= 0 )
             {
@@ -6040,15 +6059,14 @@ class COLUMN
             }
         }
 
-        foreign_column = Schema.FindForeignColumn( column_name );
-
-        if ( foreign_column !is null )
+        if ( Schema.HasForeignColumn( column_name ) )
         {
+            foreign_column = Schema.FindForeignColumn( column_name );
             foreign_column.MakeValues();
 
             if ( foreign_column.ValueCount > 0 )
             {
-                return foreign_column.ValueArray[ Random.MakeIndex( foreign_column.ValueCount ) ].Text;
+                return Random.PickElement( foreign_column.ValueArray ).Text;
             }
         }
 
@@ -10237,7 +10255,7 @@ class SCHEMA
 
             if ( foreign_table !is null )
             {
-                return true;
+                return foreign_table.FindColumn( foreign_column_name_part_array[ 1 ] ) !is null;
             }
         }
 
@@ -12132,7 +12150,7 @@ void Abort(
     )
 {
     PrintError( message );
-
+throw new Exception( message );
     exit( -1 );
 }
 
