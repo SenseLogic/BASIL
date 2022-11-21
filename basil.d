@@ -12150,7 +12150,7 @@ void Abort(
     )
 {
     PrintError( message );
-throw new Exception( message );
+
     exit( -1 );
 }
 
