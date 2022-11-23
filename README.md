@@ -276,6 +276,8 @@ using System.Collections.Generic;
     <i>multiline comment</i>
 ##
 
+@include file.bs
+
 <i>database_name</i> [| <i>database_property</i>, <i>database_property</i>, ...]
 
 &nbsp;&nbsp;&nbsp;&nbsp;<i>table_name</i> [| <i>table_property</i>, <i>table_property</i>, ...]
@@ -532,6 +534,8 @@ POINTER[ <i>ELEMENT_TYPE</i> ] | !stored
 ## Data file syntax
 
 <pre>
+@include file.bd
+
 <i>table_name</i>
 
 &nbsp;&nbsp;&nbsp;&nbsp;<i>column_name</i> <i>column_name</i> ...

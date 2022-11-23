@@ -10825,13 +10825,44 @@ class SCHEMA
 
     // ~~
 
+    string ReadFile(
+        string file_path,
+        bool file_is_includable
+        )
+    {
+        string
+            file_text;
+        string[]
+            line_array;
+
+        file_text = file_path.ReadText().replace( "\r", "" ).replace( "\t", "    " ) ~ "\n";
+
+        if ( file_is_includable )
+        {
+            line_array = file_text.split( '\n' );
+
+            foreach ( ref line; line_array )
+            {
+                if ( line.startsWith( "@include " ) )
+                {
+                    line = ReadFile( GetFolderPath( file_path ) ~ line[ 9 .. $ ], file_is_includable );
+                }
+            }
+
+            file_text = line_array.join( '\n' );
+        }
+
+        return file_text;
+    }
+
+    // ~~
+
     void ReadFiles(
         string[] file_path_array
         )
     {
         string
             data_file_text,
-            file_text,
             schema_file_text;
 
         foreach ( file_path; file_path_array )
@@ -10841,19 +10872,17 @@ class SCHEMA
                 Abort( "Invalid file path : " ~ file_path );
             }
 
-            file_text = file_path.ReadText().replace( "\r", "" ).replace( "\t", "    " ) ~ "\n";
-
             if ( file_path.endsWith( ".bs" ) )
             {
-                schema_file_text ~= file_text;
+                schema_file_text ~= ReadFile( file_path, true );
             }
             else if ( file_path.endsWith( ".bd" ) )
             {
-                data_file_text ~= file_text;
+                data_file_text ~= ReadFile( file_path, true );
             }
             else if ( file_path.endsWith( ".bt" ) )
             {
-                TemplateFileText ~= file_text;
+                TemplateFileText ~= ReadFile( file_path, false );
             }
             else
             {
