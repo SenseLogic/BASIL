@@ -6644,25 +6644,11 @@ class COLUMN
         }
     }
 
-    // ~~
-
-    void AddValue(
-        DATA_VALUE data_value
-        )
-    {
-        VALUE
-            value;
-
-        value = new VALUE( Type );
-        value.Set( data_value );
-        ValueArray ~= value;
-
-        ++ValueCount;
-    }
 
     // ~~
 
     void MakeValues(
+        long row_count
         )
     {
         if ( IsFilled )
@@ -6670,13 +6656,13 @@ class COLUMN
             Abort( "Mutual column dependency : " ~ Table.Name ~ "." ~ Name );
         }
 
-        if ( ValueCount < Table.RowCount )
+        if ( ValueCount < row_count )
         {
             writeln( "Filling column : " ~ Table.Name ~ "." ~ Name );
 
             IsFilled = true;
 
-            while ( ValueCount < Table.RowCount )
+            while ( ValueCount < row_count )
             {
                 if ( ValueCount >= ValueArray.length )
                 {
@@ -6689,7 +6675,7 @@ class COLUMN
 
                 if ( IsStored )
                 {
-                    ValueArray[ ValueCount ].Make( ValueCount, Table.RowCount );
+                    ValueArray[ ValueCount ].Make( ValueCount, row_count );
                 }
 
                 ++ValueCount;
@@ -6697,6 +6683,35 @@ class COLUMN
 
             IsFilled = false;
         }
+    }
+
+    // ~~
+
+    void MakeValues(
+        )
+    {
+        MakeValues( Table.RowCount );
+    }
+
+    // ~~
+
+    void AddValue(
+        DATA_VALUE data_value,
+        long value_count
+        )
+    {
+        VALUE
+            value;
+
+        MakeValues( value_count );
+        assert( ValueCount == value_count );
+
+        value = new VALUE( Type );
+        value.Set( data_value );
+        ValueArray ~= value;
+
+        ++ValueCount;
+
     }
 
     // ~~
@@ -6801,6 +6816,7 @@ class TABLE
         IsLastEdited,
         IsLastNonEdited;
     long
+        ValueCount,
         RowCount;
     string[ string ]
         PropertyValueMap;
@@ -6851,6 +6867,7 @@ class TABLE
         JavascriptAttribute = GenericAttribute;
         IsStored = true;
         IsEdited = true;
+        ValueCount = 0;
         RowCount = schema.RowCount;
     }
 
@@ -10606,8 +10623,8 @@ class SCHEMA
             character_index,
             column_index,
             line_index,
-            row_count,
-            sub_value_index;
+            sub_value_index,
+            value_count;
         string
             line,
             next_line,
@@ -10690,18 +10707,25 @@ class SCHEMA
                     Abort( "Invalid value count (" ~ data_value.SubValueArray.length.to!string() ~ "/" ~ column_array.length.to!string() ~ ") : " ~ data_value.GetText() );
                 }
 
+                value_count = table.ValueCount;
+
                 for ( sub_value_index = 0;
                       sub_value_index < data_value.SubValueArray.length;
                       ++sub_value_index )
                 {
-                    column_array[ sub_value_index ].AddValue( data_value.SubValueArray[ sub_value_index ] );
+                    column_array[ sub_value_index ].AddValue( data_value.SubValueArray[ sub_value_index ], value_count );
                 }
 
-                ++row_count;
+                ++value_count;
 
-                if ( row_count > table.RowCount )
+                if ( table.ValueCount < value_count )
                 {
-                    table.RowCount = row_count;
+                    table.ValueCount = value_count;
+                }
+
+                if ( table.ValueCount > table.RowCount )
+                {
+                    table.RowCount = table.ValueCount;
                 }
             }
             else if ( line.startsWith( "    " ) )
@@ -10725,8 +10749,6 @@ class SCHEMA
 
                     column_array ~= column;
                 }
-
-                row_count = table.GetValueCount();
             }
             else
             {
