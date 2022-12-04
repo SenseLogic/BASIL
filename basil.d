@@ -1601,6 +1601,26 @@ class TYPE
         Name = type_name.GetPartArray( " " ).join( "" );
         BaseName = Name;
 
+        name_part_array = Name.GetPartArray( "=" );
+
+        if ( name_part_array.length >= 2 )
+        {
+            if ( name_part_array.length == 2
+                 && name_part_array[ 1 ].length >= 2
+                 && name_part_array[ 1 ].startsWith( '"' )
+                 && name_part_array[ 1 ].endsWith( '"' ) )
+            {
+                Name = name_part_array[ 0 ];
+                BaseName = Name;
+                TemplateText = name_part_array[ 1 ][ 1 .. $ - 1 ];
+                HasTemplateText = true;
+            }
+            else
+            {
+                Abort( "Invalid type : " ~ type_name );
+            }
+        }
+
         bracket_level = 0;
         character_is_in_string = false;
 
@@ -1681,26 +1701,6 @@ class TYPE
                 {
                     character_is_in_string = true;
                 }
-            }
-        }
-
-        name_part_array = Name.GetPartArray( "=" );
-
-        if ( name_part_array.length >= 2 )
-        {
-            if ( name_part_array.length == 2
-                 && name_part_array[ 1 ].length >= 2
-                 && name_part_array[ 1 ].startsWith( '"' )
-                 && name_part_array[ 1 ].endsWith( '"' ) )
-            {
-                Name = name_part_array[ 0 ];
-                BaseName = Name;
-                TemplateText = name_part_array[ 1 ][ 1 .. $ - 1 ];
-                HasTemplateText = true;
-            }
-            else
-            {
-                Abort( "Invalid type : " ~ type_name );
             }
         }
     }
