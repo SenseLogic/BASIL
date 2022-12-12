@@ -56,6 +56,8 @@ class COMPOUND
         this.SimpleDateList = null;
         this.NameSetMap = null;
         this.Text = null;
+        this.TextArray = null;
+        this.OtherTextArray = null;
         this.SimplePointerArray = null;
     }
 }

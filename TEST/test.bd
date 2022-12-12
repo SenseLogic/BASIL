@@ -21,7 +21,7 @@ SIMPLE
 
 COMPOUND
 
-    Id Location Name NameSet PhoneList EmailSet CompanyMap Text
+    Id Location Name NameSet PhoneList EmailSet CompanyMap Text TextArray
 
         1
             ~ Belgium
@@ -31,6 +31,7 @@ COMPOUND
             ~ { jack.harper@gmail.com ~ victoria.olsen@outlook.com }
             ~ { { 12345678 ~ Warner Bros } ~ { 23456789 ~ Universal Pictures } }
             ~ \{\}
+            ~ { first\\n\\n ~ second\\n\\n }
 
         2
 
@@ -41,6 +42,7 @@ COMPOUND
             ~ { rick.deckard@gmail.com ~ dave.holden@outlook.com }
             ~ { { 12345678 ~ × } ~ { 23456789 ~ × } }
             ~
+            ~ { first\\n\\n ~ second\\n\\n }
 
 VALUE
 

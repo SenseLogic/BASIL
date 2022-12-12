@@ -4,7 +4,7 @@ drop table if exists TEST.SIMPLE;
 create table if not exists TEST.SIMPLE( Uuid uuid, Bool boolean, Int8 tinyint, Uint8 tinyint, Int16 smallint, Uint16 smallint, Int32 int, Uint32 int, Int64 bigint, Uint64 bigint, Float32 float, Float64 double, String text, Name text, Date timestamp, DateTime timestamp, Blob blob, Option text, EnglishText text, FrenchText text, GermanText text, LatinText text, SpanishText text, Integer bigint, Natural bigint, Real double, Address text, CategorySlug text, CategoryName text, CategorySection text, primary key( ( Uuid, Bool ), Int8 ) );
 create index on TEST.SIMPLE ( Uint8 );
 drop table if exists TEST.COMPOUND;
-create table if not exists TEST.COMPOUND( Id int, Location text, Name tuple<text,text>, NameSet set<frozen<tuple<text,text>>>, PhoneList list<text>, EmailSet set<text>, CompanyMap map<text,text>, SimpleDate timestamp, SimpleDateMap map<frozen<tuple<text,text>>,timestamp>, SimpleDateSet set<timestamp>, SimpleDateList list<timestamp>, NameSetMap map<timestamp,frozen<set<tuple<text,text>>>>, Text text, primary key( Id ) );
+create table if not exists TEST.COMPOUND( Id int, Location text, Name tuple<text,text>, NameSet set<frozen<tuple<text,text>>>, PhoneList list<text>, EmailSet set<text>, CompanyMap map<text,text>, SimpleDate timestamp, SimpleDateMap map<frozen<tuple<text,text>>,timestamp>, SimpleDateSet set<timestamp>, SimpleDateList list<timestamp>, NameSetMap map<timestamp,frozen<set<tuple<text,text>>>>, Text text, TextArray list<text>, OtherTextArray list<text>, primary key( Id ) );
 drop table if exists TEST.VALUE;
 create table if not exists TEST.VALUE( Tuid text, Uuid uuid, Name text, Integer int, Text text, primary key( Tuid ) );
 create index on TEST.VALUE ( Uuid );

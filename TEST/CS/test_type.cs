@@ -82,6 +82,9 @@ public class COMPOUND
         NameSetMap;
     public string
         Text;
+    public List<string>
+        TextArray,
+        OtherTextArray;
     public List<SIMPLE>
         SimplePointerArray;
 }

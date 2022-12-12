@@ -310,7 +310,7 @@ func AddDatabaseCompound(
 {
     error_
         := DatabaseSession.Query(
-               "insert into \"COMPOUND\" ( \"Location\", \"Name\", \"NameSet\", \"PhoneList\", \"EmailSet\", \"CompanyMap\", \"SimpleDate\", \"SimpleDateMap\", \"SimpleDateSet\", \"SimpleDateList\", \"NameSetMap\", \"Text\" ) values ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? )",
+               "insert into \"COMPOUND\" ( \"Location\", \"Name\", \"NameSet\", \"PhoneList\", \"EmailSet\", \"CompanyMap\", \"SimpleDate\", \"SimpleDateMap\", \"SimpleDateSet\", \"SimpleDateList\", \"NameSetMap\", \"Text\", \"TextArray\", \"OtherTextArray\" ) values ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? )",
                compound.Location,
                compound.Name,
                compound.NameSet,
@@ -322,7 +322,9 @@ func AddDatabaseCompound(
                compound.SimpleDateSet,
                compound.SimpleDateList,
                compound.NameSetMap,
-               compound.Text
+               compound.Text,
+               compound.TextArray,
+               compound.OtherTextArray
                ).Exec();
 
     if ( error_ != nil )
@@ -344,7 +346,7 @@ func PutDatabaseCompound(
 {
     error_
         := DatabaseSession.Query(
-               "replace into \"COMPOUND\" ( \"Location\", \"Name\", \"NameSet\", \"PhoneList\", \"EmailSet\", \"CompanyMap\", \"SimpleDate\", \"SimpleDateMap\", \"SimpleDateSet\", \"SimpleDateList\", \"NameSetMap\", \"Text\" ) values ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? )",
+               "replace into \"COMPOUND\" ( \"Location\", \"Name\", \"NameSet\", \"PhoneList\", \"EmailSet\", \"CompanyMap\", \"SimpleDate\", \"SimpleDateMap\", \"SimpleDateSet\", \"SimpleDateList\", \"NameSetMap\", \"Text\", \"TextArray\", \"OtherTextArray\" ) values ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? )",
                compound.Location,
                compound.Name,
                compound.NameSet,
@@ -356,7 +358,9 @@ func PutDatabaseCompound(
                compound.SimpleDateSet,
                compound.SimpleDateList,
                compound.NameSetMap,
-               compound.Text
+               compound.Text,
+               compound.TextArray,
+               compound.OtherTextArray
                ).Exec();
 
     if ( error_ != nil )
@@ -378,7 +382,7 @@ func SetDatabaseCompound(
 {
     error_
         := DatabaseSession.Query(
-               "insert into \"COMPOUND\" ( \"Id\", \"Location\", \"Name\", \"NameSet\", \"PhoneList\", \"EmailSet\", \"CompanyMap\", \"SimpleDate\", \"SimpleDateMap\", \"SimpleDateSet\", \"SimpleDateList\", \"NameSetMap\", \"Text\" ) values ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? )",
+               "insert into \"COMPOUND\" ( \"Id\", \"Location\", \"Name\", \"NameSet\", \"PhoneList\", \"EmailSet\", \"CompanyMap\", \"SimpleDate\", \"SimpleDateMap\", \"SimpleDateSet\", \"SimpleDateList\", \"NameSetMap\", \"Text\", \"TextArray\", \"OtherTextArray\" ) values ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? )",
                compound.Id,
                compound.Location,
                compound.Name,
@@ -391,7 +395,9 @@ func SetDatabaseCompound(
                compound.SimpleDateSet,
                compound.SimpleDateList,
                compound.NameSetMap,
-               compound.Text
+               compound.Text,
+               compound.TextArray,
+               compound.OtherTextArray
                ).Exec();
 
     if ( error_ != nil )
@@ -436,7 +442,7 @@ func GetDatabaseCompound(
 {
     error_
         := DatabaseSession.Query(
-               "select \"Location\", \"Name\", \"NameSet\", \"PhoneList\", \"EmailSet\", \"CompanyMap\", \"SimpleDate\", \"SimpleDateMap\", \"SimpleDateSet\", \"SimpleDateList\", \"NameSetMap\", \"Text\",  from \"COMPOUND\" where \"Id\" = ?",
+               "select \"Location\", \"Name\", \"NameSet\", \"PhoneList\", \"EmailSet\", \"CompanyMap\", \"SimpleDate\", \"SimpleDateMap\", \"SimpleDateSet\", \"SimpleDateList\", \"NameSetMap\", \"Text\", \"TextArray\", \"OtherTextArray\",  from \"COMPOUND\" where \"Id\" = ?",
                compound.Id
                )
                .Consistency( gocql.One )
@@ -453,6 +459,8 @@ func GetDatabaseCompound(
                     &compound.SimpleDateList,
                     &compound.NameSetMap,
                     &compound.Text,
+                    &compound.TextArray,
+                    &compound.OtherTextArray,
                     );
 
     if ( error_ != nil )
@@ -477,7 +485,7 @@ func GetDatabaseCompoundList(
 
     iterator
         := DatabaseSession.Query(
-               "select \"Id\", \"Location\", \"Name\", \"NameSet\", \"PhoneList\", \"EmailSet\", \"CompanyMap\", \"SimpleDate\", \"SimpleDateMap\", \"SimpleDateSet\", \"SimpleDateList\", \"NameSetMap\", \"Text\" from \"COMPOUND\""
+               "select \"Id\", \"Location\", \"Name\", \"NameSet\", \"PhoneList\", \"EmailSet\", \"CompanyMap\", \"SimpleDate\", \"SimpleDateMap\", \"SimpleDateSet\", \"SimpleDateList\", \"NameSetMap\", \"Text\", \"TextArray\", \"OtherTextArray\" from \"COMPOUND\""
                )
                .Consistency( gocql.One )
                .Iter();
@@ -497,7 +505,9 @@ func GetDatabaseCompoundList(
             &compound.SimpleDateSet,
             &compound.SimpleDateList,
             &compound.NameSetMap,
-            &compound.Text
+            &compound.Text,
+            &compound.TextArray,
+            &compound.OtherTextArray
             )
     {
         *compound_array = append( *compound_array, compound );

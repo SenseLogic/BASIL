@@ -48,6 +48,8 @@ TEST | count 10
         SimpleDateList : LIST[ SIMPLE.Date ] | count 1 3
         NameSetMap : MAP[ SIMPLE.Date, COMPOUND.NameSet ] | count 2
         Text : STRING
+        TextArray : LIST[ STRING ]
+        OtherTextArray : LIST[ STRING ] = "{ first\\\\n\\\\n ~ second\\\\n\\\\n }"
         SimplePointerArray : ARRAY[ POINTER[ SIMPLE ] ] | !stored
 
     VALUE | stored

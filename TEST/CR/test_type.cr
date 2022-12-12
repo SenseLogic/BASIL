@@ -47,6 +47,8 @@ class COMPOUND
     @simple_date_list : List(String)
     @name_set_map : Hash(String, Set(Tuple(String, String)))
     @text : String
+    @text_array : List(String)
+    @other_text_array : List(String)
     @simple_pointer_array : Array(SIMPLE)
 end
 

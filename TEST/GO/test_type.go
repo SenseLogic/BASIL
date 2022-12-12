@@ -47,6 +47,8 @@ type COMPOUND struct {
     SimpleDateList TIME.TIME_LIST    `db:"SimpleDateList"`;
     NameSetMap TIME.TIME_STRING_STRING_TUPLE_SET_MAP    `db:"NameSetMap"`;
     Text string    `db:"Text"`;
+    TextArray STRING_LIST    `db:"TextArray"`;
+    OtherTextArray STRING_LIST    `db:"OtherTextArray"`;
     SimplePointerArray [] * SIMPLE    `db:"-"`;
 }
 

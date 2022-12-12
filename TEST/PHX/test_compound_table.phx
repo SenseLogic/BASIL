@@ -2,14 +2,14 @@
 Table :
     COMPOUND : COMPOUND / Compound / compound / compound / Compound / Compound / compound
         Properties : false false
-        Columns : Id, Location, Name, NameSet, PhoneList, EmailSet, CompanyMap, SimpleDate, SimpleDateMap, SimpleDateSet, SimpleDateList, NameSetMap, Text, SimplePointerArray
+        Columns : Id, Location, Name, NameSet, PhoneList, EmailSet, CompanyMap, SimpleDate, SimpleDateMap, SimpleDateSet, SimpleDateList, NameSetMap, Text, TextArray, OtherTextArray, SimplePointerArray
         Key columns : Id
-        Non key columns : Location, Name, NameSet, PhoneList, EmailSet, CompanyMap, SimpleDate, SimpleDateMap, SimpleDateSet, SimpleDateList, NameSetMap, Text, SimplePointerArray
-        Stored columns : Id, Location, Name, NameSet, PhoneList, EmailSet, CompanyMap, SimpleDate, SimpleDateMap, SimpleDateSet, SimpleDateList, NameSetMap, Text
+        Non key columns : Location, Name, NameSet, PhoneList, EmailSet, CompanyMap, SimpleDate, SimpleDateMap, SimpleDateSet, SimpleDateList, NameSetMap, Text, TextArray, OtherTextArray, SimplePointerArray
+        Stored columns : Id, Location, Name, NameSet, PhoneList, EmailSet, CompanyMap, SimpleDate, SimpleDateMap, SimpleDateSet, SimpleDateList, NameSetMap, Text, TextArray, OtherTextArray
         Non Stored columns : SimplePointerArray
         Stored key columns : Id
         Non Stored key columns : 
-        Stored non key columns : Location, Name, NameSet, PhoneList, EmailSet, CompanyMap, SimpleDate, SimpleDateMap, SimpleDateSet, SimpleDateList, NameSetMap, Text
+        Stored non key columns : Location, Name, NameSet, PhoneList, EmailSet, CompanyMap, SimpleDate, SimpleDateMap, SimpleDateSet, SimpleDateList, NameSetMap, Text, TextArray, OtherTextArray
         Non Stored non key columns : SimplePointerArray
         Columns :
             Id : Id / id / id / Id / Id / id
@@ -103,6 +103,20 @@ Table :
                 Crystal : String text
                 C# : string Text
                 Rust : String text
+            TextArray : TextArray / text_array / text-array / Text Array / Text array / text array
+                Properties : false false
+                Go : STRING_LIST TextArray
+                PHP : array TextArray
+                Crystal : List(String) text_array
+                C# : List<string> TextArray
+                Rust : List<String> text_array
+            OtherTextArray : OtherTextArray / other_text_array / other-text-array / Other Text Array / Other text array / other text array
+                Properties : false false
+                Go : STRING_LIST OtherTextArray
+                PHP : array OtherTextArray
+                Crystal : List(String) other_text_array
+                C# : List<string> OtherTextArray
+                Rust : List<String> other_text_array
             SimplePointerArray : SimplePointerArray / simple_pointer_array / simple-pointer-array / Simple Pointer Array / Simple pointer array / simple pointer array
                 Properties : false false
                 Go : [] * SIMPLE SimplePointerArray

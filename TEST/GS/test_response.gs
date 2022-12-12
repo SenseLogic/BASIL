@@ -99,6 +99,10 @@ func WriteResponseCompound(
     WriteResponseDateTimeStringStringTupleSetMap( writer, compound.NameSetMap );
     WriteResponse( writer, ",\"Text\":" );
     WriteResponseString( writer, compound.Text );
+    WriteResponse( writer, ",\"TextArray\":" );
+    WriteResponseStringList( writer, compound.TextArray );
+    WriteResponse( writer, ",\"OtherTextArray\":" );
+    WriteResponseStringList( writer, compound.OtherTextArray );
     WriteResponse( writer, "}" );
 }
 

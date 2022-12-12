@@ -4564,7 +4564,7 @@ class VALUE
         {
             if ( !it_is_sub_value )
             {
-                sql_text = sql_text.replace( "'", "\\'" ).replace( "\"", "\\\"" );
+                sql_text = sql_text.replace( "\\", "\\\\" ).replace( "'", "\\'" ).replace( "\"", "\\\"" );
             }
 
             return "'" ~ sql_text ~ "'";
@@ -4573,7 +4573,7 @@ class VALUE
         {
             if ( !it_is_sub_value )
             {
-                sql_text = sql_text.replace( "\"", "\\\"" );
+                sql_text = sql_text.replace( "\\", "\\\\" ).replace( "\"", "\\\"" );
             }
 
             return "\"" ~ sql_text ~ "\"";

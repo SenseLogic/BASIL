@@ -3,7 +3,7 @@
 function GetDatabaseCompoundArray(
     )
 {
-    var statement = GetDatabaseStatement( 'select `Id`, `Location`, `Name`, `NameSet`, `PhoneList`, `EmailSet`, `CompanyMap`, `SimpleDate`, `SimpleDateMap`, `SimpleDateSet`, `SimpleDateList`, `NameSetMap`, `Text` from `COMPOUND`' );
+    var statement = GetDatabaseStatement( 'select `Id`, `Location`, `Name`, `NameSet`, `PhoneList`, `EmailSet`, `CompanyMap`, `SimpleDate`, `SimpleDateMap`, `SimpleDateSet`, `SimpleDateList`, `NameSetMap`, `Text`, `TextArray`, `OtherTextArray` from `COMPOUND`' );
 
     if ( !statement.execute() )
     {
@@ -24,6 +24,8 @@ function GetDatabaseCompoundArray(
         compound.SimpleDateSet = json_decode( compound.SimpleDateSet );
         compound.SimpleDateList = json_decode( compound.SimpleDateList );
         compound.NameSetMap = json_decode( compound.NameSetMap );
+        compound.TextArray = json_decode( compound.TextArray );
+        compound.OtherTextArray = json_decode( compound.OtherTextArray );
         array_push( compound_array, compound );
     }
 
@@ -36,7 +38,7 @@ function GetDatabaseCompoundById(
     int id
     )
 {
-    var statement = GetDatabaseStatement( 'select `Id`, `Location`, `Name`, `NameSet`, `PhoneList`, `EmailSet`, `CompanyMap`, `SimpleDate`, `SimpleDateMap`, `SimpleDateSet`, `SimpleDateList`, `NameSetMap`, `Text` from `COMPOUND` where `Id` = ? limit 1' );
+    var statement = GetDatabaseStatement( 'select `Id`, `Location`, `Name`, `NameSet`, `PhoneList`, `EmailSet`, `CompanyMap`, `SimpleDate`, `SimpleDateMap`, `SimpleDateSet`, `SimpleDateList`, `NameSetMap`, `Text`, `TextArray`, `OtherTextArray` from `COMPOUND` where `Id` = ? limit 1' );
     statement.bindParam( 1, id, PDO::PARAM_INT );
 
     if ( !statement.execute() )
@@ -55,6 +57,8 @@ function GetDatabaseCompoundById(
     compound.SimpleDateSet = json_decode( compound.SimpleDateSet );
     compound.SimpleDateList = json_decode( compound.SimpleDateList );
     compound.NameSetMap = json_decode( compound.NameSetMap );
+    compound.TextArray = json_decode( compound.TextArray );
+    compound.OtherTextArray = json_decode( compound.OtherTextArray );
 
     return compound;
 }
@@ -73,10 +77,12 @@ function AddDatabaseCompound(
     array simple_date_set,
     array simple_date_list,
     array name_set_map,
-    string text
+    string text,
+    array text_array,
+    array other_text_array
     )
 {
-    var statement = GetDatabaseStatement( 'insert into `COMPOUND` ( `Location`, `Name`, `NameSet`, `PhoneList`, `EmailSet`, `CompanyMap`, `SimpleDate`, `SimpleDateMap`, `SimpleDateSet`, `SimpleDateList`, `NameSetMap`, `Text` ) values ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? )' );
+    var statement = GetDatabaseStatement( 'insert into `COMPOUND` ( `Location`, `Name`, `NameSet`, `PhoneList`, `EmailSet`, `CompanyMap`, `SimpleDate`, `SimpleDateMap`, `SimpleDateSet`, `SimpleDateList`, `NameSetMap`, `Text`, `TextArray`, `OtherTextArray` ) values ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? )' );
     statement.bindParam( 1, location, PDO::PARAM_STR );
     name = json_encode( name );
     statement.bindParam( 2, name, PDO::PARAM_STR );
@@ -98,6 +104,10 @@ function AddDatabaseCompound(
     name_set_map = json_encode( name_set_map );
     statement.bindParam( 11, name_set_map, PDO::PARAM_STR );
     statement.bindParam( 12, text, PDO::PARAM_STR );
+    text_array = json_encode( text_array );
+    statement.bindParam( 13, text_array, PDO::PARAM_STR );
+    other_text_array = json_encode( other_text_array );
+    statement.bindParam( 14, other_text_array, PDO::PARAM_STR );
 
     if ( !statement.execute() )
     {
@@ -121,10 +131,12 @@ function PutDatabaseCompound(
     array simple_date_set,
     array simple_date_list,
     array name_set_map,
-    string text
+    string text,
+    array text_array,
+    array other_text_array
     )
 {
-    var statement = GetDatabaseStatement( 'replace into `COMPOUND` ( `Location`, `Name`, `NameSet`, `PhoneList`, `EmailSet`, `CompanyMap`, `SimpleDate`, `SimpleDateMap`, `SimpleDateSet`, `SimpleDateList`, `NameSetMap`, `Text` ) values ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? )' );
+    var statement = GetDatabaseStatement( 'replace into `COMPOUND` ( `Location`, `Name`, `NameSet`, `PhoneList`, `EmailSet`, `CompanyMap`, `SimpleDate`, `SimpleDateMap`, `SimpleDateSet`, `SimpleDateList`, `NameSetMap`, `Text`, `TextArray`, `OtherTextArray` ) values ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? )' );
     statement.bindParam( 1, location, PDO::PARAM_STR );
     name = json_encode( name );
     statement.bindParam( 2, name, PDO::PARAM_STR );
@@ -146,6 +158,10 @@ function PutDatabaseCompound(
     name_set_map = json_encode( name_set_map );
     statement.bindParam( 11, name_set_map, PDO::PARAM_STR );
     statement.bindParam( 12, text, PDO::PARAM_STR );
+    text_array = json_encode( text_array );
+    statement.bindParam( 13, text_array, PDO::PARAM_STR );
+    other_text_array = json_encode( other_text_array );
+    statement.bindParam( 14, other_text_array, PDO::PARAM_STR );
 
     if ( !statement.execute() )
     {
@@ -170,10 +186,12 @@ function SetDatabaseCompound(
     array simple_date_set,
     array simple_date_list,
     array name_set_map,
-    string text
+    string text,
+    array text_array,
+    array other_text_array
     )
 {
-    var statement = GetDatabaseStatement( 'update `COMPOUND` set `Location` = ?, `Name` = ?, `NameSet` = ?, `PhoneList` = ?, `EmailSet` = ?, `CompanyMap` = ?, `SimpleDate` = ?, `SimpleDateMap` = ?, `SimpleDateSet` = ?, `SimpleDateList` = ?, `NameSetMap` = ?, `Text` = ?,  where Id = ?' );
+    var statement = GetDatabaseStatement( 'update `COMPOUND` set `Location` = ?, `Name` = ?, `NameSet` = ?, `PhoneList` = ?, `EmailSet` = ?, `CompanyMap` = ?, `SimpleDate` = ?, `SimpleDateMap` = ?, `SimpleDateSet` = ?, `SimpleDateList` = ?, `NameSetMap` = ?, `Text` = ?, `TextArray` = ?, `OtherTextArray` = ?,  where Id = ?' );
     statement.bindParam( 1, location, PDO::PARAM_STR );
     name = json_encode( name );
     statement.bindParam( 2, name, PDO::PARAM_STR );
@@ -195,7 +213,11 @@ function SetDatabaseCompound(
     name_set_map = json_encode( name_set_map );
     statement.bindParam( 11, name_set_map, PDO::PARAM_STR );
     statement.bindParam( 12, text, PDO::PARAM_STR );
-    statement.bindParam( 13, id, PDO::PARAM_INT );
+    text_array = json_encode( text_array );
+    statement.bindParam( 13, text_array, PDO::PARAM_STR );
+    other_text_array = json_encode( other_text_array );
+    statement.bindParam( 14, other_text_array, PDO::PARAM_STR );
+    statement.bindParam( 15, id, PDO::PARAM_INT );
 
     if ( !statement.execute() )
     {

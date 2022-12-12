@@ -51,6 +51,8 @@ type COMPOUND struct {
     SimpleDateList TIME.TIME_LIST;
     NameSetMap TIME.TIME_STRING_STRING_TUPLE_SET_MAP;
     Text string;
+    TextArray STRING_LIST;
+    OtherTextArray STRING_LIST;
     SimplePointerArray [] * SIMPLE;
 }
 

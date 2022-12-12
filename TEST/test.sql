@@ -54,6 +54,8 @@ create table if not exists `TEST`.`COMPOUND`(
     `SimpleDateList` TEXT NULL,
     `NameSetMap` TEXT NULL,
     `Text` TEXT NULL,
+    `TextArray` TEXT NULL,
+    `OtherTextArray` TEXT NULL,
     primary key( `Id` )
     ) engine = InnoDB;
 
