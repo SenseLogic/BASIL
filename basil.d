@@ -4468,6 +4468,8 @@ class VALUE
         bool it_is_dump_value = false
         )
     {
+        bool
+            it_is_compound_value;
         string
             sql_text,
             type_name;
@@ -4560,11 +4562,23 @@ class VALUE
             sql_text = Text;
         }
 
+        it_is_compound_value
+            = ( type_name == "TUPLE"
+                || type_name == "LIST"
+                || type_name == "SET"
+                || type_name == "MAP" );
+
+        if ( it_is_compound_value
+             && !it_is_sub_value )
+        {
+            sql_text = sql_text.replace( "\\", "\\\\" );
+        }
+
         if ( it_is_dump_value )
         {
             if ( !it_is_sub_value )
             {
-                sql_text = sql_text.replace( "\\", "\\\\" ).replace( "'", "\\'" ).replace( "\"", "\\\"" );
+                sql_text = sql_text.replace( "'", "\\'" ).replace( "\"", "\\\"" );
             }
 
             return "'" ~ sql_text ~ "'";
@@ -4573,7 +4587,7 @@ class VALUE
         {
             if ( !it_is_sub_value )
             {
-                sql_text = sql_text.replace( "\\", "\\\\" ).replace( "\"", "\\\"" );
+                sql_text = sql_text.replace( "\"", "\\\"" );
             }
 
             return "\"" ~ sql_text ~ "\"";
