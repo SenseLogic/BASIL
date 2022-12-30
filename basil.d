@@ -10903,7 +10903,7 @@ class SCHEMA
 
         foreach ( file_path; file_path_array )
         {
-            if ( !exists( file_path ) )
+            if ( !file_path.exists() )
             {
                 Abort( "Invalid file path : " ~ file_path );
             }
