@@ -1,3 +1,1 @@
-dmd -debug -g -gf -gs -m64 basil.d
-del /q *.obj
-pause
+dub build --force --build=debug

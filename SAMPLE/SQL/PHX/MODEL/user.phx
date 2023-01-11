@@ -33,15 +33,15 @@ function GetDatabaseUserByEmailMap(
         var_dump( statement.errorInfo() );
     }
 
-    var user_map = [];
+    var user_by_email_map = [];
 
     while ( var user = statement.fetchObject() )
     {
         user.Id = ( int )( user.Id );
-        user_map[ user.Email ] = user;
+        user_by_email_map[ user.Email ] = user;
     }
 
-    return user_map;
+    return user_by_email_map;
 }
 
 // ~~

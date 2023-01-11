@@ -878,14 +878,14 @@ The UML diagrams can be drawn using [PlantText](https://www.planttext.com/) or [
 ## Command line
 
 ```
-basil [options] script_file.bs [script_file.bs|bd|bt ...]
+basil [options] script_file.bs [script_file.bs|bd|bt|csv ...]
 ```
 
 ### File extensions
 
 ```
 .bs : schema
-.bd : data
+.bd, .csv : data
 .bt : template
 ```
 
@@ -896,6 +896,7 @@ basil [options] script_file.bs [script_file.bs|bd|bt ...]
 --sql : generate the SQL schema and data files
 --cql : generate the CQL schema and data files
 --json : generate the JSON data file
+--csv : generate the CSV data files
 --go : generate the Go type file
 --generis : generate the Generis type, query, response, request and route files
 --phoenix : generate the Phoenix query files
@@ -910,7 +911,7 @@ basil [options] script_file.bs [script_file.bs|bd|bt ...]
 
 The `--sql` and `--cql` options are mutually exhaustive.
 
-The `--json`, `--go`, `--generis`, `--crystal`, `--csharp`, `--rust` and `--javascript` options require the `--sql` or the `--cql` option.
+The `--json`, `--csv`, `--go`, `--generis`, `--crystal`, `--csharp`, `--rust` and `--javascript` options require the `--sql` or the `--cql` option.
 
 ### Examples
 

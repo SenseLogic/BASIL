@@ -1,2 +1,15 @@
-basil
+.dub
+docs.json
+__dummy.html
+docs/
+/basil
+basil.so
+basil.dylib
+basil.dll
+basil.a
+basil.lib
+basil-test-*
+*.pdb
 *.o
+*.obj
+*.lst

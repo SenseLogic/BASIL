@@ -44,11 +44,11 @@ function GetDatabaseSubscriberById(
 // ~~
 
 function GetDatabaseSubscriberByEmail(
-    string email
+    string subscriber_email
     )
 {
-    var statement = GetDatabaseStatement( 'select `Id`, `Name`, `Email` from `SUBSCRIBER` where Email = ? limit 1' );
-    statement.bindParam( 1, email, PDO::PARAM_STR );
+    var statement = GetDatabaseStatement( 'select `Id`, `Name`, `Email` from `SUBSCRIBER` where `Email` = ? limit 1' );
+    statement.bindParam( 1, subscriber_email, PDO::PARAM_STR );
 
     if ( !statement.execute() )
     {

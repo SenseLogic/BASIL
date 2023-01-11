@@ -1,4 +1,4 @@
 #!/bin/sh
 set -x
-dmd -m64 basil.d
-rm *.o
+dub build --force --build=plain
+rm -r .dub

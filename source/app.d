@@ -20,7 +20,12 @@
 
 // -- IMPORTS
 
-import core.stdc.stdlib : exit;
+import mildew.compiler : Compiler;
+import mildew.environment : Environment;
+import mildew.exceptions : ScriptCompileException, ScriptRuntimeException;
+import mildew.interpreter : Interpreter;
+import mildew.types : NativeFunctionError, ScriptAny, ScriptFunction;
+import seed : Abort, AddPrefix, AddSuffix, EndsByVowel, GetBooleanText, GetCsvText, GetExecutablePath, GetFileName, GetFolderPath, GetFolderPath, GetInteger, GetKebabCaseText, GetMajorCaseText, GetNatural, GetPascalCaseText, GetPrefix, GetReal, GetSlugCaseText, GetSnakeCaseText, GetSuffix, IsInteger, IsLinux, IsMacOs, IsWindows, PrintError, PrintWarning, ReadText, RemovePrefix, RemoveSuffix, ReplacePrefix, ReplaceSuffix, StartsByConsonant, StartsByVowel, WriteText;
 import std.algorithm : countUntil, sort;
 import std.ascii : isDigit, isLower, isUpper;
 import std.base64 : Base64URLNoPadding;
@@ -4807,6 +4812,41 @@ class VALUE
 
     // ~~
 
+    string GetCsvText(
+        )
+    {
+        string
+            type_name;
+
+        type_name = Type.ActualType.BaseName;
+
+        if ( type_name == "BOOL" )
+        {
+            if ( Text == "1"
+                 || Text == "true" )
+            {
+                return "true";
+            }
+            else
+            {
+                return "false";
+            }
+        }
+        else if ( type_name == "TUPLE"
+                  || type_name == "LIST"
+                  || type_name == "SET"
+                  || type_name == "MAP" )
+        {
+            return GetJsonText();
+        }
+        else
+        {
+            return Text;
+        }
+    }
+
+    // ~~
+
     string GetPhpText(
         )
     {
@@ -5477,8 +5517,8 @@ class VALUE
                 }
                 else if ( Type.ColumnName.toLower.endsWith( "slug" ) )
                 {
-                    prior_title = Type.Column.FindPriorColumnValue( "title", row_index );
-                    prior_name = Type.Column.FindPriorColumnValue( "name", row_index );
+                    prior_title = Type.Column.GetColumnValueText( "title", row_index );
+                    prior_name = Type.Column.GetColumnValueText( "name", row_index );
 
                     if ( prior_title != "" )
                     {
@@ -5503,7 +5543,7 @@ class VALUE
                           || Type.ColumnName.toLower.endsWith( "pseudonym" )
                           || Type.ColumnName.toLower.endsWith( "account" ) )
                 {
-                    prior_email = Type.Column.FindPriorColumnValue( "email", row_index );
+                    prior_email = Type.Column.GetColumnValueText( "email", row_index );
 
                     if ( prior_email != "" )
                     {
@@ -5511,8 +5551,8 @@ class VALUE
                     }
                     else
                     {
-                        prior_first_name = Type.Column.FindPriorColumnValue( "firstname", row_index );
-                        prior_last_name = Type.Column.FindPriorColumnValue( "lastname", row_index );
+                        prior_first_name = Type.Column.GetColumnValueText( "firstname", row_index );
+                        prior_last_name = Type.Column.GetColumnValueText( "lastname", row_index );
 
                         Text = Random.MakePseudonym( prior_first_name, prior_last_name );
                     }
@@ -5523,8 +5563,8 @@ class VALUE
                 }
                 else if ( Type.ColumnName.toLower.endsWith( "email" ) )
                 {
-                    prior_first_name = Type.Column.FindPriorColumnValue( "firstname", row_index );
-                    prior_last_name = Type.Column.FindPriorColumnValue( "lastname", row_index );
+                    prior_first_name = Type.Column.GetColumnValueText( "firstname", row_index );
+                    prior_last_name = Type.Column.GetColumnValueText( "lastname", row_index );
 
                     Text = Random.MakeEmail( prior_first_name, prior_last_name );
                 }
@@ -6108,7 +6148,7 @@ class COLUMN
 
     // ~~
 
-    string FindValueText(
+    string GetValueText(
         long row_index
         )
     {
@@ -6126,7 +6166,7 @@ class COLUMN
 
     // ~~
 
-    string FindPriorColumnValue(
+    string GetColumnValueText(
         string prior_column_name_suffix,
         long row_index
         )
@@ -6948,6 +6988,38 @@ class TABLE
         }
 
         return null;
+    }
+
+    // ~~
+
+    string GetCsvText(
+        )
+    {
+        string
+            text;
+        string[]
+            column_text_array;
+
+        foreach ( column; ColumnArray )
+        {
+            column_text_array ~= column.Name.GetCsvText();
+        }
+
+        text ~= column_text_array.join( ',' ) ~ "\n";
+
+        foreach ( row_index; 0 .. RowCount )
+        {
+            column_text_array = null;
+
+            foreach ( column; ColumnArray )
+            {
+                column_text_array ~= column.GetValueText( row_index ).GetCsvText();
+            }
+
+            text ~= column_text_array.join( ',' ) ~ "\n";
+        }
+
+        return text;
     }
 
     // ~~
@@ -10352,7 +10424,7 @@ class SCHEMA
 
                 if ( row_index >= 0 )
                 {
-                    return value_column.FindValueText( row_index );
+                    return value_column.GetValueText( row_index );
                 }
             }
         }
@@ -11546,6 +11618,64 @@ class SCHEMA
 
     // ~~
 
+    void WriteCsvDataFile(
+        string csv_data_file_path
+        )
+    {
+        long
+            column_count;
+        string
+            csv_data_file_text;
+
+        csv_data_file_text = "{";
+
+        foreach ( table; TableArray )
+        {
+            if ( table.IsStored )
+            {
+                csv_data_file_text ~= table.JavascriptAttribute ~ "List=[";
+
+                column_count = table.ColumnArray.length;
+
+                foreach ( row_index; 0 .. table.RowCount )
+                {
+                    if ( row_index > 0 )
+                    {
+                        csv_data_file_text ~= ",";
+                    }
+
+                    csv_data_file_text ~= "{";
+
+                    foreach ( ref column; table.ColumnArray )
+                    {
+                        if ( column.IsStored )
+                        {
+                            csv_data_file_text ~= column.JavascriptName ~ "=" ~ column.ValueArray[ row_index ].GetCsvText();
+
+                            if ( !column.IsLastStored )
+                            {
+                                csv_data_file_text ~= ",";
+                            }
+                        }
+                    }
+
+                    csv_data_file_text ~= "}";
+                }
+
+                csv_data_file_text ~= "]";
+
+                if ( !table.IsLastStored )
+                {
+                    csv_data_file_text ~= ",";
+                }
+            }
+        }
+
+        csv_data_file_path.WriteText( csv_data_file_text );
+    }
+
+    // ~~
+
     void WriteGoTypeFile(
         string go_type_file_path
         )
@@ -12192,612 +12322,11 @@ SCHEMA
 
 // -- FUNCTIONS
 
-void PrintWarning(
-    string message
-    )
-{
-    writeln( "*** WARNING : ", message );
-}
-
-// ~~
-
-void PrintError(
-    string message
-    )
-{
-    writeln( "*** ERROR : ", message );
-}
-
-// ~~
-
-void Abort(
-    string message
-    )
-{
-    PrintError( message );
-
-    exit( -1 );
-}
-
-// ~~
-
-void Abort(
-    string message,
-    Exception exception
-    )
-{
-    PrintError( message );
-    PrintError( exception.msg );
-
-    exit( -1 );
-}
-
-// ~~
-
-bool IsLinux(
-    )
-{
-    version ( linux )
-    {
-        return true;
-    }
-    else
-    {
-        return false;
-    }
-}
-
-// ~~
-
-bool IsMacOs(
-    )
-{
-    version ( OSX )
-    {
-        return true;
-    }
-    else
-    {
-        return false;
-    }
-}
-
-// ~~
-
-bool IsWindows(
-    )
-{
-    version ( Windows )
-    {
-        return true;
-    }
-    else
-    {
-        return false;
-    }
-}
-
-// ~~
-
-string GetFolderPath(
-    string file_path
-    )
-{
-    long
-        folder_separator_character_index;
-
-    folder_separator_character_index = file_path.replace( '\\', '/' ).lastIndexOf( '/' );
-
-    if ( folder_separator_character_index >= 0 )
-    {
-        return file_path[ 0 .. folder_separator_character_index + 1 ];
-    }
-    else
-    {
-        return "";
-    }
-}
-
-// ~~
-
-string GetFileName(
-    string file_path
-    )
-{
-    long
-        folder_separator_character_index;
-
-    folder_separator_character_index = file_path.replace( '\\', '/' ).lastIndexOf( '/' );
-
-    if ( folder_separator_character_index >= 0 )
-    {
-        return file_path[ folder_separator_character_index + 1 .. $ ];
-    }
-    else
-    {
-        return file_path;
-    }
-}
-
-// ~~
-
-void CreateFolder(
-    string folder_path
-    )
-{
-    if ( folder_path != ""
-         && folder_path != "/"
-         && !folder_path.exists() )
-    {
-        writeln( "Creating folder : ", folder_path );
-
-        try
-        {
-            folder_path.mkdirRecurse();
-        }
-        catch ( Exception exception )
-        {
-            Abort( "Can't create folder : " ~ folder_path, exception );
-        }
-    }
-}
-
-// ~~
-
-void WriteText(
-    string file_path,
-    string file_text
-    )
-{
-    CreateFolder( file_path.dirName() );
-
-    writeln( "Writing file : ", file_path );
-
-    file_text = file_text.stripRight();
-
-    if ( file_text != ""
-         && !file_text.endsWith( '\n' ) )
-    {
-        file_text ~= '\n';
-    }
-
-    try
-    {
-        if ( !file_path.exists()
-             || file_path.readText() != file_text )
-        {
-            file_path.write( file_text );
-        }
-    }
-    catch ( Exception exception )
-    {
-        Abort( "Can't write file : " ~ file_path, exception );
-    }
-}
-
-// ~~
-
-string ReadText(
-    string file_path
-    )
-{
-    string
-        file_text;
-
-    writeln( "Reading file : ", file_path );
-
-    try
-    {
-        file_text = file_path.readText();
-    }
-    catch ( Exception exception )
-    {
-        Abort( "Can't read file : " ~ file_path, exception );
-    }
-
-    return file_text;
-}
-
-// ~~
-
-bool IsInteger(
-    string text
-    )
-{
-    if ( text.length > 0
-         && text[ 0 ] == '-' )
-    {
-        text = text[ 1 .. $ ];
-    }
-
-    if ( text.length > 0 )
-    {
-        foreach ( character; text )
-        {
-            if ( character < '0'
-                 || character > '9' )
-            {
-                return false;
-            }
-        }
-
-        return true;
-    }
-    else
-    {
-        return false;
-    }
-}
-
-// ~~
-
-ulong GetNatural(
-    string text
-    )
-{
-    try
-    {
-        return text.to!ulong();
-    }
-    catch ( Exception exception )
-    {
-        Abort( "Invalid natural : " ~ text, exception );
-    }
-
-    return 0;
-}
-
-// ~~
-
-long GetInteger(
-    string text
-    )
-{
-    try
-    {
-        return text.to!long();
-    }
-    catch ( Exception exception )
-    {
-        Abort( "Invalid integer : " ~ text, exception );
-    }
-
-    return 0;
-}
-
-// ~~
-
-double GetReal(
-    string text
-    )
-{
-    try
-    {
-        return text.to!double();
-    }
-    catch ( Exception exception )
-    {
-        Abort( "Invalid real : " ~ text, exception );
-    }
-
-    return 0.0;
-}
-
-// ~~
-
-bool IsDigitCharacter(
-    dchar character
-    )
-{
-    return
-        character >= '0'
-        && character <= '9';
-}
-
-// ~~
-
-bool IsVowelCharacter(
-    char character
-    )
-{
-    return "aeiouy".indexOf( character ) >= 0;
-}
-
-// ~~
-
-bool IsConsonantCharacter(
-    char character
-    )
-{
-    return "bcdfghjklmnpqrstvwx".indexOf( character ) >= 0;
-}
-
-// ~~
-
-bool StartsByVowel(
-    string text
-    )
-{
-    return
-        text != ""
-        && IsVowelCharacter( text[ 0 ] );
-}
-
-// ~~
-
-bool StartsByConsonant(
-    string text
-    )
-{
-    return
-        text != ""
-        && IsConsonantCharacter( text[ 0 ] );
-}
-
-// ~~
-
-bool EndsByVowel(
-    string text
-    )
-{
-    return
-        text != ""
-        && IsVowelCharacter( text[ $ - 1 ] );
-}
-
-// ~~
-
-bool EndsByConsonant(
-    string text
-    )
-{
-    return
-        text != ""
-        && IsConsonantCharacter( text[ $ - 1 ] );
-}
-
-// ~~
-
-string GetPrefix(
-    string text,
-    string separator
-    )
-{
-    return text.split( separator )[ 0 ];
-}
-
-// ~~
-
-string AddPrefix(
-    string text,
-    string prefix
-    )
-{
-    return prefix ~ text;
-}
-
-// ~~
-
-string RemovePrefix(
-    string text,
-    string prefix
-    )
-{
-    if ( text.startsWith( prefix ) )
-    {
-        return text[ prefix.length .. $ ];
-    }
-    else
-    {
-        return text;
-    }
-}
-
-// ~~
-
-string ReplacePrefix(
-    string text,
-    string old_prefix,
-    string new_prefix
-    )
-{
-    if ( text.startsWith( old_prefix ) )
-    {
-        return new_prefix ~ text[ old_prefix.length .. $ ];
-    }
-    else
-    {
-        return text;
-    }
-}
-
-// ~~
-
-string GetSuffix(
-    string text,
-    string separator
-    )
-{
-    return text.split( separator )[ $ - 1 ];
-}
-
-// ~~
-
-string AddSuffix(
-    string text,
-    string suffix
-    )
-{
-    return text ~ suffix;
-}
-
-// ~~
-
-string RemoveSuffix(
-    string text,
-    string suffix
-    )
-{
-    if ( text.endsWith( suffix ) )
-    {
-        return text[ 0 .. $ - suffix.length ];
-    }
-    else
-    {
-        return text;
-    }
-}
-
-// ~~
-
-string ReplaceSuffix(
-    string text,
-    string old_suffix,
-    string new_suffix
-    )
-{
-    if ( text.endsWith( old_suffix ) )
-    {
-        return text[ 0 .. $ - old_suffix.length ] ~ new_suffix;
-    }
-    else
-    {
-        return text;
-    }
-}
-
-// ~~
-
-string GetStrippedText(
-    string text
-    )
-{
-    while ( text.length > 0
-            && text[ 0 ] == ' ' )
-    {
-        text = text[ 1 .. $ ];
-    }
-
-    while ( text.length > 0
-            && text[ $ - 1 ] == ' ' )
-    {
-        text = text[ 0 .. $ - 1 ];
-    }
-
-    return text;
-}
-
-// ~~
-
 string GetCapitalizedText(
     string text
     )
 {
-    dstring
-        unicode_text;
-
-    if ( text == "" )
-    {
-        return "";
-    }
-    else
-    {
-        unicode_text = text.to!dstring();
-
-        return ( unicode_text[ 0 .. 1 ].capitalize() ~ unicode_text[ 1 .. $ ] ).to!string();
-    }
-}
-
-// ~~
-
-string GetPascalCaseText(
-    string text
-    )
-{
-    string[]
-        word_array;
-
-    word_array = text.split( '_' );
-
-    foreach ( ref word; word_array )
-    {
-        word = word.GetCapitalizedText();
-    }
-
-    return word_array.join( "" );
-}
-
-// ~~
-
-dstring GetSnakeCaseText(
-    dstring text
-    )
-{
-    dchar
-        character,
-        next_character,
-        prior_character;
-    long
-        character_index;
-    dstring
-        snake_case_text;
-
-    text = text.replace( dchar( '-' ), dchar( '_' ) );
-
-    snake_case_text = "";
-    prior_character = 0;
-
-    for ( character_index = 0;
-          character_index < text.length;
-          ++character_index )
-    {
-        character = text[ character_index ];
-
-        if ( character_index + 1 < text.length )
-        {
-            next_character = text[ character_index + 1 ];
-        }
-        else
-        {
-            next_character = 0;
-        }
-
-        if ( ( prior_character.isLower()
-               && ( character.isUpper()
-                    || character.isDigit() ) )
-             || ( prior_character.isDigit()
-                  && ( character.isLower()
-                       || character.isUpper() ) )
-             || ( prior_character.isUpper()
-                  && character.isUpper()
-                  && next_character.isLower() ) )
-        {
-            snake_case_text ~= '_';
-        }
-
-        snake_case_text ~= character;
-        prior_character = character;
-    }
-
-    return snake_case_text;
-}
-
-// ~~
-
-string GetSnakeCaseText(
-    string text
-    )
-{
-    return text.to!dstring().GetSnakeCaseText().to!string();
-}
-
-// ~~
-
-string GetKebabCaseText(
-    string text
-    )
-{
-    return text.GetSnakeCaseText().replace( '_', '-' );
+    return text.GetMajorCaseText();
 }
 
 // ~~
@@ -12871,99 +12400,6 @@ string GetLocutionCaseText(
     )
 {
     return text.GetSnakeCaseText().toLower().replace( '_', ' ' );
-}
-
-// ~~
-
-dchar GetSlugCharacter(
-    dchar character
-    )
-{
-    switch ( character )
-    {
-        case 'à' : return 'a';
-        case 'â' : return 'a';
-        case 'é' : return 'e';
-        case 'è' : return 'e';
-        case 'ê' : return 'e';
-        case 'ë' : return 'e';
-        case 'î' : return 'i';
-        case 'ï' : return 'i';
-        case 'ô' : return 'o';
-        case 'ö' : return 'o';
-        case 'û' : return 'u';
-        case 'ü' : return 'u';
-        case 'ç' : return 'c';
-        case 'ñ' : return 'n';
-        case 'À' : return 'a';
-        case 'Â' : return 'a';
-        case 'É' : return 'e';
-        case 'È' : return 'e';
-        case 'Ê' : return 'e';
-        case 'Ë' : return 'e';
-        case 'Î' : return 'i';
-        case 'Ï' : return 'i';
-        case 'Ô' : return 'o';
-        case 'Ö' : return 'o';
-        case 'Û' : return 'u';
-        case 'Ü' : return 'u';
-        case 'C' : return 'c';
-        case 'Ñ' : return 'n';
-        default : return character.toLower();
-    }
-}
-
-// ~~
-
-dstring GetSlugCaseText(
-    dstring text
-    )
-{
-    dstring
-        slug_case_text;
-
-    foreach ( character; text )
-    {
-        if ( character.isAlpha() )
-        {
-            slug_case_text ~= GetSlugCharacter( character );
-        }
-        else if ( character >= '0'
-                  && character <= '9' )
-        {
-            if ( slug_case_text != ""
-                 && !slug_case_text.endsWith( '-' )
-                 && !IsDigitCharacter( slug_case_text[ $ - 1 ] ) )
-            {
-                slug_case_text ~= '-';
-            }
-
-            slug_case_text ~= character;
-        }
-        else
-        {
-            if ( !slug_case_text.endsWith( '-' ) )
-            {
-                slug_case_text ~= '-';
-            }
-        }
-    }
-
-    if ( slug_case_text.endsWith( '-' ) )
-    {
-        slug_case_text = slug_case_text[ 0 .. $ - 1 ];
-    }
-
-    return slug_case_text;
-}
-
-// ~~
-
-string GetSlugCaseText(
-    string text
-    )
-{
-    return text.to!dstring().GetSlugCaseText().to!string();
 }
 
 // ~~
@@ -13083,15 +12519,6 @@ string GetFilteredScript(
     }
 
     return filtered_line_array.join( '\n' );
-}
-
-// ~~
-
-string GetExecutablePath(
-    string file_name
-    )
-{
-    return dirName( thisExePath() ) ~ "/" ~ file_name;
 }
 
 // ~~
@@ -13484,22 +12911,6 @@ string ReplaceProperties(
     }
 
     return template_part_array.join( "" );
-}
-
-// ~~
-
-string GetBooleanText(
-    bool boolean
-    )
-{
-    if ( boolean )
-    {
-        return "true";
-    }
-    else
-    {
-        return "false";
-    }
 }
 
 // ~~
@@ -14075,6 +13486,10 @@ void ProcessFiles(
         {
             Schema.WriteJsonDataFile( base_file_path ~ "_data.json" );
         }
+        else if ( output_format == "csv" )
+        {
+            Schema.WriteCsvDataFile( base_file_path ~ "_data.csv" );
+        }
         else if ( output_format == "go" )
         {
             Schema.WriteGoTypeFile( GetFolderPath( base_file_path ) ~ "GO/" ~ GetFileName( base_file_path ) ~ "_type.go" );
@@ -14164,6 +13579,11 @@ void main(
         {
             OutputFormatArray ~= "json";
         }
+        else if ( option == "--csv"
+                  && DatabaseFormat != "" )
+        {
+            OutputFormatArray ~= "csv";
+        }
         else if ( option == "--go"
                   && DatabaseFormat != "" )
         {
@@ -14232,6 +13652,8 @@ void main(
         writeln( "    --uml" );
         writeln( "    --sql" );
         writeln( "    --cql" );
+        writeln( "    --json" );
+        writeln( "    --csv" );
         writeln( "    --go" );
         writeln( "    --generis" );
         writeln( "    --phoenix" );
