@@ -12425,7 +12425,9 @@ string GetPluralText(
 
             if ( text.endsWith( "ays" )
                  || text.endsWith( "eys" )
-                 || text.endsWith( "oys" ) )
+                 || text.endsWith( "oys" )
+                 || text.endsWith( "photos" )
+                 || text.endsWith( "videos" ) )
             {
                 return text;
             }
@@ -12438,6 +12440,7 @@ string GetPluralText(
                         .ReplaceSuffix( "iss", "es" )
                         .ReplaceSuffix( "os", "oes" )
                         .ReplaceSuffix( "ss", "ses" )
+                        .ReplaceSuffix( "ums", "a" )
                         .ReplaceSuffix( "xs", "xes" )
                         .ReplaceSuffix( "ys", "ies" )
                         .ReplaceSuffix( "zs", "zes" );
@@ -12449,7 +12452,9 @@ string GetPluralText(
 
             if ( text.endsWith( "AYS" )
                  || text.endsWith( "EYS" )
-                 || text.endsWith( "OYS" ) )
+                 || text.endsWith( "OYS" )
+                 || text.endsWith( "PHOTOS" )
+                 || text.endsWith( "VIDEOS" ) )
             {
                 return text;
             }
@@ -12462,6 +12467,7 @@ string GetPluralText(
                         .ReplaceSuffix( "ISS", "ES" )
                         .ReplaceSuffix( "OS", "OES" )
                         .ReplaceSuffix( "SS", "SES" )
+                        .ReplaceSuffix( "UMS", "A" )
                         .ReplaceSuffix( "XS", "XES" )
                         .ReplaceSuffix( "YS", "IES" )
                         .ReplaceSuffix( "ZS", "ZES" );
