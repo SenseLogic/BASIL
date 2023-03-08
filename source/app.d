@@ -3173,7 +3173,7 @@ class TYPE
         }
         else
         {
-            template_part_array = Random.PickElement( TemplateText.GetPartArray( "|" ) ).GetPartArray( "{{", "}}" );
+            template_part_array = Random.PickElement( TemplateText.GetPartArray( "|" ) ).GetTemplatePartArray( "{{", "}}" );
 
             foreach ( template_part_index, ref template_part; template_part_array )
             {
@@ -10524,7 +10524,7 @@ class SCHEMA
 
                     if ( line_part_array.length == 2 )
                     {
-                        property_part_array = line_part_array[ 1 ].GetPartArray( "," );
+                        property_part_array = line_part_array[ 1 ].GetUnquotedPartArray( "," );
 
                         foreach ( ref property_text; property_part_array )
                         {
@@ -10564,7 +10564,7 @@ class SCHEMA
 
                 if ( line_part_array.length == 2 )
                 {
-                    property_part_array = line_part_array[ 1 ].GetPartArray( "," );
+                    property_part_array = line_part_array[ 1 ].GetUnquotedPartArray( "," );
 
                     foreach ( ref property_text; property_part_array )
                     {
@@ -10584,7 +10584,7 @@ class SCHEMA
 
                 if ( line_part_array.length == 2 )
                 {
-                    property_part_array = line_part_array[ 1 ].GetPartArray( "," );
+                    property_part_array = line_part_array[ 1 ].GetUnquotedPartArray( "," );
 
                     foreach ( ref property_text; property_part_array )
                     {
@@ -12657,6 +12657,144 @@ string[] Split(
 
 string[] GetPartArray(
     string text,
+    string separator
+    )
+{
+    bool
+        character_is_in_string;
+    char
+        character;
+    long
+        character_index,
+        last_part_index;
+    string[]
+        part_array;
+
+    if ( text != "" )
+    {
+        part_array = [ "" ];
+        character_is_in_string = false;
+
+        for ( character_index = 0;
+              character_index < text.length;
+              ++character_index )
+        {
+            character = text[ character_index ];
+            last_part_index = part_array.length.to!long() - 1;
+
+            if ( character_is_in_string )
+            {
+                part_array[ last_part_index ] ~= character;
+
+                if ( character == '\\'
+                     && character_index + 1 < text.length )
+                {
+                    ++character_index;
+
+                    part_array[ last_part_index ] ~= text[ character_index ];
+                }
+                else if ( character == '"' )
+                {
+                    character_is_in_string = false;
+                }
+            }
+            else if ( character == separator[ 0 ]
+                      && character_index + separator.length <= text.length
+                      && ( separator.length == 1
+                           || text[ character_index .. character_index + separator.length ] == separator ) )
+            {
+                part_array ~= "";
+            }
+            else
+            {
+                part_array[ last_part_index ] ~= character;
+
+                if ( character == '"' )
+                {
+                    character_is_in_string = true;
+                }
+            }
+        }
+    }
+
+    return part_array;
+}
+
+// ~~
+
+string[] GetUnquotedPartArray(
+    string text,
+    string separator
+    )
+{
+    bool
+        character_is_in_string;
+    char
+        character;
+    long
+        character_index,
+        last_part_index;
+    string[]
+        part_array;
+
+    if ( text != "" )
+    {
+        part_array = [ "" ];
+        character_is_in_string = false;
+
+        for ( character_index = 0;
+              character_index < text.length;
+              ++character_index )
+        {
+            character = text[ character_index ];
+            last_part_index = part_array.length.to!long() - 1;
+
+            if ( character_is_in_string )
+            {
+                if ( character == '\\'
+                     && character_index + 1 < text.length )
+                {
+                    ++character_index;
+
+                    part_array[ last_part_index ] ~= text[ character_index ];
+                }
+                else if ( character == '"' )
+                {
+                    character_is_in_string = false;
+                }
+                else
+                {
+                    part_array[ last_part_index ] ~= character;
+                }
+            }
+            else if ( character == separator[ 0 ]
+                      && character_index + separator.length <= text.length
+                      && ( separator.length == 1
+                           || text[ character_index .. character_index + separator.length ] == separator ) )
+            {
+                part_array ~= "";
+            }
+            else
+            {
+                if ( character == '"' )
+                {
+                    character_is_in_string = true;
+                }
+                else
+                {
+                    part_array[ last_part_index ] ~= character;
+                }
+            }
+        }
+    }
+
+    return part_array;
+}
+
+// ~~
+
+string[] GetTemplatePartArray(
+    string text,
     string opening_tag,
     string closing_tag
     )
@@ -12685,71 +12823,6 @@ string[] GetPartArray(
 
             part_array ~= closing_part_array[ 0 ];
             part_array ~= closing_part_array[ 1 ];
-        }
-    }
-
-    return part_array;
-}
-
-// ~~
-
-string[] GetPartArray(
-    string text,
-    string separator
-    )
-{
-    bool
-        character_is_in_string;
-    char
-        character;
-    long
-        character_index;
-    string[]
-        part_array;
-
-    if ( text != "" )
-    {
-        part_array = [ "" ];
-        character_is_in_string = false;
-
-        for ( character_index = 0;
-              character_index < text.length;
-              ++character_index )
-        {
-            character = text[ character_index ];
-
-            if ( character_is_in_string )
-            {
-                part_array[ part_array.length.to!long() - 1 ] ~= character;
-
-                if ( character == '\\'
-                     && character_index + 1 < text.length )
-                {
-                    ++character_index;
-
-                    part_array[ part_array.length.to!long() - 1 ] ~= text[ character_index ];
-                }
-                else if ( character == '"' )
-                {
-                    character_is_in_string = false;
-                }
-            }
-            else if ( character == separator[ 0 ]
-                      && character_index + separator.length <= text.length
-                      && ( separator.length == 1
-                           || text[ character_index .. character_index + separator.length ] == separator ) )
-            {
-                part_array ~= "";
-            }
-            else
-            {
-                part_array[ part_array.length.to!long() - 1 ] ~= character;
-
-                if ( character == '"' )
-                {
-                    character_is_in_string = true;
-                }
-            }
         }
     }
 
@@ -12793,7 +12866,7 @@ string ReplaceColumnTags(
         added_is_checked = [ false, false, false, false, false, false, true, true, true, false, false, false, false, false, false ][ tag_index ];
         edited_is_checked = [ false, false, false, false, false, false, false, false, false, true, true, true, false, false, false ][ tag_index ];
 
-        template_part_array = template_text.GetPartArray( opening_tag, closing_tag );
+        template_part_array = template_text.GetTemplatePartArray( opening_tag, closing_tag );
 
         foreach ( template_part_index, ref template_part; template_part_array )
         {
@@ -12854,7 +12927,7 @@ string ReplaceTableTags(
         table_is_stored = [ true, false, false, false ][ tag_index ];
         edited_is_checked = [ false, false, true, false ][ tag_index ];
 
-        template_part_array = template_text.GetPartArray( opening_tag, closing_tag );
+        template_part_array = template_text.GetTemplatePartArray( opening_tag, closing_tag );
 
         foreach ( template_part_index, ref template_part; template_part_array )
         {
@@ -12897,7 +12970,7 @@ string ReplaceProperties(
     string[]
         template_part_array;
 
-    template_part_array = template_text.GetPartArray( opening_tag, closing_tag );
+    template_part_array = template_text.GetTemplatePartArray( opening_tag, closing_tag );
 
     foreach ( template_part_index, ref template_part; template_part_array )
     {
