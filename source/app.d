@@ -12322,6 +12322,24 @@ SCHEMA
 
 // -- FUNCTIONS
 
+string GetQuotedText(
+    string text
+    )
+{
+    return text.replace( "\\", "\\\\" ).replace( "\"", "\\\"" );
+}
+
+// ~~
+
+string GetUnquotedText(
+    string text
+    )
+{
+    return text.replace( "\\\\", "\\" ).replace( "\\\"", "\"" );
+}
+
+// ~~
+
 string GetCapitalizedText(
     string text
     )
@@ -13314,6 +13332,16 @@ string ReplaceConditionalTags(
                               && argument_array[ 0 ] == "Replace" )
                     {
                         result_text = argument_array[ 1 ].replace( argument_array[ 2 ], argument_array[ 3 ] );
+                    }
+                    else if ( argument_array.length == 2
+                              && argument_array[ 0 ] == "Quote" )
+                    {
+                        result_text = argument_array[ 1 ].GetQuotedText();
+                    }
+                    else if ( argument_array.length == 2
+                              && argument_array[ 0 ] == "Unquote" )
+                    {
+                        result_text = argument_array[ 1 ].GetUnquotedText();
                     }
                     else if ( argument_array.length == 2
                               && argument_array[ 0 ] == "LowerCase" )

@@ -637,6 +637,9 @@ POINTER[ <i>ELEMENT_TYPE</i> ] | !stored
 <~Remove<>text<>content~>
 <~Replace<>text<>old content<>new content~>
 
+<~Quote<>text~>
+<~Unquote<>text~>
+
 <~LowerCase<>text~>
 <~UpperCase<>text~>
 <~PascalCase<>text~>
