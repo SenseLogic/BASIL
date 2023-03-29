@@ -928,13 +928,13 @@ Generates `blog.uml` from `blog.bs`.
 basil --uml --sql --go blog.bs
 ```
 
-Generates `blog.uml`, `blog.sql`, `blog_data.sql`, `blog_sql_type.go` from `blog.bs`.
+Generates `blog.uml`, `blog.sql`, `blog_schema.sql`, `blog_data.sql`, `blog_sql_type.go` from `blog.bs`.
 
 ```bash
 basil --uml --cql --go blog.bs blog.bt
 ```
 
-Generates `blog.uml`, `blog.sql`, `blog_data.sql`, `blog_sql_type.go` from `blog.bs`, and other custom files from `blog.bt`.
+Generates `blog.uml`, `blog.cql`, `blog_schema.cql`, `blog_data.cql`, `blog_sql_type.go` from `blog.bs`, and other custom files from `blog.bt`.
 
 ## Version
 

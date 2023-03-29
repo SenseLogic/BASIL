@@ -11063,14 +11063,11 @@ class SCHEMA
 
     // ~~
 
-    void WriteSqlSchemaFile(
-        string sql_schema_file_path
+    string GetSqlSchemaFileHeaderText(
         )
     {
         string
             sql_schema_file_text;
-        long
-            foreign_key_index;
 
         sql_schema_file_text
             = "set @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;\n"
@@ -11088,118 +11085,211 @@ class SCHEMA
             ~= "create schema if not exists `" ~ Name ~ "` default character set utf8mb4 collate utf8mb4_general_ci;\n\n"
                ~ "use `" ~ Name ~ "`;\n\n";
 
-        foreach ( table; TableArray )
+        return sql_schema_file_text;
+    }
+
+    // ~~
+
+    string GetSqlSchemaFileTableText(
+        TABLE table
+        )
+    {
+        string
+            sql_schema_file_text;
+        long
+            foreign_key_index;
+
+        if ( table.IsStored )
         {
-            if ( table.IsStored )
+            if ( ( table.IsDropped && !DropIsIgnored )
+                 || DropIsForced )
             {
-                if ( ( table.IsDropped && !DropIsIgnored )
-                     || DropIsForced )
+                sql_schema_file_text
+                    ~= "drop table if exists `" ~ Name ~ "`.`" ~ table.Name ~ "`;\n\n";
+            }
+
+            sql_schema_file_text
+                ~= "create table if not exists `" ~ Name ~ "`.`" ~ table.Name ~ "`(\n";
+
+            foreach ( ref column; table.ColumnArray )
+            {
+                if ( column.IsStored )
                 {
                     sql_schema_file_text
-                        ~= "drop table if exists `" ~ Name ~ "`.`" ~ table.Name ~ "`;\n\n";
+                        ~= "    `"
+                           ~ column.SqlName
+                           ~ "` "
+                           ~ column.SqlType
+                           ~ " "
+                           ~ column.SqlPropertyArray.join( ' ' )
+                           ~ ",\n";
                 }
+            }
 
-                sql_schema_file_text
-                    ~= "create table if not exists `" ~ Name ~ "`.`" ~ table.Name ~ "`(\n";
+            foreach ( ref column; table.ColumnArray )
+            {
+                if ( column.IsStored
+                     && column.IsKey )
+                {
+                    sql_schema_file_text ~= "    primary key( `" ~ column.SqlName ~ "` ),\n";
+                }
+            }
+
+            foreign_key_index = 0;
+
+            foreach ( ref column; table.ColumnArray )
+            {
+                if ( column.IsIndexed
+                     && column.IsStored
+                     && column.IsForeign
+                     && column.ForeignColumn.IsKey
+                     && column.ForeignColumn.IsStored
+                     && column.ForeignColumn.Table.IsStored )
+                {
+                    ++foreign_key_index;
+
+                    sql_schema_file_text
+                        ~= "    index `index_"
+                           ~ table.Name.toLower()
+                           ~ "_"
+                           ~ column.ForeignColumn.Table.Name.toLower()
+                           ~ "_"
+                           ~ foreign_key_index.to!string()
+                           ~ "_idx`( `"
+                           ~ column.SqlName
+                           ~ "` ASC ),\n";
+                }
+            }
+
+            foreign_key_index = 0;
+
+            foreach ( ref column; table.ColumnArray )
+            {
+                if ( column.IsConstrained
+                     && column.IsStored
+                     && column.IsForeign
+                     && column.ForeignColumn.IsKey
+                     && column.ForeignColumn.IsStored
+                     && column.ForeignColumn.Table.IsStored )
+                {
+                    ++foreign_key_index;
+
+                    sql_schema_file_text
+                        ~= "    constraint `constraint_"
+                           ~ table.Name.toLower()
+                           ~ "_"
+                           ~ column.ForeignColumn.Table.Name.toLower()
+                           ~ "_"
+                           ~ foreign_key_index.to!string()
+                           ~ "`\n"
+                           ~ "    foreign key( `"
+                           ~ column.SqlName
+                           ~ "` )\n"
+                           ~ "    references `"
+                           ~ Name
+                           ~ "`.`"
+                           ~ column.ForeignColumn.Table.Name
+                           ~ "`( `"
+                           ~ column.ForeignColumn.SqlName
+                           ~ "` )\n"
+                           ~ "        on delete set null\n"
+                           ~ "        on update no action,\n";
+                }
+            }
+
+            sql_schema_file_text
+                = sql_schema_file_text[ 0 .. $ - 2 ]
+                  ~ "\n    ) engine = InnoDB;\n\n";
+        }
+
+        return sql_schema_file_text;
+    }
+
+    // ~~
+
+    string GetSqlSchemaFileFooterText(
+        )
+    {
+        return
+            "set SQL_MODE=@OLD_SQL_MODE;\n"
+            ~ "set FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;\n"
+            ~ "set UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;\n";
+    }
+
+    // ~~
+
+    void WriteSqlSchemaFile(
+        string sql_schema_file_path
+        )
+    {
+        string
+            sql_schema_file_text;
+
+        sql_schema_file_text = GetSqlSchemaFileHeaderText();
+
+        foreach ( table; TableArray )
+        {
+            sql_schema_file_text ~= GetSqlSchemaFileTableText( table );
+        }
+
+        sql_schema_file_text ~= GetSqlSchemaFileFooterText();
+        sql_schema_file_path.WriteText( sql_schema_file_text.GetFilteredScript( ExcludedCommandArray ) );
+    }
+
+    // ~~
+
+    string GetSqlDataFileTableText(
+        TABLE table
+        )
+    {
+        long
+            column_count;
+        string
+            sql_data_file_text;
+
+        if ( table.IsStored )
+        {
+            column_count = table.ColumnArray.length;
+
+            foreach ( row_index; 0 .. table.RowCount )
+            {
+                sql_data_file_text ~= "replace into `" ~ table.SchemaName ~ "`.`" ~ table.Name ~ "`\n    (\n        " ;
 
                 foreach ( ref column; table.ColumnArray )
                 {
                     if ( column.IsStored )
                     {
-                        sql_schema_file_text
-                            ~= "    `"
-                               ~ column.SqlName
-                               ~ "` "
-                               ~ column.SqlType
-                               ~ " "
-                               ~ column.SqlPropertyArray.join( ' ' )
-                               ~ ",\n";
+                        sql_data_file_text ~= "`" ~ column.SqlName ~ "`";
+
+                        if ( !column.IsLastStored )
+                        {
+                            sql_data_file_text ~= ", ";
+                        }
                     }
                 }
+
+                sql_data_file_text ~= "\n    )\n    values\n    (\n";
 
                 foreach ( ref column; table.ColumnArray )
                 {
-                    if ( column.IsStored
-                         && column.IsKey )
+                    if ( column.IsStored )
                     {
-                        sql_schema_file_text ~= "    primary key( `" ~ column.SqlName ~ "` ),\n";
+                        sql_data_file_text ~= "        " ~ column.ValueArray[ row_index ].GetSqlText();
+
+                        if ( !column.IsLastStored )
+                        {
+                            sql_data_file_text ~= ",";
+                        }
+
+                        sql_data_file_text ~= "\n";
                     }
                 }
 
-                foreign_key_index = 0;
-
-                foreach ( ref column; table.ColumnArray )
-                {
-                    if ( column.IsIndexed
-                         && column.IsStored
-                         && column.IsForeign
-                         && column.ForeignColumn.IsKey
-                         && column.ForeignColumn.IsStored
-                         && column.ForeignColumn.Table.IsStored )
-                    {
-                        ++foreign_key_index;
-
-                        sql_schema_file_text
-                            ~= "    index `index_"
-                               ~ table.Name.toLower()
-                               ~ "_"
-                               ~ column.ForeignColumn.Table.Name.toLower()
-                               ~ "_"
-                               ~ foreign_key_index.to!string()
-                               ~ "_idx`( `"
-                               ~ column.SqlName
-                               ~ "` ASC ),\n";
-                    }
-                }
-
-                foreign_key_index = 0;
-
-                foreach ( ref column; table.ColumnArray )
-                {
-                    if ( column.IsConstrained
-                         && column.IsStored
-                         && column.IsForeign
-                         && column.ForeignColumn.IsKey
-                         && column.ForeignColumn.IsStored
-                         && column.ForeignColumn.Table.IsStored )
-                    {
-                        ++foreign_key_index;
-
-                        sql_schema_file_text
-                            ~= "    constraint `constraint_"
-                               ~ table.Name.toLower()
-                               ~ "_"
-                               ~ column.ForeignColumn.Table.Name.toLower()
-                               ~ "_"
-                               ~ foreign_key_index.to!string()
-                               ~ "`\n"
-                               ~ "    foreign key( `"
-                               ~ column.SqlName
-                               ~ "` )\n"
-                               ~ "    references `"
-                               ~ Name
-                               ~ "`.`"
-                               ~ column.ForeignColumn.Table.Name
-                               ~ "`( `"
-                               ~ column.ForeignColumn.SqlName
-                               ~ "` )\n"
-                               ~ "        on delete set null\n"
-                               ~ "        on update no action,\n";
-                    }
-                }
-
-                sql_schema_file_text
-                    = sql_schema_file_text[ 0 .. $ - 2 ]
-                      ~ "\n    ) engine = InnoDB;\n\n";
+                sql_data_file_text ~= "    );\n\n";
             }
         }
 
-        sql_schema_file_text
-            ~= "set SQL_MODE=@OLD_SQL_MODE;\n"
-               ~ "set FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;\n"
-               ~ "set UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;\n";
-
-        sql_schema_file_path.WriteText( sql_schema_file_text.GetFilteredScript( ExcludedCommandArray ) );
+        return sql_data_file_text;
     }
 
     // ~~
@@ -11208,57 +11298,36 @@ class SCHEMA
         string sql_data_file_path
         )
     {
-        long
-            column_count;
         string
             sql_data_file_text;
 
         foreach ( table; TableArray )
         {
-            if ( table.IsStored )
-            {
-                column_count = table.ColumnArray.length;
-
-                foreach ( row_index; 0 .. table.RowCount )
-                {
-                    sql_data_file_text ~= "replace into `" ~ table.SchemaName ~ "`.`" ~ table.Name ~ "`\n    (\n        " ;
-
-                    foreach ( ref column; table.ColumnArray )
-                    {
-                        if ( column.IsStored )
-                        {
-                            sql_data_file_text ~= "`" ~ column.SqlName ~ "`";
-
-                            if ( !column.IsLastStored )
-                            {
-                                sql_data_file_text ~= ", ";
-                            }
-                        }
-                    }
-
-                    sql_data_file_text ~= "\n    )\n    values\n    (\n";
-
-                    foreach ( ref column; table.ColumnArray )
-                    {
-                        if ( column.IsStored )
-                        {
-                            sql_data_file_text ~= "        " ~ column.ValueArray[ row_index ].GetSqlText();
-
-                            if ( !column.IsLastStored )
-                            {
-                                sql_data_file_text ~= ",";
-                            }
-
-                            sql_data_file_text ~= "\n";
-                        }
-                    }
-
-                    sql_data_file_text ~= "    );\n\n";
-                }
-            }
+            sql_data_file_text ~= GetSqlDataFileTableText( table );
         }
 
         sql_data_file_path.WriteText( sql_data_file_text );
+    }
+
+    // ~~
+
+    void WriteSqlFile(
+        string sql_file_path
+        )
+    {
+        string
+            sql_file_text;
+
+        sql_file_text = GetSqlSchemaFileHeaderText();
+
+        foreach ( table; TableArray )
+        {
+            sql_file_text ~= GetSqlSchemaFileTableText( table );
+            sql_file_text ~= GetSqlDataFileTableText( table );
+        }
+
+        sql_file_text ~= GetSqlSchemaFileFooterText();
+        sql_file_path.WriteText( sql_file_text );
     }
 
     // ~~
@@ -11390,14 +11459,11 @@ class SCHEMA
 
     // ~~
 
-    void WriteCqlSchemaFile(
-        string cql_schema_file_path
+    string GetCqlSchemaFileHeaderText(
         )
     {
         string
-            cql_schema_file_text,
-            cluster_key,
-            partition_key;
+            cql_schema_file_text;
 
         if ( ( IsDropped && !DropIsIgnored )
              || DropIsForced )
@@ -11409,93 +11475,177 @@ class SCHEMA
         cql_schema_file_text
             ~= "create keyspace if not exists " ~ Name ~ " with replication = { 'class' : 'SimpleStrategy', 'replication_factor' : 1 };\n";
 
-        foreach ( table; TableArray )
+        return cql_schema_file_text;
+    }
+
+    // ~~
+
+    string GetCqlSchemaFileTableText(
+        TABLE table
+        )
+    {
+        string
+            cql_schema_file_text,
+            cluster_key,
+            partition_key;
+
+        if ( table.IsStored )
         {
-            if ( table.IsStored )
+            if ( ( table.IsDropped && !DropIsIgnored )
+                 || DropIsForced )
             {
-                if ( ( table.IsDropped && !DropIsIgnored )
-                     || DropIsForced )
-                {
-                    cql_schema_file_text
-                        ~= "drop table if exists " ~ Name ~ "." ~ table.Name ~ ";\n";
-                }
-
                 cql_schema_file_text
-                    ~= "create table if not exists " ~ Name ~ "." ~ table.Name ~ "(";
+                    ~= "drop table if exists " ~ Name ~ "." ~ table.Name ~ ";\n";
+            }
 
-                foreach ( ref column; table.ColumnArray )
+            cql_schema_file_text
+                ~= "create table if not exists " ~ Name ~ "." ~ table.Name ~ "(";
+
+            foreach ( ref column; table.ColumnArray )
+            {
+                if ( column.IsStored )
                 {
-                    if ( column.IsStored )
+                    cql_schema_file_text ~= " " ~ column.CqlName ~ " " ~ column.CqlType;
+
+                    if ( column.IsStatic )
                     {
-                        cql_schema_file_text ~= " " ~ column.CqlName ~ " " ~ column.CqlType;
-
-                        if ( column.IsStatic )
-                        {
-                            cql_schema_file_text ~= " static";
-                        }
-
-                        cql_schema_file_text ~= ",";
+                        cql_schema_file_text ~= " static";
                     }
+
+                    cql_schema_file_text ~= ",";
                 }
+            }
 
-                partition_key = "";
-                cluster_key = "";
+            partition_key = "";
+            cluster_key = "";
 
-                foreach ( ref column; table.ColumnArray )
+            foreach ( ref column; table.ColumnArray )
+            {
+                if ( column.IsStored )
                 {
-                    if ( column.IsStored )
+                    if ( column.IsKey
+                         || column.IsPartitioned )
                     {
-                        if ( column.IsKey
-                             || column.IsPartitioned )
+                        if ( partition_key == "" )
                         {
-                            if ( partition_key == "" )
-                            {
-                                partition_key = column.CqlName;
-                            }
-                            else
-                            {
-                                partition_key ~= ", " ~ column.CqlName;
-                            }
+                            partition_key = column.CqlName;
                         }
-                        else if ( column.IsClustered )
+                        else
                         {
-                            if ( cluster_key == "" )
-                            {
-                                cluster_key = column.CqlName;
-                            }
-                            else
-                            {
-                                cluster_key ~= ", " ~ column.CqlName;
-                            }
+                            partition_key ~= ", " ~ column.CqlName;
                         }
                     }
-                }
-
-                if ( partition_key.indexOf( ',' ) >= 0 )
-                {
-                    partition_key = "( " ~ partition_key ~ " )";
-                }
-
-                if ( cluster_key == "" )
-                {
-                    cql_schema_file_text ~= " primary key( " ~ partition_key ~ " )";
-                }
-                else
-                {
-                    cql_schema_file_text ~= " primary key( " ~ partition_key ~ ", " ~ cluster_key ~ " )";
-                }
-
-                cql_schema_file_text ~= " );\n";
-
-                foreach ( ref column; table.ColumnArray )
-                {
-                    if ( column.IsStored
-                         && column.IsIndexed )
+                    else if ( column.IsClustered )
                     {
-                        cql_schema_file_text ~= "create index on " ~ Name ~ "." ~ table.Name ~ " ( " ~ column.Name ~ " );\n";
+                        if ( cluster_key == "" )
+                        {
+                            cluster_key = column.CqlName;
+                        }
+                        else
+                        {
+                            cluster_key ~= ", " ~ column.CqlName;
+                        }
                     }
                 }
             }
+
+            if ( partition_key.indexOf( ',' ) >= 0 )
+            {
+                partition_key = "( " ~ partition_key ~ " )";
+            }
+
+            if ( cluster_key == "" )
+            {
+                cql_schema_file_text ~= " primary key( " ~ partition_key ~ " )";
+            }
+            else
+            {
+                cql_schema_file_text ~= " primary key( " ~ partition_key ~ ", " ~ cluster_key ~ " )";
+            }
+
+            cql_schema_file_text ~= " );\n";
+
+            foreach ( ref column; table.ColumnArray )
+            {
+                if ( column.IsStored
+                     && column.IsIndexed )
+                {
+                    cql_schema_file_text ~= "create index on " ~ Name ~ "." ~ table.Name ~ " ( " ~ column.Name ~ " );\n";
+                }
+            }
+        }
+
+        return cql_schema_file_text;
+    }
+
+    // ~~
+
+    string GetCqlDataFileTableText(
+        TABLE table
+        )
+    {
+        long
+            column_count;
+        string
+            cql_data_file_text;
+
+        if ( table.IsStored )
+        {
+            column_count = table.ColumnArray.length;
+
+            foreach ( row_index; 0 .. table.RowCount )
+            {
+                cql_data_file_text ~= "insert into " ~ table.SchemaName ~ "." ~ table.Name ~ " ( ";
+
+                foreach ( ref column; table.ColumnArray )
+                {
+                    if ( column.IsStored )
+                    {
+                        cql_data_file_text ~= column.CqlName ~ "";
+
+                        if ( !column.IsLastStored )
+                        {
+                            cql_data_file_text ~= ", ";
+                        }
+                    }
+                }
+
+                cql_data_file_text ~= " ) values (";
+
+                foreach ( ref column; table.ColumnArray )
+                {
+                    if ( column.IsStored )
+                    {
+                        cql_data_file_text ~= " " ~ column.ValueArray[ row_index ].GetCqlText();
+
+                        if ( !column.IsLastStored )
+                        {
+                            cql_data_file_text ~= ",";
+                        }
+                    }
+                }
+
+                cql_data_file_text ~= " );\n";
+            }
+        }
+
+        return cql_data_file_text;
+    }
+
+    // ~~
+
+    void WriteCqlSchemaFile(
+        string cql_schema_file_path
+        )
+    {
+        string
+            cql_schema_file_text;
+
+        cql_schema_file_text = GetCqlSchemaFileHeaderText();
+
+        foreach ( table; TableArray )
+        {
+            cql_schema_file_text ~= GetCqlSchemaFileTableText( table );
         }
 
         cql_schema_file_path.WriteText( cql_schema_file_text.GetFilteredScript( ExcludedCommandArray ) );
@@ -11507,55 +11657,35 @@ class SCHEMA
         string cql_data_file_path
         )
     {
-        long
-            column_count;
         string
             cql_data_file_text;
 
         foreach ( table; TableArray )
         {
-            if ( table.IsStored )
-            {
-                column_count = table.ColumnArray.length;
-
-                foreach ( row_index; 0 .. table.RowCount )
-                {
-                    cql_data_file_text ~= "insert into " ~ table.SchemaName ~ "." ~ table.Name ~ " ( ";
-
-                    foreach ( ref column; table.ColumnArray )
-                    {
-                        if ( column.IsStored )
-                        {
-                            cql_data_file_text ~= column.CqlName ~ "";
-
-                            if ( !column.IsLastStored )
-                            {
-                                cql_data_file_text ~= ", ";
-                            }
-                        }
-                    }
-
-                    cql_data_file_text ~= " ) values (";
-
-                    foreach ( ref column; table.ColumnArray )
-                    {
-                        if ( column.IsStored )
-                        {
-                            cql_data_file_text ~= " " ~ column.ValueArray[ row_index ].GetCqlText();
-
-                            if ( !column.IsLastStored )
-                            {
-                                cql_data_file_text ~= ",";
-                            }
-                        }
-                    }
-
-                    cql_data_file_text ~= " );\n";
-                }
-            }
+            cql_data_file_text ~= GetCqlDataFileTableText( table );
         }
 
         cql_data_file_path.WriteText( cql_data_file_text );
+    }
+
+    // ~~
+
+    void WriteCqlFile(
+        string cql_file_path
+        )
+    {
+        string
+            cql_file_text;
+
+        cql_file_text = GetCqlSchemaFileHeaderText();
+
+        foreach ( table; TableArray )
+        {
+            cql_file_text ~= GetCqlSchemaFileTableText( table );
+            cql_file_text ~= GetCqlDataFileTableText( table );
+        }
+
+        cql_file_text.WriteText( cql_file_text );
     }
 
     // ~~
@@ -13580,13 +13710,15 @@ void ProcessFiles(
         }
         else if ( output_format == "sql" )
         {
-            Schema.WriteSqlSchemaFile( base_file_path ~ ".sql" );
+            Schema.WriteSqlFile( base_file_path ~ ".sql" );
+            Schema.WriteSqlSchemaFile( base_file_path ~ "_schema.sql" );
             Schema.WriteSqlDataFile( base_file_path ~ "_data.sql" );
             Schema.WriteSqlDumpFile( base_file_path ~ "_dump.sql" );
         }
         else if ( output_format == "cql" )
         {
-            Schema.WriteCqlSchemaFile( base_file_path ~ ".cql" );
+            Schema.WriteCqlFile( base_file_path ~ ".cql" );
+            Schema.WriteCqlSchemaFile( base_file_path ~ "_schema.cql" );
             Schema.WriteCqlDataFile( base_file_path ~ "_data.cql" );
         }
         else if ( output_format == "json" )
