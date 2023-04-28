@@ -11337,7 +11337,10 @@ class SCHEMA
         )
     {
         string
-            sql_dump_file_text;
+            sql_dump_file_text,
+            sql_dump_row_text;
+        string[]
+            sql_dump_row_text_array;
         TABLE[]
             sorted_table_array;
 
@@ -11400,40 +11403,45 @@ class SCHEMA
                     sql_dump_file_text
                         ~= ") VALUES\n";
 
+                    sql_dump_row_text_array = [];
+
                     foreach ( row_index; 0 .. table.RowCount )
                     {
-                        sql_dump_file_text ~= "(";
+                        sql_dump_row_text = "(";
 
                         foreach ( ref column; table.ColumnArray )
                         {
                             if ( column.IsStored )
                             {
-                                sql_dump_file_text ~= column.ValueArray[ row_index ].GetSqlText( false, true );
+                                sql_dump_row_text ~= column.ValueArray[ row_index ].GetSqlText( false, true );
 
                                 if ( !column.IsLastStored )
                                 {
-                                    sql_dump_file_text ~= ", ";
+                                    sql_dump_row_text ~= ", ";
                                 }
                             }
                         }
 
-                        sql_dump_file_text ~= ")";
+                        sql_dump_row_text ~= ")";
 
                         if ( row_index < table.RowCount - 1 )
                         {
-                            sql_dump_file_text ~= ",";
+                            sql_dump_row_text ~= ",";
                         }
                         else
                         {
-                            sql_dump_file_text ~= ";";
+                            sql_dump_row_text ~= ";";
                         }
 
-                        sql_dump_file_text ~= "\n";
+                        sql_dump_row_text ~= "\n";
+                        sql_dump_row_text_array ~= sql_dump_row_text;
                     }
                 }
 
+                sql_dump_row_text_array.sort();
+
                 sql_dump_file_text
-                    ~= "\n";
+                    ~= sql_dump_row_text_array.join( "" ) ~ "\n";
             }
         }
 
