@@ -4837,11 +4837,11 @@ class VALUE
                   || type_name == "SET"
                   || type_name == "MAP" )
         {
-            return GetJsonText();
+            return GetJsonText().GetCsvText();
         }
         else
         {
-            return Text;
+            return Text.GetCsvText();
         }
     }
 
@@ -11242,15 +11242,11 @@ class SCHEMA
         TABLE table
         )
     {
-        long
-            column_count;
         string
             sql_data_file_text;
 
         if ( table.IsStored )
         {
-            column_count = table.ColumnArray.length;
-
             foreach ( row_index; 0 .. table.RowCount )
             {
                 sql_data_file_text ~= "replace into `" ~ table.SchemaName ~ "`.`" ~ table.Name ~ "`\n    (\n        " ;
@@ -11592,15 +11588,11 @@ class SCHEMA
         TABLE table
         )
     {
-        long
-            column_count;
         string
             cql_data_file_text;
 
         if ( table.IsStored )
         {
-            column_count = table.ColumnArray.length;
-
             foreach ( row_index; 0 .. table.RowCount )
             {
                 cql_data_file_text ~= "insert into " ~ table.SchemaName ~ "." ~ table.Name ~ " ( ";
@@ -11702,8 +11694,6 @@ class SCHEMA
         string json_data_file_path
         )
     {
-        long
-            column_count;
         string
             json_data_file_text;
 
@@ -11714,8 +11704,6 @@ class SCHEMA
             if ( table.IsStored )
             {
                 json_data_file_text ~= table.JavascriptAttribute ~ "List=[";
-
-                column_count = table.ColumnArray.length;
 
                 foreach ( row_index; 0 .. table.RowCount )
                 {
@@ -11757,38 +11745,44 @@ class SCHEMA
     // ~~
 
     void WriteCsvDataFile(
-        string csv_data_file_path
+        string base_file_path
         )
     {
         long
             column_count;
         string
+            csv_data_file_path,
             csv_data_file_text;
-
-        csv_data_file_text = "{";
 
         foreach ( table; TableArray )
         {
             if ( table.IsStored )
             {
-                csv_data_file_text ~= table.JavascriptAttribute ~ "List=[";
+                csv_data_file_path = base_file_path ~ "_" ~ table.Name.toLower() ~ "_data.csv";
+                csv_data_file_text = "";
 
-                column_count = table.ColumnArray.length;
+                foreach ( ref column; table.ColumnArray )
+                {
+                    if ( column.IsStored )
+                    {
+                        csv_data_file_text ~= column.Name;
+
+                        if ( !column.IsLastStored )
+                        {
+                            csv_data_file_text ~= ",";
+                        }
+                    }
+                }
+
+                csv_data_file_text ~= "\n";
 
                 foreach ( row_index; 0 .. table.RowCount )
                 {
-                    if ( row_index > 0 )
-                    {
-                        csv_data_file_text ~= ",";
-                    }
-
-                    csv_data_file_text ~= "{";
-
                     foreach ( ref column; table.ColumnArray )
                     {
                         if ( column.IsStored )
                         {
-                            csv_data_file_text ~= column.JavascriptName ~ "=" ~ column.ValueArray[ row_index ].GetCsvText();
+                            csv_data_file_text ~= column.ValueArray[ row_index ].GetCsvText();
 
                             if ( !column.IsLastStored )
                             {
@@ -11797,19 +11791,12 @@ class SCHEMA
                         }
                     }
 
-                    csv_data_file_text ~= "}";
+                    csv_data_file_text ~= "\n";
                 }
 
-                csv_data_file_text ~= "]";
-
-                if ( !table.IsLastStored )
-                {
-                    csv_data_file_text ~= ",";
-                }
+                csv_data_file_path.WriteText( csv_data_file_text );
             }
         }
-
-        csv_data_file_path.WriteText( csv_data_file_text );
     }
 
     // ~~
@@ -13735,7 +13722,7 @@ void ProcessFiles(
         }
         else if ( output_format == "csv" )
         {
-            Schema.WriteCsvDataFile( base_file_path ~ "_data.csv" );
+            Schema.WriteCsvDataFile( base_file_path );
         }
         else if ( output_format == "go" )
         {
