@@ -1562,7 +1562,8 @@ class TYPE
         Name,
         BaseName;
     long
-        Capacity;
+        Capacity,
+        Precision;
     TYPE
         ActualType;
     TYPE[]
@@ -1749,7 +1750,8 @@ class TYPE
     {
         return
             BaseName == "FLOAT32"
-            || BaseName == "FLOAT64";
+            || BaseName == "FLOAT64"
+            || BaseName == "DECIMAL";
     }
 
     // ~~
@@ -1767,7 +1769,8 @@ class TYPE
             || BaseName == "INT64"
             || BaseName == "UINT64"
             || BaseName == "FLOAT32"
-            || BaseName == "FLOAT64";
+            || BaseName == "FLOAT64"
+            || BaseName == "DECIMAL";
     }
 
     // ~~
@@ -1840,6 +1843,7 @@ class TYPE
             || BaseName == "UINT64"
             || BaseName == "FLOAT32"
             || BaseName == "FLOAT64"
+            || BaseName == "DECIMAL"
             || BaseName == "STRING"
             || BaseName == "STRING8"
             || BaseName == "STRING16"
@@ -1976,6 +1980,10 @@ class TYPE
         else if ( type_name == "FLOAT64" )
         {
             return "DOUBLE";
+        }
+        else if ( type_name == "DECIMAL" )
+        {
+            return "DECIMAL( " ~ ActualType.Capacity.to!string() ~ ", " ~ ActualType.Precision.to!string() ~ " )";
         }
         else if ( type_name == "STRING" )
         {
@@ -2123,7 +2131,8 @@ class TYPE
         {
             return "float";
         }
-        else if ( type_name == "FLOAT64" )
+        else if ( type_name == "FLOAT64"
+                  || type_name == "DECIMAL" )
         {
             return "double";
         }
@@ -2246,7 +2255,8 @@ class TYPE
         {
             return "float32";
         }
-        else if ( type_name == "FLOAT64" )
+        else if ( type_name == "FLOAT64"
+                  || type_name == "DECIMAL" )
         {
             return "float64";
         }
@@ -2372,7 +2382,8 @@ class TYPE
         {
             return "Float32";
         }
-        else if ( type_name == "FLOAT64" )
+        else if ( type_name == "FLOAT64"
+                  || type_name == "DECIMAL" )
         {
             return "Float64";
         }
@@ -2458,7 +2469,8 @@ class TYPE
             return "int";
         }
         else if ( type_name == "FLOAT32"
-                  || type_name == "FLOAT64" )
+                  || type_name == "FLOAT64"
+                  || type_name == "DECIMAL" )
         {
             return "float";
         }
@@ -2588,7 +2600,8 @@ class TYPE
         {
             return "Float32";
         }
-        else if ( type_name == "FLOAT64" )
+        else if ( type_name == "FLOAT64"
+                  || type_name == "DECIMAL" )
         {
             return "Float64";
         }
@@ -2719,7 +2732,8 @@ class TYPE
         {
             return "Float32";
         }
-        else if ( type_name == "FLOAT64" )
+        else if ( type_name == "FLOAT64"
+                  || type_name == "DECIMAL" )
         {
             return "Float64";
         }
@@ -2964,7 +2978,8 @@ class TYPE
         {
             return "Float32";
         }
-        else if ( type_name == "FLOAT64" )
+        else if ( type_name == "FLOAT64"
+                  || type_name == "DECIMAL" )
         {
             return "Float64";
         }
@@ -3095,7 +3110,8 @@ class TYPE
         {
             return "f32";
         }
-        else if ( type_name == "FLOAT64" )
+        else if ( type_name == "FLOAT64"
+                  || type_name == "DECIMAL" )
         {
             return "f64";
         }
@@ -4502,7 +4518,8 @@ class VALUE
                   || type_name == "INT64"
                   || type_name == "UINT64"
                   || type_name == "FLOAT32"
-                  || type_name == "FLOAT64" )
+                  || type_name == "FLOAT64"
+                  || type_name == "DECIMAL" )
         {
             return Text;
         }
@@ -4631,7 +4648,8 @@ class VALUE
                   || type_name == "INT64"
                   || type_name == "UINT64"
                   || type_name == "FLOAT32"
-                  || type_name == "FLOAT64" )
+                  || type_name == "FLOAT64"
+                  || type_name == "DECIMAL" )
         {
             cql_text = Text;
         }
@@ -4746,7 +4764,8 @@ class VALUE
                   || type_name == "INT64"
                   || type_name == "UINT64"
                   || type_name == "FLOAT32"
-                  || type_name == "FLOAT64" )
+                  || type_name == "FLOAT64"
+                  || type_name == "DECIMAL" )
         {
             json_text = Text;
         }
@@ -4877,7 +4896,8 @@ class VALUE
                   || type_name == "INT64"
                   || type_name == "UINT64"
                   || type_name == "FLOAT32"
-                  || type_name == "FLOAT64" )
+                  || type_name == "FLOAT64"
+                  || type_name == "DECIMAL" )
         {
             php_text = Text;
         }
@@ -4978,7 +4998,8 @@ class VALUE
                   || type_name == "INT64"
                   || type_name == "UINT64"
                   || type_name == "FLOAT32"
-                  || type_name == "FLOAT64" )
+                  || type_name == "FLOAT64"
+                  || type_name == "DECIMAL" )
         {
             javascript_text = Text;
         }
@@ -5252,7 +5273,8 @@ class VALUE
             Text = "0";
         }
         else if ( type_name == "FLOAT32"
-                  || type_name == "FLOAT64" )
+                  || type_name == "FLOAT64"
+                  || type_name == "DECIMAL" )
         {
             Text = "0.0";
         }
@@ -5751,7 +5773,8 @@ class VALUE
                 }
             }
             else if ( Type.BaseName == "FLOAT32"
-                      || Type.BaseName == "FLOAT64" )
+                      || Type.BaseName == "FLOAT64"
+                      || Type.BaseName == "DECIMAL" )
             {
                 Text = ( Random.MakeInteger( 1000, 9999 ) / 100.0 ).to!string();
             }
@@ -6359,6 +6382,11 @@ class COLUMN
                  && value_text_array.length == 2 )
             {
                 Type.Capacity = value_text_array[ 1 ].GetInteger();
+            }
+            else if ( property_name == "precision"
+                      && value_text_array.length == 2 )
+            {
+                Type.Precision = value_text_array[ 1 ].GetInteger();
             }
             else if ( property_name == "stored"
                       && value_text_array.length == 2 )
@@ -11463,6 +11491,77 @@ class SCHEMA
 
     // ~~
 
+    void WriteSqlUpdateFile(
+        string sql_update_file_path
+        )
+    {
+        string
+            sql_update_file_text,
+            sql_update_row_text;
+        string[]
+            sql_update_row_text_array;
+
+        foreach ( table; TableArray )
+        {
+            if ( table.IsStored
+                 && table.RowCount > 0 )
+            {
+                foreach ( row_index; 0 .. table.RowCount )
+                {
+                    sql_update_file_text
+                        ~= "update `" ~ table.Name ~ "`\n"
+                           ~ "set\n";
+
+                    foreach ( ref column; table.ColumnArray )
+                    {
+                        if ( column.IsStored
+                             && !column.IsKey )
+                        {
+                            sql_update_file_text
+                                ~= "    `"
+                                   ~ column.SqlName
+                                   ~ "` = "
+                                   ~ column.ValueArray[ row_index ].GetSqlText( false, true );
+
+                            if ( !column.IsLastStoredNonKey )
+                            {
+                                sql_update_file_text ~= ", ";
+                            }
+
+                            sql_update_file_text ~= "\n";
+                        }
+                    }
+
+                    sql_update_file_text ~= "where ";
+
+                    foreach ( ref column; table.ColumnArray )
+                    {
+                        if ( column.IsStored
+                             && column.IsKey )
+                        {
+                            sql_update_file_text
+                                ~= "`"
+                                   ~ column.SqlName
+                                   ~ "` = "
+                                   ~ column.ValueArray[ row_index ].GetSqlText( false, true );
+
+                            if ( !column.IsLastStoredKey )
+                            {
+                                sql_update_file_text ~= " and ";
+                            }
+                        }
+                    }
+
+                    sql_update_file_text ~= ";\n\n";
+                }
+            }
+        }
+
+        sql_update_file_path.WriteText( sql_update_file_text );
+    }
+
+    // ~~
+
     string GetCqlSchemaFileHeaderText(
         )
     {
@@ -13709,6 +13808,7 @@ void ProcessFiles(
             Schema.WriteSqlSchemaFile( base_file_path ~ "_schema.sql" );
             Schema.WriteSqlDataFile( base_file_path ~ "_data.sql" );
             Schema.WriteSqlDumpFile( base_file_path ~ "_dump.sql" );
+            Schema.WriteSqlUpdateFile( base_file_path ~ "_update.sql" );
         }
         else if ( output_format == "cql" )
         {

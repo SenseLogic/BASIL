@@ -443,6 +443,7 @@ ascending [<i>order index</i>]
 descending [<i>order index</i>]
 now
 capacity <i>maximum_character_count</i>
+precision <i>maximum_digit_count</i>
 sqlname <i>sql_column_name</i>
 cqlname <i>cql_column_name</i>
 goname <i>go_field_name</i>
@@ -507,6 +508,7 @@ INT64
 UINT64
 FLOAT32
 FLOAT64
+DECIMAL
 STRING
 STRING8
 STRING16
