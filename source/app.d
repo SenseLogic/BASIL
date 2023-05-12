@@ -11521,7 +11521,7 @@ class SCHEMA
                                 ~= "    `"
                                    ~ column.SqlName
                                    ~ "` = "
-                                   ~ column.ValueArray[ row_index ].GetSqlText( false, true );
+                                   ~ column.ValueArray[ row_index ].GetSqlText();
 
                             if ( !column.IsLastStoredNonKey )
                             {
@@ -11543,7 +11543,7 @@ class SCHEMA
                                 ~= "`"
                                    ~ column.SqlName
                                    ~ "` = "
-                                   ~ column.ValueArray[ row_index ].GetSqlText( false, true );
+                                   ~ column.ValueArray[ row_index ].GetSqlText();
 
                             if ( !column.IsLastStoredKey )
                             {
