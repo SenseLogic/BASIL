@@ -1788,10 +1788,18 @@ class TYPE
 
     // ~~
 
+    bool IsTimestamp(
+        )
+    {
+        return BaseName == "TIMESTAMP";
+    }
+
+    // ~~
+
     bool IsDateTime(
         )
     {
-        return BaseName == "DATE_TIME";
+        return BaseName == "DATETIME";
     }
 
     // ~~
@@ -1849,6 +1857,7 @@ class TYPE
             || BaseName == "STRING16"
             || BaseName == "STRING24"
             || BaseName == "STRING32"
+            || BaseName == "TIMESTAMP"
             || BaseName == "DATETIME"
             || BaseName == "DATE"
             || BaseName == "TIME"
@@ -2012,6 +2021,10 @@ class TYPE
         {
             return "LONGTEXT";
         }
+        else if ( type_name == "TIMESTAMP" )
+        {
+            return "TIMESTAMP";
+        }
         else if ( type_name == "DATETIME" )
         {
             return "DATETIME";
@@ -2144,7 +2157,8 @@ class TYPE
         {
             return "text";
         }
-        else if ( type_name == "DATETIME"
+        else if ( type_name == "TIMESTAMP"
+                  || type_name == "DATETIME"
                   || type_name == "DATE"
                   || type_name == "TIME" )
         {
@@ -2268,7 +2282,8 @@ class TYPE
         {
             return "string";
         }
-        else if ( type_name == "DATETIME"
+        else if ( type_name == "TIMESTAMP"
+                  || type_name == "DATETIME"
                   || type_name == "DATE"
                   || type_name == "TIME" )
         {
@@ -2395,7 +2410,8 @@ class TYPE
         {
             return "String";
         }
-        else if ( type_name == "DATETIME"
+        else if ( type_name == "TIMESTAMP"
+                  || type_name == "DATETIME"
                   || type_name == "DATE"
                   || type_name == "TIME" )
         {
@@ -2479,6 +2495,7 @@ class TYPE
                   || type_name == "STRING16"
                   || type_name == "STRING24"
                   || type_name == "STRING32"
+                  || type_name == "TIMESTAMP"
                   || type_name == "DATETIME"
                   || type_name == "DATE"
                   || type_name == "TIME"
@@ -2613,7 +2630,8 @@ class TYPE
         {
             return "String";
         }
-        else if ( type_name == "DATETIME"
+        else if ( type_name == "TIMESTAMP"
+                  || type_name == "DATETIME"
                   || type_name == "DATE"
                   || type_name == "TIME" )
         {
@@ -2742,6 +2760,7 @@ class TYPE
                   || type_name == "STRING16"
                   || type_name == "STRING24"
                   || type_name == "STRING32"
+                  || type_name == "TIMESTAMP"
                   || type_name == "DATETIME"
                   || type_name == "DATE"
                   || type_name == "TIME"
@@ -2864,7 +2883,8 @@ class TYPE
         {
             return "string";
         }
-        else if ( type_name == "DATETIME"
+        else if ( type_name == "TIMESTAMP"
+                  || type_name == "DATETIME"
                   || type_name == "DATE"
                   || type_name == "TIME" )
         {
@@ -2991,7 +3011,8 @@ class TYPE
         {
             return "String";
         }
-        else if ( type_name == "DATETIME"
+        else if ( type_name == "TIMESTAMP"
+                  || type_name == "DATETIME"
                   || type_name == "DATE"
                   || type_name == "TIME" )
         {
@@ -3120,6 +3141,7 @@ class TYPE
                   || type_name == "STRING16"
                   || type_name == "STRING24"
                   || type_name == "STRING32"
+                  || type_name == "TIMESTAMP"
                   || type_name == "DATETIME"
                   || type_name == "DATE"
                   || type_name == "TIME"
@@ -4653,7 +4675,8 @@ class VALUE
         {
             cql_text = Text;
         }
-        else if ( type_name == "DATETIME"
+        else if ( type_name == "TIMESTAMP"
+                  || type_name == "DATETIME"
                   || type_name == "DATE"
                   || type_name == "TIME"
                   || type_name == "TUID" )
@@ -4769,7 +4792,8 @@ class VALUE
         {
             json_text = Text;
         }
-        else if ( type_name == "DATETIME"
+        else if ( type_name == "TIMESTAMP"
+                  || type_name == "DATETIME"
                   || type_name == "DATE"
                   || type_name == "TIME"
                   || type_name == "TUID"
@@ -4901,7 +4925,8 @@ class VALUE
         {
             php_text = Text;
         }
-        else if ( type_name == "DATETIME"
+        else if ( type_name == "TIMESTAMP"
+                  || type_name == "DATETIME"
                   || type_name == "DATE"
                   || type_name == "TIME"
                   || type_name == "TUID"
@@ -5003,7 +5028,8 @@ class VALUE
         {
             javascript_text = Text;
         }
-        else if ( type_name == "DATETIME"
+        else if ( type_name == "TIMESTAMP"
+                  || type_name == "DATETIME"
                   || type_name == "DATE"
                   || type_name == "TIME"
                   || type_name == "TUID"
@@ -5277,6 +5303,10 @@ class VALUE
                   || type_name == "DECIMAL" )
         {
             Text = "0.0";
+        }
+        else if ( type_name == "TIMESTAMP" )
+        {
+            Text = "1970-01-01 00:00:00.000000";
         }
         else if ( type_name == "DATETIME" )
         {
@@ -5778,6 +5808,10 @@ class VALUE
             {
                 Text = ( Random.MakeInteger( 1000, 9999 ) / 100.0 ).to!string();
             }
+            else if ( Type.BaseName == "TIMESTAMP" )
+            {
+                Text = Random.MakeDate() ~ " " ~ Random.MakeTime() ~ "." ~ Random.MakeInteger( 0, 999999 ).to!string();
+            }
             else if ( Type.BaseName == "DATETIME" )
             {
                 Text = Random.MakeDate() ~ " " ~ Random.MakeTime();
@@ -6045,6 +6079,14 @@ class COLUMN
         )
     {
         return Type.ActualType.IsReal();
+    }
+
+    // ~~
+
+    bool IsTimestamp(
+        )
+    {
+        return Type.ActualType.IsTimestamp();
     }
 
     // ~~
@@ -8630,7 +8672,12 @@ class TABLE
 
                     if ( column.IsNow )
                     {
-                        if ( column.IsDate() )
+                        if ( column.IsTimestamp() )
+                        {
+                            phoenix_code
+                                ~= "date( now() )";
+                        }
+                        else if ( column.IsDate() )
                         {
                             phoenix_code
                                 ~= "date( now() )";
