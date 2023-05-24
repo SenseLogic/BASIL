@@ -720,6 +720,7 @@ POINTER[ <i>ELEMENT_TYPE</i> ] | !stored
 {#stored_column_count#}
 
 {#<i>custom_property_name</i>#}
+{#?<i>custom_property_name</i>#}
 
 {%name%}
 {%attribute%}
@@ -839,6 +840,7 @@ POINTER[ <i>ELEMENT_TYPE</i> ] | !stored
 {%is_last_non_incremented%}
 
 {%<i>custom_property_name</i>%}
+{%?<i>custom_property_name</i>%}
 
 %\%ignored tag
 <\#ignored tags#\>

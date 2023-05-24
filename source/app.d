@@ -13265,15 +13265,31 @@ string ReplaceProperties(
     {
         if ( ( template_part_index & 1 ) == 1 )
         {
-            property_value = template_part in property_value_map;
-
-            if ( property_value !is null )
+            if ( template_part.startsWith( '?' ) )
             {
-                template_part = *property_value;
+                property_value = template_part[ 1 .. $ ] in property_value_map;
+
+                if ( property_value !is null )
+                {
+                    template_part = "true";
+                }
+                else
+                {
+                    template_part = "false";
+                }
             }
             else
             {
-                template_part = "false";
+                property_value = template_part in property_value_map;
+
+                if ( property_value !is null )
+                {
+                    template_part = *property_value;
+                }
+                else
+                {
+                    template_part = "false";
+                }
             }
         }
     }
