@@ -900,18 +900,21 @@ basil [options] script_file.bs [script_file.bs|bd|bt|csv ...]
 ### Options
 
 ```
---uml : generate the UML schema file
---sql : generate the SQL schema and data files
---cql : generate the CQL schema and data files
---json : generate the JSON data file
---csv : generate the CSV data files
---go : generate the Go type file
---generis : generate the Generis type, query, response, request and route files
---phoenix : generate the Phoenix query files
---crystal : generate the Crystal type file
---csharp : generate the C# type file
---rust : generate the Rust type file
---javascript : generate the Javascript type file
+--prefix : output file name prefix
+--suffix : output file name suffix
+--uml : generate an UML schema file
+--mysql : generate MySQL schema and data files
+--pgsql : generate PostgreSQL schema and data files
+--cql : generate CQL schema and data files
+--json : generate a JSON data file
+--csv : generate CSV data files
+--go : generate a Go type file
+--generis : generate Generis type, query, response, request and route files
+--phoenix : generate Phoenix query files
+--crystal : generate a Crystal type file
+--csharp : generate a C# type file
+--rust : generate a Rust type file
+--javascript : generate a Javascript type file
 --ignore-drop : ignore drop command
 --force-drop : force drop command
 --exclude-command <command_name>

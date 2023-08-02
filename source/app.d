@@ -25,7 +25,7 @@ import mildew.environment : Environment;
 import mildew.exceptions : ScriptCompileException, ScriptRuntimeException;
 import mildew.interpreter : Interpreter;
 import mildew.types : NativeFunctionError, ScriptAny, ScriptFunction;
-import seed : Abort, AddPrefix, AddSuffix, EndsByVowel, GetBooleanText, GetCsvText, GetExecutablePath, GetFileName, GetFolderPath, GetFolderPath, GetInteger, GetKebabCaseText, GetMajorCaseText, GetNatural, GetPascalCaseText, GetPrefix, GetReal, GetSlugCaseText, GetSnakeCaseText, GetSuffix, IsInteger, IsLinux, IsMacOs, IsWindows, PrintError, PrintWarning, ReadText, RemovePrefix, RemoveSuffix, ReplacePrefix, ReplaceSuffix, StartsByConsonant, StartsByVowel, WriteText;
+import seed : Abort, AddPrefix, AddSuffix, EndsByVowel, GetBooleanText, GetCsvText, GetExecutablePath, GetFileLabel, GetFileName, GetFolderPath, GetFolderPath, GetInteger, GetKebabCaseText, GetMajorCaseText, GetNatural, GetPascalCaseText, GetPrefix, GetReal, GetSlugCaseText, GetSnakeCaseText, GetSuffix, IsInteger, IsLinux, IsMacOs, IsWindows, PrintError, PrintWarning, ReadText, RemovePrefix, RemoveSuffix, ReplacePrefix, ReplaceSuffix, StartsByConsonant, StartsByVowel, WriteText;
 import std.algorithm : countUntil, sort;
 import std.ascii : isDigit, isLower, isUpper;
 import std.base64 : Base64URLNoPadding;
@@ -1939,6 +1939,7 @@ class TYPE
     // ~~
 
     string GetSqlText(
+        bool column_is_incremented
         )
     {
         string
@@ -1946,113 +1947,217 @@ class TYPE
 
         type_name = ActualType.BaseName;
 
-        if ( type_name == "BOOL" )
+        if ( SqlFormat == "mysql" )
         {
-            return "TINYINT UNSIGNED";
-        }
-        else if ( type_name == "INT8" )
-        {
-            return "TINYINT";
-        }
-        else if ( type_name == "UINT8" )
-        {
-            return "TINYINT UNSIGNED";
-        }
-        else if ( type_name == "INT16" )
-        {
-            return "SMALLINT";
-        }
-        else if ( type_name == "UINT16" )
-        {
-            return "SMALLINT UNSIGNED";
-        }
-        else if ( type_name == "INT32" )
-        {
-            return "INT";
-        }
-        else if ( type_name == "UINT32" )
-        {
-            return "INT UNSIGNED";
-        }
-        else if ( type_name == "INT64" )
-        {
-            return "BIGINT";
-        }
-        else if ( type_name == "UINT64" )
-        {
-            return "BIGINT UNSIGNED";
-        }
-        else if ( type_name == "FLOAT32" )
-        {
-            return "FLOAT";
-        }
-        else if ( type_name == "FLOAT64" )
-        {
-            return "DOUBLE";
-        }
-        else if ( type_name == "DECIMAL" )
-        {
-            return "DECIMAL( " ~ ActualType.Capacity.to!string() ~ ", " ~ ActualType.Precision.to!string() ~ " )";
-        }
-        else if ( type_name == "STRING" )
-        {
-            if ( ActualType.Capacity != 0 )
+            if ( type_name == "BOOL" )
             {
-                return "VARCHAR( " ~ ActualType.Capacity.to!string() ~ " )";
+                return "TINYINT UNSIGNED";
+            }
+            else if ( type_name == "INT8" )
+            {
+                return "TINYINT";
+            }
+            else if ( type_name == "UINT8" )
+            {
+                return "TINYINT UNSIGNED";
+            }
+            else if ( type_name == "INT16" )
+            {
+                return "SMALLINT";
+            }
+            else if ( type_name == "UINT16" )
+            {
+                return "SMALLINT UNSIGNED";
+            }
+            else if ( type_name == "INT32" )
+            {
+                return "INT";
+            }
+            else if ( type_name == "UINT32" )
+            {
+                return "INT UNSIGNED";
+            }
+            else if ( type_name == "INT64" )
+            {
+                return "BIGINT";
+            }
+            else if ( type_name == "UINT64" )
+            {
+                return "BIGINT UNSIGNED";
+            }
+            else if ( type_name == "FLOAT32" )
+            {
+                return "FLOAT";
+            }
+            else if ( type_name == "FLOAT64" )
+            {
+                return "DOUBLE";
+            }
+            else if ( type_name == "DECIMAL" )
+            {
+                return "DECIMAL( " ~ ActualType.Capacity.to!string() ~ ", " ~ ActualType.Precision.to!string() ~ " )";
+            }
+            else if ( type_name == "STRING" )
+            {
+                if ( ActualType.Capacity != 0 )
+                {
+                    return "VARCHAR( " ~ ActualType.Capacity.to!string() ~ " )";
+                }
+                else
+                {
+                    return "TEXT";
+                }
+            }
+            else if ( type_name == "STRING8" )
+            {
+                return "TINYTEXT";
+            }
+            else if ( type_name == "STRING16" )
+            {
+                return "TEXT";
+            }
+            else if ( type_name == "STRING24" )
+            {
+                return "MEDIUMTEXT";
+            }
+            else if ( type_name == "STRING32" )
+            {
+                return "LONGTEXT";
+            }
+            else if ( type_name == "TIMESTAMP" )
+            {
+                return "TIMESTAMP";
+            }
+            else if ( type_name == "DATETIME" )
+            {
+                return "DATETIME";
+            }
+            else if ( type_name == "DATE" )
+            {
+                return "DATE";
+            }
+            else if ( type_name == "TIME" )
+            {
+                return "TIME";
+            }
+            else if ( type_name == "TUID" )
+            {
+                return "VARCHAR(22)";
+            }
+            else if ( type_name == "UUID" )
+            {
+                return "VARCHAR(36)";
+            }
+            else if ( type_name == "BLOB" )
+            {
+                return "BLOB";
             }
             else
             {
                 return "TEXT";
             }
         }
-        else if ( type_name == "STRING8" )
+        else if ( SqlFormat == "postgresql" )
         {
-            return "TINYTEXT";
+            if ( type_name == "BOOL"
+                 || type_name == "INT8"
+                 || type_name == "UINT8"
+                 || type_name == "INT16"
+                 || type_name == "UINT16" )
+            {
+                return "SMALLINT";
+            }
+            else if ( type_name == "INT32"
+                      || type_name == "UINT32" )
+            {
+                if ( column_is_incremented )
+                {
+                    return "SERIAL";
+                }
+                else
+                {
+                    return "INTEGER";
+                }
+            }
+            else if ( type_name == "INT64"
+                      || type_name == "UINT64" )
+            {
+                return "BIGINT";
+            }
+            else if ( type_name == "FLOAT32" )
+            {
+                return "REAL";
+            }
+            else if ( type_name == "FLOAT64" )
+            {
+                return "DOUBLE PRECISION";
+            }
+            else if ( type_name == "DECIMAL" )
+            {
+                return "NUMERIC( " ~ ActualType.Capacity.to!string() ~ ", " ~ ActualType.Precision.to!string() ~ " )";
+            }
+            else if ( type_name == "STRING" )
+            {
+                if ( ActualType.Capacity != 0 )
+                {
+                    return "VARCHAR( " ~ ActualType.Capacity.to!string() ~ " )";
+                }
+                else
+                {
+                    return "TEXT";
+                }
+            }
+            else if ( type_name == "STRING8" )
+            {
+                return "TEXT";
+            }
+            else if ( type_name == "STRING16" )
+            {
+                return "TEXT";
+            }
+            else if ( type_name == "STRING24" )
+            {
+                return "TEXT";
+            }
+            else if ( type_name == "STRING32" )
+            {
+                return "TEXT";
+            }
+            else if ( type_name == "TIMESTAMP" )
+            {
+                return "TIMESTAMP";
+            }
+            else if ( type_name == "DATETIME" )
+            {
+                return "TIMESTAMP";
+            }
+            else if ( type_name == "DATE" )
+            {
+                return "DATE";
+            }
+            else if ( type_name == "TIME" )
+            {
+                return "TIME";
+            }
+            else if ( type_name == "TUID" )
+            {
+                return "VARCHAR(22)";
+            }
+            else if ( type_name == "UUID" )
+            {
+                return "VARCHAR(36)";
+            }
+            else if ( type_name == "BLOB" )
+            {
+                return "BYTEA";
+            }
+            else
+            {
+                return "TEXT";
+            }
         }
-        else if ( type_name == "STRING16" )
-        {
-            return "TEXT";
-        }
-        else if ( type_name == "STRING24" )
-        {
-            return "MEDIUMTEXT";
-        }
-        else if ( type_name == "STRING32" )
-        {
-            return "LONGTEXT";
-        }
-        else if ( type_name == "TIMESTAMP" )
-        {
-            return "TIMESTAMP";
-        }
-        else if ( type_name == "DATETIME" )
-        {
-            return "DATETIME";
-        }
-        else if ( type_name == "DATE" )
-        {
-            return "DATE";
-        }
-        else if ( type_name == "TIME" )
-        {
-            return "TIME";
-        }
-        else if ( type_name == "TUID" )
-        {
-            return "VARCHAR(22)";
-        }
-        else if ( type_name == "UUID" )
-        {
-            return "VARCHAR(36)";
-        }
-        else if ( type_name == "BLOB" )
-        {
-            return "BLOB";
-        }
-        else
-        {
-            return "TEXT";
-        }
+
+        return "TEXT";
     }
 
     // ~~
@@ -6715,7 +6820,7 @@ class COLUMN
             JavascriptName = Name;
         }
 
-        SqlType = Type.GetSqlText();
+        SqlType = Type.GetSqlText( IsIncremented );
         CqlType = Type.GetCqlText();
 
         if ( SqlOptionIsEnabled )
@@ -6762,12 +6867,12 @@ class COLUMN
             SqlPropertyArray ~= "NULL";
         }
 
-        if ( IsIncremented )
+        if ( IsIncremented
+             && SqlFormat == "mysql" )
         {
             SqlPropertyArray ~= "AUTO_INCREMENT";
         }
     }
-
 
     // ~~
 
@@ -7137,7 +7242,7 @@ class TABLE
             generis_code
                 ~= "    statement, error_\n"
                    ~ "        := DatabaseSession.Prepare(\n"
-                   ~ "               \"insert into `" ~ Name ~ "` ( ";
+                   ~ "               \"insert into " ~ SqlQuote ~ Name ~ SqlQuote ~ " ( ";
 
             column_count = 0;
 
@@ -7153,7 +7258,7 @@ class TABLE
                     }
 
                     generis_code
-                        ~= "`" ~ column.StoredName ~ "`";
+                        ~= SqlQuote ~ column.StoredName ~ SqlQuote;
 
                     ++column_count;
                 }
@@ -7406,7 +7511,7 @@ class TABLE
             generis_code
                 ~= "    statement, error_\n"
                    ~ "        := DatabaseSession.Prepare(\n"
-                   ~ "               \"update `" ~ Name ~ "` set ";
+                   ~ "               \"update " ~ SqlQuote ~ Name ~ SqlQuote ~ " set ";
 
             foreach ( column; ColumnArray )
             {
@@ -7414,7 +7519,7 @@ class TABLE
                      && !column.IsKey )
                 {
                     generis_code
-                        ~= "`" ~ column.StoredName ~ "` = ?";
+                        ~= SqlQuote ~ column.StoredName ~ SqlQuote ~ " = ?";
 
                     if ( !column.IsLastNonKey )
                     {
@@ -7589,7 +7694,7 @@ class TABLE
             generis_code
                 ~= "    statement, error_\n"
                    ~ "        := DatabaseSession.Prepare(\n"
-                   ~ "               \"delete from `" ~ Name ~ "` where ";
+                   ~ "               \"delete from " ~ SqlQuote ~ Name ~ SqlQuote ~ " where ";
 
             foreach ( column; ColumnArray )
             {
@@ -7597,7 +7702,7 @@ class TABLE
                      && column.IsKey )
                 {
                     generis_code
-                        ~= "`" ~ column.StoredName ~ "` = ?";
+                        ~= SqlQuote ~ column.StoredName ~ SqlQuote ~ " = ?";
 
                     if ( !column.IsLastKey )
                     {
@@ -7737,7 +7842,7 @@ class TABLE
                      && !column.IsKey )
                 {
                     generis_code
-                        ~= "`" ~ column.StoredName ~ "`";
+                        ~= SqlQuote ~ column.StoredName ~ SqlQuote;
 
                     if ( column.IsStored
                          && !column.IsLastNonKey )
@@ -7749,7 +7854,7 @@ class TABLE
             }
 
             generis_code
-                ~= " from `" ~ Name ~ "` where ";
+                ~= " from " ~ SqlQuote ~ Name ~ SqlQuote ~ " where ";
 
             foreach ( column; ColumnArray )
             {
@@ -7987,7 +8092,7 @@ class TABLE
                 if ( column.IsStored )
                 {
                     generis_code
-                        ~= "`" ~ column.StoredName ~ "`";
+                        ~= SqlQuote ~ column.StoredName ~ SqlQuote;
 
                     if ( !column.IsLastStored )
                     {
@@ -7998,7 +8103,7 @@ class TABLE
             }
 
             generis_code
-                ~= " from `" ~ Name ~ "`\"\n"
+                ~= " from " ~ SqlQuote ~ Name ~ SqlQuote ~ "\"\n"
                    ~ "               );\n"
                    ~ "\n"
                    ~ "    if ( error_ != nil )\n"
@@ -8632,7 +8737,7 @@ class TABLE
         if ( SqlOptionIsEnabled )
         {
             phoenix_code
-                ~= "    var statement = GetDatabaseStatement( 'insert into `" ~ Name ~ "` ( ";
+                ~= "    var statement = GetDatabaseStatement( 'insert into " ~ SqlQuote ~ Name ~ SqlQuote ~ " ( ";
 
             column_count = 0;
 
@@ -8648,7 +8753,7 @@ class TABLE
                     }
 
                     phoenix_code
-                        ~= "`" ~ column.StoredName ~ "`";
+                        ~= SqlQuote ~ column.StoredName ~ SqlQuote;
 
                     ++column_count;
                 }
@@ -8783,7 +8888,7 @@ class TABLE
         if ( SqlOptionIsEnabled )
         {
             phoenix_code
-                ~= "    var statement = GetDatabaseStatement( 'update `" ~ Name ~ "` set ";
+                ~= "    var statement = GetDatabaseStatement( 'update " ~ SqlQuote ~ Name ~ SqlQuote ~ " set ";
 
             foreach ( column; ColumnArray )
             {
@@ -8791,7 +8896,7 @@ class TABLE
                      && !column.IsKey )
                 {
                     phoenix_code
-                        ~= "`" ~ column.StoredName ~ "` = ?";
+                        ~= SqlQuote ~ column.StoredName ~ SqlQuote ~ " = ?";
 
                     if ( !column.IsLastNonKey )
                     {
@@ -8927,7 +9032,7 @@ class TABLE
         if ( SqlOptionIsEnabled )
         {
             phoenix_code
-                ~= "    var statement = GetDatabaseStatement( 'delete from `" ~ Name ~ "` where ";
+                ~= "    var statement = GetDatabaseStatement( 'delete from " ~ SqlQuote ~ Name ~ SqlQuote ~ " where ";
 
             foreach ( column; ColumnArray )
             {
@@ -8935,7 +9040,7 @@ class TABLE
                      && column.IsKey )
                 {
                     phoenix_code
-                        ~= "`" ~ column.StoredName ~ "` = ?";
+                        ~= SqlQuote ~ column.StoredName ~ SqlQuote ~ " = ?";
 
                     if ( !column.IsLastKey )
                     {
@@ -9047,7 +9152,7 @@ class TABLE
                 if ( column.IsStored )
                 {
                     phoenix_code
-                        ~= "`" ~ column.StoredName ~ "`";
+                        ~= SqlQuote ~ column.StoredName ~ SqlQuote;
 
                     if ( !column.IsLastStored )
                     {
@@ -9058,7 +9163,7 @@ class TABLE
             }
 
             phoenix_code
-                ~= " from `" ~ Name ~ "` where ";
+                ~= " from " ~ SqlQuote ~ Name ~ SqlQuote ~ " where ";
 
             foreach ( column; ColumnArray )
             {
@@ -9066,7 +9171,7 @@ class TABLE
                      && column.IsKey )
                 {
                     phoenix_code
-                        ~= "`" ~ column.StoredName ~ "` = ?";
+                        ~= SqlQuote ~ column.StoredName ~ SqlQuote ~ " = ?";
 
                     if ( !column.IsLastKey )
                     {
@@ -9140,7 +9245,7 @@ class TABLE
                         if ( column.IsStored )
                         {
                             phoenix_code
-                                ~= "`" ~ column.StoredName ~ "`";
+                                ~= SqlQuote ~ column.StoredName ~ SqlQuote;
 
                             if ( !column.IsLastStored )
                             {
@@ -9151,7 +9256,7 @@ class TABLE
                     }
 
                     phoenix_code
-                        ~= " from `" ~ Name ~ "` where `" ~ key_column.StoredName ~ "` = ? limit 1' );\n"
+                        ~= " from " ~ SqlQuote ~ Name ~ SqlQuote ~ " where " ~ SqlQuote ~ key_column.StoredName ~ SqlQuote ~ " = ? limit 1' );\n"
                            ~ "    statement.bindParam( 1, " ~ PhpVariable ~ "_" ~ key_column.PhpVariable ~ ", " ~ key_column.PhpParameterType ~ " );\n"
                            ~ "\n"
                            ~ "    if ( !statement.execute() )\n"
@@ -9198,7 +9303,7 @@ class TABLE
                 if ( column.IsStored )
                 {
                     phoenix_code
-                        ~= "`" ~ column.StoredName ~ "`";
+                        ~= SqlQuote ~ column.StoredName ~ SqlQuote;
 
                     if ( !column.IsLastStored )
                     {
@@ -9209,7 +9314,7 @@ class TABLE
             }
 
             phoenix_code
-                ~= " from `" ~ Name ~ "`";
+                ~= " from " ~ SqlQuote ~ Name ~ SqlQuote;
 
             if ( table_is_sorted )
             {
@@ -9238,7 +9343,7 @@ class TABLE
                             }
 
                             phoenix_code
-                                ~= "`" ~ column.StoredName ~ "`";
+                                ~= SqlQuote ~ column.StoredName ~ SqlQuote;
 
                             if ( column.IsAscending )
                             {
@@ -9334,7 +9439,7 @@ class TABLE
                         if ( column.IsStored )
                         {
                             phoenix_code
-                                ~= "`" ~ column.StoredName ~ "`";
+                                ~= SqlQuote ~ column.StoredName ~ SqlQuote;
 
                             if ( !column.IsLastStored )
                             {
@@ -9345,7 +9450,7 @@ class TABLE
                     }
 
                     phoenix_code
-                        ~= " from `" ~ Name ~ "` where `" ~ key_column.StoredName ~ "` = ?' );\n"
+                        ~= " from " ~ SqlQuote ~ Name ~ SqlQuote ~ " where " ~ SqlQuote ~ key_column.StoredName ~ SqlQuote ~ " = ?' );\n"
                            ~ "    statement.bindParam( 1, " ~ PhpVariable ~ "_" ~ key_column.PhpVariable ~ ", " ~ key_column.PhpParameterType ~ " );\n"
                            ~ "\n"
                            ~ "    if ( !statement.execute() )\n"
@@ -9392,7 +9497,7 @@ class TABLE
                         if ( column.IsStored )
                         {
                             phoenix_code
-                                ~= "`" ~ column.StoredName ~ "`";
+                                ~= SqlQuote ~ column.StoredName ~ SqlQuote;
 
                             if ( !column.IsLastStored )
                             {
@@ -9403,7 +9508,7 @@ class TABLE
                     }
 
                     phoenix_code
-                        ~= " from `" ~ Name ~ "`' );\n"
+                        ~= " from " ~ SqlQuote ~ Name ~ SqlQuote ~ "' );\n"
                            ~ "\n"
                            ~ "    if ( !statement.execute() )\n"
                            ~ "    {\n"
@@ -9465,7 +9570,7 @@ class TABLE
                         if ( column.IsStored )
                         {
                             phoenix_code
-                                ~= "`" ~ column.StoredName ~ "`";
+                                ~= SqlQuote ~ column.StoredName ~ SqlQuote;
 
                             if ( !column.IsLastStored )
                             {
@@ -9476,7 +9581,7 @@ class TABLE
                     }
 
                     phoenix_code
-                        ~= " from `" ~ Name ~ "`' );\n"
+                        ~= " from " ~ SqlQuote ~ Name ~ SqlQuote ~ "' );\n"
                            ~ "\n"
                            ~ "    if ( !statement.execute() )\n"
                            ~ "    {\n"
@@ -11144,21 +11249,33 @@ class SCHEMA
         string
             sql_schema_file_text;
 
-        sql_schema_file_text
-            = "set @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;\n"
-              ~ "set @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;\n"
-              ~ "set @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='TRADITIONAL,ALLOW_INVALID_DATES';\n\n";
+        if ( SqlFormat == "mysql" )
+        {
+            sql_schema_file_text
+                = "set @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;\n"
+                  ~ "set @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;\n"
+                  ~ "set @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='TRADITIONAL,ALLOW_INVALID_DATES';\n\n";
+        }
 
         if ( ( IsDropped && !DropIsIgnored )
              || DropIsForced )
         {
             sql_schema_file_text
-                ~= "drop schema if exists `" ~ Name ~ "`;\n\n";
+                ~= "drop schema if exists " ~ SqlQuote ~ Name ~ SqlQuote ~ ";\n\n";
         }
 
-        sql_schema_file_text
-            ~= "create schema if not exists `" ~ Name ~ "` default character set utf8mb4 collate utf8mb4_general_ci;\n\n"
-               ~ "use `" ~ Name ~ "`;\n\n";
+        if ( SqlFormat == "mysql" )
+        {
+            sql_schema_file_text
+                ~= "create schema if not exists " ~ SqlQuote ~ Name ~ SqlQuote ~ " default character set utf8mb4 collate utf8mb4_general_ci;\n\n"
+                   ~ "use " ~ SqlQuote ~ Name ~ SqlQuote ~ ";\n\n";
+        }
+        else if ( SqlFormat == "posgresql" )
+        {
+            sql_schema_file_text
+                ~= "create schema if not exists " ~ SqlQuote ~ Name ~ SqlQuote ~ ";\n\n"
+                   ~ "set search_path to " ~ SqlQuote ~ Name ~ SqlQuote ~ ";\n\n";
+        }
 
         return sql_schema_file_text;
     }
@@ -11180,20 +11297,20 @@ class SCHEMA
                  || DropIsForced )
             {
                 sql_schema_file_text
-                    ~= "drop table if exists `" ~ Name ~ "`.`" ~ table.Name ~ "`;\n\n";
+                    ~= "drop table if exists " ~ SqlQuote ~ Name ~ SqlQuote ~ "." ~ SqlQuote ~ table.Name ~ SqlQuote ~ ";\n\n";
             }
 
             sql_schema_file_text
-                ~= "create table if not exists `" ~ Name ~ "`.`" ~ table.Name ~ "`(\n";
+                ~= "create table if not exists " ~ SqlQuote ~ Name ~ SqlQuote ~ "." ~ SqlQuote ~ table.Name ~ SqlQuote ~ "(\n";
 
             foreach ( ref column; table.ColumnArray )
             {
                 if ( column.IsStored )
                 {
                     sql_schema_file_text
-                        ~= "    `"
+                        ~= "    " ~ SqlQuote
                            ~ column.SqlName
-                           ~ "` "
+                           ~ SqlQuote ~ " "
                            ~ column.SqlType
                            ~ " "
                            ~ column.SqlPropertyArray.join( ' ' )
@@ -11206,7 +11323,7 @@ class SCHEMA
                 if ( column.IsStored
                      && column.IsKey )
                 {
-                    sql_schema_file_text ~= "    primary key( `" ~ column.SqlName ~ "` ),\n";
+                    sql_schema_file_text ~= "    primary key( " ~ SqlQuote ~ column.SqlName ~ SqlQuote ~ " ),\n";
                 }
             }
 
@@ -11230,9 +11347,9 @@ class SCHEMA
                            ~ column.ForeignColumn.Table.Name.toLower()
                            ~ "_"
                            ~ foreign_key_index.to!string()
-                           ~ "_idx`( `"
+                           ~ "_idx`( " ~ SqlQuote
                            ~ column.SqlName
-                           ~ "` ASC ),\n";
+                           ~ SqlQuote ~ " ASC ),\n";
                 }
             }
 
@@ -11256,17 +11373,17 @@ class SCHEMA
                            ~ column.ForeignColumn.Table.Name.toLower()
                            ~ "_"
                            ~ foreign_key_index.to!string()
-                           ~ "`\n"
-                           ~ "    foreign key( `"
+                           ~ SqlQuote ~ "\n"
+                           ~ "    foreign key( " ~ SqlQuote
                            ~ column.SqlName
-                           ~ "` )\n"
-                           ~ "    references `"
+                           ~ SqlQuote ~ " )\n"
+                           ~ "    references " ~ SqlQuote
                            ~ Name
-                           ~ "`.`"
+                           ~ SqlQuote ~ "." ~ SqlQuote
                            ~ column.ForeignColumn.Table.Name
-                           ~ "`( `"
+                           ~ SqlQuote ~ "( " ~ SqlQuote
                            ~ column.ForeignColumn.SqlName
-                           ~ "` )\n"
+                           ~ SqlQuote ~ " )\n"
                            ~ "        on delete set null\n"
                            ~ "        on update no action,\n";
                 }
@@ -11285,10 +11402,17 @@ class SCHEMA
     string GetSqlSchemaFileFooterText(
         )
     {
-        return
-            "set SQL_MODE=@OLD_SQL_MODE;\n"
-            ~ "set FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;\n"
-            ~ "set UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;\n";
+        if ( SqlFormat == "mysql" )
+        {
+            return
+                "set SQL_MODE=@OLD_SQL_MODE;\n"
+                ~ "set FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;\n"
+                ~ "set UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;\n";
+        }
+        else
+        {
+            return "";
+        }
     }
 
     // ~~
@@ -11324,13 +11448,13 @@ class SCHEMA
         {
             foreach ( row_index; 0 .. table.RowCount )
             {
-                sql_data_file_text ~= "replace into `" ~ table.SchemaName ~ "`.`" ~ table.Name ~ "`\n    (\n        " ;
+                sql_data_file_text ~= "replace into " ~ SqlQuote ~ table.SchemaName ~ SqlQuote ~ "." ~ SqlQuote ~ table.Name ~ SqlQuote ~ "\n    (\n        " ;
 
                 foreach ( ref column; table.ColumnArray )
                 {
                     if ( column.IsStored )
                     {
-                        sql_data_file_text ~= "`" ~ column.SqlName ~ "`";
+                        sql_data_file_text ~= SqlQuote ~ column.SqlName ~ SqlQuote;
 
                         if ( !column.IsLastStored )
                         {
@@ -11423,16 +11547,16 @@ class SCHEMA
             if ( table.IsStored )
             {
                 sql_dump_file_text
-                    ~= "CREATE TABLE `" ~ table.Name ~ "` (\n";
+                    ~= "CREATE TABLE " ~ SqlQuote ~ table.Name ~ SqlQuote ~ " (\n";
 
                 foreach ( ref column; table.ColumnArray )
                 {
                     if ( column.IsStored )
                     {
                         sql_dump_file_text
-                            ~= "  `"
+                            ~= "  " ~ SqlQuote
                                ~ column.SqlName
-                               ~ "` "
+                               ~ SqlQuote ~ " "
                                ~ column.SqlType
                                ~ " "
                                ~ column.SqlPropertyArray.join( ' ' );
@@ -11453,16 +11577,16 @@ class SCHEMA
                 {
                     sql_dump_file_text
                         ~= "\n"
-                           ~ "INSERT INTO `" ~ table.Name ~ "` (";
+                           ~ "INSERT INTO " ~ SqlQuote ~ table.Name ~ SqlQuote ~ " (";
 
                     foreach ( ref column; table.ColumnArray )
                     {
                         if ( column.IsStored )
                         {
                             sql_dump_file_text
-                                ~= "`"
+                                ~= SqlQuote
                                    ~ column.SqlName
-                                   ~ "`";
+                                   ~ SqlQuote;
 
                             if ( !column.IsLastStored )
                             {
@@ -11526,8 +11650,8 @@ class SCHEMA
                          && column.IsKey )
                     {
                         sql_dump_file_text
-                            ~= "ALTER TABLE `" ~ table.Name ~ "`\n"
-                               ~ "  ADD PRIMARY KEY (`" ~ column.SqlName ~ "`);\n\n";
+                            ~= "ALTER TABLE " ~ SqlQuote ~ table.Name ~ SqlQuote ~ "\n"
+                               ~ "  ADD PRIMARY KEY (" ~ SqlQuote ~ column.SqlName ~ SqlQuote ~ ");\n\n";
                     }
                 }
             }
@@ -11556,7 +11680,7 @@ class SCHEMA
                 foreach ( row_index; 0 .. table.RowCount )
                 {
                     sql_update_file_text
-                        ~= "update `" ~ table.Name ~ "`\n"
+                        ~= "update " ~ SqlQuote ~ table.Name ~ SqlQuote ~ "\n"
                            ~ "set\n";
 
                     foreach ( ref column; table.ColumnArray )
@@ -11565,9 +11689,9 @@ class SCHEMA
                              && !column.IsKey )
                         {
                             sql_update_file_text
-                                ~= "    `"
+                                ~= "    " ~ SqlQuote
                                    ~ column.SqlName
-                                   ~ "` = "
+                                   ~ SqlQuote ~ " = "
                                    ~ column.ValueArray[ row_index ].GetSqlText();
 
                             if ( !column.IsLastStoredNonKey )
@@ -11587,9 +11711,9 @@ class SCHEMA
                              && column.IsKey )
                         {
                             sql_update_file_text
-                                ~= "`"
+                                ~= SqlQuote
                                    ~ column.SqlName
-                                   ~ "` = "
+                                   ~ SqlQuote ~ " = "
                                    ~ column.ValueArray[ row_index ].GetSqlText();
 
                             if ( !column.IsLastStoredKey )
@@ -12581,7 +12705,11 @@ bool
     DropIsIgnored,
     SqlOptionIsEnabled;
 string
-    DatabaseFormat;
+    DatabaseFormat,
+    OutputFileNamePrefix,
+    OutputFileNameSuffix,
+    SqlFormat = "mysql",
+    SqlQuote = "`";
 string[]
     OutputFormatArray;
 string[]
@@ -13852,7 +13980,11 @@ void ProcessFiles(
     string
         base_file_path;
 
-    base_file_path = file_path_array[ 0 ][ 0 .. $ - 3 ];
+    base_file_path
+        = GetFolderPath( file_path_array[ 0 ] )
+          ~ OutputFileNamePrefix
+          ~ GetFileLabel( file_path_array[ 0 ] )
+          ~ OutputFileNameSuffix;
 
     Random = new RANDOM();
 
@@ -13865,8 +13997,20 @@ void ProcessFiles(
         {
             Schema.WriteUmlSchemaFile( base_file_path ~ ".uml" );
         }
-        else if ( output_format == "sql" )
+        else if ( output_format == "mysql"
+                  || output_format == "postgresql" )
         {
+            SqlFormat = output_format;
+
+            if ( SqlFormat == "mysql" )
+            {
+                SqlQuote = "`";
+            }
+            else if ( SqlFormat == "postgresql" )
+            {
+                SqlQuote = "\"";
+            }
+
             Schema.WriteSqlFile( base_file_path ~ ".sql" );
             Schema.WriteSqlSchemaFile( base_file_path ~ "_schema.sql" );
             Schema.WriteSqlDataFile( base_file_path ~ "_data.sql" );
@@ -13939,6 +14083,8 @@ void main(
 
     SqlOptionIsEnabled = false;
     CqlOptionIsEnabled = false;
+    OutputFileNamePrefix = "";
+    OutputFileNameSuffix = "";
     OutputFormatArray = null;
     DatabaseFormat = "";
     DropIsIgnored = false;
@@ -13951,16 +14097,39 @@ void main(
 
         argument_array = argument_array[ 1 .. $ ];
 
-        if ( option == "--uml" )
+        if ( option == "--prefix"
+             && argument_array.length >= 1 )
+        {
+            OutputFileNamePrefix = argument_array[ 0 ];
+
+            argument_array = argument_array[ 1 .. $ ];
+        }
+        else if ( option == "--suffix"
+                  && argument_array.length >= 1 )
+        {
+            OutputFileNameSuffix = argument_array[ 0 ];
+
+            argument_array = argument_array[ 1 .. $ ];
+        }
+        else if ( option == "--uml" )
         {
             OutputFormatArray ~= "uml";
         }
-        else if ( option == "--sql"
+        else if ( ( option == "--sql"
+                    || option == "--mysql" )
                   && DatabaseFormat == "" )
         {
             SqlOptionIsEnabled = true;
 
-            OutputFormatArray ~= "sql";
+            OutputFormatArray ~= "mysql";
+            DatabaseFormat = "sql";
+        }
+        else if ( option == "--postgresql"
+                  && DatabaseFormat == "" )
+        {
+            SqlOptionIsEnabled = true;
+
+            OutputFormatArray ~= "postgresql";
             DatabaseFormat = "sql";
         }
         else if ( option == "--cql"
@@ -14046,8 +14215,12 @@ void main(
         writeln( "Usage :" );
         writeln( "    basil [options] script_file.bs [script_file.bs|bd|bt ...]" );
         writeln( "Options :" );
+        writeln( "    --prefix <prefix>" );
+        writeln( "    --suffix <suffix>" );
         writeln( "    --uml" );
         writeln( "    --sql" );
+        writeln( "    --mysql" );
+        writeln( "    --postgresql" );
         writeln( "    --cql" );
         writeln( "    --json" );
         writeln( "    --csv" );
