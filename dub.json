@@ -6,7 +6,7 @@
     "copyright": "Copyright © 2022, Eric Pelzer",
     "dependencies": {
         "dmildew": "~>0.5.12",
-        "seed": "~>1.0.0"
+        "seed": "~>1.2.0"
     },
     "buildTypes": {
         "windows": {
