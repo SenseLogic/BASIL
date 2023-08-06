@@ -904,8 +904,8 @@ basil [options] script_file.bs [script_file.bs|bd|bt|csv ...]
 --suffix : output file name suffix
 --uml : generate an UML schema file
 --mysql : generate MySQL schema and data files
---pgsql : generate PostgreSQL schema and data files
---cql : generate CQL schema and data files
+--postgresql : generate PostgreSQL schema and data files
+--cassandra : generate Cassandra schema and data files
 --json : generate a JSON data file
 --csv : generate CSV data files
 --go : generate a Go type file
@@ -920,9 +920,7 @@ basil [options] script_file.bs [script_file.bs|bd|bt|csv ...]
 --exclude-command <command_name>
 ```
 
-The `--sql` and `--cql` options are mutually exhaustive.
-
-The `--json`, `--csv`, `--go`, `--generis`, `--crystal`, `--csharp`, `--rust` and `--javascript` options require the `--sql` or the `--cql` option.
+The `--mysql`, `--postgresql` and `--cassandra` are mutually exclusive.
 
 ### Examples
 
@@ -933,20 +931,20 @@ basil --uml blog.bs
 Generates `blog.uml` from `blog.bs`.
 
 ```bash
-basil --uml --sql --go blog.bs
+basil --uml --mysql --go blog.bs
 ```
 
 Generates `blog.uml`, `blog.sql`, `blog_schema.sql`, `blog_data.sql`, `blog_sql_type.go` from `blog.bs`.
 
 ```bash
-basil --uml --cql --go blog.bs blog.bt
+basil --uml --cassandra --go blog.bs blog.bt
 ```
 
 Generates `blog.uml`, `blog.cql`, `blog_schema.cql`, `blog_data.cql`, `blog_sql_type.go` from `blog.bs`, and other custom files from `blog.bt`.
 
 ## Version
 
-6.0
+7.0
 
 ## Author
 
