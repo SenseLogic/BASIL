@@ -1,0 +1,134 @@
+// -- FUNCTIONS
+
+function GetDatabaseSubscriberArray(
+    )
+{
+    var statement = GetDatabaseStatement( 'select "Id", "Name", "Email" from "SUBSCRIBER"' );
+
+    if ( !statement.execute() )
+    {
+        var_dump( statement.errorInfo() );
+    }
+
+    var subscriber_array = [];
+
+    while ( var subscriber = statement.fetchObject() )
+    {
+        subscriber.Id = ( int )( subscriber.Id );
+        array_push( subscriber_array, subscriber );
+    }
+
+    return subscriber_array;
+}
+
+// ~~
+
+function GetDatabaseSubscriberById(
+    int id
+    )
+{
+    var statement = GetDatabaseStatement( 'select "Id", "Name", "Email" from "SUBSCRIBER" where "Id" = ? limit 1' );
+    statement.bindParam( 1, id, PDO::PARAM_INT );
+
+    if ( !statement.execute() )
+    {
+        var_dump( statement.errorInfo() );
+    }
+
+    var subscriber = statement.fetchObject();
+    subscriber.Id = ( int )( subscriber.Id );
+
+    return subscriber;
+}
+
+// ~~
+
+function GetDatabaseSubscriberByEmail(
+    string subscriber_email
+    )
+{
+    var statement = GetDatabaseStatement( 'select "Id", "Name", "Email" from "SUBSCRIBER" where "Email" = ? limit 1' );
+    statement.bindParam( 1, subscriber_email, PDO::PARAM_STR );
+
+    if ( !statement.execute() )
+    {
+        var_dump( statement.errorInfo() );
+    }
+
+    var subscriber = statement.fetchObject();
+    subscriber.Id = ( int )( subscriber.Id );
+
+    return subscriber;
+}
+
+// ~~
+
+function AddDatabaseSubscriber(
+    string name,
+    string email
+    )
+{
+    var statement = GetDatabaseStatement( 'insert into "SUBSCRIBER" ( "Name", "Email" ) values ( ?, ? )' );
+    statement.bindParam( 1, name, PDO::PARAM_STR );
+    statement.bindParam( 2, email, PDO::PARAM_STR );
+
+    if ( !statement.execute() )
+    {
+        var_dump( statement.errorInfo() );
+    }
+
+    return GetDatabaseAddedId( statement );
+}
+
+// ~~
+
+function PutDatabaseSubscriber(
+    string name,
+    string email
+    )
+{
+    var statement = GetDatabaseStatement( 'replace into "SUBSCRIBER" ( "Name", "Email" ) values ( ?, ? )' );
+    statement.bindParam( 1, name, PDO::PARAM_STR );
+    statement.bindParam( 2, email, PDO::PARAM_STR );
+
+    if ( !statement.execute() )
+    {
+        var_dump( statement.errorInfo() );
+    }
+
+    return GetDatabaseAddedId( statement );
+}
+
+// ~~
+
+function SetDatabaseSubscriber(
+    int id,
+    string name,
+    string email
+    )
+{
+    var statement = GetDatabaseStatement( 'update "SUBSCRIBER" set "Name" = ?, "Email" = ? where Id = ?' );
+    statement.bindParam( 1, name, PDO::PARAM_STR );
+    statement.bindParam( 2, email, PDO::PARAM_STR );
+    statement.bindParam( 3, id, PDO::PARAM_INT );
+
+    if ( !statement.execute() )
+    {
+        var_dump( statement.errorInfo() );
+    }
+}
+
+// ~~
+
+function RemoveDatabaseSubscriberById(
+    int id
+    )
+{
+    var statement = GetDatabaseStatement( 'delete from "SUBSCRIBER" where "Id" = ?' );
+    statement.bindParam( 1, id, PDO::PARAM_INT );
+
+    if ( !statement.execute() )
+    {
+        var_dump( statement.errorInfo() );
+    }
+}

@@ -63,7 +63,7 @@ BLOG | count 5
         Title : STRING
         Text : STRING
         Image : STRING | capacity 45
-        Date : DATE | now
+        Date : DATE | generated
 
         Section : POINTER[ SECTION ] | !stored
         User : POINTER[ USER ] | !stored
@@ -75,7 +75,7 @@ BLOG | count 5
         ArticleId : ARTICLE.Id | indexed
         UserId : USER.Id | indexed
         Text : STRING = "{{english 2 4 5 7}}"
-        DateTime : DATETIME | now, descending
+        DateTime : DATETIME | generated, descending
 
         Article : POINTER[ ARTICLE ] | !stored
         User : POINTER[ USER ] | !stored
@@ -423,25 +423,26 @@ switch this|<i>column_name</i>|<i>value</i> <i>old_value</i> <i>new_value</i> ..
 [!]stored
 [!]added
 [!]edited
-[!]key
-[!]partitioned
-[!]clustered
-[!]indexed
-[!]filtered
-[!]grouped
-[!]mapped
-[!]accessed
-[!]processed
-[!]static
-[!]required
-[!]incremented
-[!]constrained
-[!]optional
+key
+partitioned
+clustered
+indexed
+filtered
+grouped
+mapped
+accessed
+processed
+static
+required
+incremented
+constrained
+optional
 exhaustive
 exhaustive <i>foreign_column_name</i> <i>sibling_column_name</i>
 ascending [<i>order index</i>]
 descending [<i>order index</i>]
-now
+generated
+updated
 capacity <i>maximum_character_count</i>
 precision <i>maximum_digit_count</i>
 sqlname <i>sql_column_name</i>

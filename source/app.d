@@ -6035,7 +6035,8 @@ class COLUMN
         IsOptional,
         IsAscending,
         IsDescending,
-        IsNow,
+        IsGenerated,
+        IsUpdated,
         IsForeign,
         IsFilled,
         IsFirst,
@@ -6085,7 +6086,9 @@ class COLUMN
         IsLastIncremented,
         IsLastNonIncremented;
     string
-        DefaultValueText;
+        DefaultValueText,
+        GeneratedValueText,
+        ConstrainedValueText;
     long
         MinimumRandomCount,
         MaximumRandomCount;
@@ -6219,6 +6222,31 @@ class COLUMN
         )
     {
         return Type.ActualType.IsScalar();
+    }
+
+    // ~~
+
+    string GetGeneratedValueText(
+        )
+    {
+        if ( GeneratedValueText == "" )
+        {
+            if ( IsDate() )
+            {
+                return "date( now() )";
+            }
+            else if ( IsTime() )
+            {
+                return "time( now() )";
+            }
+            else if ( IsDateTime()
+                      || IsTimestamp() )
+            {
+                return "now()";
+            }
+        }
+
+        return GeneratedValueText;
     }
 
     // ~~
@@ -6497,7 +6525,8 @@ class COLUMN
         )
     {
         string
-            property_name;
+            property_name,
+            value_text;
         string[]
             value_text_array;
 
@@ -6505,6 +6534,8 @@ class COLUMN
 
         if ( value_text_array.length > 0 )
         {
+            value_text = value_text_array[ 1 .. $ ].join( ' ' );
+
             if ( value_text_array.length == 1 )
             {
                 if ( value_text_array[ 0 ].startsWith( '!' ) )
@@ -6550,81 +6581,67 @@ class COLUMN
             {
                 IsEdited = ( value_text_array[ 1 ] != "false" );
             }
-            else if ( property_name == "unique"
-                      && value_text_array.length == 2 )
+            else if ( property_name == "unique" )
             {
-                IsUnique = ( value_text_array[ 1 ] != "false" );
+                IsUnique = true;
             }
-            else if ( property_name == "key"
-                      && value_text_array.length == 2 )
+            else if ( property_name == "key" )
             {
-                IsKey = ( value_text_array[ 1 ] != "false" );
+                IsKey = true;
             }
-            else if ( property_name == "partitioned"
-                      && value_text_array.length == 2 )
+            else if ( property_name == "partitioned" )
             {
-                IsPartitioned = ( value_text_array[ 1 ] != "false" );
+                IsPartitioned = true;
             }
-            else if ( property_name == "clustered"
-                      && value_text_array.length == 2 )
+            else if ( property_name == "clustered" )
             {
-                IsClustered = ( value_text_array[ 1 ] != "false" );
+                IsClustered = true;
             }
-            else if ( property_name == "indexed"
-                      && value_text_array.length == 2 )
+            else if ( property_name == "indexed" )
             {
-                IsIndexed = ( value_text_array[ 1 ] != "false" );
+                IsIndexed = true;
             }
-            else if ( property_name == "filtered"
-                      && value_text_array.length == 2 )
+            else if ( property_name == "filtered" )
             {
-                IsFiltered = ( value_text_array[ 1 ] != "false" );
+                IsFiltered = true;
             }
-            else if ( property_name == "grouped"
-                      && value_text_array.length == 2 )
+            else if ( property_name == "grouped" )
             {
-                IsGrouped = ( value_text_array[ 1 ] != "false" );
+                IsGrouped = true;
             }
-            else if ( property_name == "mapped"
-                      && value_text_array.length == 2 )
+            else if ( property_name == "mapped" )
             {
-                IsMapped = ( value_text_array[ 1 ] != "false" );
+                IsMapped = true;
             }
-            else if ( property_name == "accessed"
-                      && value_text_array.length == 2 )
+            else if ( property_name == "accessed" )
             {
-                IsAccessed = ( value_text_array[ 1 ] != "false" );
+                IsAccessed = true;
             }
-            else if ( property_name == "processed"
-                      && value_text_array.length == 2 )
+            else if ( property_name == "processed" )
             {
-                IsProcessed = ( value_text_array[ 1 ] != "false" );
+                IsProcessed = true;
             }
-            else if ( property_name == "static"
-                      && value_text_array.length == 2 )
+            else if ( property_name == "static" )
             {
-                IsStatic = ( value_text_array[ 1 ] != "false" );
+                IsStatic = true;
             }
-            else if ( property_name == "required"
-                      && value_text_array.length == 2 )
+            else if ( property_name == "required" )
             {
-                IsRequired = ( value_text_array[ 1 ] != "false" );
+                IsRequired = true;
             }
-            else if ( property_name == "incremented"
-                      && value_text_array.length == 2 )
+            else if ( property_name == "incremented" )
             {
-                IsIncremented = ( value_text_array[ 1 ] != "false" );
+                IsIncremented = true;
                 IsAdded = false;
             }
-            else if ( property_name == "constrained"
-                      && value_text_array.length == 2 )
+            else if ( property_name == "constrained" )
             {
-                IsConstrained = ( value_text_array[ 1 ] != "false" );
+                ConstrainedValueText = value_text;
+                IsConstrained = true;
             }
-            else if ( property_name == "optional"
-                      && value_text_array.length == 2 )
+            else if ( property_name == "optional" )
             {
-                IsOptional = ( value_text_array[ 1 ] != "false" );
+                IsOptional = true;
             }
             else if ( property_name == "exhaustive"
                       && value_text_array.length == 2
@@ -6644,7 +6661,7 @@ class COLUMN
             else if ( property_name == "ascending"
                       && value_text_array.length == 2 )
             {
-                IsAscending = ( value_text_array[ 1 ] != "false" );
+                IsAscending = true;
 
                 if ( property_text == "ascending" )
                 {
@@ -6658,7 +6675,7 @@ class COLUMN
             else if ( property_name == "descending"
                       && value_text_array.length == 2 )
             {
-                IsDescending = ( value_text_array[ 1 ] != "false" );
+                IsDescending = true;
 
                 if ( property_text == "descending" )
                 {
@@ -6669,11 +6686,15 @@ class COLUMN
                     OrderIndex = value_text_array[ 1 ].GetInteger();
                 }
             }
-            else if ( property_name == "now"
-                      && value_text_array.length == 2 )
+            else if ( property_name == "generated" )
             {
-                IsNow = ( value_text_array[ 1 ] != "false" );
+                GeneratedValueText = value_text;
+                IsGenerated = true;
                 IsAdded = false;
+            }
+            else if ( property_name == "updated" )
+            {
+                IsUpdated = true;
             }
             else if ( property_name == "sqlname"
                       && value_text_array.length == 2 )
@@ -6729,7 +6750,7 @@ class COLUMN
             }
             else if ( property_name == "default" )
             {
-                DefaultValueText = value_text_array[ 1 .. $ ].join( ' ' );
+                DefaultValueText = value_text;
             }
             else
             {
@@ -6872,6 +6893,18 @@ class COLUMN
              && CommandFormat == "postgresql" )
         {
             SqlPropertyArray ~= "primary key";
+        }
+
+        if ( IsConstrained
+             && CommandFormat == "postgresql" )
+        {
+            SqlPropertyArray ~= ConstrainedValueText;
+        }
+
+        if ( IsGenerated
+             && CommandFormat == "postgresql" )
+        {
+            SqlPropertyArray ~= GetGeneratedValueText();
         }
     }
 
@@ -7281,18 +7314,10 @@ class TABLE
                             ~= ", ";
                     }
 
-                    if ( column.IsNow )
+                    if ( column.IsGenerated )
                     {
-                        if ( column.IsDate() )
-                        {
-                            generis_code
-                                ~= "date( now() )";
-                        }
-                        else
-                        {
-                            generis_code
-                                ~= "now()";
-                        }
+                        generis_code
+                            ~= column.GetGeneratedValueText();
                     }
                     else
                     {
@@ -7324,7 +7349,7 @@ class TABLE
             {
                 if ( column.IsStored
                      && !column.IsIncremented
-                     && !column.IsNow )
+                     && !column.IsGenerated )
                 {
                     ++column_count;
                 }
@@ -7336,7 +7361,7 @@ class TABLE
             {
                 if ( column.IsStored
                      && !column.IsIncremented
-                     && !column.IsNow )
+                     && !column.IsGenerated )
                 {
                     generis_code
                         ~= "               " ~ GoVariable ~ "." ~ column.GoName;
@@ -8716,7 +8741,7 @@ class TABLE
         {
             if ( column.IsStored
                  && !column.IsIncremented
-                 && !column.IsNow )
+                 && !column.IsGenerated )
             {
                 if ( column_count > 0 )
                 {
@@ -8776,23 +8801,10 @@ class TABLE
                             ~= ", ";
                     }
 
-                    if ( column.IsNow )
+                    if ( column.IsGenerated )
                     {
-                        if ( column.IsTimestamp() )
-                        {
-                            phoenix_code
-                                ~= "date( now() )";
-                        }
-                        else if ( column.IsDate() )
-                        {
-                            phoenix_code
-                                ~= "date( now() )";
-                        }
-                        else
-                        {
-                            phoenix_code
-                                ~= "now()";
-                        }
+                        phoenix_code
+                            ~= column.GetGeneratedValueText();
                     }
                     else
                     {
@@ -8813,7 +8825,7 @@ class TABLE
             {
                 if ( column.IsStored
                      && !column.IsIncremented
-                     && !column.IsNow )
+                     && !column.IsGenerated )
                 {
                     phoenix_code
                         ~= GetBindDatabaseColumnPhoenixCode( column, column_index );
