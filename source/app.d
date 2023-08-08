@@ -6904,7 +6904,7 @@ class COLUMN
         if ( IsGenerated
              && CommandFormat == "postgresql" )
         {
-            SqlPropertyArray ~= GetGeneratedValueText();
+            SqlPropertyArray ~= "default " ~ GetGeneratedValueText();
         }
     }
 
