@@ -11536,7 +11536,7 @@ class SCHEMA
             sql_data_file_text ~= GetSqlDataFileTableText( table );
         }
 
-        sql_data_file_path.WriteText( sql_data_file_text );
+        sql_data_file_path.WriteText( sql_data_file_text.GetFilteredScript( ExcludedCommandArray ) );
     }
 
     // ~~
@@ -11557,7 +11557,7 @@ class SCHEMA
         }
 
         sql_file_text ~= GetSqlSchemaFileFooterText();
-        sql_file_path.WriteText( sql_file_text );
+        sql_file_path.WriteText( sql_file_text.GetFilteredScript( ExcludedCommandArray ) );
     }
 
     // ~~
@@ -11692,7 +11692,7 @@ class SCHEMA
             }
         }
 
-        sql_dump_file_path.WriteText( sql_dump_file_text );
+        sql_dump_file_path.WriteText( sql_dump_file_text.GetFilteredScript( ExcludedCommandArray ) );
     }
 
     // ~~
@@ -11763,7 +11763,7 @@ class SCHEMA
             }
         }
 
-        sql_update_file_path.WriteText( sql_update_file_text );
+        sql_update_file_path.WriteText( sql_update_file_text.GetFilteredScript( ExcludedCommandArray ) );
     }
 
     // ~~
@@ -11970,7 +11970,7 @@ class SCHEMA
             cql_data_file_text ~= GetCqlDataFileTableText( table );
         }
 
-        cql_data_file_path.WriteText( cql_data_file_text );
+        cql_data_file_path.WriteText( cql_data_file_text.GetFilteredScript( ExcludedCommandArray ) );
     }
 
     // ~~
@@ -11990,7 +11990,7 @@ class SCHEMA
             cql_file_text ~= GetCqlDataFileTableText( table );
         }
 
-        cql_file_text.WriteText( cql_file_text );
+        cql_file_text.WriteText( cql_file_text.GetFilteredScript( ExcludedCommandArray ) );
     }
 
     // ~~
@@ -12940,7 +12940,7 @@ bool HasCommand(
 {
     foreach ( command; command_array )
     {
-        if ( line.startsWith( command ) )
+        if ( line.startsWith( command ~ ' ' ) )
         {
             return true;
         }
@@ -12960,22 +12960,17 @@ string GetFilteredScript(
         filtered_line_array,
         line_array;
 
-    line_array = script.split( '\n' );
+    line_array = ( script ~ "\n" ).split( ";\n" );
 
     foreach ( line; line_array )
     {
-        if ( !line.HasCommand( excluded_command_array ) )
+        if ( !line.strip().HasCommand( excluded_command_array ) )
         {
-            filtered_line_array ~= line;
-        }
-        else if ( filtered_line_array.length > 0
-                  && filtered_line_array[ $ - 1 ] == "" )
-        {
-            --filtered_line_array.length;
+            filtered_line_array ~= line.strip();
         }
     }
 
-    return filtered_line_array.join( '\n' );
+    return filtered_line_array.join( ";\n\n" ).replace( "\n\n\n", "\n\n" ).strip() ~ "\n";
 }
 
 // ~~
@@ -14211,7 +14206,7 @@ void main(
         else if ( option == "--exclude-command"
                   && argument_array.length >= 1 )
         {
-            ExcludedCommandArray ~= argument_array[ 0 ] ~ ' ';
+            ExcludedCommandArray ~= argument_array[ 0 ];
 
             argument_array = argument_array[ 1 .. $ ];
         }
