@@ -37,7 +37,7 @@ import std.random : uniform;
 import std.path : dirName;
 import std.regex : regex, replaceAll, Regex;
 import std.stdio : writeln;
-import std.string : capitalize, endsWith, format, indexOf, join, lastIndexOf, lineSplitter, replace, startsWith, split, strip, stripRight, toLower, toUpper;
+import std.string : capitalize, endsWith, format, indexOf, join, lastIndexOf, lineSplitter, replace, startsWith, split, strip, stripLeft, stripRight, toLower, toUpper;
 import std.uni : isAlpha;
 
 // -- TYPES
@@ -10721,7 +10721,7 @@ class SCHEMA
 
                         foreach ( ref property_text; property_part_array )
                         {
-                            column.SetPropertyValue( property_text.strip() );
+                            column.SetPropertyValue( property_text.stripLeft() );
                         }
 
                         if ( column.IsStored
@@ -10761,7 +10761,7 @@ class SCHEMA
 
                     foreach ( ref property_text; property_part_array )
                     {
-                        table.SetPropertyValue( property_text.strip() );
+                        table.SetPropertyValue( property_text.stripLeft() );
                     }
                 }
                 else if ( line_part_array.length != 1 )
@@ -10781,7 +10781,7 @@ class SCHEMA
 
                     foreach ( ref property_text; property_part_array )
                     {
-                        SetPropertyValue( property_text.strip() );
+                        SetPropertyValue( property_text.stripLeft() );
                     }
                 }
                 else if ( line_part_array.length != 1 )
