@@ -278,11 +278,11 @@ using System.Collections.Generic;
 
 @include file.bs
 
-<i>database_name</i> [| <i>database_property</i>, <i>database_property</i>, ...]
+<i>database name</i> [| <i>database property</i>, <i>database property</i>, ...]
 
-&nbsp;&nbsp;&nbsp;&nbsp;<i>table_name</i> [| <i>table_property</i>, <i>table_property</i>, ...]
+&nbsp;&nbsp;&nbsp;&nbsp;<i>table name</i> [| <i>table property</i>, <i>table property</i>, ...]
 
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i>column_name</i> : <i>column_type</i> [= "<i>column_template:filter:...|...</i>"] [| <i>column_property</i>, <i>column_property</i>, ...]
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i>column name</i> : <i>column type</i> [= "<i>column template:filter:...|...</i>"] [| <i>column property</i>, <i>column property</i>, ...]
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;..
 
 &nbsp;&nbsp;&nbsp;&nbsp;...
@@ -292,7 +292,7 @@ using System.Collections.Generic;
 
 <pre>
 [!]dropped
-count <i>row_count</i>
+count <i>row count</i>
 </pre>
 
 ### Table properties
@@ -303,31 +303,31 @@ count <i>row_count</i>
 [!]managed
 [!]sorted
 [!]dropped
-count <i>row_count</i>
+count <i>row count</i>
 
-[!]<i>custom_property_name</i>
-<i>custom_property_name</i> <i>custom_property_value</i>
+[!]<i>custom property name</i>
+<i>custom property name</i> <i>custom property value</i>
 </pre>
 
 ### Column template functions
 
 <pre>
-natural <i>minimum_value</i> <i>maximum_value</i> <i>digit_count</i>
-integer <i>minimum_value</i> <i>maximum_value</i>
-real <i>minimum_value</i> <i>maximum_value</i> [<i>precision</i>]
-date <i>minimum_year</i> <i>maximum_year</i>
-time <i>minimum_hour</i> <i>maximum_hour</i>
-blob <i>hexadecimal_digit_count</i>
+natural <i>minimum value</i> <i>maximum value</i> <i>digit count</i>
+integer <i>minimum value</i> <i>maximum value</i>
+real <i>minimum value</i> <i>maximum value</i> [<i>precision</i>]
+date <i>minimum year</i> <i>maximum year</i>
+time <i>minimum hour</i> <i>maximum hour</i>
+blob <i>hexadecimal digit count</i>
 tuid
 uuid
 isbn
-tag_list <i>minimum_word_count</i>  <i>maximum_word_count</i>
-english <i>minimum_sentence_count</i> <i>maximum_sentence_count</i> <i>minimum_word_count</i> <i>maximum_word_count</i>
-french <i>minimum_sentence_count</i> <i>maximum_sentence_count</i> <i>minimum_word_count</i> <i>maximum_word_count</i>
-german <i>minimum_sentence_count</i> <i>maximum_sentence_count</i> <i>minimum_word_count</i> <i>maximum_word_count</i>
-latin <i>minimum_sentence_count</i> <i>maximum_sentence_count</i> <i>minimum_word_count</i> <i>maximum_word_count</i>
-spanish <i>minimum_sentence_count</i> <i>maximum_sentence_count</i> <i>minimum_word_count</i> <i>maximum_word_count</i>
-name <i>minimum_letter_count</i> <i>maximum_letter_count</i>
+tag_list <i>minimum word count</i>  <i>maximum word count</i>
+english <i>minimum sentence count</i> <i>maximum sentence count</i> <i>minimum word count</i> <i>maximum word count</i>
+french <i>minimum sentence count</i> <i>maximum sentence count</i> <i>minimum word count</i> <i>maximum word count</i>
+german <i>minimum sentence count</i> <i>maximum sentence count</i> <i>minimum word count</i> <i>maximum word count</i>
+latin <i>minimum sentence count</i> <i>maximum sentence count</i> <i>minimum word count</i> <i>maximum word count</i>
+spanish <i>minimum sentence count</i> <i>maximum sentence count</i> <i>minimum word count</i> <i>maximum word count</i>
+name <i>minimum letter count</i> <i>maximum letter count</i>
 first_name
 last_name
 full_name
@@ -346,8 +346,8 @@ audio_file_name
 video_file_name
 file_name
 folder_path
-<i>column_name</i>
-<i>table_name.column_name</i>
+<i>column name</i>
+<i>table name</i>.<i>column name</i>
 </pre>
 
 ### Column template filters
@@ -356,39 +356,39 @@ folder_path
 floor [<i>precision</i>]
 ceil [<i>precision</i>]
 round [<i>precision</i>]
-add <i>column_name</i>
+add <i>column name</i>
 add <i>integer</i>
-add <i>minimum_integer</i> <i>maximum_integer</i>
+add <i>minimum integer</i> <i>maximum integer</i>
 add <i>real</i>
-add <i>minimum_real</i> <i>maximum_real</i>
-add_product <i>column_name or real</i> ...
+add <i>minimum real</i> <i>maximum real</i>
+add_product <i>column name or real</i> ...
 substract <i>integer</i>
-substract <i>minimum_integer</i> <i>maximum_integer</i>
+substract <i>minimum integer</i> <i>maximum integer</i>
 substract <i>real</i>
-substract <i>minimum_real</i> <i>maximum_real</i>
-substract <i>column_name</i>
-substract_product <i>column_name or real</i> ...
-multiply <i>column_name</i>
+substract <i>minimum real</i> <i>maximum real</i>
+substract <i>column name</i>
+substract_product <i>column name or real</i> ...
+multiply <i>column name</i>
 multiply <i>integer</i>
-multiply <i>minimum_integer</i> <i>maximum_integer</i>
+multiply <i>minimum integer</i> <i>maximum integer</i>
 multiply <i>real</i>
-multiply <i>minimum_real</i> <i>maximum_real</i>
-divide <i>column_name</i>
+multiply <i>minimum real</i> <i>maximum real</i>
+divide <i>column name</i>
 divide <i>integer</i>
-divide <i>minimum_integer</i> <i>maximum_integer</i>
+divide <i>minimum integer</i> <i>maximum integer</i>
 divide <i>real</i>
-divide <i>minimum_real</i> <i>maximum_real</i>
+divide <i>minimum real</i> <i>maximum real</i>
 set <i>value</i>
 prefix <i>separator</i>
 add_prefix <i>prefix</i>
 remove_prefix <i>prefix</i>
-replace_prefix <i>old_prefix</i> <i>new_content</i>
+replace_prefix <i>old prefix</i> <i>new content</i>
 suffix <i>separator</i>
 add_suffix <i>suffix</i>
 remove_suffix <i>suffix</i>
-replace_suffix <i>old_suffix</i> <i>new_suffix</i>
+replace_suffix <i>old suffix</i> <i>new suffix</i>
 remove <i>content</i>
-replace <i>old_content</i> <i>new_content</i>
+replace <i>old content</i> <i>new content</i>
 upper_case
 lower_case
 pascal_case
@@ -402,9 +402,9 @@ sentence_case
 locution_case
 slug_case
 plural
-fetch <i>table_name</i> <i>key_column_name</i> <i>value_column_name</i>
-if this|<i>column_name</i>|<i>value</i> =|!=|contains|!contains|has_prefix|!has_prefix|has_suffix|!has_suffix this|<i>column_name</i>|<i>value</i>
-switch this|<i>column_name</i>|<i>value</i> <i>old_value</i> <i>new_value</i> ...
+fetch <i>table name</i> <i>key column name</i> <i>value column name</i>
+if this|<i>column name</i>|<i>value</i> =|!=|contains|!contains|has_prefix|!has_prefix|has_suffix|!has_suffix this|<i>column name</i>|<i>value</i>
+switch this|<i>column name</i>|<i>value</i> <i>old value</i> <i>new value</i> ...
 </pre>
 
 ### Column template characters
@@ -436,26 +436,27 @@ static
 required
 incremented
 constrained
+linked <i>table name</i>
 optional
 exhaustive
-exhaustive <i>foreign_column_name</i> <i>sibling_column_name</i>
+exhaustive <i>foreign column name</i> <i>sibling column name</i>
 ascending [<i>order index</i>]
 descending [<i>order index</i>]
 generated
 updated
-capacity <i>maximum_character_count</i>
-precision <i>maximum_digit_count</i>
-sqlname <i>sql_column_name</i>
-cqlname <i>cql_column_name</i>
-goname <i>go_field_name</i>
-crystalname <i>crystal_field_name</i>
-csharpname <i>csharp_field_name</i>
-rustname <i>rust_field_name</i>
-count <i>minimum_element_count</i> <i>maximum_element_count</i>
-count <i>element_count</i>
+capacity <i>maximum character count</i>
+precision <i>maximum digit count</i>
+sqlname <i>sql column name</i>
+cqlname <i>cql column name</i>
+goname <i>go field name</i>
+crystalname <i>crystal field name</i>
+csharpname <i>csharp field name</i>
+rustname <i>rust field name</i>
+count <i>minimum element count</i> <i>maximum element count</i>
+count <i>element count</i>
 
-[!]<i>custom_property_name</i>
-<i>custom_property_name</i> <i>custom_property_value</i>
+[!]<i>custom property name</i>
+<i>custom property name</i> <i>custom property value</i>
 </pre>
 
 ### Field name suffixes
@@ -522,17 +523,17 @@ TIME
 TUID
 UUID
 BLOB
-<i>TABLE_NAME</i>.<i>ColumnName</i>
-TUPLE[ <i>FIELD_TYPE</i>, <i>FIELD_TYPE</i>, ... ]
-TUPLE[ <i>FieldName</i> : <i>FIELD_TYPE</i>, <i>FieldName</i> : <i>FIELD_TYPE</i>, ... ]
-LIST[ <i>ELEMENT_TYPE</i> ]
-LIST[ <i>ElementName</i> : <i>ELEMENT_TYPE</i> ]
-SET[ <i>ELEMENT_TYPE</i> ]
-SET[ <i>ElementName</i> : <i>ELEMENT_TYPE</i> ]
-MAP[ <i>KEY_TYPE</i>, <i>ELEMENT_TYPE</i> ]
-MAP[ <i>KeyName</i> : <i>KEY_TYPE</i>, <i>ElementName</i> : <i>ELEMENT_TYPE</i> ]
-ARRAY[ <i>ELEMENT_TYPE</i> ] | !stored
-POINTER[ <i>ELEMENT_TYPE</i> ] | !stored
+<i>table name</i>.<i>column name</i>
+TUPLE[ <i>field type</i>, <i>field type</i>, ... ]
+TUPLE[ <i>field name</i> : <i>field type</i>, <i>field name</i> : <i>field type</i>, ... ]
+LIST[ <i>element type</i> ]
+LIST[ <i>element name</i> : <i>element type</i> ]
+SET[ <i>element type</i> ]
+SET[ <i>element name</i> : <i>element type</i> ]
+MAP[ <i>key type</i>, <i>element type</i> ]
+MAP[ <i>key name</i> : <i>key type</i>, <i>element name</i> : <i>element type</i> ]
+ARRAY[ <i>element type</i> ] | !stored
+POINTER[ <i>element type</i> ] | !stored
 </pre>
 
 ## Data file syntax
@@ -540,11 +541,11 @@ POINTER[ <i>ELEMENT_TYPE</i> ] | !stored
 <pre>
 @include file.bd
 
-<i>table_name</i>
+<i>table name</i>
 
-&nbsp;&nbsp;&nbsp;&nbsp;<i>column_name</i> <i>column_name</i> ...
+&nbsp;&nbsp;&nbsp;&nbsp;<i>column name</i> <i>column name</i> ...
 
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i>column_value</i> ~ <i>column_value</i> ~ ...
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i>column value</i> ~ <i>column value</i> ~ ...
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;...
 
 &nbsp;&nbsp;&nbsp;&nbsp;...
@@ -720,8 +721,8 @@ POINTER[ <i>ELEMENT_TYPE</i> ] | !stored
 {#column_count#}
 {#stored_column_count#}
 
-{#<i>custom_property_name</i>#}
-{#?<i>custom_property_name</i>#}
+{#<i>custom property name</i>#}
+{#?<i>custom property name</i>#}
 
 {%name%}
 {%attribute%}
@@ -840,8 +841,8 @@ POINTER[ <i>ELEMENT_TYPE</i> ] | !stored
 {%is_last_incremented%}
 {%is_last_non_incremented%}
 
-{%<i>custom_property_name</i>%}
-{%?<i>custom_property_name</i>%}
+{%<i>custom property name</i>%}
+{%?<i>custom property name</i>%}
 
 %\%ignored tag
 <\#ignored tags#\>
