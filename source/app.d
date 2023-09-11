@@ -2145,7 +2145,7 @@ class TYPE
             }
             else if ( type_name == "UUID" )
             {
-                return "VARCHAR(36)";
+                return "UUID";
             }
             else if ( type_name == "BLOB" )
             {
@@ -6031,6 +6031,7 @@ class COLUMN
         IsRequired,
         IsIncremented,
         IsConstrained,
+        IsLinked,
         IsExhaustive,
         IsOptional,
         IsAscending,
@@ -6088,7 +6089,7 @@ class COLUMN
     string
         DefaultValueText,
         GeneratedValueText,
-        ConstrainedValueText;
+        LinkedValueText;
     long
         MinimumRandomCount,
         MaximumRandomCount;
@@ -6460,6 +6461,7 @@ class COLUMN
         PropertyValueMap[ "is_non_edited_non_key" ] = GetBooleanText( !IsEdited && !IsKey );
         PropertyValueMap[ "is_incremented" ] = GetBooleanText( IsIncremented );
         PropertyValueMap[ "is_constrained" ] = GetBooleanText( IsConstrained );
+        PropertyValueMap[ "is_linked" ] = GetBooleanText( IsLinked );
         PropertyValueMap[ "is_optional" ] = GetBooleanText( IsOptional );
         PropertyValueMap[ "is_first" ] = GetBooleanText( IsFirst );
         PropertyValueMap[ "is_first_key" ] = GetBooleanText( IsFirstKey );
@@ -6636,8 +6638,12 @@ class COLUMN
             }
             else if ( property_name == "constrained" )
             {
-                ConstrainedValueText = value_text;
                 IsConstrained = true;
+            }
+            else if ( property_name == "linked" )
+            {
+                IsLinked = true;
+                LinkedValueText = value_text;
             }
             else if ( property_name == "optional" )
             {
@@ -6895,10 +6901,10 @@ class COLUMN
             SqlPropertyArray ~= "primary key";
         }
 
-        if ( IsConstrained
+        if ( IsLinked
              && CommandFormat == "postgresql" )
         {
-            SqlPropertyArray ~= ConstrainedValueText;
+            SqlPropertyArray ~= "references " ~ LinkedValueText ~ " on delete cascade";
         }
 
         if ( IsGenerated
