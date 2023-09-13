@@ -1907,14 +1907,23 @@ class TYPE
 
     // ~~
 
-    bool IsCollection(
+    bool IsObject(
+        )
+    {
+        return BaseName == "OBJECT";
+    }
+
+    // ~~
+
+    bool IsCompound(
         )
     {
         return
             BaseName == "TUPLE"
             || BaseName == "LIST"
             || BaseName == "SET"
-            || BaseName == "MAP";
+            || BaseName == "MAP"
+            || BaseName == "OBJECT";
     }
 
     // ~~
@@ -2150,6 +2159,14 @@ class TYPE
             else if ( type_name == "BLOB" )
             {
                 return "BYTEA";
+            }
+            else if ( type_name == "TUPLE"
+                      || type_name == "LIST"
+                      || type_name == "SET"
+                      || type_name == "MAP"
+                      || type_name == "OBJECT" )
+            {
+                return "JSONB";
             }
             else
             {
@@ -2618,6 +2635,10 @@ class TYPE
                   || type_name == "MAP" )
         {
             return "array";
+        }
+        else if ( type_name == "OBJECT" )
+        {
+            return "object";
         }
         else
         {
@@ -4692,7 +4713,8 @@ class VALUE
 
             sql_text = "[" ~ sql_text ~ "]";
         }
-        else if ( type_name == "MAP" )
+        else if ( type_name == "MAP"
+                  || type_name == "OBJECT" )
         {
             foreach ( element_value_index, ref element_value; ElementValueArray )
             {
@@ -4715,7 +4737,8 @@ class VALUE
             = ( type_name == "TUPLE"
                 || type_name == "LIST"
                 || type_name == "SET"
-                || type_name == "MAP" );
+                || type_name == "MAP"
+                || type_name == "OBJECT" );
 
         if ( it_is_compound_value
              && !it_is_sub_value )
@@ -4731,7 +4754,14 @@ class VALUE
             }
             else if ( CommandFormat == "postgresql" )
             {
-                return "'" ~ sql_text.replace( "'", "''" ) ~ "'";
+                if ( it_is_compound_value )
+                {
+                    return "'" ~ sql_text.replace( "'", "''" ) ~ "'::JSONB";
+                }
+                else
+                {
+                    return "'" ~ sql_text.replace( "'", "''" ) ~ "'";
+                }
             }
         }
 
@@ -4833,7 +4863,8 @@ class VALUE
 
             cql_text = "{ " ~ cql_text ~ " }";
         }
-        else if ( type_name == "MAP" )
+        else if ( type_name == "MAP"
+                  || type_name == "OBJECT" )
         {
             foreach ( element_value_index, ref element_value; ElementValueArray )
             {
@@ -4931,7 +4962,8 @@ class VALUE
 
             json_text = "[" ~ json_text ~ "]";
         }
-        else if ( type_name == "MAP" )
+        else if ( type_name == "MAP"
+                  || type_name == "OBJECT" )
         {
             foreach ( element_value_index, ref element_value; ElementValueArray )
             {
@@ -4978,7 +5010,8 @@ class VALUE
         else if ( type_name == "TUPLE"
                   || type_name == "LIST"
                   || type_name == "SET"
-                  || type_name == "MAP" )
+                  || type_name == "MAP"
+                  || type_name == "OBJECT" )
         {
             return GetJsonText().GetCsvText();
         }
@@ -5064,7 +5097,8 @@ class VALUE
 
             php_text = "array( " ~ php_text ~ " )";
         }
-        else if ( type_name == "MAP" )
+        else if ( type_name == "MAP"
+                  || type_name == "OBJECT" )
         {
             foreach ( element_value_index, ref element_value; ElementValueArray )
             {
@@ -5167,7 +5201,8 @@ class VALUE
 
             javascript_text = "[ " ~ javascript_text ~ " ]";
         }
-        else if ( type_name == "MAP" )
+        else if ( type_name == "MAP"
+                  || type_name == "OBJECT" )
         {
             foreach ( element_value_index, ref element_value; ElementValueArray )
             {
@@ -6439,7 +6474,8 @@ class COLUMN
         PropertyValueMap[ "is_list" ] = GetBooleanText( Type.ActualType.IsList() );
         PropertyValueMap[ "is_set" ] = GetBooleanText( Type.ActualType.IsSet() );
         PropertyValueMap[ "is_map" ] = GetBooleanText( Type.ActualType.IsMap() );
-        PropertyValueMap[ "is_collection" ] = GetBooleanText( Type.ActualType.IsCollection() );
+        PropertyValueMap[ "is_object" ] = GetBooleanText( Type.ActualType.IsObject() );
+        PropertyValueMap[ "is_compound" ] = GetBooleanText( Type.ActualType.IsCompound() );
         PropertyValueMap[ "is_key" ] = GetBooleanText( IsKey );
         PropertyValueMap[ "is_stored" ] = GetBooleanText( IsStored );
         PropertyValueMap[ "is_non_stored" ] = GetBooleanText( !IsStored );

@@ -532,6 +532,7 @@ SET[ <i>element type</i> ]
 SET[ <i>element name</i> : <i>element type</i> ]
 MAP[ <i>key type</i>, <i>element type</i> ]
 MAP[ <i>key name</i> : <i>key type</i>, <i>element name</i> : <i>element type</i> ]
+OBJECT
 ARRAY[ <i>element type</i> ] | !stored
 POINTER[ <i>element type</i> ] | !stored
 </pre>
@@ -772,7 +773,8 @@ POINTER[ <i>element type</i> ] | !stored
 {%is_list%}
 {%is_set%}
 {%is_map%}
-{%is_collection%}
+{%is_object%}
+{%is_compound%}
 {%is_key%}
 {%is_non_key%}
 {%is_stored%}
