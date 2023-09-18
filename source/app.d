@@ -25,7 +25,7 @@ import mildew.environment : Environment;
 import mildew.exceptions : ScriptCompileException, ScriptRuntimeException;
 import mildew.interpreter : Interpreter;
 import mildew.types : NativeFunctionError, ScriptAny, ScriptFunction;
-import seed : Abort, AddPrefix, AddSuffix, EndsByVowel, GetBooleanText, GetCsvText, GetExecutablePath, GetFileLabel, GetFileName, GetFolderPath, GetFolderPath, GetInteger, GetKebabCaseText, GetMajorCaseText, GetNatural, GetPascalCaseText, GetPrefix, GetReal, GetSlugCaseText, GetSnakeCaseText, GetSuffix, IsInteger, IsLinux, IsMacOs, IsWindows, PrintError, PrintWarning, ReadText, RemovePrefix, RemoveSuffix, ReplacePrefix, ReplaceSuffix, StartsByConsonant, StartsByVowel, WriteText;
+import seed : Abort, AddPrefix, AddSuffix, EndsByVowel, GetBooleanText, GetCsvText, GetExecutablePath, GetFileLabel, GetFileName, GetFolderPath, GetFolderPath, GetInteger, GetKebabCaseText, GetMajorCaseText, GetNatural, GetPascalCaseText, GetPrefix, GetReal, GetSearchCaseText, GetSlugCaseText, GetSnakeCaseText, GetSuffix, GetUnaccentedText, IsInteger, IsLinux, IsMacOs, IsWindows, PrintError, PrintWarning, ReadText, RemovePrefix, RemoveSuffix, ReplacePrefix, ReplaceSuffix, StartsByConsonant, StartsByVowel, WriteText;
 import std.algorithm : countUntil, sort;
 import std.ascii : isDigit, isLower, isUpper;
 import std.base64 : Base64URLNoPadding;
@@ -3900,6 +3900,16 @@ class TYPE
                             {
                                 template_part = template_part.replace( filter_argument_array[ 0 ], filter_argument_array[ 1 ] );
                             }
+                            else if ( filter_name == "plural"
+                                      && filter_argument_count == 0 )
+                            {
+                                template_part = template_part.GetPluralText();
+                            }
+                            else if ( filter_name == "unaccented"
+                                      && filter_argument_count == 0 )
+                            {
+                                template_part = template_part.GetUnaccentedText();
+                            }
                             else if ( filter_name == "upper_case"
                                       && filter_argument_count == 0 )
                             {
@@ -3960,10 +3970,10 @@ class TYPE
                             {
                                 template_part = template_part.GetSlugCaseText();
                             }
-                            else if ( filter_name == "plural"
+                            else if ( filter_name == "search_case"
                                       && filter_argument_count == 0 )
                             {
-                                template_part = template_part.GetPluralText();
+                                template_part = template_part.GetSearchCaseText();
                             }
                             else if ( filter_name == "fetch"
                                       && filter_argument_count == 3 )
@@ -10738,7 +10748,10 @@ class SCHEMA
 
         foreach ( line; line_array )
         {
-            writeln( line );
+            if ( VerboseOptionIsEnabled )
+            {
+                writeln( line );
+            }
 
             stripped_line = line.strip();
 
@@ -10780,11 +10793,15 @@ class SCHEMA
                     }
                     else if ( line_part_array.length != 1 )
                     {
+                        writeln( line );
+
                         Abort( "Invalid column : " ~ stripped_line );
                     }
                 }
                 else
                 {
+                    writeln( line );
+
                     Abort( "Invalid column : " ~ stripped_line );
                 }
             }
@@ -10808,6 +10825,8 @@ class SCHEMA
                 }
                 else if ( line_part_array.length != 1 )
                 {
+                    writeln( line );
+
                     Abort( "Invalid table : " ~ stripped_line );
                 }
             }
@@ -10828,6 +10847,8 @@ class SCHEMA
                 }
                 else if ( line_part_array.length != 1 )
                 {
+                    writeln( line );
+
                     Abort( "Invalid schema : " ~ stripped_line );
                 }
             }
@@ -10971,7 +10992,11 @@ class SCHEMA
               ++line_index )
         {
             line = line_array[ line_index ];
-            writeln( line );
+
+            if ( VerboseOptionIsEnabled )
+            {
+                writeln( line );
+            }
 
             stripped_line = line.strip();
 
@@ -10980,6 +11005,8 @@ class SCHEMA
                 if ( table is null
                      || column_array is null )
                 {
+                    writeln( line );
+
                     Abort( "Invalid line : " ~ stripped_line );
                 }
 
@@ -10989,7 +11016,11 @@ class SCHEMA
 
                     if ( next_line.startsWith( "         " ) )
                     {
-                        writeln( next_line );
+                        if ( VerboseOptionIsEnabled )
+                        {
+                            writeln( next_line );
+                        }
+
                         stripped_line ~= next_line.strip();
 
                         ++line_index;
@@ -11025,6 +11056,8 @@ class SCHEMA
                         ++column_index;
                     }
 
+                    writeln( line );
+
                     Abort( "Invalid value count (" ~ data_value.SubValueArray.length.to!string() ~ "/" ~ column_array.length.to!string() ~ ") : " ~ data_value.GetText() );
                 }
 
@@ -11053,6 +11086,8 @@ class SCHEMA
             {
                 if ( table is null )
                 {
+                    writeln( line );
+
                     Abort( "Invalid line : " ~ stripped_line );
                 }
 
@@ -11065,6 +11100,8 @@ class SCHEMA
 
                     if ( column is null )
                     {
+                        writeln( line );
+
                         Abort( "Invalid column name : " ~ column_name );
                     }
 
@@ -11078,6 +11115,8 @@ class SCHEMA
 
                 if ( table is null )
                 {
+                    writeln( line );
+
                     Abort( "Invalid table name : " ~ table_name );
                 }
             }
@@ -12780,7 +12819,8 @@ bool
     CqlOptionIsEnabled,
     DropIsForced,
     DropIsIgnored,
-    SqlOptionIsEnabled;
+    SqlOptionIsEnabled,
+    VerboseOptionIsEnabled;
 string
     CommandFormat,
     CommandIdentifierQuote,
@@ -14149,6 +14189,7 @@ void main(
     OutputFormatArray = null;
     DropIsIgnored = false;
     DropIsForced = false;
+    VerboseOptionIsEnabled = false;
 
     while ( argument_array.length >= 1
             && argument_array[ 0 ].startsWith( "--" ) )
@@ -14251,6 +14292,10 @@ void main(
             ExcludedCommandArray ~= argument_array[ 0 ];
 
             argument_array = argument_array[ 1 .. $ ];
+        }
+        else if ( option == "--verbose" )
+        {
+            VerboseOptionIsEnabled = true;
         }
         else
         {

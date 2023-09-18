@@ -389,6 +389,8 @@ remove_suffix <i>suffix</i>
 replace_suffix <i>old suffix</i> <i>new suffix</i>
 remove <i>content</i>
 replace <i>old content</i> <i>new content</i>
+plural
+unaccented
 upper_case
 lower_case
 pascal_case
@@ -401,7 +403,7 @@ style_case
 sentence_case
 locution_case
 slug_case
-plural
+search_case
 fetch <i>table name</i> <i>key column name</i> <i>value column name</i>
 if this|<i>column name</i>|<i>value</i> =|!=|contains|!contains|has_prefix|!has_prefix|has_suffix|!has_suffix this|<i>column name</i>|<i>value</i>
 switch this|<i>column name</i>|<i>value</i> <i>old value</i> <i>new value</i> ...
@@ -922,6 +924,7 @@ basil [options] script_file.bs [script_file.bs|bd|bt|csv ...]
 --ignore-drop : ignore drop command
 --force-drop : force drop command
 --exclude-command <command_name>
+--verbose : show processed content
 ```
 
 The `--mysql`, `--postgresql` and `--cassandra` are mutually exclusive.
