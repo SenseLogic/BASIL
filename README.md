@@ -347,6 +347,7 @@ video_file_name
 file_name
 folder_path
 <i>column name</i>
+.<i>column name</i>
 <i>table name</i>.<i>column name</i>
 </pre>
 

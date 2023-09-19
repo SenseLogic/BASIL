@@ -6319,6 +6319,11 @@ class COLUMN
         string column_name
         )
     {
+        if ( column_name.startsWith( '.' ) )
+        {
+            column_name = column_name[ 1 .. $ ];
+        }
+
         foreach ( column; Table.ColumnArray )
         {
             if ( column.IsStored
@@ -6340,6 +6345,11 @@ class COLUMN
     {
         COLUMN
             foreign_column;
+
+        if ( column_name.startsWith( '.' ) )
+        {
+            column_name = column_name[ 1 .. $ ];
+        }
 
         foreach ( column; Table.ColumnArray )
         {
