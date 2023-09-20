@@ -303,6 +303,7 @@ count <i>row count</i>
 [!]managed
 [!]sorted
 [!]dropped
+[!]skipped
 count <i>row count</i>
 
 [!]<i>custom property name</i>
@@ -426,6 +427,7 @@ switch this|<i>column name</i>|<i>value</i> <i>old value</i> <i>new value</i> ..
 [!]stored
 [!]added
 [!]edited
+[!]checked
 key
 partitioned
 clustered

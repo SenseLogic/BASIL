@@ -5669,6 +5669,7 @@ class VALUE
             prior_title,
             template_value;
         ulong
+            iteration_count,
             random_natural;
 
         do
@@ -6012,9 +6013,19 @@ class VALUE
             {
                 Text.length = Type.Capacity;
             }
+
+            if ( iteration_count > 1000 )
+            {
+                writeln( "Non unique value : ", GetText() );
+
+                iteration_count = 0;
+            }
+
+            ++iteration_count;
         }
         while ( !it_is_sub_value
                 && Type.Column.IsUnique
+                && Type.Column.IsChecked
                 && Type.Column.HasPriorValue( this, row_index ) );
     }
 }
@@ -6062,6 +6073,7 @@ class COLUMN
         IsStored,
         IsAdded,
         IsEdited,
+        IsChecked,
         IsUnique,
         IsKey,
         IsPartitioned,
@@ -6202,6 +6214,7 @@ class COLUMN
         IsStored = table.IsStored;
         IsAdded = table.IsStored;
         IsEdited = table.IsEdited;
+        IsChecked = true;
         MinimumRandomCount = 0;
         MaximumRandomCount = 0;
     }
@@ -6515,6 +6528,7 @@ class COLUMN
         PropertyValueMap[ "is_non_edited_key" ] = GetBooleanText( !IsEdited && IsKey );
         PropertyValueMap[ "is_edited_non_key" ] = GetBooleanText( IsEdited && !IsKey );
         PropertyValueMap[ "is_non_edited_non_key" ] = GetBooleanText( !IsEdited && !IsKey );
+        PropertyValueMap[ "is_checked" ] = GetBooleanText( IsChecked );
         PropertyValueMap[ "is_incremented" ] = GetBooleanText( IsIncremented );
         PropertyValueMap[ "is_constrained" ] = GetBooleanText( IsConstrained );
         PropertyValueMap[ "is_linked" ] = GetBooleanText( IsLinked );
@@ -6638,6 +6652,11 @@ class COLUMN
                       && value_text_array.length == 2 )
             {
                 IsEdited = ( value_text_array[ 1 ] != "false" );
+            }
+            else if ( property_name == "checked"
+                      && value_text_array.length == 2 )
+            {
+                IsChecked = ( value_text_array[ 1 ] != "false" );
             }
             else if ( property_name == "unique" )
             {
@@ -7130,6 +7149,7 @@ class TABLE
         IsManaged,
         IsSorted,
         IsDropped,
+        IsSkipped,
         IsFirst,
         IsFirstStored,
         IsFirstNonStored,
@@ -9900,6 +9920,11 @@ class TABLE
             {
                 IsDropped = ( value_text_array[ 1 ] != "false" );
             }
+            else if ( value_text_array[ 0 ] == "skipped"
+                      && value_text_array.length == 2 )
+            {
+                IsSkipped = ( value_text_array[ 1 ] != "false" );
+            }
             else if ( value_text_array[ 0 ] == "count"
                       && value_text_array.length == 2 )
             {
@@ -11395,7 +11420,8 @@ class SCHEMA
         long
             foreign_key_index;
 
-        if ( table.IsStored )
+        if ( table.IsStored
+             && !table.IsSkipped )
         {
             if ( ( table.IsDropped && !DropIsIgnored )
                  || DropIsForced )
@@ -11560,7 +11586,8 @@ class SCHEMA
         string
             sql_data_file_text;
 
-        if ( table.IsStored )
+        if ( table.IsStored
+             && !table.IsSkipped )
         {
             foreach ( row_index; 0 .. table.RowCount )
             {
@@ -11670,7 +11697,8 @@ class SCHEMA
 
         foreach ( table; sorted_table_array )
         {
-            if ( table.IsStored )
+            if ( table.IsStored
+                 && !table.IsSkipped )
             {
                 sql_dump_file_text
                     ~= "create table " ~ CommandIdentifierQuote ~ table.Name ~ CommandIdentifierQuote ~ " (\n";
@@ -11768,7 +11796,8 @@ class SCHEMA
 
         foreach ( table; sorted_table_array )
         {
-            if ( table.IsStored )
+            if ( table.IsStored
+                 && !table.IsSkipped )
             {
                 foreach ( ref column; table.ColumnArray )
                 {
@@ -11889,7 +11918,8 @@ class SCHEMA
             cluster_key,
             partition_key;
 
-        if ( table.IsStored )
+        if ( table.IsStored
+             && !table.IsSkipped )
         {
             if ( ( table.IsDropped && !DropIsIgnored )
                  || DropIsForced )
@@ -11987,7 +12017,8 @@ class SCHEMA
         string
             cql_data_file_text;
 
-        if ( table.IsStored )
+        if ( table.IsStored
+             && !table.IsSkipped )
         {
             foreach ( row_index; 0 .. table.RowCount )
             {
@@ -12097,7 +12128,8 @@ class SCHEMA
 
         foreach ( table; TableArray )
         {
-            if ( table.IsStored )
+            if ( table.IsStored
+                 && !table.IsSkipped )
             {
                 json_data_file_text ~= table.JavascriptAttribute ~ "List=[";
 
@@ -12152,7 +12184,8 @@ class SCHEMA
 
         foreach ( table; TableArray )
         {
-            if ( table.IsStored )
+            if ( table.IsStored
+                 && !table.IsSkipped )
             {
                 csv_data_file_path = base_file_path ~ "_" ~ table.Name.toLower() ~ "_data.csv";
                 csv_data_file_text = "";
@@ -12308,7 +12341,8 @@ class SCHEMA
 
         foreach ( table_index, ref table; TableArray )
         {
-            if ( table.IsStored )
+            if ( table.IsStored
+                 && !table.IsSkipped )
             {
                 generis_query_file_text
                     ~= table.GetAddDatabaseObjectGenerisCode()
@@ -12346,7 +12380,8 @@ class SCHEMA
 
         foreach ( table_index, ref table; TableArray )
         {
-            if ( table.IsStored )
+            if ( table.IsStored
+                 && !table.IsSkipped )
             {
                 generis_response_file_text
                     ~= table.GetWriteResponseGenerisCode();
@@ -12374,7 +12409,8 @@ class SCHEMA
 
         foreach ( table_index, ref table; TableArray )
         {
-            if ( table.IsStored )
+            if ( table.IsStored
+                 && !table.IsSkipped )
             {
                 generis_request_file_text
                     ~= table.GetHandleAddRequestGenerisCode()
@@ -12414,7 +12450,8 @@ class SCHEMA
 
         foreach ( table_index, ref table; TableArray )
         {
-            if ( table.IsStored )
+            if ( table.IsStored
+                 && !table.IsSkipped )
             {
                 generis_route_file_text
                     ~= table.GetRouteRequestGenerisCode();
@@ -12497,7 +12534,8 @@ class SCHEMA
 
         foreach ( table_index, ref table; TableArray )
         {
-            if ( table.IsStored )
+            if ( table.IsStored
+                 && !table.IsSkipped )
             {
                 phoenix_model_file_path = phoenix_folder_path ~ table.PhpVariable ~ ".phx";
 
