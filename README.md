@@ -19,6 +19,8 @@ Database designer and filler.
     *   Cibyl (types)
     *   Crystal (types)
     *   C# (types)
+    *   Dart (types)
+    *   Javascript (types)
     *   Rust (types)
 
 ## Sample SQL schema file
@@ -299,11 +301,11 @@ count <i>row count</i>
 
 <pre>
 [!]stored
+[!]saved
 [!]edited
 [!]managed
 [!]sorted
 [!]dropped
-[!]skipped
 count <i>row count</i>
 
 [!]<i>custom property name</i>
@@ -438,6 +440,7 @@ mapped
 accessed
 processed
 static
+private
 required
 incremented
 constrained
@@ -922,8 +925,9 @@ basil [options] script_file.bs [script_file.bs|bd|bt|csv ...]
 --phoenix : generate Phoenix query files
 --crystal : generate a Crystal type file
 --csharp : generate a C# type file
---rust : generate a Rust type file
+--dart : generate Dart type files
 --javascript : generate a Javascript type file
+--rust : generate a Rust type file
 --ignore-drop : ignore drop command
 --force-drop : force drop command
 --exclude-command <command_name>

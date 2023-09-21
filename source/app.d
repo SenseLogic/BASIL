@@ -3188,6 +3188,236 @@ class TYPE
 
     // ~~
 
+    string GetSubTypeDartText(
+        )
+    {
+        string
+            sub_types_csharp_text;
+
+        foreach ( sub_type; ActualType.SubTypeArray )
+        {
+            if ( sub_types_csharp_text != "" )
+            {
+                sub_types_csharp_text ~= ", ";
+            }
+
+            sub_types_csharp_text ~= sub_type.GetDartText();
+        }
+
+        return sub_types_csharp_text;
+    }
+
+    // ~~
+
+    string GetDartText(
+        )
+    {
+        string
+            type_name;
+
+        type_name = ActualType.BaseName;
+
+        if ( type_name == "BOOL" )
+        {
+            return "bool";
+        }
+        else if ( type_name == "INT8"
+                  || type_name == "UINT8"
+                  || type_name == "INT16"
+                  || type_name == "UINT16"
+                  || type_name == "INT32"
+                  || type_name == "UINT32"
+                  || type_name == "INT64"
+                  || type_name == "UINT64" )
+        {
+            return "int";
+        }
+        else if ( type_name == "FLOAT32"
+                  || type_name == "FLOAT64" )
+        {
+            return "double";
+        }
+        else if ( type_name == "STRING"
+                  || type_name == "STRING8"
+                  || type_name == "STRING16"
+                  || type_name == "STRING24"
+                  || type_name == "STRING32" )
+        {
+            return "String";
+        }
+        else if ( type_name == "TIMESTAMP"
+                  || type_name == "DATETIME"
+                  || type_name == "DATE"
+                  || type_name == "TIME" )
+        {
+            return "DateTime";
+        }
+        else if ( type_name == "TUID"
+                  || type_name == "UUID"
+                  || type_name == "BLOB" )
+        {
+            return "String";
+        }
+        else if ( type_name == "POINTER" )
+        {
+            return GetSubTypeDartText();
+        }
+        else if ( type_name == "ARRAY" )
+        {
+            return "List<" ~ GetSubTypeDartText() ~ ">";
+        }
+        else if ( type_name == "TUPLE" )
+        {
+            return "Tuple<" ~ GetSubTypeDartText() ~ ">";
+        }
+        else if ( type_name == "LIST" )
+        {
+            return "List<" ~ GetSubTypeDartText() ~ ">";
+        }
+        else if ( type_name == "SET" )
+        {
+            return "Set<" ~ GetSubTypeDartText() ~ ">";
+        }
+        else if ( type_name == "MAP" )
+        {
+            return "Map<" ~ GetSubTypeDartText() ~ ">";
+        }
+        else
+        {
+            return Name;
+        }
+    }
+
+    // ~~
+
+    string GetSubTypeDartAttributeText(
+        )
+    {
+        string
+            sub_types_go_text;
+
+        foreach ( sub_type; ActualType.SubTypeArray )
+        {
+            sub_types_go_text ~= sub_type.GetDartAttributeText();
+        }
+
+        return sub_types_go_text;
+    }
+
+    // ~~
+
+    string GetDartAttributeText(
+        )
+    {
+        string
+            type_name;
+
+        type_name = ActualType.BaseName;
+
+        if ( type_name == "BOOL" )
+        {
+            return "Bool";
+        }
+        else if ( type_name == "INT8" )
+        {
+            return "Int8";
+        }
+        else if ( type_name == "UINT8" )
+        {
+            return "Uint8";
+        }
+        else if ( type_name == "INT16" )
+        {
+            return "Int16";
+        }
+        else if ( type_name == "UINT16" )
+        {
+            return "Uint16";
+        }
+        else if ( type_name == "INT32" )
+        {
+            return "Int32";
+        }
+        else if ( type_name == "UINT32" )
+        {
+            return "Uint32";
+        }
+        else if ( type_name == "INT64" )
+        {
+            return "Int64";
+        }
+        else if ( type_name == "UINT64" )
+        {
+            return "Uint64";
+        }
+        else if ( type_name == "FLOAT32" )
+        {
+            return "Float32";
+        }
+        else if ( type_name == "FLOAT64"
+                  || type_name == "DECIMAL" )
+        {
+            return "Float64";
+        }
+        else if ( type_name == "STRING"
+                  || type_name == "STRING8"
+                  || type_name == "STRING16"
+                  || type_name == "STRING24"
+                  || type_name == "STRING32" )
+        {
+            return "String";
+        }
+        else if ( type_name == "TIMESTAMP"
+                  || type_name == "DATETIME"
+                  || type_name == "DATE"
+                  || type_name == "TIME" )
+        {
+            return "DateTime";
+        }
+        else if ( type_name == "TUID" )
+        {
+            return "String";
+        }
+        else if ( type_name == "UUID" )
+        {
+            return "Uuid";
+        }
+        else if ( type_name == "BLOB" )
+        {
+            return "String";
+        }
+        else if ( type_name == "POINTER" )
+        {
+            return GetSubTypeDartAttributeText() ~ "Pointer";
+        }
+        else if ( type_name == "ARRAY" )
+        {
+            return GetSubTypeDartAttributeText() ~ "Array";
+        }
+        else if ( type_name == "TUPLE" )
+        {
+            return GetSubTypeDartAttributeText() ~ "Tuple";
+        }
+        else if ( type_name == "LIST" )
+        {
+            return GetSubTypeDartAttributeText() ~ "List";
+        }
+        else if ( type_name == "SET" )
+        {
+            return GetSubTypeDartAttributeText() ~ "Set";
+        }
+        else if ( type_name == "MAP" )
+        {
+            return GetSubTypeDartAttributeText() ~ "Map";
+        }
+        else
+        {
+            return Name.GetAttributeCaseText();
+        }
+    }
+
+    // ~~
+
     string GetSubTypeRustText(
         )
     {
@@ -6085,6 +6315,7 @@ class COLUMN
         IsAccessed,
         IsProcessed,
         IsStatic,
+        IsPrivate,
         IsRequired,
         IsIncremented,
         IsConstrained,
@@ -6193,12 +6424,16 @@ class COLUMN
         CsharpType,
         CsharpAttribute,
         CsharpVariable,
-        RustName,
-        RustType,
+        DartName,
+        DartType,
+        DartAttribute,
+        DartVariable,
         JavascriptName,
         JavascriptAttribute,
         JavascriptVariable,
-        JavascriptDefault;
+        JavascriptDefault,
+        RustName,
+        RustType;
 
     // -- CONSTRUCTORS
 
@@ -6484,12 +6719,16 @@ class COLUMN
         PropertyValueMap[ "csharp_type" ] = CsharpType;
         PropertyValueMap[ "csharp_attribute" ] = CsharpAttribute;
         PropertyValueMap[ "csharp_variable" ] = CsharpVariable;
-        PropertyValueMap[ "rust_name" ] = RustName;
-        PropertyValueMap[ "rust_type" ] = RustType;
+        PropertyValueMap[ "dart_name" ] = DartName;
+        PropertyValueMap[ "dart_type" ] = DartType;
+        PropertyValueMap[ "dart_attribute" ] = DartAttribute;
+        PropertyValueMap[ "dart_variable" ] = DartVariable;
         PropertyValueMap[ "javascript_name" ] = JavascriptName;
         PropertyValueMap[ "javascript_attribute" ] = JavascriptAttribute;
         PropertyValueMap[ "javascript_variable" ] = JavascriptVariable;
         PropertyValueMap[ "javascript_default" ] = JavascriptDefault;
+        PropertyValueMap[ "rust_name" ] = RustName;
+        PropertyValueMap[ "rust_type" ] = RustType;
         PropertyValueMap[ "is_boolean" ] = GetBooleanText( Type.ActualType.IsBoolean() );
         PropertyValueMap[ "is_natural" ] = GetBooleanText( Type.ActualType.IsNatural() );
         PropertyValueMap[ "is_integer" ] = GetBooleanText( Type.ActualType.IsInteger() );
@@ -6702,6 +6941,14 @@ class COLUMN
             {
                 IsStatic = true;
             }
+            else if ( property_name == "private" )
+            {
+                IsPrivate = true;
+            }
+            else if ( property_name == "private" )
+            {
+                IsPrivate = true;
+            }
             else if ( property_name == "required" )
             {
                 IsRequired = true;
@@ -6807,15 +7054,20 @@ class COLUMN
             {
                 CsharpName = value_text_array[ 1 ];
             }
-            else if ( property_name == "rustname"
+            else if ( property_name == "dartname"
                       && value_text_array.length == 2 )
             {
-                RustName = value_text_array[ 1 ];
+                DartName = value_text_array[ 1 ];
             }
             else if ( property_name == "javascriptname"
                       && value_text_array.length == 2 )
             {
                 JavascriptName = value_text_array[ 1 ];
+            }
+            else if ( property_name == "rustname"
+                      && value_text_array.length == 2 )
+            {
+                RustName = value_text_array[ 1 ];
             }
             else if ( property_name == "count"
                       && value_text_array.length == 2 )
@@ -6907,14 +7159,19 @@ class COLUMN
             CsharpName = Name;
         }
 
-        if ( RustName == "" )
+        if ( DartName == "" )
         {
-            RustName = Name.GetVariableCaseText();
+            DartName = Name;
         }
 
         if ( JavascriptName == "" )
         {
             JavascriptName = Name;
+        }
+
+        if ( RustName == "" )
+        {
+            RustName = Name.GetVariableCaseText();
         }
 
         SqlType = Type.GetSqlText( IsIncremented );
@@ -6950,10 +7207,13 @@ class COLUMN
         CsharpType = Type.GetCsharpText();
         CsharpAttribute = Type.GetCsharpAttributeText();
         CsharpVariable = CsharpName.GetVariableCaseText();
-        RustType = Type.GetRustText();
+        DartType = Type.GetDartText();
+        DartAttribute = Type.GetDartAttributeText();
+        DartVariable = DartName.GetVariableCaseText();
         JavascriptAttribute = JavascriptName.GetAttributeCaseText();
         JavascriptVariable = JavascriptName.GetVariableCaseText();
         JavascriptDefault = DefaultValue.GetJavascriptText();
+        RustType = Type.GetRustText();
 
         if ( IsKey || IsRequired )
         {
@@ -7134,9 +7394,12 @@ class TABLE
         CsharpType,
         CsharpAttribute,
         CsharpVariable,
-        RustType,
+        DartType,
+        DartAttribute,
+        DartVariable,
         JavascriptType,
         JavascriptAttribute,
+        RustType,
         KeyAttribute,
         KeyVariable;
     string[]
@@ -7145,11 +7408,11 @@ class TABLE
         ColumnArray;
     bool
         IsStored,
+        IsSaved,
         IsEdited,
         IsManaged,
         IsSorted,
         IsDropped,
-        IsSkipped,
         IsFirst,
         IsFirstStored,
         IsFirstNonStored,
@@ -7176,10 +7439,12 @@ class TABLE
         CybilTypeDeclaration,
         CsharpAttributeDeclaration,
         CsharpTypeDeclaration,
-        RustAttributeDeclaration,
-        RustTypeDeclaration,
+        DartAttributeDeclaration,
+        DartTypeDeclaration,
         JavascriptAttributeDeclaration,
-        JavascriptTypeDeclaration;
+        JavascriptTypeDeclaration,
+        RustAttributeDeclaration,
+        RustTypeDeclaration;
 
     // -- CONSTRUCTORS
 
@@ -7207,10 +7472,14 @@ class TABLE
         CsharpType = GenericType;
         CsharpAttribute = GenericAttribute;
         CsharpVariable = GenericVariable;
-        RustType = GenericType;
+        DartType = GenericType;
+        DartAttribute = GenericAttribute;
+        DartVariable = GenericVariable;
         JavascriptType = GenericType;
         JavascriptAttribute = GenericAttribute;
+        RustType = GenericType;
         IsStored = true;
+        IsSaved = true;
         IsEdited = true;
         ValueCount = 0;
         RowCount = schema.RowCount;
@@ -9812,9 +10081,12 @@ class TABLE
         PropertyValueMap[ "csharp_type" ] = CsharpType;
         PropertyValueMap[ "csharp_attribute" ] = CsharpAttribute;
         PropertyValueMap[ "csharp_variable" ] = CsharpVariable;
-        PropertyValueMap[ "rust_type" ] = RustType;
+        PropertyValueMap[ "dart_type" ] = DartType;
+        PropertyValueMap[ "dart_attribute" ] = DartAttribute;
+        PropertyValueMap[ "dart_variable" ] = DartVariable;
         PropertyValueMap[ "javascript_type" ] = JavascriptType;
         PropertyValueMap[ "javascript_attribute" ] = JavascriptAttribute;
+        PropertyValueMap[ "rust_type" ] = RustType;
         PropertyValueMap[ "key_attribute" ] = KeyAttribute;
         PropertyValueMap[ "key_variable" ] = KeyVariable;
         PropertyValueMap[ "go_attribute_declaration" ] = GoAttributeDeclaration;
@@ -9827,6 +10099,8 @@ class TABLE
         PropertyValueMap[ "cibyl_type_declaration" ] = CybilTypeDeclaration;
         PropertyValueMap[ "csharp_attribute_declaration" ] = CsharpAttributeDeclaration;
         PropertyValueMap[ "csharp_type_declaration" ] = CsharpTypeDeclaration;
+        PropertyValueMap[ "dart_attribute_declaration" ] = DartAttributeDeclaration;
+        PropertyValueMap[ "dart_type_declaration" ] = DartTypeDeclaration;
         PropertyValueMap[ "javascript_attribute_declaration" ] = JavascriptAttributeDeclaration;
         PropertyValueMap[ "javascript_type_declaration" ] = JavascriptTypeDeclaration;
         PropertyValueMap[ "rust_attribute_declaration" ] = RustAttributeDeclaration;
@@ -9900,6 +10174,11 @@ class TABLE
             {
                 IsStored = ( value_text_array[ 1 ] != "false" );
             }
+            else if ( value_text_array[ 0 ] == "saved"
+                      && value_text_array.length == 2 )
+            {
+                IsSaved = ( value_text_array[ 1 ] != "false" );
+            }
             else if ( property_name == "edited"
                       && value_text_array.length == 2 )
             {
@@ -9919,11 +10198,6 @@ class TABLE
                       && value_text_array.length == 2 )
             {
                 IsDropped = ( value_text_array[ 1 ] != "false" );
-            }
-            else if ( value_text_array[ 0 ] == "skipped"
-                      && value_text_array.length == 2 )
-            {
-                IsSkipped = ( value_text_array[ 1 ] != "false" );
             }
             else if ( value_text_array[ 0 ] == "count"
                       && value_text_array.length == 2 )
@@ -11421,7 +11695,7 @@ class SCHEMA
             foreign_key_index;
 
         if ( table.IsStored
-             && !table.IsSkipped )
+             && table.IsSaved )
         {
             if ( ( table.IsDropped && !DropIsIgnored )
                  || DropIsForced )
@@ -11587,7 +11861,7 @@ class SCHEMA
             sql_data_file_text;
 
         if ( table.IsStored
-             && !table.IsSkipped )
+             && table.IsSaved )
         {
             foreach ( row_index; 0 .. table.RowCount )
             {
@@ -11698,7 +11972,7 @@ class SCHEMA
         foreach ( table; sorted_table_array )
         {
             if ( table.IsStored
-                 && !table.IsSkipped )
+                 && table.IsSaved )
             {
                 sql_dump_file_text
                     ~= "create table " ~ CommandIdentifierQuote ~ table.Name ~ CommandIdentifierQuote ~ " (\n";
@@ -11797,7 +12071,7 @@ class SCHEMA
         foreach ( table; sorted_table_array )
         {
             if ( table.IsStored
-                 && !table.IsSkipped )
+                 && table.IsSaved )
             {
                 foreach ( ref column; table.ColumnArray )
                 {
@@ -11919,7 +12193,7 @@ class SCHEMA
             partition_key;
 
         if ( table.IsStored
-             && !table.IsSkipped )
+             && table.IsSaved )
         {
             if ( ( table.IsDropped && !DropIsIgnored )
                  || DropIsForced )
@@ -12018,7 +12292,7 @@ class SCHEMA
             cql_data_file_text;
 
         if ( table.IsStored
-             && !table.IsSkipped )
+             && table.IsSaved )
         {
             foreach ( row_index; 0 .. table.RowCount )
             {
@@ -12129,7 +12403,7 @@ class SCHEMA
         foreach ( table; TableArray )
         {
             if ( table.IsStored
-                 && !table.IsSkipped )
+                 && table.IsSaved )
             {
                 json_data_file_text ~= table.JavascriptAttribute ~ "List=[";
 
@@ -12185,7 +12459,7 @@ class SCHEMA
         foreach ( table; TableArray )
         {
             if ( table.IsStored
-                 && !table.IsSkipped )
+                 && table.IsSaved )
             {
                 csv_data_file_path = base_file_path ~ "_" ~ table.Name.toLower() ~ "_data.csv";
                 csv_data_file_text = "";
@@ -12341,8 +12615,7 @@ class SCHEMA
 
         foreach ( table_index, ref table; TableArray )
         {
-            if ( table.IsStored
-                 && !table.IsSkipped )
+            if ( table.IsStored )
             {
                 generis_query_file_text
                     ~= table.GetAddDatabaseObjectGenerisCode()
@@ -12380,8 +12653,7 @@ class SCHEMA
 
         foreach ( table_index, ref table; TableArray )
         {
-            if ( table.IsStored
-                 && !table.IsSkipped )
+            if ( table.IsStored )
             {
                 generis_response_file_text
                     ~= table.GetWriteResponseGenerisCode();
@@ -12409,8 +12681,7 @@ class SCHEMA
 
         foreach ( table_index, ref table; TableArray )
         {
-            if ( table.IsStored
-                 && !table.IsSkipped )
+            if ( table.IsStored )
             {
                 generis_request_file_text
                     ~= table.GetHandleAddRequestGenerisCode()
@@ -12450,8 +12721,7 @@ class SCHEMA
 
         foreach ( table_index, ref table; TableArray )
         {
-            if ( table.IsStored
-                 && !table.IsSkipped )
+            if ( table.IsStored )
             {
                 generis_route_file_text
                     ~= table.GetRouteRequestGenerisCode();
@@ -12534,8 +12804,7 @@ class SCHEMA
 
         foreach ( table_index, ref table; TableArray )
         {
-            if ( table.IsStored
-                 && !table.IsSkipped )
+            if ( table.IsStored )
             {
                 phoenix_model_file_path = phoenix_folder_path ~ table.PhpVariable ~ ".phx";
 
@@ -12702,52 +12971,327 @@ class SCHEMA
 
     // ~~
 
-    void WriteRustTypeFile(
-        string rust_type_file_path
+    void WriteDartTypeFiles(
+        string dart_type_folder_path
         )
     {
         string
-            rust_attribute_declaration,
-            rust_type_declaration,
-            rust_type_file_text;
+            dart_attribute_declaration,
+            dart_type,
+            dart_type_declaration,
+            dart_type_file_path,
+            dart_type_file_text;
         string[]
-            rust_type_text_array;
-
-        rust_type_file_text = "";
+            dart_type_text_array;
 
         foreach ( table_index, ref table; TableArray )
         {
-            rust_type_declaration = "struct " ~ table.RustType;
-            rust_attribute_declaration = "";
+            dart_type_file_path = dart_type_folder_path ~ table.DartVariable ~ ".dart";
+            dart_type_file_text = "";
+            dart_type_declaration = "class " ~ table.DartAttribute;
+            dart_attribute_declaration = "";
+            dart_type = "";
 
-            foreach ( column_index, ref column; table.ColumnArray )
+            foreach ( column; table.ColumnArray )
             {
-                rust_attribute_declaration
-                    ~= "    "
-                       ~ column.RustName
-                       ~ " : "
-                       ~ column.RustType;
-
-                if ( column_index + 1 < table.ColumnArray.length )
+                if ( !column.IsPrivate
+                     && !column.IsGenerated )
                 {
-                    rust_attribute_declaration ~= ",";
+                    if ( column.DartType == dart_type )
+                    {
+                        dart_attribute_declaration = dart_attribute_declaration[ 0 .. $ - 2 ] ~ ",\n";
+                    }
+                    else
+                    {
+                        dart_type = column.DartType;
+                        dart_attribute_declaration ~= "    final " ~ column.DartType ~ "\n";
+                    }
+
+                    dart_attribute_declaration ~= "        " ~ column.DartName ~ ";\n";
                 }
-
-                rust_attribute_declaration ~= "\n";
             }
 
-            table.RustTypeDeclaration = rust_type_declaration;
-            table.RustAttributeDeclaration = rust_attribute_declaration;
+            table.DartTypeDeclaration = dart_type_declaration;
+            table.DartAttributeDeclaration = dart_attribute_declaration;
 
-            rust_type_file_text ~= rust_type_declaration ~ "\n{\n" ~ rust_attribute_declaration ~ "}\n";
+            dart_type_file_text
+                ~= "// -- TYPES\n"
+                   ~ "\n"
+                   ~ dart_type_declaration
+                   ~ "\n{\n"
+                   ~ "    // -- ATTRIBUTES\n"
+                   ~ "\n"
+                   ~ dart_attribute_declaration
+                   ~ "\n    "
+                   ~ "// -- CONSTRUCTORS\n"
+                   ~ "\n"
+                   ~ "    "
+                   ~ table.DartAttribute
+                   ~ "(\n"
+                   ~ "        {\n";
 
-            if ( table_index + 1 < TableArray.length )
+            foreach ( column; table.ColumnArray )
             {
-                rust_type_file_text ~= "\n// ~~\n\n";
+                if ( !column.IsPrivate
+                     && !column.IsGenerated )
+                {
+                    dart_type_file_text
+                        ~= "            required this."
+                           ~ column.DartName
+                           ~ ",\n";
+                }
             }
-        }
 
-        rust_type_file_path.WriteText( rust_type_file_text );
+            if ( dart_type_file_text.endsWith( ",\n" ) )
+            {
+                dart_type_file_text = dart_type_file_text[ 0 .. $ - 2 ] ~ '\n';
+            }
+
+            dart_type_file_text
+                ~= "        }\n"
+                   ~ "        );\n"
+                   ~ "\n"
+                   ~ "    // -- OPERATORS\n"
+                   ~ "\n"
+                   ~ "    @override\n"
+                   ~ "    bool operator==(\n"
+                   ~ "        Object other\n"
+                   ~ "        )\n"
+                   ~ "    {\n"
+                   ~ "        if ( identical( this, other ) )\n"
+                   ~ "        {\n"
+                   ~ "            return true;\n"
+                   ~ "        }\n"
+                   ~ "        else\n"
+                   ~ "        {\n"
+                   ~ "            return\n"
+                   ~ "                other is "
+                   ~ table.DartAttribute
+                   ~ "\n";
+
+            foreach ( column; table.ColumnArray )
+            {
+                if ( !column.IsPrivate
+                     && !column.IsGenerated
+                     && column.IsKey )
+                {
+                    if ( dart_type_file_text.endsWith( ";\n" ) )
+                    {
+                        dart_type_file_text = dart_type_file_text[ 0 .. $ - 2 ] ~ '\n';
+                    }
+
+                    dart_type_file_text
+                        ~= "                && other."
+                           ~ column.DartName
+                           ~ " == "
+                           ~ column.DartName
+                           ~ ";\n";
+                }
+            }
+
+            dart_type_file_text
+                ~= "        }\n"
+                   ~ "    }\n"
+                   ~ "\n"
+                   ~ "    // -- INQUIRIES\n"
+                   ~ "\n"
+                   ~ "    "
+                   ~ table.DartAttribute
+                   ~ " copyWith(\n"
+                   ~ "        {\n";
+
+            foreach ( column; table.ColumnArray )
+            {
+                if ( !column.IsPrivate
+                     && !column.IsGenerated )
+                {
+                    dart_type_file_text
+                        ~= "            "
+                           ~ column.DartType
+                           ~ "? "
+                           ~ column.DartName
+                           ~ ",\n";
+                }
+            }
+
+            if ( dart_type_file_text.endsWith( ",\n" ) )
+            {
+                dart_type_file_text = dart_type_file_text[ 0 .. $ - 2 ] ~ "\n";
+            }
+
+            dart_type_file_text
+                ~= "        }\n"
+                   ~ "        )\n"
+                   ~ "    {\n"
+                   ~ "        return "
+                   ~ table.DartAttribute
+                   ~ "(\n";
+
+            foreach ( column; table.ColumnArray )
+            {
+                if ( !column.IsPrivate
+                     && !column.IsGenerated )
+                {
+                    dart_type_file_text
+                        ~= "            "
+                           ~ column.DartName
+                           ~ ": "
+                           ~ column.DartName
+                           ~ " ?? this."
+                           ~ column.DartName
+                           ~ ",\n";
+                }
+            }
+
+            if ( dart_type_file_text.endsWith( ",\n" ) )
+            {
+                dart_type_file_text = dart_type_file_text[ 0 .. $ - 2 ] ~ "\n";
+            }
+
+            dart_type_file_text
+                ~= "            );\n"
+                   ~ "    }\n"
+                   ~ "\n"
+                   ~ "    // ~~\n"
+                   ~ "\n"
+                   ~ "    factory "
+                   ~ table.DartAttribute
+                   ~ ".fromMap(\n"
+                   ~ "        Map<String, dynamic> map\n"
+                   ~ "        )"
+                   ~ "\n"
+                   ~ "    {\n"
+                   ~ "        return "
+                   ~ table.DartAttribute
+                   ~ "(\n";
+
+            foreach ( column; table.ColumnArray )
+            {
+                if ( !column.IsPrivate
+                     && !column.IsGenerated )
+                {
+                    dart_type_file_text
+                        ~= "            "
+                           ~ column.DartName
+                           ~ ": ";
+
+                    if ( column.Type.IsList )
+                    {
+                        dart_type_file_text
+                            ~= "List<String>.from( map[ '"
+                               ~ column.Name
+                               ~ "' ] ),\n";
+                    }
+                    else
+                    {
+                        dart_type_file_text
+                            ~= "map[ '"
+                               ~ column.Name
+                               ~ "' ],\n";
+                    }
+                }
+            }
+
+            if ( dart_type_file_text.endsWith( ",\n" ) )
+            {
+                dart_type_file_text = dart_type_file_text[ 0 .. $ - 2 ] ~ '\n';
+            }
+
+            dart_type_file_text
+                ~= "            );\n"
+                   ~ "    }\n"
+                   ~ "\n"
+                   ~ "    // ~~\n"
+                   ~ "\n"
+                   ~ "    Map<String, dynamic> toMap(\n"
+                   ~ "        )\n"
+                   ~ "    {\n"
+                   ~ "        return\n"
+                   ~ "            {\n";
+
+            foreach ( column; table.ColumnArray )
+            {
+                if ( !column.IsPrivate
+                     && !column.IsGenerated )
+                {
+                    dart_type_file_text
+                        ~= "                '"
+                           ~ column.DartName
+                           ~ "': "
+                           ~ column.DartName
+                           ~ ",\n";
+                }
+            }
+
+            if ( dart_type_file_text.endsWith( ",\n" ) )
+            {
+                dart_type_file_text = dart_type_file_text[ 0 .. $ - 2 ] ~ '\n';
+            }
+
+            dart_type_file_text
+                ~= "            };\n"
+                   ~ "    }\n"
+                   ~ "\n"
+                   ~ "    // ~~\n"
+                   ~ "\n"
+                   ~ "    @override\n"
+                   ~ "    String toString(\n"
+                   ~ "        )\n"
+                   ~ "    {\n"
+                   ~ "        return '"
+                   ~ table.DartAttribute
+                   ~ " {";
+
+            foreach ( column; table.ColumnArray )
+            {
+                if ( !column.IsPrivate
+                     && !column.IsGenerated )
+                {
+                    dart_type_file_text
+                        ~= " "
+                           ~ column.DartName
+                           ~ ": $"
+                           ~ column.DartName
+                           ~ ",";
+                }
+            }
+
+            if ( dart_type_file_text.endsWith( "," ) )
+            {
+                dart_type_file_text = dart_type_file_text[ 0 .. $ - 1 ] ~ " ";
+            }
+
+            dart_type_file_text
+                ~= "}';\n"
+                   ~ "    }\n";
+
+            foreach ( column; table.ColumnArray )
+            {
+                if ( !column.IsPrivate
+                     && !column.IsGenerated
+                     && column.IsKey )
+                {
+                    dart_type_file_text
+                        ~= "\n"
+                           ~ "    // ~~\n"
+                           ~ "\n"
+                           ~ "    @override\n"
+                           ~ "    int get hashCode\n"
+                           ~ "    {\n"
+                           ~ "        return "
+                           ~ column.DartName
+                           ~ ".hashCode;\n"
+                           ~ "    }\n";
+
+                    break;
+                }
+            }
+
+            dart_type_file_text
+                ~= "}\n";
+
+            dart_type_file_path.WriteText( dart_type_file_text );
+        }
     }
 
     // ~~
@@ -12795,6 +13339,56 @@ class SCHEMA
         }
 
         javascript_type_file_path.WriteText( javascript_type_file_text );
+    }
+
+    // ~~
+
+    void WriteRustTypeFile(
+        string rust_type_file_path
+        )
+    {
+        string
+            rust_attribute_declaration,
+            rust_type_declaration,
+            rust_type_file_text;
+        string[]
+            rust_type_text_array;
+
+        rust_type_file_text = "";
+
+        foreach ( table_index, ref table; TableArray )
+        {
+            rust_type_declaration = "struct " ~ table.RustType;
+            rust_attribute_declaration = "";
+
+            foreach ( column_index, ref column; table.ColumnArray )
+            {
+                rust_attribute_declaration
+                    ~= "    "
+                       ~ column.RustName
+                       ~ " : "
+                       ~ column.RustType;
+
+                if ( column_index + 1 < table.ColumnArray.length )
+                {
+                    rust_attribute_declaration ~= ",";
+                }
+
+                rust_attribute_declaration ~= "\n";
+            }
+
+            table.RustTypeDeclaration = rust_type_declaration;
+            table.RustAttributeDeclaration = rust_attribute_declaration;
+
+            rust_type_file_text ~= rust_type_declaration ~ "\n{\n" ~ rust_attribute_declaration ~ "}\n";
+
+            if ( table_index + 1 < TableArray.length )
+            {
+                rust_type_file_text ~= "\n// ~~\n\n";
+            }
+        }
+
+        rust_type_file_path.WriteText( rust_type_file_text );
     }
 
     // ~~
@@ -14205,13 +14799,17 @@ void ProcessFiles(
             Schema.WriteCsharpTypeFile( GetFolderPath( base_file_path ) ~ "CS/" ~ GetFileName( base_file_path ) ~ "_type.cs" );
             Schema.WriteCsharpConstantFile( GetFolderPath( base_file_path ) ~ "CS/" ~ GetFileName( base_file_path ) ~ "_constant.cs" );
         }
-        else if ( output_format == "rust" )
+        else if ( output_format == "dart" )
         {
-            Schema.WriteRustTypeFile( GetFolderPath( base_file_path ) ~ "RS/" ~ GetFileName( base_file_path ) ~ "_type.rs" );
+            Schema.WriteDartTypeFiles( GetFolderPath( base_file_path ) ~ "DART/" );
         }
         else if ( output_format == "javascript" )
         {
             Schema.WriteJavascriptTypeFile( GetFolderPath( base_file_path ) ~ "JS/" ~ GetFileName( base_file_path ) ~ "_type.js" );
+        }
+        else if ( output_format == "rust" )
+        {
+            Schema.WriteRustTypeFile( GetFolderPath( base_file_path ) ~ "RS/" ~ GetFileName( base_file_path ) ~ "_type.rs" );
         }
     }
 
@@ -14318,13 +14916,17 @@ void main(
         {
             OutputFormatArray ~= "csharp";
         }
-        else if ( option == "--rust" )
+        else if ( option == "--dart" )
         {
-            OutputFormatArray ~= "rust";
+            OutputFormatArray ~= "dart";
         }
         else if ( option == "--javascript" )
         {
             OutputFormatArray ~= "javascript";
+        }
+        else if ( option == "--rust" )
+        {
+            OutputFormatArray ~= "rust";
         }
         else if ( option == "--ignore-drop" )
         {
@@ -14373,8 +14975,9 @@ void main(
         writeln( "    --phoenix" );
         writeln( "    --crystal" );
         writeln( "    --csharp" );
-        writeln( "    --rust" );
+        writeln( "    --dart" );
         writeln( "    --javascript" );
+        writeln( "    --rust" );
         writeln( "    --template <template_file_path>" );
         writeln( "    --ignore-drop" );
         writeln( "    --force-drop" );
