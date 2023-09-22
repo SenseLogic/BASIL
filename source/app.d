@@ -2068,11 +2068,14 @@ class TYPE
         }
         else if ( CommandFormat == "postgresql" )
         {
-            if ( type_name == "BOOL"
-                 || type_name == "INT8"
-                 || type_name == "UINT8"
-                 || type_name == "INT16"
-                 || type_name == "UINT16" )
+            if ( type_name == "BOOL" )
+            {
+                return "BOOLEAN";
+            }
+            else if ( type_name == "INT8"
+                      || type_name == "UINT8"
+                      || type_name == "INT16"
+                      || type_name == "UINT16" )
             {
                 return "SMALLINT";
             }
@@ -4890,11 +4893,25 @@ class VALUE
             if ( Text == "1"
                  || Text == "true" )
             {
-                return "1";
+                if ( CommandFormat == "postgresql" )
+                {
+                    return "true";
+                }
+                else
+                {
+                    return "1";
+                }
             }
             else
             {
-                return "0";
+                if ( CommandFormat == "postgresql" )
+                {
+                    return "false";
+                }
+                else
+                {
+                    return "0";
+                }
             }
         }
         else if ( type_name == "INT8"
@@ -13175,7 +13192,14 @@ class SCHEMA
                            ~ column.DartName
                            ~ ": ";
 
-                    if ( column.Type.IsList )
+                    if ( column.ActualType.IsDate() )
+                    {
+                        dart_type_file_text
+                            ~= "List<String>.from( map[ '"
+                               ~ column.Name
+                               ~ "' ] ),\n";
+                    }
+                    elseif ( column.ActualType.IsList() )
                     {
                         dart_type_file_text
                             ~= "List<String>.from( map[ '"
