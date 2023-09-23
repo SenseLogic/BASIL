@@ -13192,14 +13192,14 @@ class SCHEMA
                            ~ column.DartName
                            ~ ": ";
 
-                    if ( column.ActualType.IsDate() )
+                    if ( column.Type.ActualType.IsDate() )
                     {
                         dart_type_file_text
                             ~= "List<String>.from( map[ '"
                                ~ column.Name
                                ~ "' ] ),\n";
                     }
-                    elseif ( column.ActualType.IsList() )
+                    else if ( column.Type.ActualType.IsList() )
                     {
                         dart_type_file_text
                             ~= "List<String>.from( map[ '"
@@ -14825,7 +14825,7 @@ void ProcessFiles(
         }
         else if ( output_format == "dart" )
         {
-            Schema.WriteDartTypeFiles( GetFolderPath( base_file_path ) ~ "DART/" );
+            Schema.WriteDartTypeFiles( GetFolderPath( base_file_path ) ~ "DART/ENTITY/" );
         }
         else if ( output_format == "javascript" )
         {
