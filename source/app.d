@@ -12062,18 +12062,7 @@ class SCHEMA
                             }
                         }
 
-                        sql_dump_row_text ~= ")";
-
-                        if ( row_index < table.RowCount - 1 )
-                        {
-                            sql_dump_row_text ~= ",";
-                        }
-                        else
-                        {
-                            sql_dump_row_text ~= ";";
-                        }
-
-                        sql_dump_row_text ~= "\n";
+                        sql_dump_row_text ~= "),\n";
                         sql_dump_row_text_array ~= sql_dump_row_text;
                     }
                 }
@@ -12082,6 +12071,9 @@ class SCHEMA
 
                 sql_dump_file_text
                     ~= sql_dump_row_text_array.join( "" ) ~ "\n";
+
+                sql_dump_file_text
+                    = sql_dump_file_text.ReplaceSuffix( "),\n\n", ");\n\n" );
             }
         }
 
