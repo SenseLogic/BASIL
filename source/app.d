@@ -2403,24 +2403,15 @@ class TYPE
                   || type_name == "STRING8"
                   || type_name == "STRING16"
                   || type_name == "STRING24"
-                  || type_name == "STRING32" )
-        {
-            return "string";
-        }
-        else if ( type_name == "TIMESTAMP"
+                  || type_name == "STRING32"
+                  || type_name == "TIMESTAMP"
                   || type_name == "DATETIME"
                   || type_name == "DATE"
-                  || type_name == "TIME" )
-        {
-            return "time.Time";
-        }
-        else if ( type_name == "TUID" )
+                  || type_name == "TIME"
+                  || type_name == "TUID"
+                  || type_name == "UUID" )
         {
             return "string";
-        }
-        else if ( type_name == "UUID" )
-        {
-            return "gocql.UUID";
         }
         else if ( type_name == "BLOB" )
         {
@@ -2531,28 +2522,16 @@ class TYPE
                   || type_name == "STRING8"
                   || type_name == "STRING16"
                   || type_name == "STRING24"
-                  || type_name == "STRING32" )
-        {
-            return "String";
-        }
-        else if ( type_name == "TIMESTAMP"
+                  || type_name == "STRING32"
+                  || type_name == "TIMESTAMP"
                   || type_name == "DATETIME"
                   || type_name == "DATE"
-                  || type_name == "TIME" )
-        {
-            return "DateTime";
-        }
-        else if ( type_name == "TUID" )
+                  || type_name == "TIME"
+                  || type_name == "TUID"
+                  || type_name == "UUID"
+                  || type_name == "BLOB" )
         {
             return "String";
-        }
-        else if ( type_name == "UUID" )
-        {
-            return "Uuid";
-        }
-        else if ( type_name == "BLOB" )
-        {
-            return "Blob";
         }
         else if ( type_name == "POINTER" )
         {
@@ -2755,28 +2734,16 @@ class TYPE
                   || type_name == "STRING8"
                   || type_name == "STRING16"
                   || type_name == "STRING24"
-                  || type_name == "STRING32" )
-        {
-            return "String";
-        }
-        else if ( type_name == "TIMESTAMP"
+                  || type_name == "STRING32"
+                  || type_name == "TIMESTAMP"
                   || type_name == "DATETIME"
                   || type_name == "DATE"
-                  || type_name == "TIME" )
-        {
-            return "DateTime";
-        }
-        else if ( type_name == "TUID" )
+                  || type_name == "TIME"
+                  || type_name == "TUID"
+                  || type_name == "UUID"
+                  || type_name == "BLOB" )
         {
             return "String";
-        }
-        else if ( type_name == "UUID" )
-        {
-            return "Uuid";
-        }
-        else if ( type_name == "BLOB" )
-        {
-            return "Blob";
         }
         else if ( type_name == "POINTER" )
         {
@@ -3008,28 +2975,16 @@ class TYPE
                   || type_name == "STRING8"
                   || type_name == "STRING16"
                   || type_name == "STRING24"
-                  || type_name == "STRING32" )
-        {
-            return "string";
-        }
-        else if ( type_name == "TIMESTAMP"
+                  || type_name == "STRING32"
+                  || type_name == "TIMESTAMP"
                   || type_name == "DATETIME"
                   || type_name == "DATE"
-                  || type_name == "TIME" )
+                  || type_name == "TIME"
+                  || type_name == "TUID"
+                  || type_name == "UUID"
+                  || type_name == "BLOB" )
         {
-            return "DateTime";
-        }
-        else if ( type_name == "TUID" )
-        {
-            return "String";
-        }
-        else if ( type_name == "UUID" )
-        {
-            return "Guid";
-        }
-        else if ( type_name == "BLOB" )
-        {
-            return "String";
+            return "string";
         }
         else if ( type_name == "POINTER" )
         {
@@ -3136,26 +3091,14 @@ class TYPE
                   || type_name == "STRING8"
                   || type_name == "STRING16"
                   || type_name == "STRING24"
-                  || type_name == "STRING32" )
-        {
-            return "String";
-        }
-        else if ( type_name == "TIMESTAMP"
+                  || type_name == "STRING32"
+                  || type_name == "TIMESTAMP"
                   || type_name == "DATETIME"
                   || type_name == "DATE"
-                  || type_name == "TIME" )
-        {
-            return "DateTime";
-        }
-        else if ( type_name == "TUID" )
-        {
-            return "String";
-        }
-        else if ( type_name == "UUID" )
-        {
-            return "Uuid";
-        }
-        else if ( type_name == "BLOB" )
+                  || type_name == "TIME"
+                  || type_name == "TUID"
+                  || type_name == "UUID"
+                  || type_name == "BLOB" )
         {
             return "String";
         }
@@ -3244,18 +3187,12 @@ class TYPE
                   || type_name == "STRING8"
                   || type_name == "STRING16"
                   || type_name == "STRING24"
-                  || type_name == "STRING32" )
-        {
-            return "String";
-        }
-        else if ( type_name == "TIMESTAMP"
+                  || type_name == "STRING32"
+                  || type_name == "TIMESTAMP"
                   || type_name == "DATETIME"
                   || type_name == "DATE"
-                  || type_name == "TIME" )
-        {
-            return "DateTime";
-        }
-        else if ( type_name == "TUID"
+                  || type_name == "TIME"
+                  || type_name == "TUID"
                   || type_name == "UUID"
                   || type_name == "BLOB" )
         {
@@ -3366,26 +3303,14 @@ class TYPE
                   || type_name == "STRING8"
                   || type_name == "STRING16"
                   || type_name == "STRING24"
-                  || type_name == "STRING32" )
-        {
-            return "String";
-        }
-        else if ( type_name == "TIMESTAMP"
+                  || type_name == "STRING32"
+                  || type_name == "TIMESTAMP"
                   || type_name == "DATETIME"
                   || type_name == "DATE"
-                  || type_name == "TIME" )
-        {
-            return "DateTime";
-        }
-        else if ( type_name == "TUID" )
-        {
-            return "String";
-        }
-        else if ( type_name == "UUID" )
-        {
-            return "Uuid";
-        }
-        else if ( type_name == "BLOB" )
+                  || type_name == "TIME"
+                  || type_name == "TUID"
+                  || type_name == "UUID"
+                  || type_name == "BLOB" )
         {
             return "String";
         }
@@ -13184,17 +13109,12 @@ class SCHEMA
                            ~ column.DartName
                            ~ ": ";
 
-                    if ( column.Type.ActualType.IsDate() )
+                    if ( column.Type.ActualType.IsList()
+                         || column.Type.ActualType.IsMap() )
                     {
                         dart_type_file_text
-                            ~= "List<String>.from( map[ '"
-                               ~ column.Name
-                               ~ "' ] ),\n";
-                    }
-                    else if ( column.Type.ActualType.IsList() )
-                    {
-                        dart_type_file_text
-                            ~= "List<String>.from( map[ '"
+                            ~= column.DartType
+                               ~ ".from( map[ '"
                                ~ column.Name
                                ~ "' ] ),\n";
                     }
