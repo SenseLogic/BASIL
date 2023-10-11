@@ -13174,9 +13174,10 @@ class SCHEMA
                    ~ "    String toString(\n"
                    ~ "        )\n"
                    ~ "    {\n"
-                   ~ "        return '"
+                   ~ "        return\n"
+                   ~ "            '"
                    ~ table.DartAttribute
-                   ~ " {";
+                   ~ " {'\n";
 
             foreach ( column; table.ColumnArray )
             {
@@ -13184,21 +13185,21 @@ class SCHEMA
                      && !column.IsGenerated )
                 {
                     dart_type_file_text
-                        ~= " "
+                        ~= "            ' "
                            ~ column.DartName
                            ~ ": $"
                            ~ column.DartName
-                           ~ ",";
+                           ~ ",'\n";
                 }
             }
 
-            if ( dart_type_file_text.endsWith( "," ) )
+            if ( dart_type_file_text.endsWith( ",'\n" ) )
             {
-                dart_type_file_text = dart_type_file_text[ 0 .. $ - 1 ] ~ " ";
+                dart_type_file_text = dart_type_file_text[ 0 .. $ - 3 ] ~ " '\n";
             }
 
             dart_type_file_text
-                ~= "}';\n"
+                ~= "            '}';\n"
                    ~ "    }\n";
 
             foreach ( column; table.ColumnArray )
