@@ -8948,7 +8948,7 @@ class TABLE
         string
             phoenix_code;
 
-        phoenix_code = GetEncodeDatabaseColumnPhoenixCode( "    " );
+        phoenix_code = GetEncodeDatabaseColumnPhoenixCode( "        " );
 
         if ( phoenix_code == "" )
         {
@@ -8960,8 +8960,13 @@ class TABLE
             phoenix_code
                 = "    var "
                   ~ PhpVariable
-                  ~ " = statement.fetchObject();\n"
+                  ~ " = statement.fetchObject();\n\n"
+                  ~ "    if ( "
+                  ~ PhpVariable
+                  ~ " )\n"
+                  ~ "    {\n"
                   ~ phoenix_code
+                  ~ "    }\n"
                   ~ "\n"
                   ~ "    return "
                   ~ PhpVariable
