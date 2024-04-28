@@ -3501,7 +3501,7 @@ class TYPE
             {
                 if ( ( template_part_index & 1 ) == 0 )
                 {
-                    template_part = template_part.GetProcessedText();
+                    template_part = template_part.GetUnescapedText();
                 }
                 else
                 {
@@ -3517,7 +3517,7 @@ class TYPE
 
                         foreach ( ref filter_argument_; filter_argument_array )
                         {
-                            filter_argument_ = filter_argument_.GetProcessedText();
+                            filter_argument_ = filter_argument_.GetUnescapedText();
                         }
 
                         if ( filter_argument_array.length >= 1 )
@@ -4513,8 +4513,28 @@ class DATA_VALUE
                               && character_index + 1 < text.length )
                     {
                         ++character_index;
+                        character = text[ character_index ];
 
-                        data_token.Text ~= text[ character_index ];
+                        if ( character == 'n' )
+                        {
+                            data_token.Text ~= '\n';
+                        }
+                        else if ( character == 'r' )
+                        {
+                            data_token.Text ~= '\r';
+                        }
+                        else if ( character == 't' )
+                        {
+                            data_token.Text ~= '\t';
+                        }
+                        else if ( character == 's' )
+                        {
+                            data_token.Text ~= ' ';
+                        }
+                        else if ( character != 'v' )
+                        {
+                            data_token.Text ~= character;
+                        }
                     }
                     else
                     {
@@ -4932,17 +4952,17 @@ class VALUE
         {
             if ( CommandFormat == "mysql" )
             {
-                return "'" ~ sql_text.replace( "'", "\\'" ).replace( "\"", "\\\"" ) ~ "'";
+                return "'" ~ sql_text.GetEscapedText( "\\'", "\\\"" ) ~ "'";
             }
             else if ( CommandFormat == "postgresql" )
             {
                 if ( it_is_compound_value )
                 {
-                    return "'" ~ sql_text.replace( "'", "''" ) ~ "'::JSONB";
+                    return "'" ~ sql_text.GetEscapedText( "''", "\"" ) ~ "'::JSONB";
                 }
                 else
                 {
-                    return "'" ~ sql_text.replace( "'", "''" ) ~ "'";
+                    return "'" ~ sql_text.GetEscapedText( "''", "\"" ) ~ "'";
                 }
             }
         }
@@ -5062,7 +5082,7 @@ class VALUE
         }
         else
         {
-            cql_text = "'" ~ Text.replace( "'", "''" ) ~ "'";
+            cql_text = "'" ~ Text.GetEscapedText( "''", "\"" ) ~ "'";
         }
 
         return cql_text;
@@ -13383,6 +13403,8 @@ class SCHEMA
 
         if ( TemplateFileText != "" )
         {
+            writeln( "Processing templates..." );
+
             SetProperties();
 
             instance_file_text
@@ -13667,7 +13689,7 @@ string InsertCharacter(
 
 // ~~
 
-string GetProcessedText(
+string GetUnescapedText(
     string text
     )
 {
@@ -13676,7 +13698,7 @@ string GetProcessedText(
     long
         character_index;
     string
-        processed_text;
+        escaped_text;
 
     for ( character_index = 0;
           character_index < text.length;
@@ -13692,32 +13714,50 @@ string GetProcessedText(
 
             if ( character == 'n' )
             {
-                processed_text ~= '\n';
+                escaped_text ~= '\n';
             }
             else if ( character == 'r' )
             {
-                processed_text ~= '\r';
-            }
-            else if ( character == 's' )
-            {
-                processed_text ~= ' ';
+                escaped_text ~= '\r';
             }
             else if ( character == 't' )
             {
-                processed_text ~= '\t';
+                escaped_text ~= '\t';
+            }
+            else if ( character == 's' )
+            {
+                escaped_text ~= ' ';
             }
             else if ( character != 'v' )
             {
-                processed_text ~= character;
+                escaped_text ~= character;
             }
         }
         else
         {
-            processed_text ~= character;
+            escaped_text ~= character;
         }
     }
 
-    return processed_text;
+    return escaped_text;
+}
+
+// ~~
+
+string GetEscapedText(
+    string sql_text,
+    string single_quote_text = "\\'",
+    string double_quote_text = "\\\""
+    )
+{
+    return
+        sql_text
+            .replace( "\\", "\\\\" )
+            .replace( "\n", "\\n" )
+            .replace( "\r", "\\r" )
+            .replace( "\t", "\\t" )
+            .replace( "'", single_quote_text )
+            .replace( "\"", double_quote_text );
 }
 
 // ~~

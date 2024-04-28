@@ -958,7 +958,7 @@ Generates `blog.uml`, `blog.cql`, `blog_schema.cql`, `blog_data.cql`, `blog_sql_
 
 ## Version
 
-7.0
+8.0
 
 ## Author
 
