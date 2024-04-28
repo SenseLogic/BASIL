@@ -31,7 +31,7 @@ COMPOUND
             ~ { jack.harper@gmail.com ~ victoria.olsen@outlook.com }
             ~ { { 12345678 ~ Warner Bros } ~ { 23456789 ~ Universal Pictures } }
             ~ \{\}
-            ~ { first\\n\\n ~ second\\n\\n }
+            ~ { first\n\n ~ second\n\n }
 
         2
 
@@ -42,7 +42,7 @@ COMPOUND
             ~ { rick.deckard@gmail.com ~ dave.holden@outlook.com }
             ~ { { 12345678 ~ × } ~ { 23456789 ~ × } }
             ~
-            ~ { first\\n\\n ~ second\\n\\n }
+            ~ { first\n\n ~ second\n\n }
 
 VALUE
 
