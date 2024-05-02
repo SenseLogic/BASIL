@@ -4942,17 +4942,11 @@ class VALUE
                 || type_name == "MAP"
                 || type_name == "OBJECT" );
 
-        if ( it_is_compound_value
-             && !it_is_sub_value )
-        {
-            sql_text = sql_text.replace( "\\", "\\\\" );
-        }
-
         if ( !it_is_sub_value )
         {
             if ( CommandFormat == "mysql" )
             {
-                return "'" ~ sql_text.GetEscapedText( "\\'", "\\\"" ) ~ "'";
+                return "'" ~ sql_text.GetEscapedText( "\\'", "\"" ) ~ "'";
             }
             else if ( CommandFormat == "postgresql" )
             {
@@ -4967,7 +4961,7 @@ class VALUE
             }
         }
 
-        return '"' ~ sql_text ~ '"';
+        return '"' ~ sql_text.GetEscapedText( "'", "\\\"" ) ~ '"';
     }
 
     // ~~
