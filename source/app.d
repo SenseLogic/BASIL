@@ -11035,37 +11035,46 @@ class SCHEMA
                     column_name = column_part_array[ 0 ].strip();
                     column_type = column_part_array[ 1 .. $ ].join( ':' ).strip();
 
-                    column = new COLUMN( table, column_name, column_type );
-                    column.Index = table.ColumnArray.length;
-
-                    table.ColumnArray ~= column;
-
-                    if ( line_part_array.length == 2 )
+                    if ( table.FindColumn( column_name ) is null )
                     {
-                        property_part_array = line_part_array[ 1 ].GetUnquotedPartArray( "," );
+                        column = new COLUMN( table, column_name, column_type );
+                        column.Index = table.ColumnArray.length;
 
-                        foreach ( ref property_text; property_part_array )
+                        table.ColumnArray ~= column;
+
+                        if ( line_part_array.length == 2 )
                         {
-                            column.SetPropertyValue( property_text.stripLeft() );
-                        }
+                            property_part_array = line_part_array[ 1 ].GetUnquotedPartArray( "," );
 
-                        if ( column.IsStored
-                             && column.IsKey )
-                        {
-                            table.KeyNameArray ~= column.Name;
-
-                            if ( table.KeyNameArray.length == 1 )
+                            foreach ( ref property_text; property_part_array )
                             {
-                                table.KeyAttribute = column.Name.GetAttributeCaseText();
-                                table.KeyVariable = column.Name.GetVariableCaseText();
+                                column.SetPropertyValue( property_text.stripLeft() );
+                            }
+
+                            if ( column.IsStored
+                                 && column.IsKey )
+                            {
+                                table.KeyNameArray ~= column.Name;
+
+                                if ( table.KeyNameArray.length == 1 )
+                                {
+                                    table.KeyAttribute = column.Name.GetAttributeCaseText();
+                                    table.KeyVariable = column.Name.GetVariableCaseText();
+                                }
                             }
                         }
+                        else if ( line_part_array.length != 1 )
+                        {
+                            writeln( line );
+
+                            Abort( "Invalid column : " ~ stripped_line );
+                        }
                     }
-                    else if ( line_part_array.length != 1 )
+                    else
                     {
                         writeln( line );
 
-                        Abort( "Invalid column : " ~ stripped_line );
+                        Abort( "Duplicate column : " ~ stripped_line );
                     }
                 }
                 else
