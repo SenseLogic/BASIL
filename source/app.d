@@ -11373,18 +11373,27 @@ class SCHEMA
                 column_name_array = stripped_line.split( ' ' );
                 column_array = null;
 
-                foreach ( column_name; column_name_array )
+                foreach ( column_name_index, column_name; column_name_array )
                 {
-                    column = table.FindColumn( column_name );
-
-                    if ( column is null )
+                    if ( column_name_array.countUntil( column_name ) != column_name_index )
                     {
                         writeln( line );
 
-                        Abort( "Invalid column name : " ~ column_name );
+                        Abort( "Duplicate column name : " ~ column_name );
                     }
+                    else
+                    {
+                        column = table.FindColumn( column_name );
 
-                    column_array ~= column;
+                        if ( column is null )
+                        {
+                            writeln( line );
+
+                            Abort( "Invalid column name : " ~ column_name );
+                        }
+
+                        column_array ~= column;
+                    }
                 }
             }
             else
