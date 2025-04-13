@@ -13561,6 +13561,8 @@ string GetPluralText(
 {
     char
         last_character;
+    string
+        lowercase_text;
 
     if ( text == "" )
     {
@@ -13568,60 +13570,87 @@ string GetPluralText(
     }
     else
     {
+        lowercase_text = text.toLower();
         last_character = text[ $ - 1 ];
 
         if ( last_character >= 'a' && last_character <= 'z' )
         {
-            text = text ~ 's';
-
-            if ( text.endsWith( "ays" )
-                 || text.endsWith( "eys" )
-                 || text.endsWith( "oys" )
-                 || text.endsWith( "photos" )
-                 || text.endsWith( "videos" ) )
+            if ( lowercase_text.endsWith( "man" ) )
             {
-                return text;
+                return text[ 0 .. $ - 2 ] ~ "en";
+            }
+            else if ( lowercase_text.endsWith( "child" ) )
+            {
+                return text ~ "ren";
             }
             else
             {
-                return
-                    text
-                        .ReplaceSuffix( "fs", "ves" )
-                        .ReplaceSuffix( "hs", "hes" )
-                        .ReplaceSuffix( "iss", "es" )
-                        .ReplaceSuffix( "os", "oes" )
-                        .ReplaceSuffix( "ss", "ses" )
-                        .ReplaceSuffix( "ums", "a" )
-                        .ReplaceSuffix( "xs", "xes" )
-                        .ReplaceSuffix( "ys", "ies" )
-                        .ReplaceSuffix( "zs", "zes" );
+                text = text ~ 's';
+
+                if ( text.endsWith( "ays" )
+                     || text.endsWith( "eys" )
+                     || text.endsWith( "ffs" )
+                     || text.endsWith( "oys" )
+                     || text.endsWith( "ths" )
+                     || text.endsWith( "photos" )
+                     || text.endsWith( "videos" ) )
+                {
+                    return text;
+                }
+                else
+                {
+                    return
+                        text
+                            .ReplaceSuffix( "fs", "ves" )
+                            .ReplaceSuffix( "hs", "hes" )
+                            .ReplaceSuffix( "iss", "es" )
+                            .ReplaceSuffix( "os", "oes" )
+                            .ReplaceSuffix( "ss", "ses" )
+                            .ReplaceSuffix( "ums", "a" )
+                            .ReplaceSuffix( "xs", "xes" )
+                            .ReplaceSuffix( "ys", "ies" )
+                            .ReplaceSuffix( "zs", "zes" );
+                }
             }
         }
         else if ( last_character >= 'A' && last_character <= 'Z' )
         {
-            text = text ~ 'S';
-
-            if ( text.endsWith( "AYS" )
-                 || text.endsWith( "EYS" )
-                 || text.endsWith( "OYS" )
-                 || text.endsWith( "PHOTOS" )
-                 || text.endsWith( "VIDEOS" ) )
+            if ( lowercase_text.endsWith( "MAN" ) )
             {
-                return text;
+                return text[ 0 .. $ - 2 ] ~ "EN";
+            }
+            else if ( lowercase_text.endsWith( "CHILD" ) )
+            {
+                return text ~ "REN";
             }
             else
             {
-                return
-                    text
-                        .ReplaceSuffix( "FS", "VES" )
-                        .ReplaceSuffix( "HS", "HES" )
-                        .ReplaceSuffix( "ISS", "ES" )
-                        .ReplaceSuffix( "OS", "OES" )
-                        .ReplaceSuffix( "SS", "SES" )
-                        .ReplaceSuffix( "UMS", "A" )
-                        .ReplaceSuffix( "XS", "XES" )
-                        .ReplaceSuffix( "YS", "IES" )
-                        .ReplaceSuffix( "ZS", "ZES" );
+                text = text ~ 'S';
+
+                if ( text.endsWith( "AYS" )
+                     || text.endsWith( "EYS" )
+                     || text.endsWith( "FFS" )
+                     || text.endsWith( "OYS" )
+                     || text.endsWith( "THS" )
+                     || text.endsWith( "PHOTOS" )
+                     || text.endsWith( "VIDEOS" ) )
+                {
+                    return text;
+                }
+                else
+                {
+                    return
+                        text
+                            .ReplaceSuffix( "FS", "VES" )
+                            .ReplaceSuffix( "HS", "HES" )
+                            .ReplaceSuffix( "ISS", "ES" )
+                            .ReplaceSuffix( "OS", "OES" )
+                            .ReplaceSuffix( "SS", "SES" )
+                            .ReplaceSuffix( "UMS", "A" )
+                            .ReplaceSuffix( "XS", "XES" )
+                            .ReplaceSuffix( "YS", "IES" )
+                            .ReplaceSuffix( "ZS", "ZES" );
+                }
             }
         }
         else
