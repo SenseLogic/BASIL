@@ -6412,6 +6412,14 @@ class COLUMN
 
     // -- INQUIRIES
 
+    bool IsBoolean(
+        )
+    {
+        return Type.ActualType.IsBoolean();
+    }
+
+    // ~~
+
     bool IsNatural(
         )
     {
@@ -8907,7 +8915,8 @@ class TABLE
         foreach ( column; ColumnArray )
         {
             if ( column.IsStored
-                 && ( column.IsNatural()
+                 && ( column.IsBoolean()
+                      || column.IsNatural()
                       || column.IsInteger() ) )
             {
                 phoenix_code
