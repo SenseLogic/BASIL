@@ -11652,7 +11652,16 @@ class SCHEMA
              || DropIsForced )
         {
             sql_schema_file_text
-                ~= "drop schema if exists " ~ CommandIdentifierQuote ~ Name ~ CommandIdentifierQuote ~ ";\n\n";
+                ~= "drop schema if exists " ~ CommandIdentifierQuote ~ Name ~ CommandIdentifierQuote;
+
+            if ( DropIsCascaded )
+            {
+                sql_schema_file_text
+                    ~= " cascade";
+            }
+
+            sql_schema_file_text
+                ~= ";\n\n";
         }
 
         if ( CommandFormat == "mysql" )
@@ -11722,65 +11731,68 @@ class SCHEMA
                 }
             }
 
-            foreign_key_index = 0;
-
-            foreach ( ref column; table.ColumnArray )
+            if ( CommandFormat == "mysql" )
             {
-                if ( column.IsIndexed
-                     && column.IsStored
-                     && column.IsForeign
-                     && column.ForeignColumn.IsKey
-                     && column.ForeignColumn.IsStored
-                     && column.ForeignColumn.Table.IsStored )
-                {
-                    ++foreign_key_index;
+                foreign_key_index = 0;
 
-                    sql_schema_file_text
-                        ~= "    index `index_"
-                           ~ table.Name.toLower()
-                           ~ "_"
-                           ~ column.ForeignColumn.Table.Name.toLower()
-                           ~ "_"
-                           ~ foreign_key_index.to!string()
-                           ~ "_idx`( " ~ CommandIdentifierQuote
-                           ~ column.SqlName
-                           ~ CommandIdentifierQuote ~ " asc ),\n";
+                foreach ( ref column; table.ColumnArray )
+                {
+                    if ( column.IsIndexed
+                         && column.IsStored
+                         && column.IsForeign
+                         && column.ForeignColumn.IsKey
+                         && column.ForeignColumn.IsStored
+                         && column.ForeignColumn.Table.IsStored )
+                    {
+                        ++foreign_key_index;
+
+                        sql_schema_file_text
+                            ~= "    index " ~ CommandIdentifierQuote ~ "index_"
+                               ~ table.Name.toLower()
+                               ~ "_"
+                               ~ column.ForeignColumn.Table.Name.toLower()
+                               ~ "_"
+                               ~ foreign_key_index.to!string()
+                               ~ "_idx" ~ CommandIdentifierQuote ~ "( " ~ CommandIdentifierQuote
+                               ~ column.SqlName
+                               ~ CommandIdentifierQuote ~ " asc ),\n";
+                    }
                 }
-            }
 
-            foreign_key_index = 0;
+                foreign_key_index = 0;
 
-            foreach ( ref column; table.ColumnArray )
-            {
-                if ( column.IsConstrained
-                     && column.IsStored
-                     && column.IsForeign
-                     && column.ForeignColumn.IsKey
-                     && column.ForeignColumn.IsStored
-                     && column.ForeignColumn.Table.IsStored )
+                foreach ( ref column; table.ColumnArray )
                 {
-                    ++foreign_key_index;
+                    if ( column.IsConstrained
+                         && column.IsStored
+                         && column.IsForeign
+                         && column.ForeignColumn.IsKey
+                         && column.ForeignColumn.IsStored
+                         && column.ForeignColumn.Table.IsStored )
+                    {
+                        ++foreign_key_index;
 
-                    sql_schema_file_text
-                        ~= "    constraint `constraint_"
-                           ~ table.Name.toLower()
-                           ~ "_"
-                           ~ column.ForeignColumn.Table.Name.toLower()
-                           ~ "_"
-                           ~ foreign_key_index.to!string()
-                           ~ CommandIdentifierQuote ~ "\n"
-                           ~ "    foreign key( " ~ CommandIdentifierQuote
-                           ~ column.SqlName
-                           ~ CommandIdentifierQuote ~ " )\n"
-                           ~ "    references " ~ CommandIdentifierQuote
-                           ~ Name
-                           ~ CommandIdentifierQuote ~ "." ~ CommandIdentifierQuote
-                           ~ column.ForeignColumn.Table.Name
-                           ~ CommandIdentifierQuote ~ "( " ~ CommandIdentifierQuote
-                           ~ column.ForeignColumn.SqlName
-                           ~ CommandIdentifierQuote ~ " )\n"
-                           ~ "        on delete set null\n"
-                           ~ "        on update no action,\n";
+                        sql_schema_file_text
+                            ~= "    constraint " ~ CommandIdentifierQuote ~ "constraint_"
+                               ~ table.Name.toLower()
+                               ~ "_"
+                               ~ column.ForeignColumn.Table.Name.toLower()
+                               ~ "_"
+                               ~ foreign_key_index.to!string()
+                               ~ CommandIdentifierQuote ~ "\n"
+                               ~ "    foreign key( " ~ CommandIdentifierQuote
+                               ~ column.SqlName
+                               ~ CommandIdentifierQuote ~ " )\n"
+                               ~ "    references " ~ CommandIdentifierQuote
+                               ~ Name
+                               ~ CommandIdentifierQuote ~ "." ~ CommandIdentifierQuote
+                               ~ column.ForeignColumn.Table.Name
+                               ~ CommandIdentifierQuote ~ "( " ~ CommandIdentifierQuote
+                               ~ column.ForeignColumn.SqlName
+                               ~ CommandIdentifierQuote ~ " )\n"
+                               ~ "        on delete set null\n"
+                               ~ "        on update no action,\n";
+                    }
                 }
             }
 
@@ -11796,6 +11808,54 @@ class SCHEMA
 
             sql_schema_file_text
                 ~= ";\n\n";
+        }
+
+        return sql_schema_file_text;
+    }
+
+    // ~~
+
+    string GetSqlSchemaFileIndexText(
+        TABLE table
+        )
+    {
+        string
+            sql_schema_file_text;
+        long
+            foreign_key_index;
+
+        if ( CommandFormat == "postgresql" )
+        {
+            foreign_key_index = 0;
+
+            foreach ( ref column; table.ColumnArray )
+            {
+                if ( column.IsIndexed
+                     && column.IsStored
+                     && column.IsForeign
+                     && column.ForeignColumn.IsKey
+                     && column.ForeignColumn.IsStored
+                     && column.ForeignColumn.Table.IsStored )
+                {
+                    ++foreign_key_index;
+
+                    sql_schema_file_text
+                        ~= "create index if not exists " ~ CommandIdentifierQuote ~ "index_"
+                           ~ table.Name.toLower()
+                           ~ "_"
+                           ~ column.ForeignColumn.Table.Name.toLower()
+                           ~ "_"
+                           ~ foreign_key_index.to!string()
+                           ~ "_idx" ~ CommandIdentifierQuote
+                           ~ " on " ~ CommandIdentifierQuote
+                           ~ table.Name
+                           ~ CommandIdentifierQuote ~ "." ~ CommandIdentifierQuote
+                           ~ column.ForeignColumn.Table.Name
+                           ~ CommandIdentifierQuote ~ "( " ~ CommandIdentifierQuote
+                           ~ column.SqlName
+                           ~ CommandIdentifierQuote ~ " );\n";
+                }
+            }
         }
 
         return sql_schema_file_text;
@@ -11833,6 +11893,11 @@ class SCHEMA
         foreach ( table; TableArray )
         {
             sql_schema_file_text ~= GetSqlSchemaFileTableText( table );
+        }
+
+        foreach ( table; TableArray )
+        {
+            sql_schema_file_text ~= GetSqlSchemaFileIndexText( table );
         }
 
         sql_schema_file_text ~= GetSqlSchemaFileFooterText();
@@ -11934,6 +11999,11 @@ class SCHEMA
         {
             sql_file_text ~= GetSqlSchemaFileTableText( table );
             sql_file_text ~= GetSqlDataFileTableText( table );
+        }
+
+        foreach ( table; TableArray )
+        {
+            sql_file_text ~= GetSqlSchemaFileIndexText( table );
         }
 
         sql_file_text ~= GetSqlSchemaFileFooterText();
@@ -13444,6 +13514,7 @@ class SCHEMA
 
 bool
     CqlOptionIsEnabled,
+    DropIsCascaded,
     DropIsForced,
     DropIsIgnored,
     SqlOptionIsEnabled,
@@ -14867,6 +14938,7 @@ void main(
     OutputFormatArray = null;
     DropIsIgnored = false;
     DropIsForced = false;
+    DropIsCascaded = false;
     VerboseOptionIsEnabled = false;
 
     while ( argument_array.length >= 1
@@ -14968,6 +15040,10 @@ void main(
         {
             DropIsForced = true;
         }
+        else if ( option == "--cascade-drop" )
+        {
+            DropIsCascaded = true;
+        }
         else if ( option == "--exclude-command"
                   && argument_array.length >= 1 )
         {
@@ -15013,6 +15089,7 @@ void main(
         writeln( "    --template <template_file_path>" );
         writeln( "    --ignore-drop" );
         writeln( "    --force-drop" );
+        writeln( "    --cascade-drop" );
         writeln( "    --exclude-command <command_name>" );
         writeln( "Examples :" );
         writeln( "    basil --uml script_file.bs" );

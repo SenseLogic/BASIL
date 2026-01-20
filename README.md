@@ -930,6 +930,7 @@ basil [options] script_file.bs [script_file.bs|bd|bt|csv ...]
 --rust : generate a Rust type file
 --ignore-drop : ignore drop command
 --force-drop : force drop command
+--cascade-drop : cascade drop command
 --exclude-command <command_name>
 --verbose : show processed content
 ```
