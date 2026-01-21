@@ -11689,7 +11689,8 @@ class SCHEMA
         string
             sql_schema_file_text;
         long
-            foreign_key_index;
+            constraint_index,
+            index_index;
 
         if ( table.IsStored
              && table.IsSaved )
@@ -11733,7 +11734,7 @@ class SCHEMA
 
             if ( CommandFormat == "mysql" )
             {
-                foreign_key_index = 0;
+                index_index = 0;
 
                 foreach ( ref column; table.ColumnArray )
                 {
@@ -11744,22 +11745,22 @@ class SCHEMA
                          && column.ForeignColumn.IsStored
                          && column.ForeignColumn.Table.IsStored )
                     {
-                        ++foreign_key_index;
+                        ++index_index;
 
                         sql_schema_file_text
-                            ~= "    index " ~ CommandIdentifierQuote ~ "index_"
+                            ~= "    index " ~ CommandIdentifierQuote
+                               ~ Name.toLower()
+                               ~ "_"
                                ~ table.Name.toLower()
-                               ~ "_"
-                               ~ column.ForeignColumn.Table.Name.toLower()
-                               ~ "_"
-                               ~ foreign_key_index.to!string()
-                               ~ "_idx" ~ CommandIdentifierQuote ~ "( " ~ CommandIdentifierQuote
+                               ~ "_index_"
+                               ~ index_index.to!string()
+                               ~ CommandIdentifierQuote ~ "( " ~ CommandIdentifierQuote
                                ~ column.SqlName
                                ~ CommandIdentifierQuote ~ " asc ),\n";
                     }
                 }
 
-                foreign_key_index = 0;
+                constraint_index = 0;
 
                 foreach ( ref column; table.ColumnArray )
                 {
@@ -11770,15 +11771,15 @@ class SCHEMA
                          && column.ForeignColumn.IsStored
                          && column.ForeignColumn.Table.IsStored )
                     {
-                        ++foreign_key_index;
+                        ++constraint_index;
 
                         sql_schema_file_text
-                            ~= "    constraint " ~ CommandIdentifierQuote ~ "constraint_"
-                               ~ table.Name.toLower()
+                            ~= "    constraint " ~ CommandIdentifierQuote
+                               ~ Name.toLower()
                                ~ "_"
                                ~ column.ForeignColumn.Table.Name.toLower()
-                               ~ "_"
-                               ~ foreign_key_index.to!string()
+                               ~ "_constraint_"
+                               ~ constraint_index.to!string()
                                ~ CommandIdentifierQuote ~ "\n"
                                ~ "    foreign key( " ~ CommandIdentifierQuote
                                ~ column.SqlName
@@ -11822,11 +11823,11 @@ class SCHEMA
         string
             sql_schema_file_text;
         long
-            foreign_key_index;
+            index_index;
 
         if ( CommandFormat == "postgresql" )
         {
-            foreign_key_index = 0;
+            index_index = 0;
 
             foreach ( ref column; table.ColumnArray )
             {
@@ -11837,20 +11838,19 @@ class SCHEMA
                      && column.ForeignColumn.IsStored
                      && column.ForeignColumn.Table.IsStored )
                 {
-                    ++foreign_key_index;
+                    ++index_index;
 
                     sql_schema_file_text
-                        ~= "create index if not exists " ~ CommandIdentifierQuote ~ "index_"
+                        ~= "create index if not exists " ~ CommandIdentifierQuote
+                           ~ Name.toLower()
+                           ~ "_"
                            ~ table.Name.toLower()
-                           ~ "_"
-                           ~ column.ForeignColumn.Table.Name.toLower()
-                           ~ "_"
-                           ~ foreign_key_index.to!string()
-                           ~ "_idx" ~ CommandIdentifierQuote
-                           ~ " on " ~ CommandIdentifierQuote
-                           ~ table.Name
+                           ~ "_index_"
+                           ~ index_index.to!string()
+                           ~ CommandIdentifierQuote ~ " on " ~ CommandIdentifierQuote
+                           ~ Name
                            ~ CommandIdentifierQuote ~ "." ~ CommandIdentifierQuote
-                           ~ column.ForeignColumn.Table.Name
+                           ~ table.Name
                            ~ CommandIdentifierQuote ~ "( " ~ CommandIdentifierQuote
                            ~ column.SqlName
                            ~ CommandIdentifierQuote ~ " );\n";
