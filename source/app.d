@@ -20,11 +20,6 @@
 
 // -- IMPORTS
 
-import mildew.compiler : Compiler;
-import mildew.environment : Environment;
-import mildew.exceptions : ScriptCompileException, ScriptRuntimeException;
-import mildew.interpreter : Interpreter;
-import mildew.types : NativeFunctionError, ScriptAny, ScriptFunction;
 import seed : Abort, AddPrefix, AddSuffix, EndsByVowel, GetBooleanText, GetCsvText, GetExecutablePath, GetFileLabel, GetFileName, GetFolderPath, GetFolderPath, GetInteger, GetKebabCaseText, GetMajorCaseText, GetNatural, GetPascalCaseText, GetPrefix, GetReal, GetSearchCaseText, GetSlugCaseText, GetSnakeCaseText, GetSuffix, GetUnaccentedText, IsInteger, IsLinux, IsMacOs, IsWindows, PrintError, PrintWarning, ReadText, RemovePrefix, RemoveSuffix, ReplacePrefix, ReplaceSuffix, StartsByConsonant, StartsByVowel, WriteText;
 import std.algorithm : countUntil, sort;
 import std.ascii : isDigit, isLower, isUpper;
@@ -4831,137 +4826,144 @@ class VALUE
             sql_text,
             type_name;
 
-        type_name = Type.ActualType.BaseName;
-
-        if ( type_name == "BOOL" )
+        if ( Text == "␀" )
         {
-            if ( Text == "1"
-                 || Text == "true" )
-            {
-                if ( CommandFormat == "postgresql" )
-                {
-                    return "true";
-                }
-                else
-                {
-                    return "1";
-                }
-            }
-            else
-            {
-                if ( CommandFormat == "postgresql" )
-                {
-                    return "false";
-                }
-                else
-                {
-                    return "0";
-                }
-            }
-        }
-        else if ( type_name == "INT8"
-                  || type_name == "UINT8"
-                  || type_name == "INT16"
-                  || type_name == "UINT16"
-                  || type_name == "INT32"
-                  || type_name == "UINT32"
-                  || type_name == "INT64"
-                  || type_name == "UINT64"
-                  || type_name == "FLOAT32"
-                  || type_name == "FLOAT64"
-                  || type_name == "DECIMAL" )
-        {
-            return Text;
-        }
-        else if ( type_name == "TUPLE" )
-        {
-            foreach ( sub_value_index, ref sub_value; SubValueArray )
-            {
-                if ( sub_value_index > 0 )
-                {
-                    sql_text ~= ",";
-                }
-
-                sql_text ~= sub_value.GetSqlText( true, it_is_dump_value );
-            }
-
-            sql_text = "[" ~ sql_text ~ "]";
-        }
-        else if ( type_name == "LIST" )
-        {
-            foreach ( element_value_index, ref element_value; ElementValueArray )
-            {
-                if ( element_value_index > 0 )
-                {
-                    sql_text ~= ",";
-                }
-
-                sql_text ~= element_value.GetSqlText( true, it_is_dump_value );
-            }
-
-            sql_text = "[" ~ sql_text ~ "]";
-        }
-        else if ( type_name == "SET" )
-        {
-            foreach ( element_value_index, ref element_value; ElementValueArray )
-            {
-                if ( element_value_index > 0 )
-                {
-                    sql_text ~= ",";
-                }
-
-                sql_text ~= element_value.GetSqlText( true, it_is_dump_value );
-            }
-
-            sql_text = "[" ~ sql_text ~ "]";
-        }
-        else if ( type_name == "MAP"
-                  || type_name == "OBJECT" )
-        {
-            foreach ( element_value_index, ref element_value; ElementValueArray )
-            {
-                if ( element_value_index > 0 )
-                {
-                    sql_text ~= ",";
-                }
-
-                sql_text ~= KeyValueArray[ element_value_index ].GetSqlText( true, it_is_dump_value ) ~ ":" ~ element_value.GetSqlText( true, it_is_dump_value );
-            }
-
-            sql_text = "{" ~ sql_text ~ "}";
+            return "null";
         }
         else
         {
-            sql_text = Text;
-        }
+            type_name = Type.ActualType.BaseName;
 
-        it_is_compound_value
-            = ( type_name == "TUPLE"
-                || type_name == "LIST"
-                || type_name == "SET"
-                || type_name == "MAP"
-                || type_name == "OBJECT" );
-
-        if ( !it_is_sub_value )
-        {
-            if ( CommandFormat == "mysql" )
+            if ( type_name == "BOOL" )
             {
-                return "'" ~ sql_text.GetEscapedText( "\\'", "\"" ) ~ "'";
-            }
-            else if ( CommandFormat == "postgresql" )
-            {
-                if ( it_is_compound_value )
+                if ( Text == "1"
+                    || Text == "true" )
                 {
-                    return "'" ~ sql_text.GetEscapedText( "''", "\"" ) ~ "'::JSONB";
+                    if ( CommandFormat == "postgresql" )
+                    {
+                        return "true";
+                    }
+                    else
+                    {
+                        return "1";
+                    }
                 }
                 else
                 {
-                    return "'" ~ sql_text.GetEscapedText( "''", "\"" ) ~ "'";
+                    if ( CommandFormat == "postgresql" )
+                    {
+                        return "false";
+                    }
+                    else
+                    {
+                        return "0";
+                    }
                 }
             }
-        }
+            else if ( type_name == "INT8"
+                    || type_name == "UINT8"
+                    || type_name == "INT16"
+                    || type_name == "UINT16"
+                    || type_name == "INT32"
+                    || type_name == "UINT32"
+                    || type_name == "INT64"
+                    || type_name == "UINT64"
+                    || type_name == "FLOAT32"
+                    || type_name == "FLOAT64"
+                    || type_name == "DECIMAL" )
+            {
+                return Text;
+            }
+            else if ( type_name == "TUPLE" )
+            {
+                foreach ( sub_value_index, ref sub_value; SubValueArray )
+                {
+                    if ( sub_value_index > 0 )
+                    {
+                        sql_text ~= ",";
+                    }
 
-        return '"' ~ sql_text.GetEscapedText( "'", "\\\"" ) ~ '"';
+                    sql_text ~= sub_value.GetSqlText( true, it_is_dump_value );
+                }
+
+                sql_text = "[" ~ sql_text ~ "]";
+            }
+            else if ( type_name == "LIST" )
+            {
+                foreach ( element_value_index, ref element_value; ElementValueArray )
+                {
+                    if ( element_value_index > 0 )
+                    {
+                        sql_text ~= ",";
+                    }
+
+                    sql_text ~= element_value.GetSqlText( true, it_is_dump_value );
+                }
+
+                sql_text = "[" ~ sql_text ~ "]";
+            }
+            else if ( type_name == "SET" )
+            {
+                foreach ( element_value_index, ref element_value; ElementValueArray )
+                {
+                    if ( element_value_index > 0 )
+                    {
+                        sql_text ~= ",";
+                    }
+
+                    sql_text ~= element_value.GetSqlText( true, it_is_dump_value );
+                }
+
+                sql_text = "[" ~ sql_text ~ "]";
+            }
+            else if ( type_name == "MAP"
+                    || type_name == "OBJECT" )
+            {
+                foreach ( element_value_index, ref element_value; ElementValueArray )
+                {
+                    if ( element_value_index > 0 )
+                    {
+                        sql_text ~= ",";
+                    }
+
+                    sql_text ~= KeyValueArray[ element_value_index ].GetSqlText( true, it_is_dump_value ) ~ ":" ~ element_value.GetSqlText( true, it_is_dump_value );
+                }
+
+                sql_text = "{" ~ sql_text ~ "}";
+            }
+            else
+            {
+                sql_text = Text;
+            }
+
+            it_is_compound_value
+                = ( type_name == "TUPLE"
+                    || type_name == "LIST"
+                    || type_name == "SET"
+                    || type_name == "MAP"
+                    || type_name == "OBJECT" );
+
+            if ( !it_is_sub_value )
+            {
+                if ( CommandFormat == "mysql" )
+                {
+                    return "'" ~ sql_text.GetEscapedText( "\\'", "\"" ) ~ "'";
+                }
+                else if ( CommandFormat == "postgresql" )
+                {
+                    if ( it_is_compound_value )
+                    {
+                        return "'" ~ sql_text.GetEscapedText( "''", "\"" ) ~ "'::JSONB";
+                    }
+                    else
+                    {
+                        return "'" ~ sql_text.GetEscapedText( "''", "\"" ) ~ "'";
+                    }
+                }
+            }
+
+            return '"' ~ sql_text.GetEscapedText( "'", "\\\"" ) ~ '"';
+        }
     }
 
     // ~~
@@ -7323,7 +7325,8 @@ class COLUMN
 
                 if ( !value_is_found
                      && !( IsOptional
-                           && value.GetText() == "''" ) )
+                           && ( value.Text == "␀"
+                                || value.GetText() == "''" ) ) )
                 {
                     PrintWarning( "Invalid foreign value : " ~ value.GetText() );
                 }

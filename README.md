@@ -567,6 +567,7 @@ POINTER[ <i>element type</i> ] | !stored
 % : null TUID
 #identifier : MD5 hash UUID
 # : null UUID
+␀ : null value
 ~ : value separator
 { } : collection delimiter
 { <i>value</i> ~ <i>value</i> ~ ... } : tuple
